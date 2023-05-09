@@ -941,4 +941,36 @@ function toggleDropdownText(elm) {
 function hasClass(elem, cls) {
 	return (" " + elem.className + " ").indexOf(" " + cls + " ") > -1;
 }
+
+function insertEmoji(target, item){
+	let dest = '';
+	switch (target) {
+		case 'comment':
+			dest='#comment-edit-text-' + item;
+			break;
+		case 'jot':
+			dest='.profile-jot-text';
+			break;
+		case 'pn':
+			dest='#comment-edit-text-input';
+	}
+	emojiPicker(dest)
+};
+
+function emojiPicker(dest) {
+	console.log(this);
+	if (typeof this.EmojiPicker == "undefined") {
+
+		new EmojiPicker({
+			trigger: [
+				{
+					selector: '.emojis',
+					insertInto: dest
+				}
+			],
+			closeButton: true,
+		});
+	}
+	console.log(this);
+}
 // @license-end

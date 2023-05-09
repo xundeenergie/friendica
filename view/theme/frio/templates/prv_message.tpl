@@ -59,6 +59,11 @@
 						<i class="fa fa-quote-left" aria-hidden="true"></i>
 					</button>
 				</li>
+				<li>
+					<button type="button" class="btn-link icton emojis" style="cursor: pointer;" title="{{$edemojis}}" data-role="insert-emoji" data-comment=" " onclick="insertEmoji('pn');">
+						<i class="fa fa-smile-o"></i>
+					</button>
+				</li>
 			</ul>
 
 	<div id="prvmail-text-bb-end"></div>
