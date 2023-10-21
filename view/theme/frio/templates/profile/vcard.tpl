@@ -70,13 +70,12 @@
 				</button>
 			</div>
 			{{/if}}
-            {{if $profile.addr}}
-			<div id="mention-link-button">
-				<button type="button" id="mention-link" class="btn btn-labeled btn-primary" onclick="openWallMessage('{{$mention_url}}')">
-					<span class=""><i class="fa fa-pencil-square-o"></i></span>
-					<span class="">{{$mention_label}}</span>
-				</button>
-			</div>
+                        {{if $profile.addr}}
+				<div id="mention-link-button">
+					<button type="button" id="mention-link" class="btn btn-labeled btn-primary" onclick="openWallMessage('{{$mention_url}}')" oncontextmenu="openWallMessage('compose/0'); return false;">
+					       <span class=""><i class="fa fa-pencil-square-o"></i></span>
+					       <span class="">{{$mention_label}}</span>
+				</div>
 			{{/if}}
             {{if $network_label}}
 			<div id="showgroup-button">

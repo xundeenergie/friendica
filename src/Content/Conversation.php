@@ -362,6 +362,7 @@ class Conversation
 		$tpl = Renderer::getMarkupTemplate('jot.tpl');
 
 		$o .= Renderer::replaceMacros($tpl, [
+			'$post'                => $this->l10n->t($x['content'] ? 'Post to group' : 'Post'),
 			'$new_post'            => $this->l10n->t('New Post'),
 			'$return_path'         => $this->args->getQueryString(),
 			'$action'              => 'item',
