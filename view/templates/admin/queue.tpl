@@ -8,6 +8,7 @@
 			<th>{{$command_header}}</th>
 			<th>{{$param_header}}</th>
 			<th>{{$created_header}}</th>
+			<th>{{$next_try_header}}</th>
 			<th>{{$prio_header}}</th>
 		</tr>
 		{{foreach $entries as $e}}
@@ -16,6 +17,7 @@
 			<td>{{$e.command}}</td>
 			<td>{{$e.parameter}}</td>
 			<td>{{$e.created}}</td>
+			<td>{{$e.next_try}}</td>
 			<td>{{$e.priority}}</td>
 		</tr>
 		{{/foreach}}
