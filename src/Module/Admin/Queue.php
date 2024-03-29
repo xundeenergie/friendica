@@ -80,6 +80,7 @@ class Queue extends BaseAdmin
 			'$next_try_header' => DI::l10n()->t('Next Try'),
 			'$prio_header' => DI::l10n()->t('Priority'),
 			'$info' => $info,
+			'$status' => $status,
 			'$entries' => $r,
 		]);
 	}
