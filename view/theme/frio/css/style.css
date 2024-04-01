@@ -3849,6 +3849,12 @@ section .profile-match-wrapper {
 		margin-top: 0;
 	}
 
+	.mod-home.is-not-singleuser,
+	.mod-login {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
 	.generic-page-wrapper,
 	.videos-content-wrapper,
 	.suggest-content-wrapper,
