@@ -71,6 +71,8 @@ class Timeline extends BaseModule
 	/** @var bool */
 	protected $update;
 	/** @var bool */
+	protected $ping;
+	/** @var bool */
 	protected $raw;
 	/** @var string */
 	protected $order;
@@ -823,7 +825,7 @@ class Timeline extends BaseModule
 	 */
 	protected function setItemsSeenByCondition(array $condition)
 	{
-		if (empty($condition)) {
+		if (empty($condition) || $this->ping) {
 			return;
 		}
 
