@@ -378,6 +378,11 @@ class Network extends Timeline
 		}
 	}
 
+	protected function setPing(bool $ping)
+	{
+		$this->ping = $ping;
+	}
+
 	protected function getItems()
 	{
 		$conditionFields  = ['uid' => $this->session->getLocalUserId()];

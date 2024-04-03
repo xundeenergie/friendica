@@ -46,6 +46,7 @@ class Network extends NetworkModule
 			System::httpExit('');
 		}
 
+		$this->setPing(true);
 		$this->itemsPerPage = 100;
 
 		if ($this->channel->isTimeline($this->selectedTab) || $this->userDefinedChannel->isTimeline($this->selectedTab, $this->session->getLocalUserId())) {
