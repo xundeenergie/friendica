@@ -4132,9 +4132,14 @@ class Item
 			return is_numeric($hookData['item_id']) ? $hookData['item_id'] : 0;
 		}
 
-		$curlResult = DI::httpClient()->head($uri, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::JSON_AS]);
-		if (HTTPSignature::isValidContentType($curlResult->getContentType(), $uri)) {
-			$fetched_uri = ActivityPub\Processor::fetchMissingActivity($uri, [], '', $completion, $uid);
+		try {
+			$curlResult = DI::httpClient()->head($uri, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::JSON_AS]);
+			if (HTTPSignature::isValidContentType($curlResult->getContentType(), $uri)) {
+				$fetched_uri = ActivityPub\Processor::fetchMissingActivity($uri, [], '', $completion, $uid);
+			}
+		} catch (\Throwable $th) {
+			Logger::info('Invalid link', ['uid' => $uid, 'uri' => $uri, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return 0;
 		}
 
 		if (!empty($fetched_uri)) {
