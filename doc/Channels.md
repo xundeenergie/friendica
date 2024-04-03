@@ -61,7 +61,7 @@ Additionally to the search for content, there are keywords that can be used in t
 Alternatives are presented with "|".
 
 * from - Use "from:nickname" or "from:nickname@domain.tld" to search for posts from a specific author.
-* to - Use "from:nickname" or "from:nickname@domain.tld" to search for posts with the given contact as receiver.
+* to - Use "to:nickname" or "to:nickname@domain.tld" to search for posts with the given contact as receiver.
 * group - Use "group:nickname" or "group:nickname@domain.tld" to search for group post of the given group.
 * application | relay - Use "application:nickname" or "application:nickname@domain.tld" to search for posts that had been reshared by the given relay application.
 * server - Use "server:hostname" to search for posts from a specific server. In the case of group postings, the search text contains both the hostname of the group server and the author's hostname.
