@@ -803,6 +803,12 @@ function displaySearchText(id) {
 	});
 }
 
+function displayLanguage(id) {
+	$.get('item/' + id + '/language', function(data) {
+		alert(data);
+	});
+}
+
 var lockvisible = false;
 
 function lockview(event, type, id) {

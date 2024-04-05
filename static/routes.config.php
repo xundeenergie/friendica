@@ -390,8 +390,6 @@ return [
 		'/event/{mode:edit|copy}/{id:\d+}'              => [Module\Calendar\Event\Form::class, [R::GET         ]],
 	],
 
-//	'/callback/searchtext',
-
 	'/channel[/{content}]'   => [Module\Conversation\Channel::class,   [R::GET]],
 	'/community[/{content}]' => [Module\Conversation\Community::class, [R::GET]],
 
@@ -482,9 +480,10 @@ return [
 		'/activity/{verb}' => [Module\Item\Activity::class,    [        R::POST]],
 		'/follow'          => [Module\Item\Follow::class,      [        R::POST]],
 		'/ignore'          => [Module\Item\Ignore::class,      [        R::POST]],
+		'/language'        => [Module\Item\Language::class,    [R::GET]],
 		'/pin'             => [Module\Item\Pin::class,         [        R::POST]],
-		'/star'            => [Module\Item\Star::class,        [        R::POST]],
 		'/searchtext'      => [Module\Item\Searchtext::class,  [R::GET]],
+		'/star'            => [Module\Item\Star::class,        [        R::POST]],
 	],
 
 	'/localtime'          => [Module\Debug\Localtime::class, [R::GET, R::POST]],

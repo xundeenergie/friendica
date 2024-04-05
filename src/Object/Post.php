@@ -521,7 +521,7 @@ class Post
 
 		$languages = [];
 		if (!empty($item['language'])) {
-			$languages = [DI::l10n()->t('Languages'), Item::getLanguageMessage($item)];
+			$languages = DI::l10n()->t('Languages');
 		}
 
 		if (in_array($item['private'], [Item::PUBLIC, Item::UNLISTED]) && in_array($item['network'], Protocol::FEDERATED)) {

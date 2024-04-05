@@ -433,7 +433,7 @@ as the value of $top_child_total (this is done at the end of this file)
 
 				{{if $item.language}}
 				<li role="menuitem">
-						<a id="language-{{$item.id}}" href="javascript:alert('{{$item.language.1}}');" class="btn-link filer-item language-icon" title="{{$item.language.0}}"><i class="fa fa-language" aria-hidden="true"></i>&ensp;{{$item.language.0}}</a>
+						<a id="language-{{$item.id}}" href="javascript:displayLanguage({{$item.uriid}});" class="btn-link filer-item language-icon" title="{{$item.language}}"><i class="fa fa-language" aria-hidden="true"></i>&ensp;{{$item.language}}</a>
 				</li>
 				{{/if}}
 
@@ -620,7 +620,7 @@ as the value of $top_child_total (this is done at the end of this file)
 
 							{{if $item.language}}
 								<li role="menuitem">
-									<a id="language-{{$item.id}}" href="javascript:alert('{{$item.language.1}}');" class="btn-link filer-item language-icon" title="{{$item.language.0}}"><i class="fa fa-language" aria-hidden="true"></i>&ensp;{{$item.language.0}}</a>
+									<a id="language-{{$item.id}}" href="javascript:displayLanguage({{$item.uriid}});" class="btn-link filer-item language-icon" title="{{$item.language}}"><i class="fa fa-language" aria-hidden="true"></i>&ensp;{{$item.language}}</a>
 								</li>
 							{{/if}}
 
