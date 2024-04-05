@@ -600,6 +600,7 @@ class Post
 			'tagger'          => $tagger,
 			'filer'           => $filer,
 			'language'        => $languages,
+			'searchtext'      => DI::l10n()->t('Search Text'),
 			'drop'            => $drop,
 			'block'           => $block,
 			'ignore_author'   => $ignore,

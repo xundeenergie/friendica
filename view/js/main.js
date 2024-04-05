@@ -797,6 +797,12 @@ function getPosition(e) {
 	return cursor;
 }
 
+function displaySearchText(id) {
+	$.get('item/' + id + '/searchtext', function(data) {
+		alert(data);
+	});
+}
+
 var lockvisible = false;
 
 function lockview(event, type, id) {

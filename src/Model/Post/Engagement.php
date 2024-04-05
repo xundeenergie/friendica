@@ -418,4 +418,12 @@ class Engagement
 		}
 		return $fullTextSearch;
 	}
+
+	public static function unescapeKeywords(string $fullTextSearch): string
+	{
+		foreach (self::KEYWORDS as $keyword) {
+			$fullTextSearch = preg_replace('~(' . $keyword . ')_(.[\w\*@\.-]+)~', '$1:$2', $fullTextSearch);
+		}
+		return $fullTextSearch;
+	}
 }

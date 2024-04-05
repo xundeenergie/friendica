@@ -390,6 +390,8 @@ return [
 		'/event/{mode:edit|copy}/{id:\d+}'              => [Module\Calendar\Event\Form::class, [R::GET         ]],
 	],
 
+//	'/callback/searchtext',
+
 	'/channel[/{content}]'   => [Module\Conversation\Channel::class,   [R::GET]],
 	'/community[/{content}]' => [Module\Conversation\Community::class, [R::GET]],
 
@@ -482,6 +484,7 @@ return [
 		'/ignore'          => [Module\Item\Ignore::class,      [        R::POST]],
 		'/pin'             => [Module\Item\Pin::class,         [        R::POST]],
 		'/star'            => [Module\Item\Star::class,        [        R::POST]],
+		'/searchtext'      => [Module\Item\Searchtext::class,  [R::GET]],
 	],
 
 	'/localtime'          => [Module\Debug\Localtime::class, [R::GET, R::POST]],

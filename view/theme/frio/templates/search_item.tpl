@@ -225,6 +225,10 @@
 						</li>
 						{{/if}}
 
+						<li role="menuitem">
+							<a id="searchtext-{{$item.id}}" href="javascript:displaySearchText({{$item.uriid}});" class="btn-link filer-item search-icon" title="{{$item.searchtext}}"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;{{$item.searchtext}}</a>
+						</li>
+
 						{{if $item.browsershare}}
 							<li role="menuitem" class="button-browser-share">
 								<a id="browser-share-{{$item.id}}" href="javascript:navigator.share({url: '{{$item.plink.orig}}'});" class="btn-link button-browser-share" title="{{$item.browsershare.1}}"><i class="fa fa-share-alt" aria-hidden="true"></i>&nbsp;{{$item.browsershare.0}}</a>
