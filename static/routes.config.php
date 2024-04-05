@@ -480,7 +480,9 @@ return [
 		'/activity/{verb}' => [Module\Item\Activity::class,    [        R::POST]],
 		'/follow'          => [Module\Item\Follow::class,      [        R::POST]],
 		'/ignore'          => [Module\Item\Ignore::class,      [        R::POST]],
+		'/language'        => [Module\Item\Language::class,    [R::GET]],
 		'/pin'             => [Module\Item\Pin::class,         [        R::POST]],
+		'/searchtext'      => [Module\Item\Searchtext::class,  [R::GET]],
 		'/star'            => [Module\Item\Star::class,        [        R::POST]],
 	],
 

@@ -521,7 +521,7 @@ class Post
 
 		$languages = [];
 		if (!empty($item['language'])) {
-			$languages = [DI::l10n()->t('Languages'), Item::getLanguageMessage($item)];
+			$languages = DI::l10n()->t('Languages');
 		}
 
 		if (in_array($item['private'], [Item::PUBLIC, Item::UNLISTED]) && in_array($item['network'], Protocol::FEDERATED)) {
@@ -600,6 +600,7 @@ class Post
 			'tagger'          => $tagger,
 			'filer'           => $filer,
 			'language'        => $languages,
+			'searchtext'      => DI::l10n()->t('Search Text'),
 			'drop'            => $drop,
 			'block'           => $block,
 			'ignore_author'   => $ignore,
