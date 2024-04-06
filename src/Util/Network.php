@@ -533,18 +533,27 @@ class Network
 	{
 		$parts = parse_url($uri);
 		if (!empty($parts['scheme']) && !empty($parts['host'])) {
-			$parts['host'] = idn_to_ascii($parts['host']);
+			$parts['host'] = self::idnToAscii($parts['host']);
 			$uri = (string)Uri::fromParts($parts);
 		} else {
 			$parts = explode('@', $uri);
 			if (count($parts) == 2) {
-				$uri = $parts[0] . '@' . idn_to_ascii($parts[1]);
+				$uri = $parts[0] . '@' . self::idnToAscii($parts[1]);
 			} else {
-				$uri = idn_to_ascii($uri);
+				$uri = self::idnToAscii($uri);
 			}
 		}
 
 		return $uri;
+	}
+
+	private static function idnToAscii(string $uri): string
+	{
+		if (!function_exists('idn_to_ascii')) {
+			Logger::error('IDN functions are missing.');
+			return $uri;
+		}
+		return idn_to_ascii($uri);
 	}
 
 	/**
