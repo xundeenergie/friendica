@@ -136,7 +136,7 @@ function photos_post(App $a)
 	$visitor   = 0;
 
 	$page_owner_uid = intval($user['uid']);
-	$community_page = $user['page-flags'] == User::PAGE_FLAGS_COMMUNITY;
+	$community_page = in_array($user['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN]);
 
 	if (DI::userSession()->getLocalUserId() && (DI::userSession()->getLocalUserId() == $page_owner_uid)) {
 		$can_post = true;
@@ -618,7 +618,7 @@ function photos_content(App $a)
 
 	$owner_uid = $user['uid'];
 
-	$community_page = (($user['page-flags'] == User::PAGE_FLAGS_COMMUNITY) ? true : false);
+	$community_page = in_array($user['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN]);
 
 	if (DI::userSession()->getLocalUserId() && (DI::userSession()->getLocalUserId() == $owner_uid)) {
 		$can_post = true;

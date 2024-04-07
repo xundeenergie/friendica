@@ -76,6 +76,7 @@
 							{{if $u.page_flags_raw==3}}fa-heart{{/if}}		{{* PAGE_FREELOVE *}}
 							{{if $u.page_flags_raw==4}}fa-rss{{/if}}		{{* PAGE_BLOG *}}
 							{{if $u.page_flags_raw==5}}fa-user-secret{{/if}}	{{* PAGE_PRVGROUP *}}
+							{{if $u.page_flags_raw==6}}fa-users{{/if}}		{{* PAGE_COMM_MAN *}}
 							" title="{{$u.page_flags}}">
 						</i>
 						{{if $u.page_flags_raw==0 && $u.account_type_raw > 0}}

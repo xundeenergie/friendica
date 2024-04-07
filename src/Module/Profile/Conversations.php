@@ -144,7 +144,7 @@ class Conversations extends BaseProfile
 
 		$o .= Widget::commonFriendsVisitor($profile['uid'], $profile['nickname']);
 
-		$commpage    = $profile['page-flags'] == User::PAGE_FLAGS_COMMUNITY;
+		$commpage    = in_array($profile['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN]);
 		$commvisitor = $commpage && $remote_contact;
 
 		$this->page['aside'] .= Widget::postedByYear($this->baseUrl . '/profile/' . $profile['nickname'] . '/conversations', $profile['profile_uid'] ?? 0, true);

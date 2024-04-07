@@ -51,7 +51,7 @@ class Whoami extends BaseApi
 		$data['name']                      = $owner['name'];
 		$data['preferredUsername']         = $owner['nick'];
 		$data['alsoKnownAs']               = [];
-		$data['manuallyApprovesFollowers'] = in_array($owner['page-flags'], [User::PAGE_FLAGS_NORMAL, User::PAGE_FLAGS_PRVGROUP]);
+		$data['manuallyApprovesFollowers'] = in_array($owner['page-flags'], [User::PAGE_FLAGS_NORMAL, User::PAGE_FLAGS_PRVGROUP, User::PAGE_FLAGS_COMM_MAN]);
 		$data['discoverable']              = (bool)$owner['net-publish'];
 		$data['tag']                       = [];
 

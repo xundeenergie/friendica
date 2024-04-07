@@ -122,7 +122,7 @@ class Profile extends BaseProfile
 			$this->baseUrl->redirect('profile/' . $profile['nickname'] . '/restricted');
 		}
 
-		if (!empty($profile['page-flags']) && $profile['page-flags'] == User::PAGE_FLAGS_COMMUNITY) {
+		if (!empty($profile['page-flags']) && in_array($profile['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN])) {
 			$this->page['htmlhead'] .= '<meta name="friendica.community" content="true" />' . "\n";
 		}
 
@@ -319,7 +319,7 @@ class Profile extends BaseProfile
 	{
 		$htmlhead = "\n";
 
-		if (!empty($profile['page-flags']) && $profile['page-flags'] == User::PAGE_FLAGS_COMMUNITY) {
+		if (!empty($profile['page-flags']) && in_array($profile['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN])) {
 			$htmlhead .= '<meta name="friendica.community" content="true" />' . "\n";
 		}
 

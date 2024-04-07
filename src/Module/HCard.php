@@ -53,7 +53,7 @@ class HCard extends BaseModule
 
 		$page = DI::page();
 
-		if (!empty($profile['page-flags']) && ($profile['page-flags'] == User::PAGE_FLAGS_COMMUNITY)) {
+		if (!empty($profile['page-flags']) && in_array($profile['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN])) {
 			$page['htmlhead'] .= '<meta name="friendica.community" content="true" />';
 		}
 		if (!empty($profile['openidserver'])) {
