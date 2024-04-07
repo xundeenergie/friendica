@@ -51,7 +51,7 @@ use Friendica\Util\XML;
 class BBCode
 {
 	// Update this value to the current date whenever changes are made to BBCode::convert
-	const VERSION = '2021-07-28';
+	const VERSION = '2024-04-07';
 
 	const INTERNAL     = 0;
 	const EXTERNAL     = 1;
@@ -146,8 +146,7 @@ class BBCode
 					case 'title':
 						$value = self::toPlaintext(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
 						$value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
-						$value = str_replace(['[', ']'], ['&#91;', '&#93;'], $value);
-						$data['title'] = $value;
+						$data['title'] = self::escapeUrl($value);
 
 					default:
 						$data[$field] = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
@@ -549,71 +548,6 @@ class BBCode
 
 		DI::profiler()->stopRecording();
 		return $text . "\n" . $data['after'];
-	}
-
-	/**
-	 * Converts [url] BBCodes in a format that looks fine on Mastodon. (callback function)
-	 *
-	 * @param array $match Array with the matching values
-	 * @return string reformatted link including HTML codes
-	 */
-	private static function convertUrlForActivityPubCallback(array $match): string
-	{
-		$url = $match[1];
-
-		if (isset($match[2]) && ($match[1] != $match[2])) {
-			return $match[0];
-		}
-
-		$parts = parse_url($url);
-		if (!isset($parts['scheme'])) {
-			return $match[0];
-		}
-
-		return self::convertUrlForActivityPub($url);
-	}
-
-	/**
-	 * Converts [url] BBCodes in a format that looks fine on ActivityPub systems.
-	 *
-	 * @param string $url URL that is about to be reformatted
-	 * @return string reformatted link including HTML codes
-	 */
-	private static function convertUrlForActivityPub(string $url): string
-	{
-		return sprintf('<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>', $url, Strings::getStyledURL($url));
-	}
-
-	/*
-	 * [noparse][i]italic[/i][/noparse] turns into
-	 * [noparse][ i ]italic[ /i ][/noparse],
-	 * to hide them from parser.
-	 *
-	 * @param array $match
-	 * @return string
-	 */
-	private static function escapeNoparseCallback(array $match): string
-	{
-		$whole_match = $match[0];
-		$captured = $match[1];
-		$spacefied = preg_replace("/\[(.*?)\]/", "[ $1 ]", $captured);
-		$new_str = str_replace($captured, $spacefied, $whole_match);
-		return $new_str;
-	}
-
-	/*
-	 * The previously spacefied [noparse][ i ]italic[ /i ][/noparse],
-	 * now turns back and the [noparse] tags are trimmed
-	 * returning [i]italic[/i]
-	 *
-	 * @param array $match
-	 * @return string
-	 */
-	private static function unescapeNoparseCallback(array $match): string
-	{
-		$captured = $match[1];
-		$unspacefied = preg_replace("/\[ (.*?)\ ]/", "[$1]", $captured);
-		return $unspacefied;
 	}
 
 	/**
@@ -1914,16 +1848,6 @@ class BBCode
 					$text = preg_replace("/([#@!])\[url\=(.*?)\](.*?)\[\/url\]/ism", '$1$3', $text);
 				}
 
-				if (!$for_plaintext) {
-					if (in_array($simple_html, [self::OSTATUS, self::MASTODON_API, self::TWITTER_API, self::ACTIVITYPUB])) {
-						$text = preg_replace_callback("/\[url\](.*?)\[\/url\]/ism", [self::class, 'convertUrlForActivityPubCallback'], $text);
-						$text = preg_replace_callback("/\[url\=(.*?)\](.*?)\[\/url\]/ism", [self::class, 'convertUrlForActivityPubCallback'], $text);
-					}
-				} else {
-					$text = preg_replace("(\[url\](.*?)\[\/url\])ism", " $1 ", $text);
-					$text = preg_replace_callback("&\[url=([^\[\]]*)\]\[img\](.*)\[\/img\]\[\/url\]&Usi", [self::class, 'removePictureLinksCallback'], $text);
-				}
-
 				// Bookmarks in red - will be converted to bookmarks in friendica
 				$text = preg_replace("/#\^\[url\](.*?)\[\/url\]/ism", '[bookmark=$1]$1[/bookmark]', $text);
 				$text = preg_replace("/#\^\[url\=(.*?)\](.*?)\[\/url\]/ism", '[bookmark=$1]$2[/bookmark]', $text);
@@ -1940,7 +1864,7 @@ class BBCode
 				}
 
 				// Perform URL Search
-				if ($try_oembed) {
+				if (!$for_plaintext && $try_oembed) {
 					$text = preg_replace_callback("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism", $try_oembed_callback, $text);
 				}
 
@@ -1968,6 +1892,14 @@ class BBCode
 				$expression = "=diaspora://.*?/post/([0-9A-Za-z\-_@.:]{15,254}[0-9A-Za-z])=ism";
 				$text = preg_replace($expression, DI::baseUrl() . "/display/$1", $text);
 
+				// Red compatibility, though the link can't be authenticated on Friendica
+				$text = preg_replace("/\[zrl\=(.*?)\](.*?)\[\/zrl\]/ism", '[url=$1]$2[/url]', $text);
+
+				if ($for_plaintext) {
+					$text = preg_replace("(\[url\](.*?)\[\/url\])ism", " $1 ", $text);
+					$text = preg_replace_callback("&\[url=([^\[\]]*)\]\[img\](.*)\[\/img\]\[\/url\]&Usi", [self::class, 'removePictureLinksCallback'], $text);
+				}
+
 				/* Tag conversion
 				 * Supports:
 				 * - #[url=<anything>]<term>[/url]
@@ -1988,18 +1920,17 @@ class BBCode
 					return $text;
 				});
 
+				if (in_array($simple_html, [self::INTERNAL, self::EXTERNAL, self::DIASPORA, self::OSTATUS, self::MASTODON_API, self::TWITTER_API, self::ACTIVITYPUB])) {
+					$text = self::shortenLinkDescription($text);
+				} else {
+					$text = self::unifyLinks($text);
+				}
+
 				// We need no target="_blank" rel="noopener noreferrer" for local links
 				// convert links start with DI::baseUrl() as local link without the target="_blank" rel="noopener noreferrer" attribute
-				$escapedBaseUrl = preg_quote(DI::baseUrl(), '/');
-				$text = preg_replace("/\[url\](" . $escapedBaseUrl . ".*?)\[\/url\]/ism", '<a href="$1">$1</a>', $text);
-				$text = preg_replace("/\[url\=(" . $escapedBaseUrl . ".*?)\](.*?)\[\/url\]/ism", '<a href="$1">$2</a>', $text);
+				$text = preg_replace("/\[url\=(" . preg_quote(DI::baseUrl(), '/') . ".*?)\](.*?)\[\/url\]/ism", '<a href="$1">$2</a>', $text);
 
-				$text = preg_replace("/\[url\](.*?)\[\/url\]/ism", '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>', $text);
 				$text = preg_replace("/\[url\=(.*?)\](.*?)\[\/url\]/ism", '<a href="$1" target="_blank" rel="noopener noreferrer">$2</a>', $text);
-
-				// Red compatibility, though the link can't be authenticated on Friendica
-				$text = preg_replace("/\[zrl\=(.*?)\](.*?)\[\/zrl\]/ism", '<a href="$1" target="_blank" rel="noopener noreferrer">$2</a>', $text);
-
 
 				// we may need to restrict this further if it picks up too many strays
 				// link acct:user@host to a webfinger profile redirector
@@ -2110,6 +2041,45 @@ class BBCode
 		DI::profiler()->stopRecording();
 
 		return trim($text);
+	}
+
+	private static function escapeUrl(string $url): string
+	{
+		return str_replace(['[', ']'], ['&#91;', '&#93;'], $url);
+	}
+
+	private static function unifyLinks(string $text): string
+	{
+		return preg_replace_callback(
+			"/\[url\](.*?)\[\/url\]/ism",
+			function ($match) {
+				return "[url=" . self::escapeUrl($match[1]) . "]" . $match[1] . "[/url]";
+			},
+			$text
+		);
+	}
+
+	private static function shortenLinkDescription(string $text): string
+	{
+		$text = preg_replace_callback(
+			"/\[url\](.*?)\[\/url\]/ism",
+			function ($match) {
+				return "[url=" . self::escapeUrl($match[1]) . "]" . Strings::getStyledURL($match[1]) . "[/url]";
+			},
+			$text
+		);
+		$text = preg_replace_callback(
+			"/\[url\=(.*?)\](.*?)\[\/url\]/ism",
+			function ($match) {
+				if ($match[1] == $match[2]) {
+					return "[url=" . self::escapeUrl($match[1]) . "]" . Strings::getStyledURL($match[2]) . "[/url]";
+				} else {
+					return "[url=" . self::escapeUrl($match[1]) . "]" . $match[2] . "[/url]";
+				}
+			},
+			$text
+		);
+		return $text;
 	}
 
 	/**

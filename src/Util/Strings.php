@@ -569,6 +569,10 @@ class Strings
 	public static function getStyledURL(string $url): string
 	{
 		$parts = parse_url($url);
+		if (empty($parts['scheme'])) {
+			return $url;
+		}
+
 		$scheme = [$parts['scheme'] . '://www.', $parts['scheme'] . '://'];
 		$styled_url = str_replace($scheme, '', $url);
 

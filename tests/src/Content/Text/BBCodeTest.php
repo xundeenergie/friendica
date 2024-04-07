@@ -25,6 +25,7 @@ use Friendica\Content\Text\BBCode;
 use Friendica\DI;
 use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Test\FixtureTest;
+use Friendica\Util\Strings;
 
 class BBCodeTest extends FixtureTest
 {
@@ -148,7 +149,7 @@ class BBCodeTest extends FixtureTest
 	public function testAutoLinking(string $data, bool $assertHTML)
 	{
 		$output = BBCode::convert($data);
-		$assert = $this->HTMLPurifier->purify('<a href="' . $data . '" target="_blank" rel="noopener noreferrer">' . $data . '</a>');
+		$assert = $this->HTMLPurifier->purify('<a href="' . $data . '" target="_blank" rel="noopener noreferrer">' . Strings::getStyledURL($data) . '</a>');
 		if ($assertHTML) {
 			self::assertEquals($assert, $output);
 		} else {
@@ -160,21 +161,21 @@ class BBCodeTest extends FixtureTest
 	{
 		return [
 			'bug-7271-condensed-space' => [
-				'expectedHtml' => '<ol><li> <a href="http://example.com/" target="_blank" rel="noopener noreferrer">http://example.com/</a></li></ol>',
+				'expectedHtml' => '<ol><li> <a href="http://example.com/" target="_blank" rel="noopener noreferrer">example.com/</a></li></ol>',
 				'text' => '[ol][li] http://example.com/[/ol]',
 			],
 			'bug-7271-condensed-nospace' => [
-				'expectedHtml' => '<ol><li><a href="http://example.com/" target="_blank" rel="noopener noreferrer">http://example.com/</a></li></ol>',
+				'expectedHtml' => '<ol><li><a href="http://example.com/" target="_blank" rel="noopener noreferrer">example.com/</a></li></ol>',
 				'text' => '[ol][li]http://example.com/[/ol]',
 			],
 			'bug-7271-indented-space' => [
-				'expectedHtml' => '<ul><li> <a href="http://example.com/" target="_blank" rel="noopener noreferrer">http://example.com/</a></li></ul>',
+				'expectedHtml' => '<ul><li> <a href="http://example.com/" target="_blank" rel="noopener noreferrer">example.com/</a></li></ul>',
 				'text' => '[ul]
 [li] http://example.com/
 [/ul]',
 			],
 			'bug-7271-indented-nospace' => [
-				'expectedHtml' => '<ul><li><a href="http://example.com/" target="_blank" rel="noopener noreferrer">http://example.com/</a></li></ul>',
+				'expectedHtml' => '<ul><li><a href="http://example.com/" target="_blank" rel="noopener noreferrer">example.com/</a></li></ul>',
 				'text' => '[ul]
 [li]http://example.com/
 [/ul]',
