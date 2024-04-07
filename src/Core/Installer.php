@@ -495,6 +495,13 @@ class Installer
 		);
 		$returnVal = $returnVal ? $status : false;
 
+		$status = $this->checkFunction('idn_to_ascii',
+			DI::l10n()->t('IDN Functions PHP module'),
+			DI::l10n()->t('Error: IDN Functions PHP module required but not installed.'),
+			true
+		);
+		$returnVal = $returnVal ? $status : false;
+
 		return $returnVal;
 	}
 

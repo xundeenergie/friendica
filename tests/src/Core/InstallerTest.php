@@ -110,6 +110,8 @@ class InstallerTest extends MockedTest
 		$this->mockL10nT('Error: File Information PHP module required but not installed.', 1);
 		$this->mockL10nT('GNU Multiple Precision PHP module', 1);
 		$this->mockL10nT('Error: GNU Multiple Precision PHP module required but not installed.', 1);
+		$this->mockL10nT('IDN Functions PHP module', 1);
+		$this->mockL10nT('Error: IDN Functions PHP module required but not installed.', 1);
 		$this->mockL10nT('Program execution functions', 1);
 		$this->mockL10nT('Error: Program execution functions (proc_open) required but not enabled.', 1);
 	}
