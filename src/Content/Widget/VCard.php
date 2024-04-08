@@ -43,9 +43,10 @@ class VCard
 	 * @template widget/vcard.tpl
 	 * @param array $contact
 	 * @param bool  $hide_mention
+	 * @param bool  $hide_follow
 	 * @return string
 	 */
-	public static function getHTML(array $contact, bool $hide_mention = false): string
+	public static function getHTML(array $contact, bool $hide_mention = false, bool $hide_follow = false): string
 	{
 		if (!isset($contact['network']) || !isset($contact['id'])) {
 			Logger::warning('Incomplete contact', ['contact' => $contact ?? []]);
@@ -87,7 +88,7 @@ class VCard
 				}
 			}
 
-			if (empty($contact['self']) && Protocol::supportsFollow($contact['network'])) {
+			if (!$hide_follow && empty($contact['self']) && Protocol::supportsFollow($contact['network'])) {
 				if (in_array($rel, [Contact::SHARING, Contact::FRIEND])) {
 					$unfollow_link = 'contact/unfollow?url=' . urlencode($contact_url) . '&auto=1';
 				} elseif (!$pending) {
