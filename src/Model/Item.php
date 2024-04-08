@@ -3990,6 +3990,13 @@ class Item
 			$plink = $item['uri'];
 		}
 
+		if (($item['post-reason'] == self::PR_ANNOUNCEMENT) && ($item['owner-contact-type'] == Contact::TYPE_COMMUNITY) && ($item['owner-network'] == Protocol::DFRN)) {
+			$contact = Contact::getById($item['owner-id'], ['baseurl']);
+			if (!empty($contact['baseurl'])) {
+				$plink = $contact['baseurl'] . '/display/' . $item['guid'];
+			}
+		}
+
 		if (DI::userSession()->getLocalUserId()) {
 			$ret = [
 				'href' => "display/" . $item['guid'],
