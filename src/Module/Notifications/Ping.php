@@ -191,7 +191,7 @@ class Ping extends BaseModule
 				if (!$this->notify->shouldShowOnDesktop($notification)) {
 					return null;
 				}
-				if (($notification->type == Post\UserNotification::TYPE_NONE) && in_array($owner['page-flags'], [User::PAGE_FLAGS_NORMAL, User::PAGE_FLAGS_PRVGROUP])) {
+				if (($notification->type == Post\UserNotification::TYPE_NONE) && in_array($owner['page-flags'], [User::PAGE_FLAGS_NORMAL, User::PAGE_FLAGS_PRVGROUP, User::PAGE_FLAGS_COMM_MAN])) {
 					return null;
 				}
 				try {

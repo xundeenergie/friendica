@@ -73,6 +73,7 @@ class User
 	const PAGE_FLAGS_FREELOVE  = 3;
 	const PAGE_FLAGS_BLOG      = 4;
 	const PAGE_FLAGS_PRVGROUP  = 5;
+	const PAGE_FLAGS_COMM_MAN  = 6;
 	/**
 	 * @}
 	 */

@@ -71,6 +71,7 @@ class UpdateCredentials extends BaseApi
 		}
 
 		if ($user['account-type'] == Contact::TYPE_COMMUNITY) {
+			// @todo Support for PAGE_FLAGS_COMM_MAN
 			$user['page-flags'] = $request['locked'] ? User::PAGE_FLAGS_PRVGROUP : User::PAGE_FLAGS_COMMUNITY;
 		} elseif ($user['account-type'] == Contact::TYPE_PERSON) {
 			if ($request['locked']) {

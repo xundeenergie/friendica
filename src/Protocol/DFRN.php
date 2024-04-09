@@ -392,7 +392,7 @@ class DFRN
 		}
 
 		// For backward compatibility we keep this element
-		if ($owner['page-flags'] == User::PAGE_FLAGS_COMMUNITY) {
+		if (in_array($owner['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN])) {
 			XML::addElement($doc, $root, 'dfrn:community', 1);
 		}
 

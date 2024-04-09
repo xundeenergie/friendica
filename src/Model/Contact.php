@@ -892,10 +892,10 @@ class Contact
 
 		$fields['avatar'] = User::getAvatarUrl($user);
 		$fields['header'] = User::getBannerUrl($user);
-		$fields['forum'] = $user['page-flags'] == User::PAGE_FLAGS_COMMUNITY;
+		$fields['forum'] = in_array($user['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN]);
 		$fields['prv'] = $user['page-flags'] == User::PAGE_FLAGS_PRVGROUP;
 		$fields['unsearchable'] = !$profile['net-publish'];
-		$fields['manually-approve'] = in_array($user['page-flags'], [User::PAGE_FLAGS_NORMAL, User::PAGE_FLAGS_PRVGROUP]);
+		$fields['manually-approve'] = in_array($user['page-flags'], [User::PAGE_FLAGS_NORMAL, User::PAGE_FLAGS_PRVGROUP, User::PAGE_FLAGS_COMM_MAN]);
 		$fields['baseurl'] = DI::baseUrl();
 		$fields['gsid'] = GServer::getID($fields['baseurl'], true);
 
