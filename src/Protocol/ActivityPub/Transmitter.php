@@ -322,16 +322,17 @@ class Transmitter
 	}
 
 	/**
-	 * Return the service array containing information the used software and it's url
+	 * Return the service array containing information the used software and its url
 	 *
 	 * @return array with service data
 	 */
 	public static function getService(): array
 	{
 		return [
-			'type' => 'Service',
+			'id'   => (string)DI::baseUrl() . '/friendica',
+			'type' => 'Application',
 			'name' =>  App::PLATFORM . " '" . App::CODENAME . "' " . App::VERSION . '-' . DB_UPDATE_VERSION,
-			'url' => (string)DI::baseUrl()
+			'url'  => (string)DI::baseUrl(),
 		];
 	}
 

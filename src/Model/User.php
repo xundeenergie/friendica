@@ -25,6 +25,7 @@ use DivineOmega\DOFileCachePSR6\CacheItemPool;
 use DivineOmega\PasswordExposed;
 use ErrorException;
 use Exception;
+use Friendica\App;
 use Friendica\Content\Pager;
 use Friendica\Core\Hook;
 use Friendica\Core\L10n;
@@ -161,6 +162,7 @@ class User
 			}
 		}
 
+		$system['name'] = App::PLATFORM . " '" . App::CODENAME . "' " . App::VERSION . '-' . DB_UPDATE_VERSION;
 		$system['sprvkey'] = $system['uprvkey'] = $system['prvkey'];
 		$system['spubkey'] = $system['upubkey'] = $system['pubkey'];
 		$system['nickname'] = $system['nick'];
