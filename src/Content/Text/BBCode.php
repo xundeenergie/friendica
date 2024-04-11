@@ -1805,132 +1805,7 @@ class BBCode
 					$text = '<span style="font-size: xx-large; line-height: normal;">' . $text . '</span>';
 				}
 
-				$text = preg_replace_callback("/\[(url)\](.*?)\[\/url\]/ism", [self::class, 'sanitizeLinksCallback'], $text);
-				$text = preg_replace_callback("/\[(url)\=(.*?)\](.*?)\[\/url\]/ism", [self::class, 'sanitizeLinksCallback'], $text);
-
-				// Handle mentions and hashtag links
-				if ($simple_html == self::DIASPORA) {
-					// The ! is converted to @ since Diaspora only understands the @
-					$text = preg_replace(
-						"/([@!])\[url\=(.*?)\](.*?)\[\/url\]/ism",
-						'@<a href="$2">$3</a>',
-						$text
-					);
-				} elseif (in_array($simple_html, [self::OSTATUS, self::ACTIVITYPUB])) {
-					$text = preg_replace(
-						"/([@!])\[url\=(.*?)\](.*?)\[\/url\]/ism",
-						'<span class="h-card"><a href="$2" class="u-url mention">$1<span>$3</span></a></span>',
-						$text
-					);
-					$text = preg_replace(
-						"/([#])\[url\=(.*?)\](.*?)\[\/url\]/ism",
-						'<a href="$2" class="mention hashtag" rel="tag">$1<span>$3</span></a>',
-						$text
-					);
-				} elseif (in_array($simple_html, [self::INTERNAL, self::EXTERNAL, self::TWITTER_API])) {
-					$text = preg_replace(
-						"/([@!])\[url\=(.*?)\](.*?)\[\/url\]/ism",
-						'<bdi>$1<a href="$2" class="userinfo mention" title="$3">$3</a></bdi>',
-						$text
-					);
-				} elseif ($simple_html == self::MASTODON_API) {
-					$text = preg_replace(
-						"/([@!])\[url\=(.*?)\](.*?)\[\/url\]/ism",
-						'<a class="u-url mention status-link" href="$2" rel="nofollow noopener noreferrer" target="_blank" title="$3">$1<span>$3</span></a>',
-						$text
-					);
-					$text = preg_replace(
-						"/([#])\[url\=(.*?)\](.*?)\[\/url\]/ism",
-						'<a class="mention hashtag status-link" href="$2" rel="tag">$1<span>$3</span></a>',
-						$text
-					);
-				} else {
-					$text = preg_replace("/([#@!])\[url\=(.*?)\](.*?)\[\/url\]/ism", '$1$3', $text);
-				}
-
-				// Bookmarks in red - will be converted to bookmarks in friendica
-				$text = preg_replace("/#\^\[url\](.*?)\[\/url\]/ism", '[bookmark=$1]$1[/bookmark]', $text);
-				$text = preg_replace("/#\^\[url\=(.*?)\](.*?)\[\/url\]/ism", '[bookmark=$1]$2[/bookmark]', $text);
-				$text = preg_replace(
-					"/#\[url\=.*?\]\^\[\/url\]\[url\=(.*?)\](.*?)\[\/url\]/i",
-					"[bookmark=$1]$2[/bookmark]",
-					$text
-				);
-
-				if (in_array($simple_html, [self::OSTATUS, self::TWITTER, self::BLUESKY])) {
-					$text = preg_replace_callback("/([^#@!])\[url\=([^\]]*)\](.*?)\[\/url\]/ism", [self::class, 'expandLinksCallback'], $text);
-					//$text = preg_replace("/[^#@!]\[url\=([^\]]*)\](.*?)\[\/url\]/ism", ' $2 [url]$1[/url]', $text);
-					$text = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism", ' $2 [url]$1[/url]', $text);
-				}
-
-				// Perform URL Search
-				if (!$for_plaintext && $try_oembed) {
-					$text = preg_replace_callback("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism", $try_oembed_callback, $text);
-				}
-
-				$text = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism", '[url=$1]$2[/url]', $text);
-
-				// Handle Diaspora posts
-				$text = preg_replace_callback(
-					"&\[url=/?posts/([^\[\]]*)\](.*)\[\/url\]&Usi",
-					function ($match) {
-						return "[url=" . DI::baseUrl() . "/display/" . $match[1] . "]" . $match[2] . "[/url]";
-					},
-					$text
-				);
-
-				$text = preg_replace_callback(
-					"&\[url=/people\?q\=(.*)\](.*)\[\/url\]&Usi",
-					function ($match) {
-						return "[url=" . DI::baseUrl() . "/search?search=%40" . $match[1] . "]" . $match[2] . "[/url]";
-					},
-					$text
-				);
-
-				// Server independent link to posts and comments
-				// See issue: https://github.com/diaspora/diaspora_federation/issues/75
-				$expression = "=diaspora://.*?/post/([0-9A-Za-z\-_@.:]{15,254}[0-9A-Za-z])=ism";
-				$text = preg_replace($expression, DI::baseUrl() . "/display/$1", $text);
-
-				// Red compatibility, though the link can't be authenticated on Friendica
-				$text = preg_replace("/\[zrl\=(.*?)\](.*?)\[\/zrl\]/ism", '[url=$1]$2[/url]', $text);
-
-				if ($for_plaintext) {
-					$text = preg_replace("(\[url\](.*?)\[\/url\])ism", " $1 ", $text);
-					$text = preg_replace_callback("&\[url=([^\[\]]*)\]\[img\](.*)\[\/img\]\[\/url\]&Usi", [self::class, 'removePictureLinksCallback'], $text);
-				}
-
-				/* Tag conversion
-				 * Supports:
-				 * - #[url=<anything>]<term>[/url]
-				 * - [url=<anything>]#<term>[/url]
-				 */
-				self::performWithEscapedTags($text, ['url', 'share'], function ($text) use ($simple_html) {
-					$text = preg_replace_callback("/(?:#\[url\=[^\[\]]*\]|\[url\=[^\[\]]*\]#)(.*?)\[\/url\]/ism", function ($matches) use ($simple_html) {
-						if ($simple_html == self::ACTIVITYPUB) {
-							return '<a href="' . DI::baseUrl() . '/search?tag=' . urlencode($matches[1])
-								. '" data-tag="' . XML::escape($matches[1]) . '" rel="tag ugc">#'
-								. XML::escape($matches[1]) . '</a>';
-						} else {
-							return '#<a href="' . DI::baseUrl() . '/search?tag=' . urlencode($matches[1])
-								. '" class="tag" rel="tag" title="' . XML::escape($matches[1]) . '">'
-								. XML::escape($matches[1]) . '</a>';
-						}
-					}, $text);
-					return $text;
-				});
-
-				if (in_array($simple_html, [self::INTERNAL, self::EXTERNAL, self::DIASPORA, self::OSTATUS, self::MASTODON_API, self::TWITTER_API, self::ACTIVITYPUB])) {
-					$text = self::shortenLinkDescription($text);
-				} else {
-					$text = self::unifyLinks($text);
-				}
-
-				// We need no target="_blank" rel="noopener noreferrer" for local links
-				// convert links start with DI::baseUrl() as local link without the target="_blank" rel="noopener noreferrer" attribute
-				$text = preg_replace("/\[url\=(" . preg_quote(DI::baseUrl(), '/') . ".*?)\](.*?)\[\/url\]/ism", '<a href="$1">$2</a>', $text);
-
-				$text = preg_replace("/\[url\=(.*?)\](.*?)\[\/url\]/ism", '<a href="$1" target="_blank" rel="noopener noreferrer">$2</a>', $text);
+				$text = self::convertUrlToHtml($text, $simple_html, $for_plaintext, $try_oembed, $try_oembed_callback);
 
 				// we may need to restrict this further if it picks up too many strays
 				// link acct:user@host to a webfinger profile redirector
@@ -2041,6 +1916,137 @@ class BBCode
 		DI::profiler()->stopRecording();
 
 		return trim($text);
+	}
+
+	private static function convertUrlToHtml(string $text, int $simple_html, bool $for_plaintext, bool $try_oembed, \Closure $try_oembed_callback): string
+	{
+		$text = preg_replace_callback("/\[(url)\](.*?)\[\/url\]/ism", [self::class, 'sanitizeLinksCallback'], $text);
+		$text = preg_replace_callback("/\[(url)\=(.*?)\](.*?)\[\/url\]/ism", [self::class, 'sanitizeLinksCallback'], $text);
+
+		// Handle mentions and hashtag links
+		if ($simple_html == self::DIASPORA) {
+			// The ! is converted to @ since Diaspora only understands the @
+			$text = preg_replace(
+				"/([@!])\[url\=(.*?)\](.*?)\[\/url\]/ism",
+				'@<a href="$2">$3</a>',
+				$text
+			);
+		} elseif (in_array($simple_html, [self::OSTATUS, self::ACTIVITYPUB])) {
+			$text = preg_replace(
+				"/([@!])\[url\=(.*?)\](.*?)\[\/url\]/ism",
+				'<span class="h-card"><a href="$2" class="u-url mention">$1<span>$3</span></a></span>',
+				$text
+			);
+			$text = preg_replace(
+				"/([#])\[url\=(.*?)\](.*?)\[\/url\]/ism",
+				'<a href="$2" class="mention hashtag" rel="tag">$1<span>$3</span></a>',
+				$text
+			);
+		} elseif (in_array($simple_html, [self::INTERNAL, self::EXTERNAL, self::TWITTER_API])) {
+			$text = preg_replace(
+				"/([@!])\[url\=(.*?)\](.*?)\[\/url\]/ism",
+				'<bdi>$1<a href="$2" class="userinfo mention" title="$3">$3</a></bdi>',
+				$text
+			);
+		} elseif ($simple_html == self::MASTODON_API) {
+			$text = preg_replace(
+				"/([@!])\[url\=(.*?)\](.*?)\[\/url\]/ism",
+				'<a class="u-url mention status-link" href="$2" rel="nofollow noopener noreferrer" target="_blank" title="$3">$1<span>$3</span></a>',
+				$text
+			);
+			$text = preg_replace(
+				"/([#])\[url\=(.*?)\](.*?)\[\/url\]/ism",
+				'<a class="mention hashtag status-link" href="$2" rel="tag">$1<span>$3</span></a>',
+				$text
+			);
+		} else {
+			$text = preg_replace("/([#@!])\[url\=(.*?)\](.*?)\[\/url\]/ism", '$1$3', $text);
+		}
+
+		if ($for_plaintext) {
+			$text = preg_replace("(\[url\](.*?)\[\/url\])ism", " $1 ", $text);
+			$text = preg_replace_callback("&\[url=([^\[\]]*)\]\[img\](.*)\[\/img\]\[\/url\]&Usi", [self::class, 'removePictureLinksCallback'], $text);
+		}
+
+		// Bookmarks in red - will be converted to bookmarks in friendica
+		$text = preg_replace("/#\^\[url\](.*?)\[\/url\]/ism", '[bookmark=$1]$1[/bookmark]', $text);
+		$text = preg_replace("/#\^\[url\=(.*?)\](.*?)\[\/url\]/ism", '[bookmark=$1]$2[/bookmark]', $text);
+		$text = preg_replace(
+			"/#\[url\=.*?\]\^\[\/url\]\[url\=(.*?)\](.*?)\[\/url\]/i",
+			"[bookmark=$1]$2[/bookmark]",
+			$text
+		);
+
+		if (in_array($simple_html, [self::OSTATUS, self::TWITTER, self::BLUESKY])) {
+			$text = preg_replace_callback("/([^#@!])\[url\=([^\]]*)\](.*?)\[\/url\]/ism", [self::class, 'expandLinksCallback'], $text);
+			//$text = preg_replace("/[^#@!]\[url\=([^\]]*)\](.*?)\[\/url\]/ism", ' $2 [url]$1[/url]', $text);
+			$text = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism", ' $2 [url]$1[/url]', $text);
+		}
+
+		// Perform URL Search
+		if ($try_oembed) {
+			$text = preg_replace_callback("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism", $try_oembed_callback, $text);
+		}
+
+		$text = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism", '[url=$1]$2[/url]', $text);
+
+		// Handle Diaspora posts
+		$text = preg_replace_callback(
+			"&\[url=/?posts/([^\[\]]*)\](.*)\[\/url\]&Usi",
+			function ($match) {
+				return "[url=" . DI::baseUrl() . "/display/" . $match[1] . "]" . $match[2] . "[/url]";
+			},
+			$text
+		);
+
+		$text = preg_replace_callback(
+			"&\[url=/people\?q\=(.*)\](.*)\[\/url\]&Usi",
+			function ($match) {
+				return "[url=" . DI::baseUrl() . "/search?search=%40" . $match[1] . "]" . $match[2] . "[/url]";
+			},
+			$text
+		);
+
+		// Server independent link to posts and comments
+		// See issue: https://github.com/diaspora/diaspora_federation/issues/75
+		$expression = "=diaspora://.*?/post/([0-9A-Za-z\-_@.:]{15,254}[0-9A-Za-z])=ism";
+		$text = preg_replace($expression, DI::baseUrl() . "/display/$1", $text);
+
+		/* Tag conversion
+		 * Supports:
+		 * - #[url=<anything>]<term>[/url]
+		 * - [url=<anything>]#<term>[/url]
+		 */
+		self::performWithEscapedTags($text, ['url', 'share'], function ($text) use ($simple_html) {
+			$text = preg_replace_callback("/(?:#\[url\=[^\[\]]*\]|\[url\=[^\[\]]*\]#)(.*?)\[\/url\]/ism", function ($matches) use ($simple_html) {
+				if ($simple_html == self::ACTIVITYPUB) {
+					return '<a href="' . DI::baseUrl() . '/search?tag=' . urlencode($matches[1])
+						. '" data-tag="' . XML::escape($matches[1]) . '" rel="tag ugc">#'
+						. XML::escape($matches[1]) . '</a>';
+				} else {
+					return '#<a href="' . DI::baseUrl() . '/search?tag=' . urlencode($matches[1])
+						. '" class="tag" rel="tag" title="' . XML::escape($matches[1]) . '">'
+						. XML::escape($matches[1]) . '</a>';
+				}
+			}, $text);
+			return $text;
+		});
+
+		// Red compatibility, though the link can't be authenticated on Friendica
+		$text = preg_replace("/\[zrl\=(.*?)\](.*?)\[\/zrl\]/ism", '[url=$1]$2[/url]', $text);
+
+		if (in_array($simple_html, [self::INTERNAL, self::EXTERNAL, self::DIASPORA, self::OSTATUS, self::MASTODON_API, self::TWITTER_API, self::ACTIVITYPUB])) {
+			$text = self::shortenLinkDescription($text);
+		} else {
+			$text = self::unifyLinks($text);
+		}
+
+		// We need no target="_blank" rel="noopener noreferrer" for local links
+		// convert links start with DI::baseUrl() as local link without the target="_blank" rel="noopener noreferrer" attribute
+		$text = preg_replace("/\[url\=(" . preg_quote(DI::baseUrl(), '/') . ".*?)\](.*?)\[\/url\]/ism", '<a href="$1">$2</a>', $text);
+
+		$text = preg_replace("/\[url\=(.*?)\](.*?)\[\/url\]/ism", '<a href="$1" target="_blank" rel="noopener noreferrer">$2</a>', $text);
+		return $text;
 	}
 
 	private static function escapeUrl(string $url): string
