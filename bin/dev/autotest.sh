@@ -152,8 +152,8 @@ function execute_tests() {
             echo "To use the docker container set the USEDOCKER environment variable"
             exit 3
           fi
-          mysql -u "${DATABASE_USER}" -pfriendica -e "DROP DATABASE IF EXISTS ${DATABASE_NAME}" -h ${DATABASE_HOST} || true
-          mysql -u "${DATABASE_USER}" -pfriendica -e "CREATE DATABASE ${DATABASE_NAME} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci" -h ${DATABASE_HOST}
+          mysql -u "${DATABASE_USER}" -p"${DATABASE_PASSWORD}" -e "DROP DATABASE IF EXISTS ${DATABASE_NAME}" -h ${DATABASE_HOST} || true
+          mysql -u "${DATABASE_USER}" -p"${DATABASE_PASSWORD}" -e "CREATE DATABASE ${DATABASE_NAME} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci" -h ${DATABASE_HOST}
         else
           DATABASE_HOST=mysql
         fi
@@ -185,8 +185,8 @@ function execute_tests() {
             echo "To use the docker container set the USEDOCKER environment variable"
             exit 3
           fi
-          mysql -u "${DATABASE_USER}" -pfriendica -e "DROP DATABASE IF EXISTS ${DATABASE_NAME}" -h ${DATABASE_HOST} || true
-          mysql -u "${DATABASE_USER}" -pfriendica -e "CREATE DATABASE ${DATABASE_NAME} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci" -h ${DATABASE_HOST}
+          mysql -u "${DATABASE_USER}" -p"${DATABASE_PASSWORD}" -e "DROP DATABASE IF EXISTS ${DATABASE_NAME}" -h ${DATABASE_HOST} || true
+          mysql -u "${DATABASE_USER}" -p"${DATABASE_PASSWORD}" -e "CREATE DATABASE ${DATABASE_NAME} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci" -h ${DATABASE_HOST}
         else
           DATABASE_HOST=mariadb
         fi
@@ -203,7 +203,7 @@ function execute_tests() {
 
     if [ -n "${USEDOCKER}" ]; then
       echo "Initialize database..."
-      docker exec ${DOCKER_CONTAINER_ID} mysql -u root -pfriendica -e "CREATE DATABASE IF NOT EXISTS ${DATABASE_NAME};"
+      docker exec ${DOCKER_CONTAINER_ID} mysql -u root -p"${DATABASE_PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS ${DATABASE_NAME};"
     fi
 
     export MYSQL_HOST="${DATABASE_HOST}"
