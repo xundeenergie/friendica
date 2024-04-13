@@ -591,6 +591,9 @@ class Image
 		if (!$this->isValid()) {
 			return false;
 		}
+		if ($dest_width <= 0 || $dest_height <= 0) {
+			return false;
+		}
 
 		if ($this->isImagick()) {
 			/*
