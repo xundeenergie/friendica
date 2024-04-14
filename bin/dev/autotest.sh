@@ -138,9 +138,9 @@ function execute_tests() {
       if [ -n "${USEDOCKER}" ]; then
         echo "Fire up the mysql docker"
         DOCKER_CONTAINER_ID=$(docker run \
-          -e MYSQL_ROOT_PASSWORD=friendica \
+          -e MYSQL_ROOT_PASSWORD="${DATABASE_PASSWORD}" \
           -e MYSQL_USER="${DATABASE_USER}" \
-          -e MYSQL_PASSWORD=friendica \
+          -e MYSQL_PASSWORD="${DATABASE_PASSWORD}" \
           -e MYSQL_DATABASE="${DATABASE_NAME}" \
           -d mysql)
         DATABASE_HOST=$(docker inspect --format="{{.NetworkSettings.IPAddress}}" "${DOCKER_CONTAINER_ID}")
@@ -171,9 +171,9 @@ function execute_tests() {
       if [ -n "${USEDOCKER}" ]; then
         echo "Fire up the mariadb docker"
         DOCKER_CONTAINER_ID=$(docker run \
-          -e MYSQL_ROOT_PASSWORD=friendica \
+          -e MYSQL_ROOT_PASSWORD="${DATABASE_PASSWORD}" \
           -e MYSQL_USER="${DATABASE_USER}" \
-          -e MYSQL_PASSWORD=friendica \
+          -e MYSQL_PASSWORD="${DATABASE_PASSWORD}" \
           -e MYSQL_DATABASE="${DATABASE_NAME}" \
           -d mariadb)
         DATABASE_HOST=$(docker inspect --format="{{.NetworkSettings.IPAddress}}" "${DOCKER_CONTAINER_ID}")
@@ -210,7 +210,7 @@ function execute_tests() {
 
     #call installer
     echo "Installing Friendica..."
-    "${PHP}" ./bin/console.php autoinstall --dbuser="${DATABASE_USER}" --dbpass=friendica --dbdata="${DATABASE_NAME}" --dbhost="${DATABASE_HOST}" --url=https://friendica.local --admin=admin@friendica.local
+    "${PHP}" ./bin/console.php autoinstall --dbuser="${DATABASE_USER}" --dbpass="${DATABASE_PASSWORD}" --dbdata="${DATABASE_NAME}" --dbhost="${DATABASE_HOST}" --url=https://friendica.local --admin=admin@friendica.local
   fi
 
   #test execution
