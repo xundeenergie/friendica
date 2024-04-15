@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.06-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-07 16:31+0000\n"
+"POT-Creation-Date: 2024-04-13 11:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -957,7 +957,7 @@ msgstr ""
 msgid "Enter user nickname: "
 msgstr ""
 
-#: src/Console/User.php:182 src/Model/User.php:820
+#: src/Console/User.php:182 src/Model/User.php:822
 #: src/Module/Api/Twitter/ContactEndpoint.php:74
 #: src/Module/Moderation/Users/Active.php:71
 #: src/Module/Moderation/Users/Blocked.php:71
@@ -1381,7 +1381,7 @@ msgstr ""
 msgid "Public post"
 msgstr ""
 
-#: src/Content/Conversation.php:424 src/Content/Widget/VCard.php:130
+#: src/Content/Conversation.php:424 src/Content/Widget/VCard.php:131
 #: src/Model/Profile.php:482 src/Module/Admin/Logs/View.php:92
 #: src/Module/Post/Edit.php:181
 msgid "Message"
@@ -1733,7 +1733,7 @@ msgstr ""
 
 #: src/Content/Feature.php:130 src/Content/GroupManager.php:147
 #: src/Content/Nav.php:278 src/Content/Text/HTML.php:881
-#: src/Content/Widget.php:538 src/Model/User.php:1386
+#: src/Content/Widget.php:538 src/Model/User.php:1388
 msgid "Groups"
 msgstr ""
 
@@ -2266,39 +2266,39 @@ msgstr ""
 msgid "last"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:767 src/Content/Text/BBCode.php:1764
-#: src/Content/Text/BBCode.php:1765
+#: src/Content/Text/BBCode.php:701 src/Content/Text/BBCode.php:1843
+#: src/Content/Text/BBCode.php:1844
 msgid "Image/photo"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:985
+#: src/Content/Text/BBCode.php:919
 #, php-format
 msgid ""
 "<a href=\"%1$s\" target=\"_blank\" rel=\"noopener noreferrer\">%2$s</a> %3$s"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:1010 src/Model/Item.php:4014
-#: src/Model/Item.php:4020 src/Model/Item.php:4021
+#: src/Content/Text/BBCode.php:944 src/Model/Item.php:4021
+#: src/Model/Item.php:4027 src/Model/Item.php:4028
 msgid "Link to source"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:1671 src/Content/Text/HTML.php:905
+#: src/Content/Text/BBCode.php:1724 src/Content/Text/HTML.php:905
 msgid "Click to open/close"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:1704
+#: src/Content/Text/BBCode.php:1779
 msgid "$1 wrote:"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:1769 src/Content/Text/BBCode.php:1770
+#: src/Content/Text/BBCode.php:1853 src/Content/Text/BBCode.php:1854
 msgid "Encrypted content"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:2033
+#: src/Content/Text/BBCode.php:2159
 msgid "Invalid source protocol"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:2052
+#: src/Content/Text/BBCode.php:2178
 msgid "Invalid link protocol"
 msgstr ""
 
@@ -2310,7 +2310,7 @@ msgstr ""
 msgid "The end"
 msgstr ""
 
-#: src/Content/Text/HTML.php:860 src/Content/Widget/VCard.php:126
+#: src/Content/Text/HTML.php:860 src/Content/Widget/VCard.php:127
 #: src/Model/Profile.php:476 src/Module/Contact/Profile.php:477
 msgid "Follow"
 msgstr ""
@@ -2483,27 +2483,27 @@ msgstr[1] ""
 msgid "More Trending Tags"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:104 src/Model/Contact.php:1205
+#: src/Content/Widget/VCard.php:105 src/Model/Contact.php:1205
 #: src/Model/Profile.php:461
 msgid "Post to group"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:109 src/Model/Contact.php:1209
+#: src/Content/Widget/VCard.php:110 src/Model/Contact.php:1209
 #: src/Model/Profile.php:465 src/Module/Moderation/Item/Source.php:85
 msgid "Mention"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:119 src/Model/Profile.php:380
+#: src/Content/Widget/VCard.php:120 src/Model/Profile.php:380
 #: src/Module/Contact/Profile.php:413 src/Module/Profile/Profile.php:199
 msgid "XMPP:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:120 src/Model/Profile.php:381
+#: src/Content/Widget/VCard.php:121 src/Model/Profile.php:381
 #: src/Module/Contact/Profile.php:415 src/Module/Profile/Profile.php:203
 msgid "Matrix:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:121 src/Model/Event.php:82
+#: src/Content/Widget/VCard.php:122 src/Model/Event.php:82
 #: src/Model/Event.php:109 src/Model/Event.php:471 src/Model/Event.php:960
 #: src/Model/Profile.php:375 src/Module/Contact/Profile.php:411
 #: src/Module/Directory.php:147 src/Module/Notifications/Introductions.php:187
@@ -2511,18 +2511,18 @@ msgstr ""
 msgid "Location:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:124 src/Model/Profile.php:489
+#: src/Content/Widget/VCard.php:125 src/Model/Profile.php:489
 #: src/Module/Notifications/Introductions.php:201
 msgid "Network:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:128 src/Model/Contact.php:1237
+#: src/Content/Widget/VCard.php:129 src/Model/Contact.php:1237
 #: src/Model/Contact.php:1249 src/Model/Profile.php:478
 #: src/Module/Contact/Profile.php:469
 msgid "Unfollow"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:134 src/Model/Contact.php:1207
+#: src/Content/Widget/VCard.php:135 src/Model/Contact.php:1207
 #: src/Model/Profile.php:463
 msgid "View group"
 msgstr ""
@@ -3568,7 +3568,7 @@ msgstr[1] ""
 msgid "Poll end: %s"
 msgstr ""
 
-#: src/Model/Item.php:3997 src/Model/Item.php:3998
+#: src/Model/Item.php:4004 src/Model/Item.php:4005
 msgid "View on separate page"
 msgstr ""
 
@@ -3726,145 +3726,145 @@ msgstr ""
 msgid "Contact information and Social Networks"
 msgstr ""
 
-#: src/Model/User.php:229 src/Model/User.php:1299
+#: src/Model/User.php:231 src/Model/User.php:1301
 msgid "SERIOUS ERROR: Generation of security keys failed."
 msgstr ""
 
-#: src/Model/User.php:729 src/Model/User.php:762
+#: src/Model/User.php:731 src/Model/User.php:764
 msgid "Login failed"
 msgstr ""
 
-#: src/Model/User.php:794
+#: src/Model/User.php:796
 msgid "Not enough information to authenticate"
 msgstr ""
 
-#: src/Model/User.php:919
+#: src/Model/User.php:921
 msgid "Password can't be empty"
 msgstr ""
 
-#: src/Model/User.php:961
+#: src/Model/User.php:963
 msgid "Empty passwords are not allowed."
 msgstr ""
 
-#: src/Model/User.php:965
+#: src/Model/User.php:967
 msgid ""
 "The new password has been exposed in a public data dump, please choose "
 "another."
 msgstr ""
 
-#: src/Model/User.php:969
+#: src/Model/User.php:971
 msgid "The password length is limited to 72 characters."
 msgstr ""
 
-#: src/Model/User.php:973
+#: src/Model/User.php:975
 msgid "The password can't contain white spaces nor accentuated letters"
 msgstr ""
 
-#: src/Model/User.php:1182
+#: src/Model/User.php:1184
 msgid "Passwords do not match. Password unchanged."
 msgstr ""
 
-#: src/Model/User.php:1189
+#: src/Model/User.php:1191
 msgid "An invitation is required."
 msgstr ""
 
-#: src/Model/User.php:1193
+#: src/Model/User.php:1195
 msgid "Invitation could not be verified."
 msgstr ""
 
-#: src/Model/User.php:1201
+#: src/Model/User.php:1203
 msgid "Invalid OpenID url"
 msgstr ""
 
-#: src/Model/User.php:1214 src/Security/Authentication.php:230
+#: src/Model/User.php:1216 src/Security/Authentication.php:230
 msgid ""
 "We encountered a problem while logging in with the OpenID you provided. "
 "Please check the correct spelling of the ID."
 msgstr ""
 
-#: src/Model/User.php:1214 src/Security/Authentication.php:230
+#: src/Model/User.php:1216 src/Security/Authentication.php:230
 msgid "The error message was:"
 msgstr ""
 
-#: src/Model/User.php:1220
+#: src/Model/User.php:1222
 msgid "Please enter the required information."
 msgstr ""
 
-#: src/Model/User.php:1234
+#: src/Model/User.php:1236
 #, php-format
 msgid ""
 "system.username_min_length (%s) and system.username_max_length (%s) are "
 "excluding each other, swapping values."
 msgstr ""
 
-#: src/Model/User.php:1241
+#: src/Model/User.php:1243
 #, php-format
 msgid "Username should be at least %s character."
 msgid_plural "Username should be at least %s characters."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/User.php:1245
+#: src/Model/User.php:1247
 #, php-format
 msgid "Username should be at most %s character."
 msgid_plural "Username should be at most %s characters."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/User.php:1253
+#: src/Model/User.php:1255
 msgid "That doesn't appear to be your full (First Last) name."
 msgstr ""
 
-#: src/Model/User.php:1258
+#: src/Model/User.php:1260
 msgid "Your email domain is not among those allowed on this site."
 msgstr ""
 
-#: src/Model/User.php:1262
+#: src/Model/User.php:1264
 msgid "Not a valid email address."
 msgstr ""
 
-#: src/Model/User.php:1265
+#: src/Model/User.php:1267
 msgid "The nickname was blocked from registration by the nodes admin."
 msgstr ""
 
-#: src/Model/User.php:1269 src/Model/User.php:1275
+#: src/Model/User.php:1271 src/Model/User.php:1277
 msgid "Cannot use that email."
 msgstr ""
 
-#: src/Model/User.php:1281
+#: src/Model/User.php:1283
 msgid "Your nickname can only contain a-z, 0-9 and _."
 msgstr ""
 
-#: src/Model/User.php:1289 src/Model/User.php:1346
+#: src/Model/User.php:1291 src/Model/User.php:1348
 msgid "Nickname is already registered. Please choose another."
 msgstr ""
 
-#: src/Model/User.php:1333 src/Model/User.php:1337
+#: src/Model/User.php:1335 src/Model/User.php:1339
 msgid "An error occurred during registration. Please try again."
 msgstr ""
 
-#: src/Model/User.php:1360
+#: src/Model/User.php:1362
 msgid "An error occurred creating your default profile. Please try again."
 msgstr ""
 
-#: src/Model/User.php:1367
+#: src/Model/User.php:1369
 msgid "An error occurred creating your self contact. Please try again."
 msgstr ""
 
-#: src/Model/User.php:1372
+#: src/Model/User.php:1374
 msgid "Friends"
 msgstr ""
 
-#: src/Model/User.php:1376
+#: src/Model/User.php:1378
 msgid ""
 "An error occurred creating your default contact circle. Please try again."
 msgstr ""
 
-#: src/Model/User.php:1418
+#: src/Model/User.php:1420
 msgid "Profile Photos"
 msgstr ""
 
-#: src/Model/User.php:1600
+#: src/Model/User.php:1602
 #, php-format
 msgid ""
 "\n"
@@ -3872,7 +3872,7 @@ msgid ""
 "\t\t\tthe administrator of %2$s has set up an account for you."
 msgstr ""
 
-#: src/Model/User.php:1603
+#: src/Model/User.php:1605
 #, php-format
 msgid ""
 "\n"
@@ -3908,12 +3908,12 @@ msgid ""
 "\t\tThank you and welcome to %4$s."
 msgstr ""
 
-#: src/Model/User.php:1635 src/Model/User.php:1741
+#: src/Model/User.php:1637 src/Model/User.php:1743
 #, php-format
 msgid "Registration details for %s"
 msgstr ""
 
-#: src/Model/User.php:1655
+#: src/Model/User.php:1657
 #, php-format
 msgid ""
 "\n"
@@ -3929,12 +3929,12 @@ msgid ""
 "\t\t"
 msgstr ""
 
-#: src/Model/User.php:1674
+#: src/Model/User.php:1676
 #, php-format
 msgid "Registration at %s"
 msgstr ""
 
-#: src/Model/User.php:1698
+#: src/Model/User.php:1700
 #, php-format
 msgid ""
 "\n"
@@ -3943,7 +3943,7 @@ msgid ""
 "\t\t\t"
 msgstr ""
 
-#: src/Model/User.php:1706
+#: src/Model/User.php:1708
 #, php-format
 msgid ""
 "\n"
@@ -3981,7 +3981,7 @@ msgid ""
 "\t\t\tThank you and welcome to %2$s."
 msgstr ""
 
-#: src/Model/User.php:1768
+#: src/Model/User.php:1770
 msgid ""
 "User with delegates can't be removed, please remove delegate users first"
 msgstr ""
@@ -8920,11 +8920,11 @@ msgstr ""
 msgid "Show unread"
 msgstr ""
 
-#: src/Module/Notifications/Ping.php:223
+#: src/Module/Notifications/Ping.php:220
 msgid "{0} requested registration"
 msgstr ""
 
-#: src/Module/Notifications/Ping.php:232
+#: src/Module/Notifications/Ping.php:229
 #, php-format
 msgid "{0} and %d others requested registration"
 msgstr ""

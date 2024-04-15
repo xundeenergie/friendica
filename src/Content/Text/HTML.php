@@ -253,13 +253,12 @@ class HTML
 			self::tagToBBCode($doc, 'span', ['class' => 'type-link'], '[class=type-link]', '[/class]');
 			self::tagToBBCode($doc, 'span', ['class' => 'type-video'], '[class=type-video]', '[/class]');
 
-			self::tagToBBCode($doc, 'strong', [], '[b]', '[/b]');
-			self::tagToBBCode($doc, 'em', [], '[i]', '[/i]');
-			self::tagToBBCode($doc, 'b', [], '[b]', '[/b]');
-			self::tagToBBCode($doc, 'i', [], '[i]', '[/i]');
-			self::tagToBBCode($doc, 'u', [], '[u]', '[/u]');
-			self::tagToBBCode($doc, 's', [], '[s]', '[/s]');
-			self::tagToBBCode($doc, 'del', [], '[s]', '[/s]');
+			$elements = ['b', 'del', 'em', 'i', 'ins', 'kbd', 'mark',
+				's', 'samp', 'strong', 'sub', 'sup', 'u', 'var'];
+			foreach ($elements as $element) {
+				self::tagToBBCode($doc, $element, [], '[' . $element . ']', '[/' . $element . ']');
+			}
+
 			self::tagToBBCode($doc, 'strike', [], '[s]', '[/s]');
 
 			self::tagToBBCode($doc, 'big', [], "[size=large]", "[/size]");
