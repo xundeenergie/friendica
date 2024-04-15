@@ -83,6 +83,10 @@ class Statuses extends BaseApi
 		$item['network']    = $post['network'];
 		$item['gravity']    = $post['gravity'];
 		$item['verb']       = $post['verb'];
+		$item['allow_cid']  = $post['allow_cid'];
+		$item['allow_gid']  = $post['allow_gid'];
+		$item['deny_cid']   = $post['deny_cid'];
+		$item['deny_gid']   = $post['deny_gid'];
 		$item['app']        = $this->getApp();
 		$item['sensitive']  = $request['sensitive'];
 
