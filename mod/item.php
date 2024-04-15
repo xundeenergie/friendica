@@ -279,6 +279,7 @@ function item_process(array $post, array $request, bool $preview, string $return
 		$post['body']           = BBCode::removeSharedData(Item::setHashtags($post['body']));
 		$post['writable']       = true;
 		$post['sensitive']      = false;
+		$post['post-reason']    = Item::PR_LOCAL;
 
 		$o = DI::conversation()->render([$post], Conversation::MODE_SEARCH, false, true);
 
