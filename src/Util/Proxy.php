@@ -50,19 +50,6 @@ class Proxy
 	const PIXEL_LARGE  = 1024;
 
 	/**
-	 * Accepted extensions
-	 *
-	 * @var array
-	 * @todo Make this configurable?
-	 */
-	private static $extensions = [
-		'jpg',
-		'jpeg',
-		'gif',
-		'png',
-	];
-
-	/**
 	 * Private constructor
 	 */
 	private function __construct () {
