@@ -97,7 +97,6 @@ class Site extends BaseAdmin
 		$adjust_poll_frequency  = !empty($_POST['adjust_poll_frequency']);
 		$min_poll_interval      = (!empty($_POST['min_poll_interval']) ? intval(trim($_POST['min_poll_interval']))                : 0);
 		$explicit_content       = !empty($_POST['explicit_content']);
-		$proxify_content        = !empty($_POST['proxify_content']);
 		$local_search           = !empty($_POST['local_search']);
 		$blocked_tags           = (!empty($_POST['blocked_tags']) ? trim($_POST['blocked_tags'])  : '');
 		$cache_contact_avatar   = !empty($_POST['cache_contact_avatar']);
@@ -271,7 +270,6 @@ class Site extends BaseAdmin
 		$transactionConfig->set('system', 'adjust_poll_frequency'  , $adjust_poll_frequency);
 		$transactionConfig->set('system', 'min_poll_interval'      , $min_poll_interval);
 		$transactionConfig->set('system', 'explicit_content'       , $explicit_content);
-		$transactionConfig->set('system', 'proxify_content'        , $proxify_content);
 		$transactionConfig->set('system', 'local_search'           , $local_search);
 		$transactionConfig->set('system', 'blocked_tags'           , Strings::cleanTags($blocked_tags));
 		$transactionConfig->set('system', 'cache_contact_avatar'   , $cache_contact_avatar);
@@ -518,7 +516,6 @@ class Site extends BaseAdmin
 			'$private_addons'         => ['private_addons', DI::l10n()->t('Disallow public access to addons listed in the apps menu.'), DI::config()->get('config', 'private_addons'), DI::l10n()->t('Checking this box will restrict addons listed in the apps menu to members only.')],
 			'$disable_embedded'       => ['disable_embedded', DI::l10n()->t('Don\'t embed private images in posts'), DI::config()->get('system', 'disable_embedded'), DI::l10n()->t('Don\'t replace locally-hosted private photos in posts with an embedded copy of the image. This means that contacts who receive posts containing private photos will have to authenticate and load each image, which may take a while.')],
 			'$explicit_content'       => ['explicit_content', DI::l10n()->t('Explicit Content'), DI::config()->get('system', 'explicit_content'), DI::l10n()->t('Set this to announce that your node is used mostly for explicit content that might not be suited for minors. This information will be published in the node information and might be used, e.g. by the global directory, to filter your node from listings of nodes to join. Additionally a note about this will be shown at the user registration page.')],
-			'$proxify_content'        => ['proxify_content', DI::l10n()->t('Proxify external content'), DI::config()->get('system', 'proxify_content'), DI::l10n()->t('Route external content via the proxy functionality. This is used for example for some OEmbed accesses and in some other rare cases.')],
 			'$local_search'           => ['local_search', DI::l10n()->t('Only local search'), DI::config()->get('system', 'local_search'), DI::l10n()->t('Blocks search for users who are not logged in to prevent crawlers from blocking your system.')],
 			'$blocked_tags'           => ['blocked_tags', DI::l10n()->t('Blocked tags for trending tags'), DI::config()->get('system', 'blocked_tags'), DI::l10n()->t("Comma separated list of hashtags that shouldn't be displayed in the trending tags.")],
 			'$cache_contact_avatar'   => ['cache_contact_avatar', DI::l10n()->t('Cache contact avatars'), DI::config()->get('system', 'cache_contact_avatar'), DI::l10n()->t('Locally store the avatar pictures of the contacts. This uses a lot of storage space but it increases the performance.')],

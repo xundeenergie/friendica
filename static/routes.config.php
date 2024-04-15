@@ -595,13 +595,6 @@ return [
 	'/u/{nickname}'       => $profileRoutes,
 	'/~{nickname}'        => $profileRoutes,
 
-	'/proxy' => [
-		'[/]'                  => [Module\Proxy::class, [R::GET]],
-		'/{url}'               => [Module\Proxy::class, [R::GET]],
-		'/{sub1}/{url}'        => [Module\Proxy::class, [R::GET]],
-		'/{sub1}/{sub2}/{url}' => [Module\Proxy::class, [R::GET]],
-	],
-
 	// OStatus stack modules
 	'/ostatus/repair'                => [Module\OStatus\Repair::class,           [R::GET         ]],
 	'/ostatus/subscribe'             => [Module\OStatus\Subscribe::class,        [R::GET         ]],
