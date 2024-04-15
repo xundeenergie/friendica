@@ -317,7 +317,7 @@ class BBCode
 		} elseif ($uriid > 0) {
 			return Post\Link::getByLink($uriid, $image, $size);
 		} else {
-			return Proxy::proxifyUrl($image, $size);
+			return $image;
 		}
 	}
 

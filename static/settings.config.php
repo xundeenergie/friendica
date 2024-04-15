@@ -241,10 +241,6 @@ return [
 		// Maximum amount of tags in a post before it is rejected as spam.
 		'relay_max_tags' => 20,
 
-		// proxify_content (Boolean)
-		// Use the proxy functionality for fetching external content
-		'proxify_content' => true,
-
 		// relay_directly (Boolean)
 		// Directly transmit content to relay subscribers without using a relay server
 		'relay_directly' => false,

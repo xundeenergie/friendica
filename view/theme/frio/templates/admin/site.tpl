@@ -168,7 +168,6 @@
 						{{include file="field_checkbox.tpl" field=$allow_relay_channels}}
 						{{include file="field_checkbox.tpl" field=$adjust_poll_frequency}}
 						{{include file="field_checkbox.tpl" field=$explicit_content}}
-						{{include file="field_checkbox.tpl" field=$proxify_content}}
 						{{include file="field_checkbox.tpl" field=$local_search}}
 						{{include file="field_input.tpl" field=$blocked_tags}}
 						</div>
