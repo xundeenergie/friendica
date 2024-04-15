@@ -2000,8 +2000,8 @@ class Probe
 		if (isset($adr)) {
 			foreach ($adr as $feadr) {
 				if ((strcasecmp($feadr->mailbox, $data['name']) == 0)
-					&&(strcasecmp($feadr->host, $phost) == 0)
-					&& (strlen($feadr->personal))
+					&& (strcasecmp($feadr->host, $phost) == 0)
+					&& !empty($feadr->personal)
 				) {
 					$personal = imap_mime_header_decode($feadr->personal);
 					$data['name'] = '';
