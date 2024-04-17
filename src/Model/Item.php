@@ -1335,6 +1335,8 @@ class Item
 			return 0;
 		}
 
+		Post\Origin::insert($posted_item);
+
 		// update the commented timestamp on the parent
 		if (DI::config()->get('system', 'like_no_comment')) {
 			// Update when it is a comment

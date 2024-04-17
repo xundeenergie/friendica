@@ -26,6 +26,7 @@ use Friendica\App\Mode;
 use Friendica\BaseModule;
 use Friendica\Content\Conversation\Collection\Timelines;
 use Friendica\Content\Conversation\Entity\Channel as ChannelEntity;
+use Friendica\Content\Conversation\Entity\Community;
 use Friendica\Content\Conversation\Entity\UserDefinedChannel as UserDefinedChannelEntity;
 use Friendica\Content\Conversation\Repository\UserDefinedChannel;
 use Friendica\Core\Cache\Capability\ICanCache;
@@ -685,10 +686,10 @@ class Timeline extends BaseModule
 	{
 		$items = $this->selectItems();
 
-		if ($this->selectedTab == 'local') {
+		if ($this->selectedTab == Community::LOCAL) {
 			$maxpostperauthor = (int)$this->config->get('system', 'max_author_posts_community_page');
 			$key = 'author-id';
-		} elseif ($this->selectedTab == 'global') {
+		} elseif ($this->selectedTab == Community::GLOBAL) {
 			$maxpostperauthor = (int)$this->config->get('system', 'max_server_posts_community_page');
 			$key = 'author-gsid';
 		} else {
@@ -754,7 +755,7 @@ class Timeline extends BaseModule
 	{
 		$this->order = 'received';
 
-		if ($this->selectedTab == 'local') {
+		if ($this->selectedTab == Community::LOCAL) {
 			$condition = ["`wall` AND `origin` AND `private` = ?", Item::PUBLIC];
 		} elseif ($this->selectedTab == 'global') {
 			$condition = ["`uid` = ? AND `private` = ?", 0, Item::PUBLIC];
@@ -790,7 +791,11 @@ class Timeline extends BaseModule
 		}
 
 		$items = [];
-		$result = Post::selectThreadForUser($this->session->getLocalUserId() ?: 0, ['uri-id', 'received', 'author-id', 'author-gsid'], $condition, $params);
+		if ($this->selectedTab ==  Community::LOCAL) {
+			$result = Post::selectOriginThread(['uri-id', 'received', 'author-id', 'author-gsid'], $condition, $params);
+		} else {
+			$result = Post::selectThreadForUser($this->session->getLocalUserId() ?: 0, ['uri-id', 'received', 'author-id', 'author-gsid'], $condition, $params);
+		}
 
 		while ($item = $this->database->fetch($result)) {
 			$item['comments'] = 0;

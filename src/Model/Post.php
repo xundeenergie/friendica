@@ -380,6 +380,21 @@ class Post
 	}
 
 	/**
+	 * Select rows from the post-origin-view view
+	 *
+	 * @param array $selected  Array of selected fields, empty for all
+	 * @param array $condition Array of fields for condition
+	 * @param array $params    Array of several parameters
+	 *
+	 * @return boolean|object
+	 * @throws \Exception
+	 */
+	public static function selectOrigin(array $selected = [], array $condition = [], array $params = [])
+	{
+		return self::selectView('post-origin-view', $selected, $condition, $params);
+	}
+
+	/**
 	 * Select rows from the post-view view
 	 *
 	 * @param array $selected  Array of selected fields, empty for all
@@ -422,6 +437,21 @@ class Post
 	public static function selectPostThread(array $selected = [], array $condition = [], array $params = [])
 	{
 		return self::selectView('post-thread-view', $selected, $condition, $params);
+	}
+
+	/**
+	 * Select rows from the post-thread-origin-view view
+	 *
+	 * @param array $selected  Array of selected fields, empty for all
+	 * @param array $condition Array of fields for condition
+	 * @param array $params    Array of several parameters
+	 *
+	 * @return boolean|object
+	 * @throws \Exception
+	 */
+	public static function selectOriginThread(array $selected = [], array $condition = [], array $params = [])
+	{
+		return self::selectView('post-thread-origin-view', $selected, $condition, $params);
 	}
 
 	/**
@@ -511,6 +541,11 @@ class Post
 	public static function selectTimelineForUser(int $uid, array $selected = [], array $condition = [], array $params = [])
 	{
 		return self::selectViewForUser('post-timeline-view', $uid, $selected, $condition, $params);
+	}
+
+	public static function selectLocalTimelineForUser(int $uid, array $selected = [], array $condition = [], array $params = [])
+	{
+		return self::selectViewForUser('post-timeline-origin-view', $uid, $selected, $condition, $params);
 	}
 
 	/**

@@ -73,6 +73,7 @@ class ExpirePosts
 		while ($row = Post::fetch($rows)) {
 			Logger::info('Delete expired item', ['uri-id' => $row['uri-id'], 'guid' => $row['guid']]);
 			Post\User::delete(['parent-uri-id' => $row['uri-id'], 'uid' => $row['uid']]);
+			Post\Origin::delete(['parent-uri-id' => $row['uri-id'], 'uid' => $row['uid']]);
 		}
 		DBA::close($rows);
 

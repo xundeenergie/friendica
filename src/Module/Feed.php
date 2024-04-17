@@ -22,7 +22,6 @@
 namespace Friendica\Module;
 
 use Friendica\BaseModule;
-use Friendica\Core\System;
 use Friendica\Model\User;
 use Friendica\Network\HTTPException;
 use Friendica\Protocol\Feed as ProtocolFeed;

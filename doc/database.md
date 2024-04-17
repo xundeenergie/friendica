@@ -68,6 +68,7 @@ Database Tables
 | [post-history](help/database/db_post-history) | Post history |
 | [post-link](help/database/db_post-link) | Post related external links |
 | [post-media](help/database/db_post-media) | Attached media |
+| [post-origin](help/database/db_post-origin) | Posts from local users |
 | [post-question](help/database/db_post-question) | Question |
 | [post-question-option](help/database/db_post-question-option) | Question option |
 | [post-searchindex](help/database/db_post-searchindex) | Content for all posts |
