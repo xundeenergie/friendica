@@ -1003,23 +1003,12 @@ class Feed
 	{
 		$stamp = microtime(true);
 
-		$cachekey = 'feed:feed:' . $owner['nickname'] . ':' . $filter . ':' . $last_update;
-
 		// Display events in the user's timezone
 		if (strlen($owner['timezone'])) {
 			DI::app()->setTimeZone($owner['timezone']);
 		}
 
 		$previous_created = $last_update;
-
-		// Don't cache when the last item was posted less than 15 minutes ago (Cache duration)
-		if ((time() - strtotime($owner['last-item'])) < 15 * 60) {
-			$result = DI::cache()->get($cachekey);
-			if (!$nocache && !is_null($result)) {
-				Logger::info('Cached feed duration', ['seconds' => number_format(microtime(true) - $stamp, 3), 'nick' => $owner['nickname'], 'filter' => $filter, 'created' => $previous_created]);
-				return $result['feed'];
-			}
-		}
 
 		$check_date = empty($last_update) ? '' : DateTimeFormat::utc($last_update);
 		$authorid = Contact::getIdForURL($owner['url']);
@@ -1046,9 +1035,9 @@ class Feed
 		$params = ['order' => ['received' => true], 'limit' => $max_items];
 
 		if ($filter === 'posts') {
-			$ret = Post::selectThread(Item::DELIVER_FIELDLIST, $condition, $params);
+			$ret = Post::selectOriginThread(Item::DELIVER_FIELDLIST, $condition, $params);
 		} else {
-			$ret = Post::select(Item::DELIVER_FIELDLIST, $condition, $params);
+			$ret = Post::selectOrigin(Item::DELIVER_FIELDLIST, $condition, $params);
 		}
 
 		$items = Post::toArray($ret);
@@ -1068,9 +1057,6 @@ class Feed
 		}
 
 		$feeddata = trim($doc->saveXML());
-
-		$msg = ['feed' => $feeddata, 'last_update' => $last_update];
-		DI::cache()->set($cachekey, $msg, Duration::QUARTER_HOUR);
 
 		Logger::info('Feed duration', ['seconds' => number_format(microtime(true) - $stamp, 3), 'nick' => $owner['nickname'], 'filter' => $filter, 'created' => $previous_created]);
 

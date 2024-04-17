@@ -56,7 +56,7 @@ use Friendica\Database\DBA;
 
 // This file is required several times during the test in DbaDefinition which justifies this condition
 if (!defined('DB_UPDATE_VERSION')) {
-	define('DB_UPDATE_VERSION', 1559);
+	define('DB_UPDATE_VERSION', 1560);
 }
 
 return [
@@ -1458,6 +1458,32 @@ return [
 			"uri-id-id" => ["uri-id", "id"],
 			"media-uri-id" => ["media-uri-id"],
 		]
+	],
+	"post-origin" => [
+		"comment" => "Posts from local users",
+		"fields" => [
+			"id" => ["type" => "int unsigned", "not null" => "1", "primary" => "1"],
+			"uri-id" => ["type" => "int unsigned", "not null" => "1", "foreign" => ["item-uri" => "id"], "comment" => "Id of the item-uri table entry that contains the item uri"],
+			"uid" => ["type" => "mediumint unsigned", "not null" => "1", "foreign" => ["user" => "uid"], "comment" => "Owner id which owns this copy of the item"],
+			"parent-uri-id" => ["type" => "int unsigned", "foreign" => ["item-uri" => "id"], "comment" => "Id of the item-uri table that contains the parent uri"],
+			"thr-parent-id" => ["type" => "int unsigned", "foreign" => ["item-uri" => "id"], "comment" => "Id of the item-uri table that contains the thread parent uri"],
+			"created" => ["type" => "datetime", "not null" => "1", "default" => DBA::NULL_DATETIME, "comment" => "Creation timestamp."],
+			"received" => ["type" => "datetime", "not null" => "1", "default" => DBA::NULL_DATETIME, "comment" => "datetime"],
+			"gravity" => ["type" => "tinyint unsigned", "not null" => "1", "default" => "0", "comment" => ""],
+			"vid" => ["type" => "smallint unsigned", "foreign" => ["verb" => "id", "on delete" => "restrict"], "comment" => "Id of the verb table entry that contains the activity verbs"],
+			"private" => ["type" => "tinyint unsigned", "not null" => "1", "default" => "0", "comment" => "0=public, 1=private, 2=unlisted"],
+			"wall" => ["type" => "boolean", "not null" => "1", "default" => "0", "comment" => "This item was posted to the wall of uid"],
+		],
+		"indexes" => [
+			"PRIMARY" => ["id"],
+			"uid_uri-id" => ["UNIQUE", "uid", "uri-id"],
+			"uri-id" => ["uri-id"],
+			"parent-uri-id" => ["parent-uri-id"],
+			"thr-parent-id" => ["thr-parent-id"],
+			"vid" => ["vid"],
+			"parent-uri-id_uid" => ["parent-uri-id", "uid"],
+			"uid_wall_received" => ["uid", "wall", "received"],
+		],
 	],
 	"post-question" => [
 		"comment" => "Question",

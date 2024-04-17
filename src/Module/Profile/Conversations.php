@@ -204,7 +204,7 @@ class Conversations extends BaseProfile
 
 		$condition = DBA::mergeConditions($condition, ["((`gravity` = ? AND `wall`) OR
 			(`gravity` = ? AND `vid` = ? AND `origin`
-			AND EXISTS(SELECT `uri-id` FROM `post` WHERE `uri-id` = `post-user-view`.`thr-parent-id` AND `gravity` = ? AND `network` IN (?, ?))))",
+			AND EXISTS(SELECT `uri-id` FROM `post` WHERE `uri-id` = `post-origin-view`.`thr-parent-id` AND `gravity` = ? AND `network` IN (?, ?))))",
 		                                               Item::GRAVITY_PARENT, Item::GRAVITY_ACTIVITY, Verb::getID(Activity::ANNOUNCE), Item::GRAVITY_PARENT, Protocol::ACTIVITYPUB, Protocol::DFRN]);
 
 		$condition = DBA::mergeConditions($condition, ['uid'     => $profile['uid'], 'network' => Protocol::FEDERATED,
@@ -213,7 +213,7 @@ class Conversations extends BaseProfile
 		$pager  = new Pager($this->l10n, $this->args->getQueryString(), $itemspage_network);
 		$params = ['limit' => [$pager->getStart(), $pager->getItemsPerPage()], 'order' => ['received' => true]];
 
-		$items_stmt = Post::select(['uri-id', 'thr-parent-id', 'gravity', 'author-id', 'received'], $condition, $params);
+		$items_stmt = Post::selectOrigin(['uri-id', 'thr-parent-id', 'gravity', 'author-id', 'received'], $condition, $params);
 
 		// Set a time stamp for this page. We will make use of it when we
 		// search for new items (update routine)

@@ -1458,3 +1458,11 @@ function update_1557()
 	DBA::close($contacts);
 	return Update::SUCCESS;
 }
+
+function update_1560()
+{
+	if (!DBA::e("INSERT IGNORE INTO `post-origin`(`id`, `uri-id`, `uid`, `parent-uri-id`, `thr-parent-id`, `created`, `received`, `gravity`, `vid`, `private`, `wall`)
+		SELECT `id`, `uri-id`, `uid`, `parent-uri-id`, `thr-parent-id`, `created`, `received`, `gravity`, `vid`, `private`, `wall` FROM `post-user` WHERE `post-user`.`origin` AND `post-user`.`uid` != ?", 0)) {
+		return Update::FAILED;
+	}
+}

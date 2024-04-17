@@ -85,7 +85,11 @@ class PublicTimeline extends BaseApi
 			$condition = DBA::mergeConditions($condition, ['gravity' => Item::GRAVITY_PARENT]);
 		}
 
-		$items = Post::selectTimelineForUser($uid, ['uri-id'], $condition, $params);
+		if ($request['local']) {
+			$items = Post::selectLocalTimelineForUser($uid, ['uri-id'], $condition, $params);
+		} else {
+			$items = Post::selectTimelineForUser($uid, ['uri-id'], $condition, $params);
+		}
 
 		$display_quotes = self::appSupportsQuotes();
 
