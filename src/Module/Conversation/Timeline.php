@@ -461,7 +461,7 @@ class Timeline extends BaseModule
 
 		if (!empty($channel->fullTextSearch)) {
 			if (!empty($channel->includeTags)) {
-				$additional = self:: addIncludeTags($channel->includeTags);
+				$additional = $this->addIncludeTags($channel->includeTags);
 			} else {
 				$additional = '';
 			}
@@ -473,10 +473,10 @@ class Timeline extends BaseModule
 			}
 
 			if (!empty($channel->mediaType)) {
-				$additional .= self::addMediaTerms($channel->mediaType);
+				$additional .= $this->addMediaTerms($channel->mediaType);
 			}
 
-			$additional .= self::addLanguageSearchTerms($uid, $channel->languages);
+			$additional .= $this->addLanguageSearchTerms($uid, $channel->languages);
 
 			if ($additional) {
 				$searchterms = '+(' . trim($channel->fullTextSearch) . ')' . $additional;
