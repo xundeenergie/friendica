@@ -95,7 +95,7 @@ class Timeline extends BaseModule
 	/** @var UserDefinedChannel */
 	protected $channelRepository;
 
-	public function __construct(UserDefinedChannel $channel, Mode $mode, IHandleUserSessions $session, Database $database, IManagePersonalConfigValues $pConfig, IManageConfigValues $config, ICanCache $cache, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(UserDefinedChannel $channel, Mode $mode, IHandleUserSessions $session, Database $database, IManagePersonalConfigValues $pConfig, IManageConfigValues $config, ICanCache $cache, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server = [], array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
@@ -167,7 +167,7 @@ class Timeline extends BaseModule
 				$this->maxId = $request['last_created'] ?? $this->maxId;
 				$this->minId = $request['first_created'] ?? $this->minId;
 				break;
-			case 'uriid':
+			case 'uri-id':
 				$this->maxId = $request['last_uriid'] ?? $this->maxId;
 				$this->minId = $request['first_uriid'] ?? $this->minId;
 				break;
@@ -229,15 +229,29 @@ class Timeline extends BaseModule
 		return $tabs;
 	}
 
+	public function getChannelItemsForAPI(string $channel, int $uid, int $limit, int $min = null, int $max = null): array
+	{
+		$this->itemsPerPage = $limit;
+		$this->itemUriId    = 0;
+		$this->maxId        = $max;
+		$this->minId        = $min;
+		$this->noSharer     = false;
+		$this->order        = 'uri-id';
+		$this->ping         = false;
+		$this->selectedTab  = $channel;
+
+		return $this->getChannelItems([], $uid);
+	}
+
 	/**
 	 * Database query for the channel page
 	 *
 	 * @return array
 	 * @throws \Exception
 	 */
-	protected function getChannelItems(array $request)
+	protected function getChannelItems(array $request, int $uid): array
 	{
-		$items = $this->getRawChannelItems($request);
+		$items = $this->getRawChannelItems($request, $uid);
 		$total = min(count($items), $this->itemsPerPage);
 
 		$contacts = $this->database->selectToArray('user-contact', ['cid'], ['channel-frequency' => Contact\User::FREQUENCY_REDUCED, 'cid' => array_column($items, 'owner-id')]);
@@ -284,14 +298,14 @@ class Timeline extends BaseModule
 				}
 
 				if (count($selected_items) < $total) {
-					$items = $this->getRawChannelItems($request);
+					$items = $this->getRawChannelItems($request, $uid);
 				}
 			}
 		} else {
 			$selected_items = $items;
 		}
 
-		$condition = ['unseen' => true, 'uid' => $this->session->getLocalUserId(), 'parent-uri-id' => array_column($selected_items, 'uri-id')];
+		$condition = ['unseen' => true, 'uid' => $uid, 'parent-uri-id' => array_column($selected_items, 'uri-id')];
 		$this->setItemsSeenByCondition($condition);
 
 		return $selected_items;
@@ -303,10 +317,8 @@ class Timeline extends BaseModule
 	 * @return array
 	 * @throws \Exception
 	 */
-	private function getRawChannelItems(array $request)
+	private function getRawChannelItems(array $request, int $uid): array
 	{
-		$uid = $this->session->getLocalUserId();
-
 		$table = 'post-engagement';
 
 		if ($this->selectedTab == ChannelEntity::WHATSHOT) {
