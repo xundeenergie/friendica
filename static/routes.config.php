@@ -308,7 +308,7 @@ return [
 			'/tags/{hashtag}/unfollow'           => [Module\Api\Mastodon\Tags\Unfollow::class,            [        R::POST]],
 			'/timelines/direct'                  => [Module\Api\Mastodon\Timelines\Direct::class,         [R::GET         ]],
 			'/timelines/home'                    => [Module\Api\Mastodon\Timelines\Home::class,           [R::GET         ]],
-			'/timelines/list/{id:\d+}'           => [Module\Api\Mastodon\Timelines\ListTimeline::class,   [R::GET         ]],
+			'/timelines/list/{id}'               => [Module\Api\Mastodon\Timelines\ListTimeline::class,   [R::GET         ]],
 			'/timelines/public'                  => [Module\Api\Mastodon\Timelines\PublicTimeline::class, [R::GET         ]],
 			'/timelines/tag/{hashtag}'           => [Module\Api\Mastodon\Timelines\Tag::class,            [R::GET         ]],
 			'/trends'                            => [Module\Api\Mastodon\Trends\Tags::class,              [R::GET         ]],

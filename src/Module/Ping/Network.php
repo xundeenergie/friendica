@@ -88,7 +88,7 @@ class Network extends NetworkModule
 		$this->itemsPerPage = 100;
 
 		if ($this->channel->isTimeline($this->selectedTab) || $this->userDefinedChannel->isTimeline($this->selectedTab, $this->session->getLocalUserId())) {
-			$items = $this->getChannelItems($request);
+			$items = $this->getChannelItems($request, $this->session->getLocalUserId());
 		} elseif ($this->community->isTimeline($this->selectedTab)) {
 			$items = $this->getCommunityItems();
 		} else {

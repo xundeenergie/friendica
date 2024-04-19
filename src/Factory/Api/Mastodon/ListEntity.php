@@ -22,6 +22,7 @@
 namespace Friendica\Factory\Api\Mastodon;
 
 use Friendica\BaseFactory;
+use Friendica\Content\Conversation\Entity\Timeline;
 use Friendica\Database\Database;
 use Friendica\Network\HTTPException\InternalServerErrorException;
 use Psr\Log\LoggerInterface;
@@ -44,5 +45,15 @@ class ListEntity extends BaseFactory
 	{
 		$circle = $this->dba->selectFirst('group', ['name'], ['id' => $id, 'deleted' => false]);
 		return new \Friendica\Object\Api\Mastodon\ListEntity($id, $circle['name'] ?? '', 'list');
+	}
+
+	public function createFromChannel(Timeline $channel): \Friendica\Object\Api\Mastodon\ListEntity
+	{
+		return new \Friendica\Object\Api\Mastodon\ListEntity('channel:' . $channel->code, $channel->label, 'followed');
+	}
+
+	public function createFromGroup(array $group): \Friendica\Object\Api\Mastodon\ListEntity
+	{
+		return new \Friendica\Object\Api\Mastodon\ListEntity('group:' . $group['id'], $group['name'], 'followed');
 	}
 }

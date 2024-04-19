@@ -21,16 +21,36 @@
 
 namespace Friendica\Module\Api\Mastodon;
 
-use Friendica\Core\System;
+use Friendica\App;
+use Friendica\Core\L10n;
 use Friendica\DI;
+use Friendica\Content\Conversation\Factory\Channel as ChannelFactory;
+use Friendica\Content\Conversation\Repository;
+use Friendica\Content\GroupManager;
 use Friendica\Module\BaseApi;
 use Friendica\Model\Circle;
+use Friendica\Module\Api\ApiResponse;
+use Friendica\Util\Profiler;
+use Psr\Log\LoggerInterface;
 
 /**
  * @see https://docs.joinmastodon.org/methods/timelines/lists/
  */
 class Lists extends BaseApi
 {
+	/** @var ChannelFactory */
+	protected $channel;
+	/** @var Repository\UserDefinedChannel */
+	protected $userDefinedChannel;
+
+	public function __construct(Repository\UserDefinedChannel $userDefinedChannel, ChannelFactory $channel, \Friendica\Factory\Api\Mastodon\Error $errorFactory, App $app, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, ApiResponse $response, array $server, array $parameters = [])
+	{
+		parent::__construct($errorFactory, $app, $l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
+
+		$this->channel            = $channel;
+		$this->userDefinedChannel = $userDefinedChannel;
+	}
+
 	protected function delete(array $request = [])
 	{
 		$this->checkAllowedScope(self::SCOPE_WRITE);
@@ -101,6 +121,18 @@ class Lists extends BaseApi
 
 			foreach (Circle::getByUserId($uid) as $circle) {
 				$lists[] = DI::mstdnList()->createFromCircleId($circle['id']);
+			}
+
+			foreach ($this->channel->getTimelines($uid) as $channel) {
+				$lists[] = DI::mstdnList()->createFromChannel($channel);
+			}
+
+			foreach ($this->userDefinedChannel->selectByUid($uid) as $channel) {
+				$lists[] = DI::mstdnList()->createFromChannel($channel);
+			}
+
+			foreach (GroupManager::getList($uid, true, true, true) as $group) {
+				$lists[] = DI::mstdnList()->createFromGroup($group);
 			}
 		} else {
 			$id = $this->parameters['id'];

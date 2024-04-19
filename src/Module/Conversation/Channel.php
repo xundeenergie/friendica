@@ -128,7 +128,7 @@ class Channel extends Timeline
 		}
 
 		if ($this->channel->isTimeline($this->selectedTab) || $this->userDefinedChannel->isTimeline($this->selectedTab, $this->session->getLocalUserId())) {
-			$items = $this->getChannelItems($request);
+			$items = $this->getChannelItems($request, $this->session->getLocalUserId());
 			$order = 'created';
 		} else {
 			$items = $this->getCommunityItems();

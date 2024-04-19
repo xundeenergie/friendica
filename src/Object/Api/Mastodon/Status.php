@@ -160,7 +160,7 @@ class Status extends BaseDataTransferObject
 
 	/**
 	 * Returns the current created_at string or null if not set
-	 * @return \DateTime|null
+	 * @return ?string
 	 */
 	public function createdAt(): ?string
 	{
