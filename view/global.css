@@ -764,6 +764,7 @@ figure.img-allocated-height img{
 }
 .loglevel-warning {
 	color: #ff8c00; /* dark orange */
+	font-weight: bold;
 }
 .loglevel-error {
 	color: #ff0000; /* red */
