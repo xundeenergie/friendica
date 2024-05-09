@@ -767,9 +767,9 @@ figure.img-allocated-height img{
 }
 .loglevel-error {
 	color: #ff0000; /* red */
-	font-weight: bold; 
+	font-weight: bold;
 }
 .loglevel-critical {
 	color: #8b0000; /* dark red */
-	font-weight: bold; 
+	font-weight: bold;
 }
