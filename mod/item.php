@@ -45,7 +45,8 @@ use Friendica\Model\Post;
 use Friendica\Network\HTTPException;
 use Friendica\Util\DateTimeFormat;
 
-function item_post(App $a) {
+function item_post(App $a)
+{
 	$uid = DI::userSession()->getLocalUserId();
 
 	if (!$uid) {
@@ -248,7 +249,7 @@ function item_process(array $post, array $request, bool $preview, string $return
 		$post['body'] .= DI::contentItem()->storeAttachmentFromRequest($request);
 	}
 
-	$post = DI::contentItem()->finalizePost($post);
+	$post = DI::contentItem()->finalizePost($post, $preview);
 
 	if (!strlen($post['body'])) {
 		if ($preview) {
@@ -286,7 +287,7 @@ function item_process(array $post, array $request, bool $preview, string $return
 		System::jsonExit(['preview' => $o]);
 	}
 
-	Hook::callAll('post_local',$post);
+	Hook::callAll('post_local', $post);
 
 	unset($post['edit']);
 	unset($post['self']);

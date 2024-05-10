@@ -48,7 +48,6 @@ use Friendica\Model\User;
 use Friendica\Network\HTTPException;
 use Friendica\Object\EMail\ItemCCEMail;
 use Friendica\Protocol\Activity;
-use Friendica\Protocol\ActivityPub;
 use Friendica\Util\ACLFormatter;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Emailer;
@@ -912,40 +911,6 @@ class Item
 		return $post;
 	}
 
-	public function moveAttachmentsFromBodyToAttach(array $post): array
-	{
-		if (!preg_match_all('/(\[attachment\]([0-9]+)\[\/attachment\])/', $post['body'], $match)) {
-			return $post;
-		}
-
-		foreach ($match[2] as $attachment_id) {
-			$attachment = Attach::selectFirst(['id', 'uid', 'filename', 'filesize', 'filetype'], ['id' => $attachment_id, 'uid' => $post['uid']]);
-			if (empty($attachment)) {
-				continue;
-			}
-			if ($post['attach']) {
-				$post['attach'] .= ',';
-			}
-			$post['attach'] .= Post\Media::getAttachElement(
-				$this->baseURL . '/attach/' . $attachment['id'],
-				$attachment['filesize'],
-				$attachment['filetype'],
-				$attachment['filename'] ?? ''
-			);
-
-			$fields = [
-				'allow_cid' => $post['allow_cid'], 'allow_gid' => $post['allow_gid'],
-				'deny_cid' => $post['deny_cid'], 'deny_gid' => $post['deny_gid']
-			];
-			$condition = ['id' => $attachment_id];
-			Attach::update($fields, $condition);
-		}
-
-		$post['body'] = str_replace($match[1], '', $post['body']);
-
-		return $post;
-	}
-
 	private function setObjectType(array $post): array
 	{
 		if (empty($post['post-type'])) {
@@ -1025,8 +990,13 @@ class Item
 		return $post;
 	}
 
-	public function finalizePost(array $post): array
+	public function finalizePost(array $post, bool $preview): array
 	{
+		if ($preview) {
+			$post['body'] = Attach::addAttachmentToBody($post['body'], $post['uid']);
+		} else {
+			Attach::setPermissionFromBody($post);
+		}
 		if (preg_match("/\[attachment\](.*?)\[\/attachment\]/ism", $post['body'], $matches)) {
 			$post['body'] = preg_replace("/\[attachment].*?\[\/attachment\]/ism", PageInfo::getFooterFromUrl($matches[1]), $post['body']);
 		}
@@ -1080,7 +1050,7 @@ class Item
 		$to_author     = DBA::selectFirst('account-view', ['ap-followers'], ['id' => $to['author-id']]);
 		$parent        = Post::selectFirstPost(['author-id'], ['uri-id' => $parentUriId]);
 		$parent_author = DBA::selectFirst('account-view', ['ap-followers'], ['id' => $parent['author-id']]);
-		
+
 		$followers = '';
 		foreach (array_column(Tag::getByURIId($parentUriId, [Tag::TO, Tag::CC, Tag::BCC]), 'url') as $url) {
 			if ($url == $parent_author['ap-followers']) {
