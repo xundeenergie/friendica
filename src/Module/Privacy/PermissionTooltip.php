@@ -19,18 +19,21 @@
  *
  */
 
-namespace Friendica\Module;
+namespace Friendica\Module\Privacy;
 
 use Friendica\App;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Hook;
 use Friendica\Core\L10n;
 use Friendica\Core\Protocol;
+use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\Database;
 use Friendica\Model;
+use Friendica\Module\Response;
 use Friendica\Network\HTTPException;
 use Friendica\Network\HTTPException\InternalServerErrorException;
+use Friendica\Privacy\Entity;
 use Friendica\Security\PermissionSet\Repository\PermissionSet;
 use Friendica\Util\ACLFormatter;
 use Friendica\Util\Profiler;
@@ -101,109 +104,111 @@ class PermissionTooltip extends \Friendica\BaseModule
 		// Kept for backwards compatibility
 		Hook::callAll('lockview_content', $model);
 
-		if ($type == 'item') {
-			$receivers = $this->fetchReceivers($model['uri-id']);
-			if (empty($receivers)) {
-				switch ($model['private']) {
-					case Model\Item::PUBLIC:
-						$receivers = $this->t('Public');
-						break;
-
-					case Model\Item::UNLISTED:
-						$receivers = $this->t('Unlisted');
-						break;
-
-					case Model\Item::PRIVATE:
-						$receivers = $this->t('Limited/Private');
-						break;
-				}
-			}
-		} else {
-			$receivers = '';
+		$aclReceivers = new Entity\AclReceivers();
+		$addressedReceivers = new Entity\AddressedReceivers();
+		if (!empty($model['allow_cid']) || !empty($model['allow_gid']) || !empty($model['deny_cid']) || !empty($model['deny_gid'])) {
+			$aclReceivers = $this->fetchReceiversFromACL($model);
+		} elseif ($type == 'item') {
+			$addressedReceivers = $this->fetchAddressedReceivers($model['uri-id']);
 		}
 
-		if (empty($model['allow_cid'])
-			&& empty($model['allow_gid'])
-			&& empty($model['deny_cid'])
-			&& empty($model['deny_gid'])
-			&& empty($receivers))
+		$privacy = '';
+		switch ($model['private'] ?? null) {
+			case Model\Item::PUBLIC:   $privacy = $this->t('Public'); break;
+			case Model\Item::UNLISTED: $privacy = $this->t('Unlisted'); break;
+			case Model\Item::PRIVATE:  $privacy = $this->t('Limited/Private'); break;
+		}
+
+		if ($aclReceivers->isEmpty() && $addressedReceivers->isEmpty() && empty($privacy))
 		{
 			echo $this->t('Remote privacy information not available.');
 			exit;
 		}
 
-		if (!empty($model['allow_cid']) || !empty($model['allow_gid']) || !empty($model['deny_cid']) || !empty($model['deny_gid'])) {
-			$receivers = $this->fetchReceiversFromACL($model);
-		}
+		$tpl = Renderer::getMarkupTemplate('privacy/permission_tooltip.tpl');
+		$output = Renderer::replaceMacros($tpl, [
+			'$l10n' => [
+				'visible_to' => $this->t('Visible to:'),
+				'to' => $this->t('To:'),
+				'cc' => $this->t('CC:'),
+				'bcc' => $this->t('BCC:'),
+				'audience' => $this->t('Audience:'),
+				'attributed' => $this->t('Attributed To:'),
+			],
+			'$aclReceivers' => $aclReceivers,
+			'$addressedReceivers' => $addressedReceivers,
+			'$privacy' => $privacy,
+		]);
 
-		$this->httpExit($this->t('Visible to:') . '<br />' . $receivers);
+		$this->httpExit($output);
 	}
 
 	/**
-	 * Fetch a list of receivers based on the ACL data
 	 * @throws \Exception
 	 */
-	private function fetchReceiversFromACL(array $model): string
+	private function fetchReceiversFromACL(array $model): Entity\AclReceivers
 	{
-		$allowed_users   = $model['allow_cid'];
-		$allowed_circles = $model['allow_gid'];
-		$deny_users      = $model['deny_cid'];
-		$deny_circles    = $model['deny_gid'];
+		$allow_cid = $model['allow_cid'];
+		$allow_gid = $model['allow_gid'];
+		$deny_cid  = $model['deny_cid'];
+		$deny_gid  = $model['deny_gid'];
 
-		$l = [];
+		$allowContacts = [];
+		$allowCircles  = [];
+		$denyContacts  = [];
+		$denyCircles   = [];
 
-		if (count($allowed_circles)) {
-			$key = array_search(Model\Circle::FOLLOWERS, $allowed_circles);
+		if (count($allow_gid)) {
+			$key = array_search(Model\Circle::FOLLOWERS, $allow_gid);
 			if ($key !== false) {
-				$l[] = '<b>' . $this->t('Followers') . '</b>';
-				unset($allowed_circles[$key]);
+				$allowCircles[] = $this->t('Followers');
+				unset($allow_gid[$key]);
 			}
 
-			$key = array_search(Model\Circle::MUTUALS, $allowed_circles);
+			$key = array_search(Model\Circle::MUTUALS, $allow_gid);
 			if ($key !== false) {
-				$l[] = '<b>' . $this->t('Mutuals') . '</b>';
-				unset($allowed_circles[$key]);
+				$allowCircles[] = $this->t('Mutuals');
+				unset($allow_gid[$key]);
 			}
 
-			foreach ($this->dba->selectToArray('group', ['name'], ['id' => $allowed_circles]) as $circle) {
-				$l[] = '<b>' . $circle['name'] . '</b>';
+			foreach ($this->dba->selectToArray('group', ['name'], ['id' => $allow_gid]) as $circle) {
+				$allowCircles[] = $circle['name'];
 			}
 		}
 
-		foreach ($this->dba->selectToArray('contact', ['name'], ['id' => $allowed_users]) as $contact) {
-			$l[] = $contact['name'];
+		foreach ($this->dba->selectToArray('contact', ['name'], ['id' => $allow_cid]) as $contact) {
+			$allowContacts[] = $contact['name'];
 		}
 
-		if (count($deny_circles)) {
-			$key = array_search(Model\Circle::FOLLOWERS, $deny_circles);
+		if (count($deny_gid)) {
+			$key = array_search(Model\Circle::FOLLOWERS, $deny_gid);
 			if ($key !== false) {
-				$l[] = '<b><strike>' . $this->t('Followers') . '</strike></b>';
-				unset($deny_circles[$key]);
+				$denyCircles[] = $this->t('Followers');
+				unset($deny_gid[$key]);
 			}
 
-			$key = array_search(Model\Circle::MUTUALS, $deny_circles);
+			$key = array_search(Model\Circle::MUTUALS, $deny_gid);
 			if ($key !== false) {
-				$l[] = '<b><strike>' . $this->t('Mutuals') . '</strike></b>';
-				unset($deny_circles[$key]);
+				$denyCircles[] = $this->t('Mutuals');
+				unset($deny_gid[$key]);
 			}
 
-			foreach ($this->dba->selectToArray('group', ['name'], ['id' => $allowed_circles]) as $circle) {
-				$l[] = '<b><strike>' . $circle['name'] . '</strike></b>';
+			foreach ($this->dba->selectToArray('group', ['name'], ['id' => $allow_gid]) as $circle) {
+				$denyCircles[] = $circle['name'];
 			}
 		}
 
-		foreach ($this->dba->selectToArray('contact', ['name'], ['id' => $deny_users]) as $contact) {
-			$l[] = '<strike>' . $contact['name'] . '</strike>';
+		foreach ($this->dba->selectToArray('contact', ['name'], ['id' => $deny_cid]) as $contact) {
+			$denyContacts[] = $contact['name'];
 		}
 
-		return implode(', ', $l);
+		return new Entity\AclReceivers($allowContacts, $allowCircles, $denyContacts, $denyCircles);
 	}
 
 	/**
-	 * Fetch a list of receivers
 	 * @throws InternalServerErrorException
 	 */
-	private function fetchReceivers(int $uriId): string
+	private function fetchAddressedReceivers(int $uriId): Entity\AddressedReceivers
 	{
 		$own_url = '';
 		$uid = $this->session->getLocalUserId();
@@ -242,34 +247,21 @@ class PermissionTooltip extends \Friendica\BaseModule
 			}
 		}
 
-		$output = '';
-
 		foreach ($receivers as $type => $receiver) {
 			$max = $this->config->get('system', 'max_receivers');
 			$total = count($receiver);
 			if ($total > $max) {
-				$receiver = array_slice($receiver, 0, $max);
-				$receiver[] = $this->t('%d more', $total - $max);
-			}
-			switch ($type) {
-				case Model\Tag::TO:
-					$output .= $this->t('<b>To:</b> %s<br>', implode(', ', $receiver));
-					break;
-				case Model\Tag::CC:
-					$output .= $this->t('<b>CC:</b> %s<br>', implode(', ', $receiver));
-					break;
-				case Model\Tag::BCC:
-					$output .= $this->t('<b>BCC:</b> %s<br>', implode(', ', $receiver));
-					break;
-				case Model\Tag::AUDIENCE:
-					$output .= $this->t('<b>Audience:</b> %s<br>', implode(', ', $receiver));
-					break;
-				case Model\Tag::ATTRIBUTED:
-					$output .= $this->t('<b>Attributed To:</b> %s<br>', implode(', ', $receiver));
-					break;
+				$receivers[$type] = array_slice($receiver, 0, $max);
+				$receivers[$type][] = $this->t('%d more', $total - $max);
 			}
 		}
 
-		return $output;
+		return new Entity\AddressedReceivers(
+			$receivers[Model\Tag::TO] ?? [],
+			$receivers[Model\Tag::CC] ?? [],
+			$receivers[Model\Tag::BCC] ?? [],
+			$receivers[Model\Tag::AUDIENCE] ?? [],
+			$receivers[Model\Tag::ATTRIBUTED] ?? [],
+		);
 	}
 }
