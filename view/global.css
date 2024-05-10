@@ -749,3 +749,27 @@ figure.img-allocated-height img{
 	width: 48px;
 	height: 48px;
 }
+
+/**
+ * Log levels colorized in the admin panel
+ **/
+.loglevel-debug {
+}
+.loglevel-info {
+	color: #0f009f; /* blue */
+}
+.loglevel-notice {
+	color: #007e01; /* green */
+}
+.loglevel-warning {
+	color: #de9600; /* dark orange */
+	font-weight: bold;
+}
+.loglevel-error {
+	color: #ff0000; /* red */
+	font-weight: bold;
+}
+.loglevel-critical {
+	color: #731289; /* purple */
+	font-weight: bold;
+}
