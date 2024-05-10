@@ -754,16 +754,15 @@ figure.img-allocated-height img{
  * Log levels colorized in the admin panel
  **/
 .loglevel-debug {
-	color: #00ff00; /* green */
 }
 .loglevel-info {
-	color: #013220; /* dark green */
+	color: #0f009f; /* blue */
 }
 .loglevel-notice {
-	color: #ffa500; /* orange */
+	color: #007e01; /* green */
 }
 .loglevel-warning {
-	color: #ff8c00; /* dark orange */
+	color: #de9600; /* dark orange */
 	font-weight: bold;
 }
 .loglevel-error {
@@ -771,6 +770,6 @@ figure.img-allocated-height img{
 	font-weight: bold;
 }
 .loglevel-critical {
-	color: #8b0000; /* dark red */
+	color: #731289; /* purple */
 	font-weight: bold;
 }
