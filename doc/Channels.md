@@ -95,5 +95,5 @@ Alternatives are presented with "|".
     * visibility:private
 * language | lang - Use "language:code" to search for posts with the given language in the [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1) format.
 
-Remember that you can combine these kerywords.
+Remember that you can combine these keywords.
 So for example you can create a channel with all posts that talk about the Fediverse - that aren't posted in the Fediverse with the search terms: "fediverse -network:apub -network:dfrn"
