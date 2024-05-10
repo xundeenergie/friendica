@@ -32,6 +32,8 @@ use Friendica\Core\Storage\Exception\ReferenceStorageException;
 use Friendica\Core\Storage\Exception\StorageException;
 use Friendica\Core\Storage\Type\SystemResource;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Object\Image;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Images;
@@ -234,7 +236,8 @@ class Photo
 					FROM `photo` WHERE `uid` = ? AND NOT `photo-type` IN (?, ?) $sqlExtra
 					GROUP BY `resource-id` $sqlExtra2",
 				$values
-			));
+			)
+		);
 	}
 
 	/**
@@ -549,7 +552,7 @@ class Photo
 			// get photo to update
 			$photos = self::selectToArray(['backend-class', 'backend-ref'], $conditions);
 
-			foreach($photos as $photo) {
+			foreach ($photos as $photo) {
 				try {
 					$backend_class         = DI::storageManager()->getWritableStorageByName($photo['backend-class'] ?? '');
 					$fields['backend-ref'] = $backend_class->put($image->asString(), $photo['backend-ref']);
@@ -580,7 +583,9 @@ class Photo
 		$micro = '';
 
 		$photo = DBA::selectFirst(
-			'photo', ['resource-id'], ['uid' => $uid, 'contact-id' => $cid, 'scale' => 4, 'photo-type' => self::CONTACT_AVATAR]
+			'photo',
+			['resource-id'],
+			['uid' => $uid, 'contact-id' => $cid, 'scale' => 4, 'photo-type' => self::CONTACT_AVATAR]
 		);
 		if (!empty($photo['resource-id'])) {
 			$resource_id = $photo['resource-id'];
@@ -597,7 +602,7 @@ class Photo
 
 		$filename = basename($image_url);
 		if (!empty($image_url)) {
-			$ret = DI::httpClient()->get($image_url, HttpClientAccept::IMAGE);
+			$ret = DI::httpClient()->get($image_url, HttpClientAccept::IMAGE, [HttpClientOptions::REQUEST => HttpClientRequest::MEDIAPROXY]);
 			Logger::debug('Got picture', ['Content-Type' => $ret->getHeader('Content-Type'), 'url' => $image_url]);
 			$img_str = $ret->getBodyString();
 			$type = $ret->getContentType();
@@ -681,7 +686,9 @@ class Photo
 		}
 
 		$photo = DBA::selectFirst(
-			'photo', ['blurhash'], ['uid' => $uid, 'contact-id' => $cid, 'scale' => 4, 'photo-type' => self::CONTACT_AVATAR]
+			'photo',
+			['blurhash'],
+			['uid' => $uid, 'contact-id' => $cid, 'scale' => 4, 'photo-type' => self::CONTACT_AVATAR]
 		);
 
 		return [$image_url, $thumb, $micro, $photo['blurhash']];
@@ -751,7 +758,8 @@ class Photo
 			if (!DI::config()->get('system', 'no_count', false)) {
 				/// @todo This query needs to be renewed. It is really slow
 				// At this time we just store the data in the cache
-				$albums = DBA::toArray(DBA::p("SELECT COUNT(DISTINCT `resource-id`) AS `total`, `album`, MIN(`created`) AS `created`
+				$albums = DBA::toArray(DBA::p(
+					"SELECT COUNT(DISTINCT `resource-id`) AS `total`, `album`, MIN(`created`) AS `created`
 					FROM `photo`
 					WHERE `uid` = ? AND `photo-type` IN (?, ?, ?) $sql_extra
 					GROUP BY `album` ORDER BY `created` DESC",
@@ -762,7 +770,8 @@ class Photo
 				));
 			} else {
 				// This query doesn't do the count and is much faster
-				$albums = DBA::toArray(DBA::p("SELECT '' AS `total`, `album`, MIN(`created`) AS `created`
+				$albums = DBA::toArray(DBA::p(
+					"SELECT '' AS `total`, `album`, MIN(`created`) AS `created`
 					FROM `photo` USE INDEX (`uid_album_scale_created`)
 					WHERE `uid` = ? AND `photo-type` IN (?, ?, ?) $sql_extra
 					GROUP BY `album` ORDER BY `created` DESC",
@@ -902,9 +911,11 @@ class Photo
 	 */
 	public static function setPermissionForResource(string $image_rid, int $uid, string $str_contact_allow, string $str_circle_allow, string $str_contact_deny, string $str_circle_deny)
 	{
-		$fields = ['allow_cid' => $str_contact_allow, 'allow_gid' => $str_circle_allow,
-		'deny_cid' => $str_contact_deny, 'deny_gid' => $str_circle_deny,
-		'accessible' => DI::pConfig()->get($uid, 'system', 'accessible-photos', false)];
+		$fields = [
+			'allow_cid' => $str_contact_allow, 'allow_gid' => $str_circle_allow,
+			'deny_cid' => $str_contact_deny, 'deny_gid' => $str_circle_deny,
+			'accessible' => DI::pConfig()->get($uid, 'system', 'accessible-photos', false)
+		];
 
 		$condition = ['resource-id' => $image_rid, 'uid' => $uid];
 		Logger::info('Set permissions', ['condition' => $condition, 'permissions' => $fields]);
@@ -1046,7 +1057,7 @@ class Photo
 	{
 		$filename = basename($image_url);
 		if (!empty($image_url)) {
-			$ret = DI::httpClient()->get($image_url, HttpClientAccept::IMAGE);
+			$ret = DI::httpClient()->get($image_url, HttpClientAccept::IMAGE, [HttpClientOptions::REQUEST => HttpClientRequest::MEDIAPROXY]);
 			Logger::debug('Got picture', ['Content-Type' => $ret->getHeader('Content-Type'), 'url' => $image_url]);
 			$img_str = $ret->getBodyString();
 			$type = $ret->getContentType();

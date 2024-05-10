@@ -34,6 +34,7 @@ use Friendica\Model\User;
 use Friendica\Network\HTTPClient\Capability\ICanHandleHttpResponses;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 
 /**
  * Implements HTTP Signatures per draft-cavage-http-signatures-07.
@@ -69,7 +70,7 @@ class HTTPSignature
 
 		// Decide if $data arrived via controller submission or curl.
 		$headers = [];
-		$headers['(request-target)'] = strtolower(DI::args()->getMethod()).' '.$_SERVER['REQUEST_URI'];
+		$headers['(request-target)'] = strtolower(DI::args()->getMethod()) . ' ' . $_SERVER['REQUEST_URI'];
 
 		foreach ($_SERVER as $k => $v) {
 			if (strpos($k, 'HTTP_') === 0) {
@@ -293,7 +294,7 @@ class HTTPSignature
 			'Host' => $host
 		];
 
-		$signed_data = "(request-target): post " . $path . "\ndate: ". $date . "\ncontent-length: " . $content_length . "\ndigest: " . $digest . "\nhost: " . $host;
+		$signed_data = "(request-target): post " . $path . "\ndate: " . $date . "\ncontent-length: " . $content_length . "\ndigest: " . $digest . "\nhost: " . $host;
 
 		$signature = base64_encode(Crypto::rsaSign($signed_data, $owner['uprvkey'], 'sha256'));
 
@@ -301,7 +302,7 @@ class HTTPSignature
 
 		$headers['Content-Type'] = 'application/activity+json';
 
-		$postResult = DI::httpClient()->post($target, $content, $headers, DI::config()->get('system', 'curl_timeout'));
+		$postResult = DI::httpClient()->post($target, $content, $headers, DI::config()->get('system', 'curl_timeout'), HttpClientRequest::ACTIVITYPUB);
 		$return_code = $postResult->getReturnCode();
 
 		Logger::info('Transmit to ' . $target . ' returned ' . $return_code);
@@ -508,7 +509,7 @@ class HTTPSignature
 			$header['Date'] = $date;
 			$header['Host'] = $host;
 
-			$signed_data = "(request-target): get " . $path . "\ndate: ". $date . "\nhost: " . $host;
+			$signed_data = "(request-target): get " . $path . "\ndate: " . $date . "\nhost: " . $host;
 
 			$signature = base64_encode(Crypto::rsaSign($signed_data, $owner['uprvkey'], 'sha256'));
 
@@ -517,6 +518,7 @@ class HTTPSignature
 
 		$curl_opts                             = $opts;
 		$curl_opts[HttpClientOptions::HEADERS] = $header;
+		$curl_opts[HttpClientOptions::REQUEST] = HttpClientRequest::ACTIVITYPUB;
 
 		if (!empty($opts['nobody'])) {
 			$curlResult = DI::httpClient()->head($request, $curl_opts);

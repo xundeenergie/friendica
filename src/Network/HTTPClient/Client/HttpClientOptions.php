@@ -52,7 +52,10 @@ class HttpClientOptions
 	 * content_length: (int) maximum File content length
 	 */
 	const CONTENT_LENGTH = 'content_length';
-
+	/**
+	 * Request: (string) Type of request (ActivityPub, Diaspora, server discovery, ...)
+	 */
+	const REQUEST = 'request';
 	/**
 	 * verify: (bool|string, default=true) Describes the SSL certificate
 	 */

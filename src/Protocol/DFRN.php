@@ -44,6 +44,7 @@ use Friendica\Model\Post;
 use Friendica\Model\Profile;
 use Friendica\Model\Tag;
 use Friendica\Model\User;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException;
 use Friendica\Network\Probe;
 use Friendica\Util\Crypto;
@@ -1009,7 +1010,7 @@ class DFRN
 
 		$content_type = ($public_batch ? 'application/magic-envelope+xml' : 'application/json');
 
-		$postResult = DI::httpClient()->post($dest_url, $envelope, ['Content-Type' => $content_type]);
+		$postResult = DI::httpClient()->post($dest_url, $envelope, ['Content-Type' => $content_type], 0, HttpClientRequest::DFRN);
 		$xml = $postResult->getBodyString();
 
 		$curl_stat = $postResult->getReturnCode();
