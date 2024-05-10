@@ -22,13 +22,13 @@ Voreingestellte Kanäle
 ---
 
 * Für Dich: Beiträge von Kontakten mit denen du interagierst und die mit dir interagieren. Im Detail bestehend aus:
-	* Beiträge von Leuten, mit denen du überdurchschnittlich viel interagierst.
-	* Beiträge von Kontakten, denen du folgst und mit denen du überdurchschnittlich viel interagierst.
-	* Beiträge von Kontakten, bei denen du "Benachrichtigung bei neuen Beiträgen" aktiviert hast oder wo du die Kanalfrequenz entsprechend eingestellt hast.
+    * Beiträge von Leuten, mit denen du überdurchschnittlich viel interagierst.
+    * Beiträge von Kontakten, denen du folgst und mit denen du überdurchschnittlich viel interagierst.
+    * Beiträge von Kontakten, bei denen du "Benachrichtigung bei neuen Beiträgen" aktiviert hast oder wo du die Kanalfrequenz entsprechend eingestellt hast.
 * Entdecken: Beiträge von Kontakten denen du nicht folgst, aber denen zu folgen für dich interessant sein könnte. Im Detail bestehend aus:
-	* Beiträge von Leuten denen du nicht folgst, aber mit denen du überdurchschnittlich viel interagierst.
-	* Beiträge von Leuten denen du nicht folgst, aber die mit dir überdurchschnittlich viel interagieren.
-	* Beliebte Beiträge von Leuten denen du nicht folgst, aber mit denen du interagiert hast oder die mit dir interagiert haben.
+    * Beiträge von Leuten denen du nicht folgst, aber mit denen du überdurchschnittlich viel interagierst.
+    * Beiträge von Leuten denen du nicht folgst, aber die mit dir überdurchschnittlich viel interagieren.
+    * Beliebte Beiträge von Leuten denen du nicht folgst, aber mit denen du interagiert hast oder die mit dir interagiert haben.
 * Angesagt: Beiträge mit überdurchschnittlich hoher Anzahl von Interaktionen.
 * Sprache: Beiträge in deiner Sprache.
 * Folgende: Beiträge von Leuten die dir folgen, aber denen du nicht folgst.
@@ -66,33 +66,33 @@ Alternativen werden durch "|" dargestellt.
 * application | relay - Nutze "application:nickname" oder "application:nickname@domain.tld" um Beiträge zu finden, die von der gegebenen relay application geteilt wurden.
 * server - Verwende "server:hostname" um Beiträge von einem bestimmten Server zu suchen. Im Falle eine Gruppen-Postings enthält der Suchtext beides, den Hostname des Gruppen-Servers und den Hostname des Autors.
 * source - Der ActivityPub-Typ der Beitragsquelle. Nutze dies um beispielsweise Gruppenpostings oder Beiträge von Services (aka Bots) ein- oder auszuschließen.
-	* source:person - Der Beitrag wurde von einem regulären Nutzerkonto erstellt.
-	* source:organization - Der Beitrag wurde von einer Organisation erstellt.
-	* source:group -  Dieser Beitrag wurde über eine Gruppe erstellt oder verteilt.
-	* source:service | source:news - Dieser Beitrag stammt aus einem 'service' Account. Dieser Quellen(source)-Typ wird oft genutzt um Bot Accounts zu markieren.
-	* source:application | source:relay - Dieser Beitrag wurde von einer Anwendung (application) erstellt. Dies wird im Fediverse höchstwahrscheinlich für die Beitragserstellung nicht genutzt.
+    * source:person - Der Beitrag wurde von einem regulären Nutzerkonto erstellt.
+    * source:organization - Der Beitrag wurde von einer Organisation erstellt.
+    * source:group -  Dieser Beitrag wurde über eine Gruppe erstellt oder verteilt.
+    * source:service | source:news - Dieser Beitrag stammt aus einem 'service' Account. Dieser Quellen(source)-Typ wird oft genutzt um Bot Accounts zu markieren.
+    * source:application | source:relay - Dieser Beitrag wurde von einer Anwendung (application) erstellt. Dies wird im Fediverse höchstwahrscheinlich für die Beitragserstellung nicht genutzt.
 * tag - Nutze "tag:tagname" um nach einem bestimmten tag (Schlagwort) zu suchen.
 * media - Mit diesem Schlüsselwort kannst du nach angefügten Medien suchen.
-	* media:image | media:photo | media:picture - Dieser Beitrag enthält ein Bild
-	* media:video - Dieser Beitrag enthält ein Video
-	* media:audio - Dieser Beitrag enthält Audio
-	* media:card - Dieser Beitrag enthält eine Linkvorschau-'card'
-	* media:post - Dieser Beitrag verweist auf einen anderen Beitrag, was bedeutet, es ist ein zitierter Beitrag
+    * media:image | media:photo | media:picture - Dieser Beitrag enthält ein Bild
+    * media:video - Dieser Beitrag enthält ein Video
+    * media:audio - Dieser Beitrag enthält Audio
+    * media:card - Dieser Beitrag enthält eine Linkvorschau-'card'
+    * media:post - Dieser Beitrag verweist auf einen anderen Beitrag, was bedeutet, es ist ein zitierter Beitrag
 * network | net - Verwende dies um Netzwerke in deinen Kanal einzuschließen oder von ihm auszuschließen.
-	* network:apub | network:activitypub - ActivityPub (verwendet von den Systemen im Fediverse)
-	* network:dfrn | network:friendica - altes Friendica-Protokoll. Heutzutage nutzt Friendica meist ActivityPub.
-	* network:dspr | network:diaspora - Das Diaspora-Protokoll wird hauptsächlich von Diaspora selbst genutzt. Ein paar andere Systeme unterstützen dieses Protokoll ebenfalls, wie Hubzilla, Socialhome or Ganggo.
-	* network:feed - RSS/Atom feeds
-	* network:mail - Mails die via IMAP importiert worden sind.
-	* network:stat | network:ostatus - Das OStatus-Protokoll wird hauptsächlich von alten GNU Social-Installationen genutzt.
-	* network:dscs | network:discourse - Beiträge, die über den Discourse connector empfangen werden.
-	* network:tmbl | network:tumblr - Beiträge, die über den Tumblr connector empfangen werden.
-	* network:bsky | network:bluesky - Beiträge, die über den Bluesky connector empfangen werden.
+    * network:apub | network:activitypub - ActivityPub (verwendet von den Systemen im Fediverse)
+    * network:dfrn | network:friendica - altes Friendica-Protokoll. Heutzutage nutzt Friendica meist ActivityPub.
+    * network:dspr | network:diaspora - Das Diaspora-Protokoll wird hauptsächlich von Diaspora selbst genutzt. Ein paar andere Systeme unterstützen dieses Protokoll ebenfalls, wie Hubzilla, Socialhome or Ganggo.
+    * network:feed - RSS/Atom feeds
+    * network:mail - Mails die via IMAP importiert worden sind.
+    * network:stat | network:ostatus - Das OStatus-Protokoll wird hauptsächlich von alten GNU Social-Installationen genutzt.
+    * network:dscs | network:discourse - Beiträge, die über den Discourse connector empfangen werden.
+    * network:tmbl | network:tumblr - Beiträge, die über den Tumblr connector empfangen werden.
+    * network:bsky | network:bluesky - Beiträge, die über den Bluesky connector empfangen werden.
 * platform - Benutze dies, um Plattformen in deinen Kanal einzuschließen, oder von ihm auszuschließen, d.h. "+platform:friendica". Im Falle eines Gruppen-Postings enthält der Suchtext beides, die Plattform des Gruppen-Servers und die Plattform des Autors.
 * visibility - Du hast die Wahl zwischen verschiedenen Sichtbarkeiten. Du kannst nur die ungelisteten oder privaten Beiträge sehen, zu denen du Zugang hast.
-	* visibility:public - (öffentlich)
-	* visibility:unlisted - (ungelistet)
-	* visibility:private - (privat)
+    * visibility:public - (öffentlich)
+    * visibility:unlisted - (ungelistet)
+    * visibility:private - (privat)
 * language | lang - Verwende "language:code" um nach Beiträgen in der gewünschten Sprache (im [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1) format) zu suchen.
 
 Denke daran, dass du diese Schlüsselwörter kombinieren kannst.
