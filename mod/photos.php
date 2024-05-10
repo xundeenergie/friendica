@@ -672,18 +672,14 @@ function photos_content(App $a)
 
 		$selname = (!is_null($datum) && Strings::isHex($datum)) ? hex2bin($datum) : '';
 
-		$albumselect = '';
+		$albumselect = ['' => '<current year>'];
 
-		$albumselect .= '<option value="" ' . (!$selname ? ' selected="selected" ' : '') . '>&lt;current year&gt;</option>';
-		$albums = Photo::getAlbums($owner_uid);
-		if (!empty($albums)) {
-			foreach ($albums as $album) {
-				if ($album['album'] === '') {
-					continue;
-				}
-				$selected = (($selname === $album['album']) ? ' selected="selected" ' : '');
-				$albumselect .= '<option value="' . $album['album'] . '"' . $selected . '>' . $album['album'] . '</option>';
+		foreach (Photo::getAlbums($owner_uid) as $album) {
+			if ($album['album'] === '') {
+				continue;
 			}
+
+			$albumselect[$album['album']] = $album['album'];
 		}
 
 		$uploader = '';
@@ -729,6 +725,7 @@ function photos_content(App $a)
 			'$existalbumtext' => DI::l10n()->t('or select existing album:'),
 			'$nosharetext' => DI::l10n()->t('Do not show a status post for this upload'),
 			'$albumselect' => $albumselect,
+			'$selname' => $selname,
 			'$permissions' => DI::l10n()->t('Permissions'),
 			'$aclselect' => $aclselect_e,
 			'$lockstate' => ACL::getLockstateForUserId($a->getLoggedInUserId()) ? 'lock' : 'unlock',
