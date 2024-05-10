@@ -3688,13 +3688,14 @@ class Item
 				/// @todo Move the template to /content as well
 				$media = Renderer::replaceMacros(Renderer::getMarkupTemplate('video_top.tpl'), [
 					'$video' => [
-						'id'      => $PostMedia->id,
-						'src'     => (string)$PostMedia->url,
-						'name'    => $PostMedia->name ?: $PostMedia->url,
-						'preview' => $preview_url,
-						'mime'    => (string)$PostMedia->mimetype,
-						'height'  => $height,
-						'width'   => $width,
+						'id'          => $PostMedia->id,
+						'src'         => (string)$PostMedia->url,
+						'name'        => $PostMedia->name ?: $PostMedia->url,
+						'preview'     => $preview_url,
+						'mime'        => (string)$PostMedia->mimetype,
+						'height'      => $height,
+						'width'       => $width,
+						'description' => $PostMedia->description,
 					],
 				]);
 				if (($item['post-type'] ?? null) == Item::PT_VIDEO) {
