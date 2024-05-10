@@ -37,6 +37,7 @@ use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException;
 use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Protocol\Activity;
@@ -781,7 +782,7 @@ class Profile
 			$magic_path = $basepath . '/magic' . '?owa=1&dest=' . $dest . '&' . $addr_request;
 
 			// We have to check if the remote server does understand /magic without invoking something
-			$serverret = DI::httpClient()->head($basepath . '/magic', [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::HTML]);
+			$serverret = DI::httpClient()->head($basepath . '/magic', [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::HTML, HttpClientOptions::REQUEST => HttpClientRequest::MAGICAUTH]);
 			if ($serverret->isSuccess()) {
 				Logger::info('Doing magic auth for visitor ' . $my_url . ' to ' . $magic_path);
 				System::externalRedirect($magic_path);

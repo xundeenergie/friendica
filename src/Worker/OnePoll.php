@@ -33,6 +33,7 @@ use Friendica\Model\Post;
 use Friendica\Model\User;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Protocol\Activity;
 use Friendica\Protocol\ActivityPub;
 use Friendica\Protocol\Email;
@@ -487,7 +488,7 @@ class OnePoll
 			Contact::update(['hub-verify' => $verify_token], ['id' => $contact['id']]);
 		}
 
-		$postResult = DI::httpClient()->post($url, $params);
+		$postResult = DI::httpClient()->post($url, $params, [], 0, HttpClientRequest::PUBSUB);
 
 		Logger::info('Hub subscription done', ['result' => $postResult->getReturnCode()]);
 

@@ -27,6 +27,7 @@ use Friendica\DI;
 use Friendica\Model\Contact;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException\NotModifiedException;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
@@ -78,7 +79,8 @@ class Network
 		}
 
 		if (in_array(parse_url($url, PHP_URL_SCHEME), ['https', 'http'])) {
-			$options = [HttpClientOptions::VERIFY => true, HttpClientOptions::TIMEOUT => $xrd_timeout];
+			$options = [HttpClientOptions::VERIFY => true, HttpClientOptions::TIMEOUT => $xrd_timeout,
+				HttpClientOptions::REQUEST => HttpClientRequest::VERIFIER];
 			try {
 				$curlResult = DI::httpClient()->head($url, $options);
 			} catch (\Exception $e) {

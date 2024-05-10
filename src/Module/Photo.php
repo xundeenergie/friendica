@@ -38,6 +38,7 @@ use Friendica\Core\Worker;
 use Friendica\Model\User;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException;
 use Friendica\Network\HTTPException\NotModifiedException;
 use Friendica\Object\Image;
@@ -140,7 +141,7 @@ class Photo extends BaseApi
 					case 'scaled_full':
 						$scale = 1;
 						break;
-					}
+				}
 			}
 
 			$photo = MPhoto::getPhoto($photoid, $scale, self::getCurrentUserID());
@@ -166,7 +167,7 @@ class Photo extends BaseApi
 		if (empty($imgdata) && empty($photo['blurhash'])) {
 			throw new HTTPException\NotFoundException();
 		} elseif (empty($imgdata) && !empty($photo['blurhash'])) {
-			$image = New Image('', image_type_to_mime_type(IMAGETYPE_WEBP));
+			$image = new Image('', image_type_to_mime_type(IMAGETYPE_WEBP));
 			$image->getFromBlurHash($photo['blurhash'], $photo['width'], $photo['height']);
 			$imgdata  = $image->asString();
 			$mimetype = $image->getType();
@@ -243,10 +244,12 @@ class Photo extends BaseApi
 		$rest = $total - ($fetch + $data + $checksum + $output);
 
 		if (!is_null($scale) && ($scale < 4)) {
-			Logger::debug('Performance:', ['scale' => $scale, 'resource' => $photo['resource-id'],
+			Logger::debug('Performance:', [
+				'scale' => $scale, 'resource' => $photo['resource-id'],
 				'total' => number_format($total, 3), 'fetch' => number_format($fetch, 3),
 				'data' => number_format($data, 3), 'checksum' => number_format($checksum, 3),
-				'output' => number_format($output, 3), 'rest' => number_format($rest, 3)]);
+				'output' => number_format($output, 3), 'rest' => number_format($rest, 3)
+			]);
 		}
 
 		System::exit();
@@ -262,7 +265,7 @@ class Photo extends BaseApi
 	 */
 	private static function getPhotoById(int $id, string $type, int $customsize)
 	{
-		switch($type) {
+		switch ($type) {
 			case 'preview':
 				$media = DBA::selectFirst('post-media', ['preview', 'url', 'preview-height', 'preview-width', 'height', 'width', 'mimetype', 'type', 'uri-id', 'blurhash'], ['id' => $id]);
 				if (empty($media)) {
@@ -366,7 +369,7 @@ class Photo extends BaseApi
 						$update = in_array($contact['network'], Protocol::FEDERATED) && !$contact['failed']
 							&& ((time() - strtotime($contact['updated']) > 86400));
 						if ($update) {
-							$curlResult = DI::httpClient()->head($url, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::IMAGE]);
+							$curlResult = DI::httpClient()->head($url, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::IMAGE, HttpClientOptions::REQUEST => HttpClientRequest::MEDIAPROXY]);
 							$update = !$curlResult->isSuccess() && ($curlResult->getReturnCode() == 404);
 							Logger::debug('Got return code for avatar', ['return code' => $curlResult->getReturnCode(), 'cid' => $id, 'url' => $contact['url'], 'avatar' => $url]);
 						}
@@ -384,12 +387,13 @@ class Photo extends BaseApi
 					if (!empty($mimetext) && ($mime[0] != 'image') && ($mimetext != 'application/octet-stream')) {
 						Logger::info('Unexpected Content-Type', ['mime' => $mimetext, 'url' => $url]);
 						$mimetext = '';
-					} if (!empty($mimetext)) {
+					}
+					if (!empty($mimetext)) {
 						Logger::debug('Expected Content-Type', ['mime' => $mimetext, 'url' => $url]);
 					}
 				}
 				if (empty($mimetext) && !empty($contact['blurhash'])) {
-					$image = New Image('', image_type_to_mime_type(IMAGETYPE_WEBP));
+					$image = new Image('', image_type_to_mime_type(IMAGETYPE_WEBP));
 					$image->getFromBlurHash($contact['blurhash'], $customsize, $customsize);
 					return MPhoto::createPhotoForImageData($image->asString());
 				} elseif (empty($mimetext)) {
@@ -420,7 +424,7 @@ class Photo extends BaseApi
 					return self::getBannerForUser($header_uid);
 				}
 
-				If (($contact['uid'] != 0) && empty($contact['header'])) {
+				if (($contact['uid'] != 0) && empty($contact['header'])) {
 					$contact = Contact::getByURL($contact['url'], false, $fields);
 				}
 				if (!empty($contact['header'])) {
@@ -450,7 +454,7 @@ class Photo extends BaseApi
 		if (empty($photo)) {
 			$contact = DBA::selectFirst('contact', [], ['uid' => $id, 'self' => true]) ?: [];
 
-			switch($type) {
+			switch ($type) {
 				case 'profile':
 				case 'custom':
 					$default = Contact::getDefaultAvatar($contact, Proxy::SIZE_SMALL);

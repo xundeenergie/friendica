@@ -30,6 +30,7 @@ use Friendica\Module\Response;
 use Friendica\Network\HTTPClient\Capability\ICanSendHttpRequests;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException;
 use Friendica\Util\Profiler;
 use Friendica\Util\Strings;
@@ -107,7 +108,7 @@ class Redir extends \Friendica\BaseModule
 		}
 
 		// Test for magic auth on the target system
-		$response = $this->httpClient->head($basepath . '/magic', [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::HTML]);
+		$response = $this->httpClient->head($basepath . '/magic', [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::HTML, HttpClientOptions::REQUEST => HttpClientRequest::MAGICAUTH]);
 		if ($response->isSuccess()) {
 			$separator = strpos($target_url, '?') ? '&' : '?';
 			$target_url .= $separator . 'zrl=' . urlencode($visitor) . '&addr=' . urlencode($contact_url);

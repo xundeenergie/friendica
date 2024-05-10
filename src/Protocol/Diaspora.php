@@ -41,6 +41,7 @@ use Friendica\Model\Post;
 use Friendica\Model\Tag;
 use Friendica\Model\User;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException;
 use Friendica\Network\Probe;
 use Friendica\Protocol\Delivery;
@@ -2937,7 +2938,7 @@ class Diaspora
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	private static function transmit(array $owner, array $contact, string $envelope, bool $public_batch, string $guid = ''): int
+	private static function transmit(array $contact, string $envelope, bool $public_batch, string $guid = ''): int
 	{
 		$enabled = intval(DI::config()->get('system', 'diaspora_enabled'));
 		if (!$enabled) {
@@ -2968,7 +2969,7 @@ class Diaspora
 		if (!intval(DI::config()->get('system', 'diaspora_test'))) {
 			$content_type = (($public_batch) ? 'application/magic-envelope+xml' : 'application/json');
 
-			$postResult = DI::httpClient()->post($dest_url . '/', $envelope, ['Content-Type' => $content_type]);
+			$postResult = DI::httpClient()->post($dest_url . '/', $envelope, ['Content-Type' => $content_type], 0, HttpClientRequest::DIASPORA);
 			$return_code = $postResult->getReturnCode();
 		} else {
 			Logger::notice('test_mode');
@@ -3042,7 +3043,7 @@ class Diaspora
 
 		$envelope = self::buildMessage($msg, $owner, $contact, $owner['uprvkey'], $pubkey ?? '', $public_batch);
 
-		$return_code = self::transmit($owner, $contact, $envelope, $public_batch, $guid);
+		$return_code = self::transmit($contact, $envelope, $public_batch, $guid);
 
 		Logger::info('Transmitted message', ['owner' => $owner['uid'], 'target' => $contact['addr'], 'type' => $type, 'guid' => $guid, 'result' => $return_code]);
 

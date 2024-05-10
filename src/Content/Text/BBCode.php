@@ -40,6 +40,7 @@ use Friendica\Model\Post;
 use Friendica\Model\Tag;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Util\Images;
 use Friendica\Util\Map;
 use Friendica\Util\Network;
@@ -960,7 +961,7 @@ class BBCode
 		$text = DI::cache()->get($cache_key);
 
 		if (is_null($text)) {
-			$curlResult = DI::httpClient()->head($match[1], [HttpClientOptions::TIMEOUT => DI::config()->get('system', 'xrd_timeout')]);
+			$curlResult = DI::httpClient()->head($match[1], [HttpClientOptions::TIMEOUT => DI::config()->get('system', 'xrd_timeout'), HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
 			if ($curlResult->isSuccess()) {
 				$mimetype = $curlResult->getContentType() ?? '';
 			} else {
@@ -1058,7 +1059,7 @@ class BBCode
 			return $text;
 		}
 
-		$curlResult = DI::httpClient()->head($match[1], [HttpClientOptions::TIMEOUT => DI::config()->get('system', 'xrd_timeout')]);
+		$curlResult = DI::httpClient()->head($match[1], [HttpClientOptions::TIMEOUT => DI::config()->get('system', 'xrd_timeout'), HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
 		if ($curlResult->isSuccess()) {
 			$mimetype = $curlResult->getContentType() ?? '';
 		} else {
@@ -1355,7 +1356,7 @@ class BBCode
 				$text = self::convertTablesToHtml($text);
 				$text = self::convertSpoilersToHtml($text);
 				$text = self::convertStructuresToHtml($text);
-				
+
 				// We add URL without a surrounding URL at this time, since at a earlier stage it would had been too early,
 				// since the used regular expression won't touch URL inside of BBCode elements, but with the structural ones it should.
 				// At a later stage we won't be able to exclude certain parts of the code.
@@ -1365,7 +1366,7 @@ class BBCode
 					}
 					return self::convertSmileysToHtml($text, $simple_html, $for_plaintext);
 				});
-				
+
 				// Now for some more complex BBCode elements (mostly non standard ones)
 				$text = self::convertAttachmentsToHtml($text, $simple_html, $try_oembed, $uriid);
 				$text = self::convertMapsToHtml($text, $simple_html);
@@ -1380,7 +1381,7 @@ class BBCode
 				$text = self::convertIFramesToHtml($text);
 				$text = self::convertMailToHtml($text);
 				$text = self::convertAudioVideoToHtml($text, $simple_html, $try_oembed, $try_oembed_callback);
-				
+
 				// At last, some standard elements. URL has to go last,
 				// since some previous conversions use URL elements.
 				$text = self::convertImagesToHtml($text, $simple_html, $uriid);
@@ -1650,10 +1651,12 @@ class BBCode
 			$elements = ['big', 'small'];
 			foreach ($elements as $bbcode) {
 				$text = preg_replace("(\[" . $bbcode . "\](.*?)\[\/" . $bbcode . "\])ism", '$1', $text);
-			}	
+			}
 
-			$elements = ['del' => 's', 'ins' => 'em', 'kbd' => 'code', 'mark' => 'strong',
-				'samp' => 'code', 'u' => 'em', 'var' => 'em'];
+			$elements = [
+				'del' => 's', 'ins' => 'em', 'kbd' => 'code', 'mark' => 'strong',
+				'samp' => 'code', 'u' => 'em', 'var' => 'em'
+			];
 			foreach ($elements as $bbcode => $html) {
 				$text = preg_replace("(\[" . $bbcode . "\](.*?)\[\/" . $bbcode . "\])ism", '<' . $html . '>$1</' . $html . '>', $text);
 			}
@@ -1661,8 +1664,10 @@ class BBCode
 
 		// Several easy to replace HTML elements
 		// @todo add the new elements to the documentation by the end of 2024 so that most systems will support them.
-		$elements = ['b', 'del', 'em', 'i', 'ins', 'kbd', 'mark',
-			's', 'samp', 'small', 'strong', 'sub', 'sup', 'u', 'var'];
+		$elements = [
+			'b', 'del', 'em', 'i', 'ins', 'kbd', 'mark',
+			's', 'samp', 'small', 'strong', 'sub', 'sup', 'u', 'var'
+		];
 		foreach ($elements as $element) {
 			$text = preg_replace("(\[" . $element . "\](.*?)\[\/" . $element . "\])ism", '<' . $element . '>$1</' . $element . '>', $text);
 		}
@@ -1706,7 +1711,7 @@ class BBCode
 
 		return $text;
 	}
-	
+
 	private static function convertTablesToHtml(string $text): string
 	{
 		$text = preg_replace("/\[th\](.*?)\[\/th\]/sm", '<th>$1</th>', $text);
@@ -1875,7 +1880,7 @@ class BBCode
 
 		$text = self::convertImages($text, $simple_html, $uriid);
 
-				return $text;
+		return $text;
 	}
 
 	private static function convertCryptToHtml(string $text): string
