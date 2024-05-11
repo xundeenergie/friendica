@@ -96,7 +96,6 @@ class Activities extends BaseFactory
 					break;
 
 				default:
-					$this->logger->warning('Unsupported verb in parent item:', ['parent_item' => $parent_item]);
 					break;
 			}
 		}
