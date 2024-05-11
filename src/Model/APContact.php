@@ -105,14 +105,12 @@ class APContact
 	/**
 	 * Fetches a profile from a given url
 	 *
-	 * @param string  $url    profile url
-	 * @param boolean $update true = always update, false = never update, null = update when not found or outdated
+	 * @param string   $url    profile url
+	 * @param ?boolean $update true = always update, false = never update, null = update when not found or outdated
 	 * @return array profile array
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
-	 * @throws \ImagickException
-	 * @todo Rewrite parameter $update to avoid true|false|null (boolean is binary, null adds a third case)
 	 */
-	public static function getByURL(string $url, $update = null): array
+	public static function getByURL(string $url, bool $update = null): array
 	{
 		if (empty($url) || Network::isUrlBlocked($url)) {
 			Logger::info('Domain is blocked', ['url' => $url]);

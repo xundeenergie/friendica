@@ -565,7 +565,7 @@ return [
 	'/opensearch'        => [Module\OpenSearch::class,         [R::GET]],
 
 	'/parseurl'                           => [Module\ParseUrl::class,          [R::GET]],
-	'/permission/tooltip/{type}/{id:\d+}' => [Module\PermissionTooltip::class, [R::GET]],
+	'/permission/tooltip/{type}/{id:\d+}' => [Module\Privacy\PermissionTooltip::class, [R::GET]],
 
 	'/photo' => [
 		'/{size:thumb_small|scaled_full}_{name}'                   => [Module\Photo::class, [R::GET]],
