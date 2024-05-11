@@ -29,7 +29,6 @@ use Friendica\Contact\LocalRelationship\Entity\LocalRelationship;
 use Friendica\Content\PageInfo;
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Text\HTML;
-use Friendica\Core\Cache\Enum\Duration;
 use Friendica\Core\Logger;
 use Friendica\Core\Protocol;
 use Friendica\Core\Worker;
@@ -668,7 +667,7 @@ class Feed
 				}
 			} else {
 				if (!empty($summary)) {
-					$item['body'] = '[abstract]' . HTML::toBBCode($summary, $basepath) . "[/abstract]\n" . $item['body'];
+					$item['content-warning'] = HTML::toBBCode($summary, $basepath);
 				}
 
 				if ($fetch_further_information == LocalRelationship::FFI_KEYWORD) {

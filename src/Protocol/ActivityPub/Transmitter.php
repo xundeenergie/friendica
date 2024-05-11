@@ -1160,11 +1160,11 @@ class Transmitter
 		// - Moving the title into the "summary" field that is used as a "content warning"
 
 		if (!$use_title) {
-			$mail['body']         = '[abstract]' . $mail['title'] . "[/abstract]\n" . $mail['body'];
-			$mail['title']        = '';
+			$mail['content-warning'] = $mail['title'];
+			$mail['title']           = '';
+		} else {
+			$mail['content-warning']  = '';
 		}
-
-		$mail['content-warning']  = '';
 		$mail['sensitive']        = false;
 		$mail['author-link']      = $mail['owner-link'] = $mail['from-url'];
 		$mail['owner-id']         = $mail['author-id'];
@@ -1780,7 +1780,7 @@ class Transmitter
 			return $data;
 		}
 
-		$data['summary'] = BBCode::toPlaintext(BBCode::getAbstract($item['body'], Protocol::ACTIVITYPUB));
+		$data['summary'] = $item['content-warning'] ?: BBCode::toPlaintext(BBCode::getAbstract($item['body'], Protocol::ACTIVITYPUB));
 
 		if ($item['uri'] != $item['thr-parent']) {
 			$data['inReplyTo'] = $item['thr-parent'];
