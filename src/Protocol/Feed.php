@@ -674,7 +674,7 @@ class Feed
 				}
 			} else {
 				if (!empty($summary)) {
-					$item['body'] = '[abstract]' . HTML::toBBCode($summary, $basepath) . "[/abstract]\n" . $item['body'];
+					$item['content-warning'] = HTML::toBBCode($summary, $basepath);
 				}
 
 				if ($fetch_further_information == LocalRelationship::FFI_KEYWORD) {
