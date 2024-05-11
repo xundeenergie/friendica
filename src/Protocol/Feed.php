@@ -29,7 +29,6 @@ use Friendica\Contact\LocalRelationship\Entity\LocalRelationship;
 use Friendica\Content\PageInfo;
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Text\HTML;
-use Friendica\Core\Cache\Enum\Duration;
 use Friendica\Core\Logger;
 use Friendica\Core\Protocol;
 use Friendica\Core\Worker;
@@ -546,6 +545,13 @@ class Feed
 			if (self::titleIsBody($item['title'], $body)) {
 				$item['title'] = '';
 			}
+
+			if (!HTML::isHTML($body)) {
+				$original = $body;
+				$body = BBCode::convert($body, false, BBCode::EXTERNAL);
+				Logger::debug('Body contained no HTML', ['original' => $original, 'converted' => $body]);
+			}
+
 			$item['body'] = HTML::toBBCode($body, $basepath);
 
 			// Remove tracking pixels
