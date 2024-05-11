@@ -790,7 +790,7 @@ class Item
 
 		if (self::hasRestrictions($item, $parent['author-id'], $parent['restrictions'])) {
 			Logger::notice('Restrictions apply - ignoring item', ['restrictions' => $parent['restrictions'], 'verb' => $parent['verb'], 'uri-id' => $item['uri-id'], 'thr-parent-id' => $item['thr-parent-id'], 'uid' => $item['uid']]);
-			return 0;
+			return [];
 		}
 
 		if ($parent['uri-id'] == $parent['parent-uri-id']) {
