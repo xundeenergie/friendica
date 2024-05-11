@@ -253,8 +253,10 @@ class HTML
 			self::tagToBBCode($doc, 'span', ['class' => 'type-link'], '[class=type-link]', '[/class]');
 			self::tagToBBCode($doc, 'span', ['class' => 'type-video'], '[class=type-video]', '[/class]');
 
-			$elements = ['b', 'del', 'em', 'i', 'ins', 'kbd', 'mark',
-				's', 'samp', 'strong', 'sub', 'sup', 'u', 'var'];
+			$elements = [
+				'b', 'del', 'em', 'i', 'ins', 'kbd', 'mark',
+				's', 'samp', 'strong', 'sub', 'sup', 'u', 'var'
+			];
 			foreach ($elements as $element) {
 				self::tagToBBCode($doc, $element, [], '[' . $element . ']', '[/' . $element . ']');
 			}
@@ -1058,5 +1060,16 @@ class HTML
 		}
 
 		return null;
+	}
+
+	/**
+	 * Check if a document contains HTML or entities
+	 *
+	 * @param string $text
+	 * @return boolean
+	 */
+	public static function isHTML(string $text): bool
+	{
+		return ($text != html_entity_decode($text)) || ($text != strip_tags($text));
 	}
 }
