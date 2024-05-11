@@ -28,6 +28,7 @@ use Friendica\Core\Protocol;
 use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\DI;
+use Friendica\Model\Attach;
 use Friendica\Model\Contact;
 use Friendica\Model\Item;
 use Friendica\Model\ItemURI;
@@ -389,6 +390,16 @@ class Media
 	 */
 	private static function fetchLocalData(array $media): array
 	{
+		if (preg_match('|.*?/attach/(\d+)|', $media['url'] ?? '', $matches)) {
+			$attachment = Attach::selectFirst(['filename', 'filetype', 'filesize'], ['id' => $matches[1]]);
+			if (!empty($attachment)) {
+				$media['name']     = $attachment['filename'];
+				$media['mimetype'] = $attachment['filetype'];
+				$media['size']     = $attachment['filesize'];
+			}
+			return $media;
+		}
+
 		if (!preg_match('|.*?/photo/(.*[a-fA-F0-9])\-(.*[0-9])\..*[\w]|', $media['url'] ?? '', $matches)) {
 			return $media;
 		}
@@ -902,25 +913,31 @@ class Media
 		$body = BBCode::removeAttachment($body);
 
 		foreach (self::getByURIId($uriid, $types) as $media) {
-			if (Item::containsLink($body, $media['preview'] ?? $media['url'], $media['type'])) {
-				continue;
-			}
-
-			if ($media['type'] == self::IMAGE) {
-				$body .= "\n" . Images::getBBCodeByUrl($media['url'], $media['preview'], $media['description'] ?? '');
-			} elseif ($media['type'] == self::AUDIO) {
-				$body .= "\n[audio]" . $media['url'] . "[/audio]\n";
-			} elseif ($media['type'] == self::VIDEO) {
-				$body .= "\n[video]" . $media['url'] . "[/video]\n";
-			} else {
-				$body .= "\n[url]" . $media['url'] . "[/url]\n";
-			}
+			$body = self::addAttachmentToBody($media, $body);
 		}
 
 		if (preg_match("/.*(\[attachment.*?\].*?\[\/attachment\]).*/ism", $original_body, $match)) {
 			$body .= "\n" . $match[1];
 		}
 
+		return $body;
+	}
+
+	public static function addAttachmentToBody(array $media, string $body): string
+	{
+		if (Item::containsLink($body, $media['preview'] ?? $media['url'], $media['type'])) {
+			return $body;
+		}
+
+		if ($media['type'] == self::IMAGE) {
+			$body .= "\n" . Images::getBBCodeByUrl($media['url'], $media['preview'], $media['description'] ?? '');
+		} elseif ($media['type'] == self::AUDIO) {
+			$body .= "\n[audio]" . $media['url'] . "[/audio]\n";
+		} elseif ($media['type'] == self::VIDEO) {
+			$body .= "\n[video]" . $media['url'] . "[/video]\n";
+		} else {
+			$body .= "\n[url]" . $media['url'] . "[/url]\n";
+		}
 		return $body;
 	}
 

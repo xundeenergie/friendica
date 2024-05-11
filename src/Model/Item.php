@@ -848,7 +848,7 @@ class Item
 	private static function prepareOriginPost(array $item): array
 	{
 		$item = DI::contentItem()->initializePost($item);
-		$item = DI::contentItem()->finalizePost($item);
+		$item = DI::contentItem()->finalizePost($item, false);
 
 		return $item;
 	}
@@ -1044,7 +1044,7 @@ class Item
 				$item['deny_gid']  = $store_permissions ? $toplevel_parent['deny_gid'] : '';
 			}
 
-			$parent_origin         = $toplevel_parent['origin'];
+			$parent_origin = $toplevel_parent['origin'];
 
 			// Don't federate received participation messages
 			if ($item['verb'] != Activity::FOLLOW) {
@@ -1088,8 +1088,6 @@ class Item
 			) {
 				$item['object-type'] = Activity\ObjectType::IMAGE;
 			}
-
-			$item = DI::contentItem()->moveAttachmentsFromBodyToAttach($item);
 		}
 
 		$item['parent-uri-id'] = ItemURI::getIdByURI($item['parent-uri']);
