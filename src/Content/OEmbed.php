@@ -32,6 +32,7 @@ use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Network;
 use Friendica\Util\ParseUrl;
@@ -86,7 +87,7 @@ class OEmbed
 
 			if (!in_array($ext, $noexts)) {
 				// try oembed autodiscovery
-				$html_text = DI::httpClient()->fetch($embedurl, HttpClientAccept::HTML, 15);
+				$html_text = DI::httpClient()->fetch($embedurl, HttpClientAccept::HTML, 15, '', HttpClientRequest::SITEINFO);
 				if (!empty($html_text)) {
 					$dom = new DOMDocument();
 					if (@$dom->loadHTML($html_text)) {
@@ -100,7 +101,7 @@ class OEmbed
 							// but their OEmbed endpoint is only accessible by HTTPS ¯\_(ツ)_/¯
 							$href = str_replace(['http://www.youtube.com/', 'http://player.vimeo.com/'],
 								['https://www.youtube.com/', 'https://player.vimeo.com/'], $href);
-							$result = DI::httpClient()->fetchFull($href . '&maxwidth=' . $a->getThemeInfoValue('videowidth'));
+							$result = DI::httpClient()->fetchFull($href . '&maxwidth=' . $a->getThemeInfoValue('videowidth'), HttpClientAccept::DEFAULT, 0, '', HttpClientRequest::SITEINFO);
 							if ($result->isSuccess()) {
 								$json_string = $result->getBodyString();
 								break;

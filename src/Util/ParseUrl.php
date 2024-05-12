@@ -234,7 +234,7 @@ class ParseUrl
 		}
 
 		try {
-			$curlResult = DI::httpClient()->get($url, HttpClientAccept::HTML, [HttpClientOptions::CONTENT_LENGTH => 1000000]);
+			$curlResult = DI::httpClient()->get($url, HttpClientAccept::HTML, [HttpClientOptions::CONTENT_LENGTH => 1000000, HttpClientOptions::REQUEST => HttpClientRequest::SITEINFO]);
 		} catch (\Throwable $th) {
 			Logger::info('Exception when fetching', ['url' => $url, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
 			return $siteinfo;

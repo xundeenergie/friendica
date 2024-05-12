@@ -35,6 +35,7 @@ use Friendica\Model\Profile;
 use Friendica\Model\User;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Protocol\ActivityNamespace;
 use Friendica\Protocol\ActivityPub;
 use Friendica\Protocol\Diaspora;
@@ -225,7 +226,7 @@ class Probe
 		Logger::info('Probing', ['host' => $host, 'ssl_url' => $ssl_url, 'url' => $url]);
 		$xrd = null;
 
-		$curlResult = DI::httpClient()->get($ssl_url, HttpClientAccept::XRD_XML, [HttpClientOptions::TIMEOUT => $xrd_timeout]);
+		$curlResult = DI::httpClient()->get($ssl_url, HttpClientAccept::XRD_XML, [HttpClientOptions::TIMEOUT => $xrd_timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 		$ssl_connection_error = ($curlResult->getErrorNumber() == CURLE_COULDNT_CONNECT) || ($curlResult->getReturnCode() == 0);
 		if ($curlResult->isSuccess()) {
 			$xml = $curlResult->getBodyString();
@@ -242,7 +243,7 @@ class Probe
 		}
 
 		if (!is_object($xrd) && !empty($url)) {
-			$curlResult = DI::httpClient()->get($url, HttpClientAccept::XRD_XML, [HttpClientOptions::TIMEOUT => $xrd_timeout]);
+			$curlResult = DI::httpClient()->get($url, HttpClientAccept::XRD_XML, [HttpClientOptions::TIMEOUT => $xrd_timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 			$connection_error = ($curlResult->getErrorNumber() == CURLE_COULDNT_CONNECT) || ($curlResult->getReturnCode() == 0);
 			if ($curlResult->isTimeout()) {
 				Logger::info('Probing timeout', ['url' => $url]);
@@ -452,7 +453,7 @@ class Probe
 	 */
 	private static function getHideStatus(string $url): bool
 	{
-		$curlResult = DI::httpClient()->get($url, HttpClientAccept::HTML, [HttpClientOptions::CONTENT_LENGTH => 1000000]);
+		$curlResult = DI::httpClient()->get($url, HttpClientAccept::HTML, [HttpClientOptions::CONTENT_LENGTH => 1000000, HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 		if (!$curlResult->isSuccess()) {
 			return false;
 		}
@@ -864,7 +865,7 @@ class Probe
 
 	public static function pollZot(string $url, array $data): array
 	{
-		$curlResult = DI::httpClient()->get($url, HttpClientAccept::JSON);
+		$curlResult = DI::httpClient()->get($url, HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 		if ($curlResult->isTimeout()) {
 			return $data;
 		}
@@ -963,7 +964,7 @@ class Probe
 			$curlResult = DI::httpClient()->get(
 				$url,
 				$type,
-				[HttpClientOptions::TIMEOUT => DI::config()->get('system', 'xrd_timeout', 20)]
+				[HttpClientOptions::TIMEOUT => DI::config()->get('system', 'xrd_timeout', 20), HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]
 			);
 		} catch (\Throwable $e) {
 			Logger::notice($e->getMessage(), ['url' => $url, 'type' => $type, 'class' => get_class($e)]);
@@ -1038,7 +1039,7 @@ class Probe
 	 */
 	private static function pollNoscrape(string $noscrape_url, array $data): array
 	{
-		$curlResult = DI::httpClient()->get($noscrape_url, HttpClientAccept::JSON);
+		$curlResult = DI::httpClient()->get($noscrape_url, HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 		if ($curlResult->isTimeout()) {
 			self::$isTimeout = true;
 			return $data;
@@ -1301,7 +1302,7 @@ class Probe
 	 */
 	private static function pollHcard(string $hcard_url, array $data, bool $dfrn = false): array
 	{
-		$curlResult = DI::httpClient()->get($hcard_url, HttpClientAccept::HTML);
+		$curlResult = DI::httpClient()->get($hcard_url, HttpClientAccept::HTML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 		if ($curlResult->isTimeout()) {
 			self::$isTimeout = true;
 			return [];
@@ -1577,7 +1578,7 @@ class Probe
 							$pubkey = substr($pubkey, 5);
 						}
 					} elseif (Strings::normaliseLink($pubkey) == 'http://') {
-						$curlResult = DI::httpClient()->get($pubkey, HttpClientAccept::MAGIC_KEY);
+						$curlResult = DI::httpClient()->get($pubkey, HttpClientAccept::MAGIC_KEY, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 						if ($curlResult->isTimeout()) {
 							self::$isTimeout = true;
 							return $short ? false : [];
@@ -1610,7 +1611,7 @@ class Probe
 		}
 
 		// Fetch all additional data from the feed
-		$curlResult = DI::httpClient()->get($data['poll'], HttpClientAccept::FEED_XML);
+		$curlResult = DI::httpClient()->get($data['poll'], HttpClientAccept::FEED_XML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 		if ($curlResult->isTimeout()) {
 			self::$isTimeout = true;
 			return [];
@@ -1662,7 +1663,7 @@ class Probe
 	 */
 	private static function pumpioProfileData(string $profile_link, string $baseurl): array
 	{
-		$curlResult = DI::httpClient()->get($profile_link, HttpClientAccept::HTML);
+		$curlResult = DI::httpClient()->get($profile_link, HttpClientAccept::HTML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 		if (!$curlResult->isSuccess() || empty($curlResult->getBodyString())) {
 			return [];
 		}
@@ -1879,7 +1880,7 @@ class Probe
 	private static function feed(string $url, bool $probe = true): array
 	{
 		try {
-			$curlResult = DI::httpClient()->get($url, HttpClientAccept::FEED_XML);
+			$curlResult = DI::httpClient()->get($url, HttpClientAccept::FEED_XML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 		} catch(\Throwable $e) {
 			DI::logger()->info('Error requesting feed URL', ['url' => $url, 'exception' => $e]);
 			return [];
@@ -2113,7 +2114,7 @@ class Probe
 			return '';
 		}
 
-		$curlResult = DI::httpClient()->get($gserver['noscrape'] . '/' . $data['nick'], HttpClientAccept::JSON);
+		$curlResult = DI::httpClient()->get($gserver['noscrape'] . '/' . $data['nick'], HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 
 		if ($curlResult->isSuccess() && !empty($curlResult->getBodyString())) {
 			$noscrape = json_decode($curlResult->getBodyString(), true);
@@ -2189,7 +2190,7 @@ class Probe
 	private static function updateFromFeed(array $data): string
 	{
 		// Search for the newest entry in the feed
-		$curlResult = DI::httpClient()->get($data['poll'], HttpClientAccept::ATOM_XML);
+		$curlResult = DI::httpClient()->get($data['poll'], HttpClientAccept::ATOM_XML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 		if (!$curlResult->isSuccess() || !$curlResult->getBodyString()) {
 			return '';
 		}

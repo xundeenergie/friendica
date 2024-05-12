@@ -37,6 +37,7 @@ use Friendica\Module\Contact as ModuleContact;
 use Friendica\Module\Response;
 use Friendica\Navigation\SystemMessages;
 use Friendica\Network\HTTPClient\Capability\ICanSendHttpRequests;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Util\Profiler;
 use Psr\Log\LoggerInterface;
@@ -122,10 +123,10 @@ class MatchInterests extends BaseModule
 				continue;
 			}
 
-			$result = $this->httpClient->post($server . '/search/user/tags', $searchParameters);
+			$result = $this->httpClient->post($server . '/search/user/tags', $searchParameters, [], 0, HttpClientRequest::CONTACTDISCOVER);
 			if (!$result->isSuccess()) {
 				// try legacy endpoint
-				$result = $this->httpClient->post($server . '/msearch', $searchParameters);
+				$result = $this->httpClient->post($server . '/msearch', $searchParameters, [], 0, HttpClientRequest::CONTACTDISCOVER);
 				if (!$result->isSuccess()) {
 					$this->logger->notice('Search-Endpoint not available for server.', ['server' => $server]);
 					continue;

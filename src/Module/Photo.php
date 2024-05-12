@@ -369,7 +369,7 @@ class Photo extends BaseApi
 						$update = in_array($contact['network'], Protocol::FEDERATED) && !$contact['failed']
 							&& ((time() - strtotime($contact['updated']) > 86400));
 						if ($update) {
-							$curlResult = DI::httpClient()->head($url, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::IMAGE, HttpClientOptions::REQUEST => HttpClientRequest::MEDIAPROXY]);
+							$curlResult = DI::httpClient()->head($url, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::IMAGE, HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
 							$update = !$curlResult->isSuccess() && ($curlResult->getReturnCode() == 404);
 							Logger::debug('Got return code for avatar', ['return code' => $curlResult->getReturnCode(), 'cid' => $id, 'url' => $contact['url'], 'avatar' => $url]);
 						}

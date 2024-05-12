@@ -267,7 +267,7 @@ class HttpClient implements ICanSendHttpRequests
 
 		$url = trim($url, "'");
 
-		$this->resolver->setUserAgent($this->getUserAgent(HttpClientRequest::RESOLVER));
+		$this->resolver->setUserAgent($this->getUserAgent(HttpClientRequest::URLRESOLVER));
 		$urlResult = $this->resolver->resolveURL($url);
 
 		if ($urlResult->didErrorOccur()) {
@@ -280,9 +280,9 @@ class HttpClient implements ICanSendHttpRequests
 	/**
 	 * {@inheritDoc}
 	 */
-	public function fetch(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = ''): string
+	public function fetch(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = '', string $request = ''): string
 	{
-		$ret = $this->fetchFull($url, $accept_content, $timeout, $cookiejar);
+		$ret = $this->fetchFull($url, $accept_content, $timeout, $cookiejar, $request);
 
 		return $ret->getBodyString();
 	}
@@ -290,14 +290,15 @@ class HttpClient implements ICanSendHttpRequests
 	/**
 	 * {@inheritDoc}
 	 */
-	public function fetchFull(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = ''): ICanHandleHttpResponses
+	public function fetchFull(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = '', string $request = ''): ICanHandleHttpResponses
 	{
 		return $this->get(
 			$url,
 			$accept_content,
 			[
 				HttpClientOptions::TIMEOUT   => $timeout,
-				HttpClientOptions::COOKIEJAR => $cookiejar
+				HttpClientOptions::COOKIEJAR => $cookiejar,
+				HttpClientOptions::REQUEST   => $request,
 			]
 		);
 	}

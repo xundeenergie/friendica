@@ -1082,7 +1082,7 @@ class Diaspora
 
 		Logger::info('Fetch post from ' . $source_url);
 
-		$envelope = DI::httpClient()->fetch($source_url, HttpClientAccept::MAGIC);
+		$envelope = DI::httpClient()->fetch($source_url, HttpClientAccept::MAGIC, 0, '', HttpClientRequest::DIASPORA);
 		if ($envelope) {
 			Logger::info('Envelope was fetched.');
 			$x = self::verifyMagicEnvelope($envelope);

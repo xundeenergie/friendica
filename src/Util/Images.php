@@ -26,6 +26,7 @@ use Friendica\Core\Logger;
 use Friendica\DI;
 use Friendica\Model\Photo;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Object\Image;
 
 /**
@@ -356,7 +357,7 @@ class Images
 
 		if (empty($img_str)) {
 			try {
-				$img_str = DI::httpClient()->fetch($url, HttpClientAccept::IMAGE, 4);
+				$img_str = DI::httpClient()->fetch($url, HttpClientAccept::IMAGE, 4, '', HttpClientRequest::MEDIAVERIFIER);
 			} catch (\Exception $exception) {
 				Logger::notice('Image is invalid', ['url' => $url, 'exception' => $exception]);
 				return [];
