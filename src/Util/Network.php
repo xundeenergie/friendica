@@ -80,7 +80,7 @@ class Network
 
 		if (in_array(parse_url($url, PHP_URL_SCHEME), ['https', 'http'])) {
 			$options = [HttpClientOptions::VERIFY => true, HttpClientOptions::TIMEOUT => $xrd_timeout,
-				HttpClientOptions::REQUEST => HttpClientRequest::VERIFIER];
+				HttpClientOptions::REQUEST => HttpClientRequest::URLVERIFIER];
 			try {
 				$curlResult = DI::httpClient()->head($url, $options);
 			} catch (\Exception $e) {

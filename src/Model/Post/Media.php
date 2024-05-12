@@ -36,6 +36,7 @@ use Friendica\Model\Photo;
 use Friendica\Model\Post;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Protocol\ActivityPub;
 use Friendica\Util\Images;
 use Friendica\Util\Network;
@@ -188,7 +189,7 @@ class Media
 		// Fetch the mimetype or size if missing.
 		if (Network::isValidHttpUrl($media['url']) && (empty($media['mimetype']) || empty($media['size']))) {
 			$timeout = DI::config()->get('system', 'xrd_timeout');
-			$curlResult = DI::httpClient()->head($media['url'], [HttpClientOptions::TIMEOUT => $timeout]);
+			$curlResult = DI::httpClient()->head($media['url'], [HttpClientOptions::TIMEOUT => $timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
 
 			// Workaround for systems that can't handle a HEAD request
 			if (!$curlResult->isSuccess() && ($curlResult->getReturnCode() == 405)) {

@@ -39,6 +39,7 @@ use Friendica\DI;
 use Friendica\Model\Post\Category;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Network\HTTPException\ServiceUnavailableException;
 use Friendica\Protocol\Activity;
@@ -4141,7 +4142,7 @@ class Item
 		}
 
 		try {
-			$curlResult = DI::httpClient()->head($uri, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::JSON_AS]);
+			$curlResult = DI::httpClient()->head($uri, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::JSON_AS, HttpClientOptions::REQUEST => HttpClientRequest::ACTIVITYPUB]);
 			if (HTTPSignature::isValidContentType($curlResult->getContentType(), $uri)) {
 				$fetched_uri = ActivityPub\Processor::fetchMissingActivity($uri, [], '', $completion, $uid);
 			}

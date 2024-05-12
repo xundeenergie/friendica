@@ -38,6 +38,8 @@ use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Module;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException;
 use Friendica\Object\Image;
 use Friendica\Protocol\Delivery;
@@ -1400,7 +1402,7 @@ class User
 			$photo_failure = false;
 
 			$filename = basename($photo);
-			$curlResult = DI::httpClient()->get($photo, HttpClientAccept::IMAGE);
+			$curlResult = DI::httpClient()->get($photo, HttpClientAccept::IMAGE, [HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
 			if ($curlResult->isSuccess()) {
 				Logger::debug('Got picture', ['Content-Type' => $curlResult->getHeader('Content-Type'), 'url' => $photo]);
 				$img_str = $curlResult->getBodyString();

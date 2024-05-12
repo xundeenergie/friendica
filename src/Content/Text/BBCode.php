@@ -974,7 +974,7 @@ class BBCode
 				$text = '[url=' . $match[2] . ']' . $match[2] . '[/url]';
 
 				// if its not a picture then look if its a page that contains a picture link
-				$body = DI::httpClient()->fetch($match[1], HttpClientAccept::HTML, 0);
+				$body = DI::httpClient()->fetch($match[1], HttpClientAccept::HTML, 0, '', HttpClientRequest::SITEINFO);
 				if (empty($body)) {
 					DI::cache()->set($cache_key, $text);
 					return $text;
@@ -1077,7 +1077,7 @@ class BBCode
 			}
 
 			// if its not a picture then look if its a page that contains a picture link
-			$body = DI::httpClient()->fetch($match[1], HttpClientAccept::HTML, 0);
+			$body = DI::httpClient()->fetch($match[1], HttpClientAccept::HTML, 0, '', HttpClientRequest::SITEINFO);
 			if (empty($body)) {
 				DI::cache()->set($cache_key, $text);
 				return $text;
