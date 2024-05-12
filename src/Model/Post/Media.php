@@ -184,6 +184,12 @@ class Media
 	{
 		if (Network::isLocalLink($media['url'])) {
 			$media = self::fetchLocalData($media);
+			if (preg_match('|.*?/search\?(.+)|', $media['url'], $matches)) {
+				return $media;
+			}
+			if (empty($media['mimetype']) || empty($media['size'])) {
+				Logger::debug('Unknown local link', ['url' => $media['url']]);
+			}
 		}
 
 		// Fetch the mimetype or size if missing.
@@ -391,7 +397,7 @@ class Media
 	 */
 	private static function fetchLocalData(array $media): array
 	{
-		if (preg_match('|.*?/attach/(\d+)|', $media['url'] ?? '', $matches)) {
+		if (preg_match('|.*?/attach/(\d+)|', $media['url'], $matches)) {
 			$attachment = Attach::selectFirst(['filename', 'filetype', 'filesize'], ['id' => $matches[1]]);
 			if (!empty($attachment)) {
 				$media['name']     = $attachment['filename'];
@@ -401,7 +407,7 @@ class Media
 			return $media;
 		}
 
-		if (!preg_match('|.*?/photo/(.*[a-fA-F0-9])\-(.*[0-9])\..*[\w]|', $media['url'] ?? '', $matches)) {
+		if (!preg_match('|.*?/photo/(.*[a-fA-F0-9])\-(.*[0-9])\..*[\w]|', $media['url'], $matches)) {
 			return $media;
 		}
 		$photo = Photo::selectFirst([], ['resource-id' => $matches[1], 'scale' => $matches[2]]);
