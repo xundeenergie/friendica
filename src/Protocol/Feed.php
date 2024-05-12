@@ -547,9 +547,11 @@ class Feed
 			}
 
 			if (!HTML::isHTML($body)) {
-				$original = $body;
-				$body = BBCode::convert($body, false, BBCode::EXTERNAL);
-				Logger::debug('Body contained no HTML', ['original' => $original, 'converted' => $body]);
+				$html = BBCode::convert($body, false, BBCode::EXTERNAL);
+				if ($body != $html) {
+					Logger::debug('Body contained no HTML', ['original' => $body, 'converted' => $html]);
+					$body = $html;
+				}
 			}
 
 			$item['body'] = HTML::toBBCode($body, $basepath);
