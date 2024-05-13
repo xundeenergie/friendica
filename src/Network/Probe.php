@@ -815,7 +815,13 @@ class Probe
 	 */
 	private static function zot(array $webfinger, array $data): array
 	{
-		if (empty($webfinger['aliases']) || !is_array($webfinger['aliases'])) {
+		foreach ($webfinger['links'] as $link) {
+			if (($link['rel'] == 'http://purl.org/zot/protocol/6.0') && !empty($link['href'])) {
+				$zot_url = $link['href'];
+			}
+		}
+
+		if (empty($zot_url)) {
 			return $data;
 		}
 
@@ -829,22 +835,54 @@ class Probe
 			$data['addr'] = substr($webfinger['subject'], 5);
 		}
 
+		if (!empty($webfinger['properties'])) {
+			if (!empty($webfinger['properties']['http://webfinger.net/ns/name'])) {
+				$data['name'] = $webfinger['properties']['http://webfinger.net/ns/name'];
+			}
+			if (!empty($webfinger['properties']['http://xmlns.com/foaf/0.1/name'])) {
+				$data['name'] = $webfinger['properties']['http://xmlns.com/foaf/0.1/name'];
+			}
+			if (!empty($webfinger['properties']['https://w3id.org/security/v1#publicKeyPem'])) {
+				$data['pubkey'] = $webfinger['properties']['https://w3id.org/security/v1#publicKeyPem'];
+			}
 
-		foreach ($webfinger['links'] as $link) {
-			if (($link['rel'] == 'http://purl.org/zot/protocol/6.0') && !empty($link['href'])) {
-				$zot_url = $link['href'];
+			if (empty($data['network']) && !empty($webfinger['properties']['http://purl.org/zot/federation'])) {
+				$networks = explode(',', $webfinger['properties']['http://purl.org/zot/federation']);
+				if (in_array('zot6', $networks)) {
+					$data['network'] = Protocol::ZOT;
+				}
 			}
 		}
 
-		if (empty($zot_url)) {
-			return $data;
-		}
+		foreach ($webfinger['links'] as $link) {
+			if (($link['rel'] == 'http://webfinger.net/rel/avatar') && !empty($link['href'])) {
+				$data['photo'] = $link['href'];
+			} elseif (($link['rel'] == 'http://openid.net/specs/connect/1.0/issuer') && !empty($link['href'])) {
+				$data['baseurl'] = trim($link['href'], '/');
+			} elseif (($link['rel'] == 'http://webfinger.net/rel/blog') && !empty($link['href'])) {
+				$data['url'] = $link['href'];
+			} elseif (($link['rel'] == 'magic-public-key') && !empty($link['href'])) {
+				$pubkey = $link['href'];
 
+				if (substr($pubkey, 0, 5) === 'data:') {
+					if (strstr($pubkey, ',')) {
+						$pubkey = substr($pubkey, strpos($pubkey, ',') + 1);
+					} else {
+						$pubkey = substr($pubkey, 5);
+					}
+					try {
+						$data['pubkey'] = Salmon::magicKeyToPem($pubkey);
+					} catch (\Throwable $e) {
+					}
+				}
+			}
+		}
+		
 		$data = self::pollZot($zot_url, $data);
 
-		if (!empty($data['url'])) {
+		if (!empty($data['url']) && !empty($webfinger['aliases']) && is_array($webfinger['aliases'])) {
 			foreach ($webfinger['aliases'] as $alias) {
-				if (Network::isValidHttpUrl($alias) && Strings::normaliseLink($alias) != Strings::normaliseLink($data['url'])) {
+				if (Network::isValidHttpUrl($alias) && !Strings::compareLink($alias, $data['url'])) {
 					$data['alias'] = $alias;
 				}
 			}
@@ -911,9 +949,9 @@ class Probe
 		}
 		if (!empty($json['public_forum'])) {
 			$data['community'] = $json['public_forum'];
-			$data['account-type'] = User::PAGE_FLAGS_COMMUNITY;
+			$data['account-type'] = User::ACCOUNT_TYPE_COMMUNITY;
 		} elseif ($json['channel_type'] == 'normal') {
-			$data['account-type'] = User::PAGE_FLAGS_NORMAL;
+			$data['account-type'] = User::ACCOUNT_TYPE_PERSON;
 		}
 
 		if (!empty($json['profile'])) {
@@ -1105,14 +1143,6 @@ class Probe
 			$data['photo'] = $json['photo'];
 		}
 
-		if (!empty($json['dfrn-request'])) {
-			$data['request'] = $json['dfrn-request'];
-		}
-
-		if (!empty($json['dfrn-confirm'])) {
-			$data['confirm'] = $json['dfrn-confirm'];
-		}
-
 		if (!empty($json['dfrn-notify'])) {
 			$data['notify'] = $json['dfrn-notify'];
 		}
@@ -1173,7 +1203,7 @@ class Probe
 			foreach ($webfinger['aliases'] as $alias) {
 				if (empty($data['url']) && !strstr($alias, '@')) {
 					$data['url'] = $alias;
-				} elseif (!strstr($alias, '@') && Strings::normaliseLink($alias) != Strings::normaliseLink($data['url'])) {
+				} elseif (Network::isValidHttpUrl($alias) && !Strings::compareLink($alias, $data['url'])) {
 					$data['alias'] = $alias;
 				} elseif (substr($alias, 0, 5) == 'acct:') {
 					$data['addr'] = substr($alias, 5);
@@ -1191,22 +1221,7 @@ class Probe
 
 		// Fetch data via noscrape - this is faster
 		$noscrape_url = str_replace('/hcard/', '/noscrape/', $hcard_url);
-		$data = self::pollNoscrape($noscrape_url, $data);
-
-		if (
-			isset($data['notify'])
-			&& isset($data['confirm'])
-			&& isset($data['request'])
-			&& isset($data['poll'])
-			&& isset($data['name'])
-			&& isset($data['photo'])
-		) {
-			return $data;
-		}
-
-		$data = self::pollHcard($hcard_url, $data, true);
-
-		return $data;
+		return self::pollNoscrape($noscrape_url, $data);
 	}
 
 	/**
@@ -1214,11 +1229,10 @@ class Probe
 	 *
 	 * @param string  $hcard_url Link to the hcard page
 	 * @param array   $data      The already fetched data
-	 * @param boolean $dfrn      Poll DFRN specific data
 	 * @return array hcard data
 	 * @throws HTTPException\InternalServerErrorException
 	 */
-	private static function pollHcard(string $hcard_url, array $data, bool $dfrn = false): array
+	private static function pollHcard(string $hcard_url, array $data): array
 	{
 		$curlResult = DI::httpClient()->get($hcard_url, HttpClientAccept::HTML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
 		if ($curlResult->isTimeout()) {
@@ -1328,27 +1342,6 @@ class Probe
 			}
 		}
 
-		if ($dfrn) {
-			// Poll DFRN specific data
-			$search = $xpath->query("//link[contains(concat(' ', @rel), ' dfrn-')]");
-			if ($search->length > 0) {
-				foreach ($search as $link) {
-					//$data['request'] = $search->item(0)->nodeValue;
-					$attr = [];
-					foreach ($link->attributes as $attribute) {
-						$attr[$attribute->name] = trim($attribute->value);
-					}
-
-					$data[substr($attr['rel'], 5)] = $attr['href'];
-				}
-			}
-
-			// Older Friendica versions had used the "uid" field differently than newer versions
-			if (!empty($data['nick']) && !empty($data['guid']) && ($data['nick'] == $data['guid'])) {
-				unset($data['guid']);
-			}
-		}
-
 		return $data;
 	}
 
@@ -1403,7 +1396,7 @@ class Probe
 
 		if (!empty($webfinger['aliases']) && is_array($webfinger['aliases'])) {
 			foreach ($webfinger['aliases'] as $alias) {
-				if (Strings::normaliseLink($alias) != Strings::normaliseLink($data['url']) && !strstr($alias, '@')) {
+				if (Network::isValidHttpUrl($alias) && !Strings::compareLink($alias, $data['url'])) {
 					$data['alias'] = $alias;
 				} elseif (substr($alias, 0, 5) == 'acct:') {
 					$data['addr'] = substr($alias, 5);
@@ -2071,7 +2064,7 @@ class Probe
 				'keywords'         => $owner['keywords'], 'location' => $owner['location'], 'about' => $owner['about'],
 				'xmpp'             => $owner['xmpp'], 'matrix' => $owner['matrix'],
 				'hide'             => !$owner['net-publish'], 'batch' => '', 'notify' => $owner['notify'],
-				'poll'             => $owner['poll'], 'request' => $owner['request'], 'confirm' => $owner['confirm'],
+				'poll'             => $owner['poll'],
 				'subscribe'        => $approfile['generator']['url'] . '/contact/follow?url={uri}', 'poco' => $owner['poco'],
 				'following'        => $approfile['following'], 'followers' => $approfile['followers'],
 				'inbox'            => $approfile['inbox'], 'outbox' => $approfile['outbox'],
