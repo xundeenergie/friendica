@@ -773,3 +773,13 @@ figure.img-allocated-height img{
 	color: #731289; /* purple */
 	font-weight: bold;
 }
+.loglevel-alert {
+	color: #ff0000; /* red */
+	font-weight: bold;
+	font-style: italic;
+}
+.loglevel-emergency {
+	color: #731289; /* purple */
+	font-weight: bold;
+	font-style: italic;
+}
