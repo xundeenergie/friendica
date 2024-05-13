@@ -386,10 +386,12 @@ class Feed
 
 			$orig_plink = $item['plink'];
 
-			try {
-				$item['plink'] = DI::httpClient()->finalUrl($item['plink']);
-			} catch (TransferException $exception) {
-				Logger::notice('Item URL couldn\'t get expanded', ['url' => $item['plink'], 'exception' => $exception]);
+			if (!$dryRun) {
+				try {
+					$item['plink'] = DI::httpClient()->finalUrl($item['plink']);
+				} catch (TransferException $exception) {
+					Logger::notice('Item URL couldn\'t get expanded', ['url' => $item['plink'], 'exception' => $exception]);
+				}
 			}
 
 			if (empty($item['title'])) {
