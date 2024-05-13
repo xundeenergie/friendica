@@ -285,7 +285,7 @@ class Photo extends BaseApi
 					return false;
 				}
 
-				if (Network::isLocalLink($url) && preg_match('|.*?/photo/(.*[a-fA-F0-9])\-(.*[0-9])\..*[\w]|', $url, $matches)) {
+				if (DI::baseUrl()->isLocalUrl($url) && preg_match('|.*?/photo/(.*[a-fA-F0-9])\-(.*[0-9])\..*[\w]|', $url, $matches)) {
 					return MPhoto::getPhoto($matches[1], $matches[2], self::getCurrentUserID());
 				}
 
@@ -296,7 +296,7 @@ class Photo extends BaseApi
 					return false;
 				}
 
-				if (Network::isLocalLink($media['url']) && preg_match('|.*?/photo/(.*[a-fA-F0-9])\-(.*[0-9])\..*[\w]|', $media['url'], $matches)) {
+				if (DI::baseUrl()->isLocalUrl($media['url']) && preg_match('|.*?/photo/(.*[a-fA-F0-9])\-(.*[0-9])\..*[\w]|', $media['url'], $matches)) {
 					return MPhoto::getPhoto($matches[1], $matches[2], self::getCurrentUserID());
 				}
 
@@ -316,7 +316,7 @@ class Photo extends BaseApi
 				}
 
 				// For local users directly use the photo record that is marked as the profile
-				if (Network::isLocalLink($contact['url'])) {
+				if (DI::baseUrl()->isLocalUrl($contact['url'])) {
 					$contact = Contact::selectFirst($fields, ['nurl' => $contact['nurl'], 'self' => true]);
 					if (!empty($contact)) {
 						if ($customsize <= Proxy::PIXEL_MICRO) {
@@ -355,7 +355,7 @@ class Photo extends BaseApi
 				}
 
 				// If it is a local link, we save resources by just redirecting to it.
-				if (!empty($url) && Network::isLocalLink($url)) {
+				if (!empty($url) && DI::baseUrl()->isLocalUrl($url)) {
 					System::externalRedirect($url);
 				}
 
@@ -404,7 +404,7 @@ class Photo extends BaseApi
 					} else {
 						$url = Contact::getDefaultAvatar($contact ?: [], Proxy::SIZE_SMALL);
 					}
-					if (Network::isLocalLink($url)) {
+					if (DI::baseUrl()->isLocalUrl($url)) {
 						System::externalRedirect($url);
 					}
 				}
@@ -416,7 +416,7 @@ class Photo extends BaseApi
 					return false;
 				}
 
-				if (Network::isLocalLink($contact['url'])) {
+				if (DI::baseUrl()->isLocalUrl($contact['url'])) {
 					$header_uid = User::getIdForURL($contact['url']);
 					if (empty($header_uid)) {
 						throw new HTTPException\NotFoundException();
@@ -431,7 +431,7 @@ class Photo extends BaseApi
 					$url = $contact['header'];
 				} else {
 					$url = Contact::getDefaultHeader($contact);
-					if (Network::isLocalLink($url)) {
+					if (DI::baseUrl()->isLocalUrl($url)) {
 						System::externalRedirect($url);
 					}
 				}
@@ -467,7 +467,7 @@ class Photo extends BaseApi
 					$default = Contact::getDefaultAvatar($contact, Proxy::SIZE_THUMB);
 			}
 
-			if (Network::isLocalLink($default)) {
+			if (DI::baseUrl()->isLocalUrl($default)) {
 				System::externalRedirect($default);
 			}
 

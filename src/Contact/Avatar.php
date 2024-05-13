@@ -57,7 +57,7 @@ class Avatar
 			return $fields;
 		}
 
-		if (Network::isLocalLink($avatar) || empty($avatar)) {
+		if (DI::baseUrl()->isLocalUrl($avatar) || empty($avatar)) {
 			self::deleteCache($contact);
 			return $fields;
 		}
@@ -120,7 +120,7 @@ class Avatar
 			return $fields;
 		}
 
-		if (Network::isLocalLink($contact['avatar']) || empty($contact['avatar'])) {
+		if (DI::baseUrl()->isLocalUrl($contact['avatar']) || empty($contact['avatar'])) {
 			self::deleteCache($contact);
 			return $fields;
 		}

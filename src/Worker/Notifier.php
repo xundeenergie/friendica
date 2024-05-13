@@ -856,7 +856,7 @@ class Notifier
 		foreach ($inboxes as $inbox => $receivers) {
 			$contacts = array_merge($contacts, $receivers);
 
-			if ((count($receivers) == 1) && Network::isLocalLink($inbox)) {
+			if ((count($receivers) == 1) && DI::baseUrl()->isLocalUrl($inbox)) {
 				$contact = Contact::getById($receivers[0], ['url']);
 				if (!in_array($cmd, [Delivery::RELOCATION, Delivery::SUGGESTION, Delivery::MAIL]) && ($target_uid = User::getIdForURL($contact['url']))) {
 					if ($cmd == Delivery::DELETION) {
@@ -876,7 +876,7 @@ class Notifier
 					}
 					continue;
 				}
-			} elseif ((count($receivers) >= 1) && Network::isLocalLink($inbox)) {
+			} elseif ((count($receivers) >= 1) && DI::baseUrl()->isLocalUrl($inbox)) {
 				Logger::info('Is this a thing?', ['guid' => $target_item['guid'], 'uri-id' => $target_item['uri-id'], 'uri' => $target_item['uri']]);
 			}
 

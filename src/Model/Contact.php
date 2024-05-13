@@ -1793,7 +1793,7 @@ class Contact
 			return;
 		}
 
-		if (Network::isLocalLink($contact['url'])) {
+		if (DI::baseUrl()->isLocalUrl($contact['url'])) {
 			return;
 		}
 
@@ -1910,7 +1910,7 @@ class Contact
 			return $contact;
 		}
 
-		$local = !empty($contact['url']) && Network::isLocalLink($contact['url']);
+		$local = !empty($contact['url']) && DI::baseUrl()->isLocalUrl($contact['url']);
 
 		if (!$local && !empty($contact['id']) && !empty($contact['avatar'])) {
 			self::updateAvatar($contact['id'], $contact['avatar'], true);
@@ -2300,7 +2300,7 @@ class Contact
 		if (($uid == 0) && !$force && empty($contact['thumb']) && empty($contact['micro']) && !$create_cache) {
 			if (($contact['avatar'] != $avatar) || empty($contact['blurhash'])) {
 				$update_fields = ['avatar' => $avatar];
-				if (!Network::isLocalLink($avatar)) {
+				if (!DI::baseUrl()->isLocalUrl($avatar)) {
 					try {
 						$fetchResult = HTTPSignature::fetchRaw($avatar, 0, [HttpClientOptions::ACCEPT_CONTENT => [HttpClientAccept::IMAGE]]);
 
@@ -2348,7 +2348,7 @@ class Contact
 		$cache_avatar = DI::config()->get('system', 'cache_contact_avatar');
 
 		// Local contact avatars don't need to be cached
-		if ($cache_avatar && Network::isLocalLink($contact['url'])) {
+		if ($cache_avatar && DI::baseUrl()->isLocalUrl($contact['url'])) {
 			$cache_avatar = !DBA::exists('contact', ['nurl' => $contact['nurl'], 'self' => true]);
 		}
 

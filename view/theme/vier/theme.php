@@ -40,7 +40,7 @@ use Friendica\Util\Strings;
  * This script can be included even when the app is in maintenance mode which requires us to avoid any config call
  */
 
-function vier_init(App $a)
+function vier_init()
 {
 	Renderer::setActiveTemplateEngine('smarty3');
 
@@ -49,7 +49,7 @@ function vier_init(App $a)
 	if (
 		DI::mode()->has(App\Mode::MAINTENANCEDISABLED)
 		&& (
-			$args->get(0) === 'profile' && $args->get(1) === ($a->getLoggedInUserNickname() ?? '')
+			$args->get(0) === 'profile' && $args->get(1) === (DI::userSession()->getLocalUserNickname() ?? '')
 			|| $args->get(0) === 'network' && DI::userSession()->getLocalUserId()
 		)
 	) {
@@ -337,23 +337,21 @@ function vier_community_info()
 }
 
 /**
- * @param int|null $uid
  * @return null
  * @see \Friendica\Core\Theme::getBackgroundColor()
  * @TODO Implement this function
  */
-function vier_get_background_color(int $uid = null)
+function vier_get_background_color()
 {
 	return null;
 }
 
 /**
- * @param int|null $uid
  * @return null
  * @see \Friendica\Core\Theme::getThemeColor()
  * @TODO Implement this function
  */
-function vier_get_theme_color(int $uid = null)
+function vier_get_theme_color()
 {
 	return null;
 }

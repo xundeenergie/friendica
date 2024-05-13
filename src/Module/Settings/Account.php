@@ -398,7 +398,7 @@ class Account extends BaseSettings
 
 		$username         = $user['username'];
 		$email            = $user['email'];
-		$nickname         = $a->getLoggedInUserNickname();
+		$nickname         = DI::userSession()->getLocalUserNickname();
 		$timezone         = $user['timezone'];
 		$language         = $user['language'];
 		$notify           = $user['notify-flags'];
