@@ -182,7 +182,7 @@ class Media
 	 */
 	public static function fetchAdditionalData(array $media): array
 	{
-		if (Network::isLocalLink($media['url'])) {
+		if (DI::baseUrl()->isLocalUrl($media['url'])) {
 			$media = self::fetchLocalData($media);
 			if (preg_match('|.*?/search\?(.+)|', $media['url'], $matches)) {
 				return $media;

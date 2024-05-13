@@ -347,7 +347,7 @@ class Images
 			return $data;
 		}
 
-		if (Network::isLocalLink($url) && ($data = Photo::getResourceData($url))) {
+		if (DI::baseUrl()->isLocalUrl($url) && ($data = Photo::getResourceData($url))) {
 			$photo = Photo::selectFirst([], ['resource-id' => $data['guid'], 'scale' => $data['scale']]);
 			if (!empty($photo)) {
 				$img_str = Photo::getImageDataForPhoto($photo);

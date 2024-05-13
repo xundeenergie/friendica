@@ -37,7 +37,7 @@ class HCard extends BaseModule
 	{
 		if (DI::userSession()->getLocalUserId() && ($this->parameters['action'] ?? '') === 'view') {
 			// A logged in user views a profile of a user
-			$nickname = DI::app()->getLoggedInUserNickname();
+			$nickname = DI::userSession()->getLocalUserNickname();
 		} elseif (empty($this->parameters['action'])) {
 			// Show the profile hCard
 			$nickname = $this->parameters['profile'];

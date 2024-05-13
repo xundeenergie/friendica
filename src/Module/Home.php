@@ -51,7 +51,7 @@ class Home extends BaseModule
 
 		Hook::callAll('home_init', $ret);
 
-		if (DI::userSession()->getLocalUserId() && ($app->getLoggedInUserNickname())) {
+		if (DI::userSession()->getLocalUserId() && (DI::userSession()->getLocalUserNickname())) {
 			DI::baseUrl()->redirect('network');
 		}
 

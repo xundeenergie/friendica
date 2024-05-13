@@ -101,7 +101,7 @@ class Proxy
 			return true;
 		}
 
-		return Network::isLocalLink($url);
+		return DI::baseUrl()->isLocalUrl($url);
 	}
 
 	/**

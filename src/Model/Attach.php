@@ -335,7 +335,7 @@ class Attach
 	{
 		preg_match_all("/\[attachment\](.*?)\[\/attachment\]/ism", $post['body'], $matches, PREG_SET_ORDER);
 		foreach ($matches as $attachment) {
-			if (Network::isLocalLink($attachment[1]) && preg_match('|.*?/attach/(\d+)|', $attachment[1], $match)) {
+			if (DI::baseUrl()->isLocalUrl($attachment[1]) && preg_match('|.*?/attach/(\d+)|', $attachment[1], $match)) {
 				$fields = [
 					'allow_cid' => $post['allow_cid'], 'allow_gid' => $post['allow_gid'],
 					'deny_cid' => $post['deny_cid'], 'deny_gid' => $post['deny_gid']
@@ -349,7 +349,7 @@ class Attach
 	{
 		preg_match_all("/\[attachment\](.*?)\[\/attachment\]/ism", $body, $matches, PREG_SET_ORDER);
 		foreach ($matches as $attachment) {
-			if (Network::isLocalLink($attachment[1]) && preg_match('|.*?/attach/(\d+)|', $attachment[1], $match)) {
+			if (DI::baseUrl()->isLocalUrl($attachment[1]) && preg_match('|.*?/attach/(\d+)|', $attachment[1], $match)) {
 				$attach = self::getById($match[1], $uid);
 				if (empty($attach)) {
 					return $body;

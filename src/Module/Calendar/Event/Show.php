@@ -55,7 +55,7 @@ class Show extends BaseModule
 
 	protected function rawContent(array $request = [])
 	{
-		$nickname = $this->parameters['nickname'] ?? $this->app->getLoggedInUserNickname();
+		$nickname = $this->parameters['nickname'] ?? $this->session->getLocalUserNickname();
 		if (!$nickname) {
 			throw new HTTPException\UnauthorizedException();
 		}
