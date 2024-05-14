@@ -1660,7 +1660,7 @@ class Probe
 		unset($baseParts['query']);
 		unset($baseParts['fragment']);
 
-		return Network::unparseURL((array)$baseParts);
+		return (string)Uri::fromParts((array)(array)$baseParts);
 	}
 
 	/**

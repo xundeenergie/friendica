@@ -21,10 +21,9 @@
 
 namespace Friendica\Network\HTTPClient\Response;
 
-use Friendica\Core\Logger;
 use Friendica\Network\HTTPClient\Capability\ICanHandleHttpResponses;
 use Friendica\Network\HTTPException\UnprocessableEntityException;
-use Friendica\Util\Network;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -224,7 +223,7 @@ class CurlResult implements ICanHandleHttpResponses
 				}
 			}
 
-			$this->redirectUrl = Network::unparseURL($redirect_parts);
+			$this->redirectUrl = (string)Uri::fromParts((array)$redirect_parts);
 
 			$this->isRedirectUrl = true;
 		} else {
