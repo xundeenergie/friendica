@@ -308,7 +308,7 @@ class Conversation
 
 	public function statusEditor(array $x = [], int $notes_cid = 0, bool $popup = false): string
 	{
-		$user = User::getById($this->app->getLoggedInUserId(), ['uid', 'nickname', 'allow_location', 'default-location']);
+		$user = User::getById($this->session->getLocalUserId(), ['uid', 'nickname', 'allow_location', 'default-location']);
 		if (empty($user['uid'])) {
 			return '';
 		}

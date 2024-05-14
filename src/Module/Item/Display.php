@@ -188,7 +188,7 @@ class Display extends BaseModule
 			$author = Contact::getById($item['author-id']);
 		}
 
-		if (Network::isLocalLink($author['url'])) {
+		if ($this->baseUrl->isLocalUrl($author['url'])) {
 			Profile::load($this->app, $author['nick'], false);
 		} else {
 			$this->page['aside'] = Widget\VCard::getHTML($author);

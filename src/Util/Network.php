@@ -649,19 +649,6 @@ class Network
 	}
 
 	/**
-	 * Check if the given URL is a local link
-	 *
-	 * @param string $url
-	 *
-	 * @return bool
-	 * @deprecated since 2023.09, please use BaseUrl->isLocalUrl or BaseUrl->isLocalUri instead.
-	 */
-	public static function isLocalLink(string $url): bool
-	{
-		return DI::baseUrl()->isLocalUrl($url);
-	}
-
-	/**
 	 * Check if the given URL is a valid HTTP/HTTPS URL
 	 *
 	 * @param string $url

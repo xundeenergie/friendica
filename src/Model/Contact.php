@@ -113,15 +113,6 @@ class Contact
 	 * @}
 	 */
 
-	/** @deprecated Use Entity\LocalRelationship::MIRROR_DEACTIVATED instead */
-	const MIRROR_DEACTIVATED = LocalRelationship::MIRROR_DEACTIVATED;
-	/** @deprecated Now does the same as MIRROR_OWN_POST */
-	const MIRROR_FORWARDED = 1;
-	/** @deprecated Use Entity\LocalRelationship::MIRROR_OWN_POST instead */
-	const MIRROR_OWN_POST = LocalRelationship::MIRROR_OWN_POST;
-	/** @deprecated Use Entity\LocalRelationship::MIRROR_NATIVE_RESHARE instead */
-	const MIRROR_NATIVE_RESHARE = LocalRelationship::MIRROR_NATIVE_RESHARE;
-
 	/**
 	 * @param array $fields    Array of selected fields, empty for all
 	 * @param array $condition Array of fields for condition

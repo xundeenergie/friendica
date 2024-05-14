@@ -135,42 +135,6 @@ class App
 	private $session;
 
 	/**
-	 * @deprecated 2022.03
-	 * @see IHandleUserSessions::isAuthenticated()
-	 */
-	public function isLoggedIn(): bool
-	{
-		return $this->session->isAuthenticated();
-	}
-
-	/**
-	 * @deprecated 2022.03
-	 * @see IHandleUserSessions::isSiteAdmin()
-	 */
-	public function isSiteAdmin(): bool
-	{
-		return $this->session->isSiteAdmin();
-	}
-
-	/**
-	 * @deprecated 2022.03
-	 * @see IHandleUserSessions::getLocalUserId()
-	 */
-	public function getLoggedInUserId(): int
-	{
-		return $this->session->getLocalUserId();
-	}
-
-	/**
-	 * @deprecated 2022.03
-	 * @see IHandleUserSessions::getLocalUserNickname()
-	 */
-	public function getLoggedInUserNickname(): string
-	{
-		return $this->session->getLocalUserNickname();
-	}
-
-	/**
 	 * Set the profile owner ID
 	 *
 	 * @param int $owner_id
@@ -716,7 +680,7 @@ class App
 
 			// Wrapping HTML responses in the theme template
 			if ($response->getHeaderLine(ICanCreateResponses::X_HEADER) === ICanCreateResponses::TYPE_HTML) {
-				$response = $page->run($this, $this->baseURL, $this->args, $this->mode, $response, $this->l10n, $this->profiler, $this->config, $pconfig, $nav, $this->session->getLocalUserId());
+				$response = $page->run($this, $this->session, $this->baseURL, $this->args, $this->mode, $response, $this->l10n, $this->profiler, $this->config, $pconfig, $nav, $this->session->getLocalUserId());
 			}
 
 			$this->logger->debug('Request processed sucessfully', ['response' => $response->getStatusCode(), 'address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '', 'duration' => number_format(microtime(true) - $request_start, 3)]);

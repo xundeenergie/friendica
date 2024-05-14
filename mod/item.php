@@ -45,7 +45,7 @@ use Friendica\Model\Post;
 use Friendica\Network\HTTPException;
 use Friendica\Util\DateTimeFormat;
 
-function item_post(App $a)
+function item_post()
 {
 	$uid = DI::userSession()->getLocalUserId();
 

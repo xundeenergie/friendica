@@ -40,6 +40,7 @@
  * If you need to run a script before the database update, name the function "pre_update_4712()"
  */
 
+use Friendica\Contact\LocalRelationship\Entity\LocalRelationship;
 use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Core\Logger;
 use Friendica\Core\Protocol;
@@ -1133,7 +1134,7 @@ function update_1481()
 
 function update_1491()
 {
-	DBA::update('contact', ['remote_self' => Contact::MIRROR_OWN_POST], ['remote_self' => Contact::MIRROR_FORWARDED]);
+	DBA::update('contact', ['remote_self' => LocalRelationship::MIRROR_OWN_POST], ['remote_self' => 1]);
 	return Update::SUCCESS;
 }
 

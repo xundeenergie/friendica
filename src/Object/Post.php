@@ -1071,13 +1071,11 @@ class Post
 	 */
 	private function getDefaultText(): string
 	{
-		$a = DI::app();
-
 		if (!DI::userSession()->getLocalUserId()) {
 			return '';
 		}
 
-		$owner = User::getOwnerDataById($a->getLoggedInUserId());
+		$owner = User::getOwnerDataById(DI::userSession()->getLocalUserId());
 		$item = $this->getData();
 
 		if (!empty($item['content-warning']) && Feature::isEnabled(DI::userSession()->getLocalUserId(), Feature::ADD_ABSTRACT)) {
@@ -1124,8 +1122,6 @@ class Post
 	 */
 	private function getCommentBox(string $indent)
 	{
-		$a = DI::app();
-
 		$comment_box = '';
 		$conv = $this->getThread();
 
@@ -1144,7 +1140,7 @@ class Post
 			$uid = $conv->getProfileOwner();
 			$parent_uid = $this->getDataValue('uid');
 
-			$owner = User::getOwnerDataById($a->getLoggedInUserId());
+			$owner = User::getOwnerDataById(DI::userSession()->getLocalUserId());
 
 			$default_text = $this->getDefaultText();
 

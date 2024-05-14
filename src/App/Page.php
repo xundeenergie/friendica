@@ -32,6 +32,7 @@ use Friendica\Core\L10n;
 use Friendica\Core\Logger;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\Renderer;
+use Friendica\Core\Session\Model\UserSession;
 use Friendica\Core\System;
 use Friendica\Core\Theme;
 use Friendica\Module\Response;
@@ -325,13 +326,13 @@ class Page implements ArrayAccess
 	 *
 	 * @throws HTTPException\InternalServerErrorException
 	 */
-	private function initFooter(App $app, Mode $mode, L10n $l10n)
+	private function initFooter(UserSession $session, Mode $mode, L10n $l10n)
 	{
 		// If you're just visiting, let javascript take you home
 		if (!empty($_SESSION['visitor_home'])) {
 			$homebase = $_SESSION['visitor_home'];
-		} elseif (!empty($app->getLoggedInUserNickname())) {
-			$homebase = 'profile/' . $app->getLoggedInUserNickname();
+		} elseif (!empty($session->getLocalUserNickname())) {
+			$homebase = 'profile/' . $session->getLocalUserNickname();
 		}
 
 		if (isset($homebase)) {
@@ -420,7 +421,7 @@ class Page implements ArrayAccess
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws HTTPException\ServiceUnavailableException
 	 */
-	public function run(App $app, BaseURL $baseURL, Arguments $args, Mode $mode, ResponseInterface $response, L10n $l10n, Profiler $profiler, IManageConfigValues $config, IManagePersonalConfigValues $pconfig, Nav $nav, int $localUID)
+	public function run(App $app, UserSession $session, BaseURL $baseURL, Arguments $args, Mode $mode, ResponseInterface $response, L10n $l10n, Profiler $profiler, IManageConfigValues $config, IManagePersonalConfigValues $pconfig, Nav $nav, int $localUID)
 	{
 		$moduleName = $args->getModuleName();
 
@@ -459,7 +460,7 @@ class Page implements ArrayAccess
 		/* Build the page ending -- this is stuff that goes right before
 		 * the closing </body> tag
 		 */
-		$this->initFooter($app, $mode, $l10n);
+		$this->initFooter($session, $mode, $l10n);
 
 		$profiler->set(microtime(true) - $timestamp, 'aftermath');
 

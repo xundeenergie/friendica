@@ -67,7 +67,7 @@ class Widget
 
 		if (DI::config()->get('system', 'invitation_only')) {
 			$x = intval(DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'invites_remaining'));
-			if ($x || DI::app()->isSiteAdmin()) {
+			if ($x || DI::userSession()->isSiteAdmin()) {
 				DI::page()['aside'] .= '<div class="side-link widget" id="side-invite-remain">'
 					. DI::l10n()->tt('%d invitation available', '%d invitations available', $x)
 					. '</div>';
