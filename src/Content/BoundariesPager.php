@@ -23,8 +23,8 @@ namespace Friendica\Content;
 
 use Friendica\Core\L10n;
 use Friendica\Core\Renderer;
-use Friendica\Util\Network;
 use Friendica\Util\Strings;
+use GuzzleHttp\Psr7\Uri;
 
 /**
  * This pager should be used by lists using the min_id†/max_id† parameters
@@ -67,7 +67,7 @@ class BoundariesPager extends Pager
 
 			$parsed['query'] = http_build_query($queryParameters);
 
-			$url = Network::unparseURL($parsed);
+			$url = (string)Uri::fromParts((array)$parsed);
 
 			$this->setQueryString($url);
 		}

@@ -33,6 +33,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\RequestOptions;
 use mattwright\URLResolver;
 use Psr\Http\Message\ResponseInterface;
@@ -104,7 +105,7 @@ class HttpClient implements ICanSendHttpRequests
 			}
 		}
 		$parts['path'] = implode('/', $parts2);
-		$url           = Network::unparseURL($parts);
+		$url           = (string)Uri::fromParts((array)$parts);
 
 		if (Network::isUrlBlocked($url)) {
 			$this->logger->info('Domain is blocked.', ['url' => $url]);

@@ -29,9 +29,9 @@ use Friendica\Core\Renderer;
 use Friendica\Core\Search;
 use Friendica\DI;
 use Friendica\Model\Contact;
-use Friendica\Util\Network;
 use Friendica\Util\Strings;
 use Friendica\Util\XML;
+use GuzzleHttp\Psr7\Uri;
 use League\HTMLToMarkdown\HtmlConverter;
 use Psr\Http\Message\UriInterface;
 
@@ -407,7 +407,7 @@ class HTML
 		}
 
 		$parts = array_merge($base, parse_url($url));
-		$url2 = Network::unparseURL($parts);
+		$url2 = (string)Uri::fromParts((array)$parts);
 
 		return str_replace($url, $url2, $link);
 	}

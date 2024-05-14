@@ -400,7 +400,7 @@ class Network
 		];
 
 		$parts = array_merge($base, parse_url('/' . ltrim($url, '/')));
-		return self::unparseURL($parts);
+		return (string)Uri::fromParts((array)$parts);
 	}
 
 	/**
@@ -493,38 +493,6 @@ class Network
 	}
 
 	/**
-	 * Glue url parts together
-	 *
-	 * @param array $parsed URL parts
-	 *
-	 * @return string|null The glued URL or null on error
-	 * @deprecated since version 2021.12, use GuzzleHttp\Psr7\Uri::fromParts($parts) instead
-	 */
-	public static function unparseURL(array $parsed): string
-	{
-		$get = function ($key) use ($parsed) {
-			return isset($parsed[$key]) ? $parsed[$key] : null;
-		};
-
-		$pass      = $get('pass');
-		$user      = $get('user');
-		$userinfo  = $pass !== null ? "$user:$pass" : $user;
-		$port      = $get('port');
-		$scheme    = $get('scheme');
-		$query     = $get('query');
-		$fragment  = $get('fragment');
-		$authority = ($userinfo !== null ? $userinfo . '@' : '') .
-						$get('host') .
-						($port ? ":$port" : '');
-
-		return	(!empty($scheme) ? $scheme . ':' : '') .
-			(!empty($authority) ? '//' . $authority : '') .
-			$get('path') .
-			(!empty($query) ? '?' . $query : '') .
-			(!empty($fragment) ? '#' . $fragment : '');
-	}
-
-	/**
 	 * Convert an URI to an IDN compatible URI
 	 *
 	 * @param string $uri
@@ -602,7 +570,7 @@ class Network
 
 		$parsed['query'] = http_build_query($params);
 
-		return self::unparseURL($parsed);
+		return (string)Uri::fromParts((array)$parsed);
 	}
 
 	/**
