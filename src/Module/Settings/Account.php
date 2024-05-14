@@ -46,7 +46,7 @@ class Account extends BaseSettings
 {
 	protected function post(array $request = [])
 	{
-		if (!DI::app()->isLoggedIn()) {
+		if (!DI::userSession()->isAuthenticated()) {
 			throw new HTTPException\ForbiddenException(DI::l10n()->t('Permission denied.'));
 		}
 
@@ -56,7 +56,7 @@ class Account extends BaseSettings
 
 		$a = DI::app();
 
-		$user = User::getById($a->getLoggedInUserId());
+		$user = User::getById($this->session->getLocalUserId());
 
 		if (!empty($request['password-submit'])) {
 			$newpass = $request['password'];
@@ -394,7 +394,7 @@ class Account extends BaseSettings
 
 		$a = DI::app();
 
-		$user = User::getById($a->getLoggedInUserId());
+		$user = User::getById($this->session->getLocalUserId());
 
 		$username         = $user['username'];
 		$email            = $user['email'];
@@ -591,7 +591,7 @@ class Account extends BaseSettings
 			'$circle_select'      => Circle::getSelectorHTML(DI::userSession()->getLocalUserId(), $user['def_gid'], 'circle-selection', DI::l10n()->t('Default privacy circle for new contacts')),
 			'$circle_select_group' => Circle::getSelectorHTML(DI::userSession()->getLocalUserId(), DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'default-group-gid', $user['def_gid']), 'circle-selection-group', DI::l10n()->t('Default privacy circle for new group contacts')),
 			'$permissions'        => DI::l10n()->t('Default Post Permissions'),
-			'$aclselect'          => ACL::getFullSelectorHTML(DI::page(), $a->getLoggedInUserId()),
+			'$aclselect'          => ACL::getFullSelectorHTML(DI::page(), $this->session->getLocalUserId()),
 
 			'$expire' => [
 				'label'        => DI::l10n()->t('Expiration settings'),

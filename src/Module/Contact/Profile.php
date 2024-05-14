@@ -24,6 +24,7 @@ namespace Friendica\Module\Contact;
 use Friendica\App;
 use Friendica\BaseModule;
 use Friendica\Contact\LocalRelationship;
+use Friendica\Contact\LocalRelationship\Entity\LocalRelationship as LocalRelationshipEntity;
 use Friendica\Content\ContactSelector;
 use Friendica\Content\Nav;
 use Friendica\Content\Text\BBCode;
@@ -323,24 +324,24 @@ class Profile extends BaseModule
 
 		if ($contact['network'] == Protocol::FEED) {
 			$remote_self_options = [
-				Contact::MIRROR_DEACTIVATED => $this->t('No mirroring'),
-				Contact::MIRROR_OWN_POST    => $this->t('Mirror as my own posting')
+				LocalRelationshipEntity::MIRROR_DEACTIVATED => $this->t('No mirroring'),
+				LocalRelationshipEntity::MIRROR_OWN_POST    => $this->t('Mirror as my own posting')
 			];
 		} elseif ($contact['network'] == Protocol::ACTIVITYPUB) {
 			$remote_self_options = [
-				Contact::MIRROR_DEACTIVATED    => $this->t('No mirroring'),
-				Contact::MIRROR_NATIVE_RESHARE => $this->t('Native reshare')
+				LocalRelationshipEntity::MIRROR_DEACTIVATED    => $this->t('No mirroring'),
+				LocalRelationshipEntity::MIRROR_NATIVE_RESHARE => $this->t('Native reshare')
 			];
 		} elseif ($contact['network'] == Protocol::DFRN) {
 			$remote_self_options = [
-				Contact::MIRROR_DEACTIVATED    => $this->t('No mirroring'),
-				Contact::MIRROR_OWN_POST       => $this->t('Mirror as my own posting'),
-				Contact::MIRROR_NATIVE_RESHARE => $this->t('Native reshare')
+				LocalRelationshipEntity::MIRROR_DEACTIVATED    => $this->t('No mirroring'),
+				LocalRelationshipEntity::MIRROR_OWN_POST       => $this->t('Mirror as my own posting'),
+				LocalRelationshipEntity::MIRROR_NATIVE_RESHARE => $this->t('Native reshare')
 			];
 		} else {
 			$remote_self_options = [
-				Contact::MIRROR_DEACTIVATED => $this->t('No mirroring'),
-				Contact::MIRROR_OWN_POST    => $this->t('Mirror as my own posting')
+				LocalRelationshipEntity::MIRROR_DEACTIVATED => $this->t('No mirroring'),
+				LocalRelationshipEntity::MIRROR_OWN_POST    => $this->t('Mirror as my own posting')
 			];
 		}
 

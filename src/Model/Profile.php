@@ -297,7 +297,7 @@ class Profile
 		if (DI::userSession()->getLocalUserId() && ($profile['uid'] ?? 0) != DI::userSession()->getLocalUserId()) {
 			$profile_contact = Contact::getByURL($profile['nurl'], null, [], DI::userSession()->getLocalUserId());
 		}
-		if (!empty($profile['cid']) && self::getMyURL()) {
+		if (!empty($profile['cid']) && DI::userSession()->getMyUrl()) {
 			$profile_contact = Contact::selectFirst([], ['id' => $profile['cid']]);
 		}
 
@@ -322,19 +322,19 @@ class Profile
 
 		// Who is the logged-in user to this profile?
 		$visitor_contact = [];
-		if (!empty($profile['uid']) && self::getMyURL()) {
-			$visitor_contact = Contact::selectFirst(['rel'], ['uid' => $profile['uid'], 'nurl' => Strings::normaliseLink(self::getMyURL())]);
+		if (!empty($profile['uid']) && DI::userSession()->getMyUrl()) {
+			$visitor_contact = Contact::selectFirst(['rel'], ['uid' => $profile['uid'], 'nurl' => Strings::normaliseLink(DI::userSession()->getMyUrl())]);
 		}
 
-		$local_user_is_self = self::getMyURL() && ($profile['url'] == self::getMyURL());
-		$visitor_is_authenticated = (bool)self::getMyURL();
+		$local_user_is_self = DI::userSession()->getMyUrl() && ($profile['url'] == DI::userSession()->getMyUrl());
+		$visitor_is_authenticated = (bool)DI::userSession()->getMyUrl();
 		$visitor_is_following =
 			in_array($visitor_contact['rel'] ?? 0, [Contact::FOLLOWER, Contact::FRIEND])
 			|| in_array($profile_contact['rel'] ?? 0, [Contact::SHARING, Contact::FRIEND]);
 		$visitor_is_followed =
 			in_array($visitor_contact['rel'] ?? 0, [Contact::SHARING, Contact::FRIEND])
 			|| in_array($profile_contact['rel'] ?? 0, [Contact::FOLLOWER, Contact::FRIEND]);
-		$visitor_base_path = self::getMyURL() ? preg_replace('=/profile/(.*)=ism', '', self::getMyURL()) : '';
+		$visitor_base_path = DI::userSession()->getMyUrl() ? preg_replace('=/profile/(.*)=ism', '', DI::userSession()->getMyUrl()) : '';
 
 		if (!$local_user_is_self) {
 			if (!$visitor_is_authenticated) {
@@ -697,17 +697,6 @@ class Profile
 	}
 
 	/**
-	 * Retrieves the my_url session variable
-	 *
-	 * @return string
-	 * @deprecated since version 2022.12, please use UserSession->getMyUrl instead
-	 */
-	public static function getMyURL(): string
-	{
-		return DI::userSession()->getMyUrl();
-	}
-
-	/**
 	 * Process the 'zrl' parameter and initiate the remote authentication.
 	 *
 	 * This method checks if the visitor has a public contact entry and
@@ -730,7 +719,7 @@ class Profile
 	 */
 	public static function zrlInit(App $a)
 	{
-		$my_url = self::getMyURL();
+		$my_url = DI::userSession()->getMyUrl();
 		$my_url = Network::isUrlValid($my_url);
 
 		if (empty($my_url) || DI::userSession()->getLocalUserId()) {
@@ -916,7 +905,7 @@ class Profile
 		}
 
 		$achar = strpos($url, '?') ? '&' : '?';
-		$mine = self::getMyURL();
+		$mine = DI::userSession()->getMyUrl();
 
 		if ($mine && !Strings::compareLink($mine, $url)) {
 			return $url . $achar . 'zrl=' . urlencode($mine);

@@ -199,7 +199,7 @@ function frio_remote_nav(array &$nav_info)
 {
 	if (DI::mode()->has(App\Mode::MAINTENANCEDISABLED)) {
 		// get the homelink from $_SESSION
-		$homelink = Profile::getMyURL();
+		$homelink = DI::userSession()->getMyUrl();
 		if (!$homelink) {
 			$homelink = DI::session()->get('visitor_home', '');
 		}
@@ -212,7 +212,7 @@ function frio_remote_nav(array &$nav_info)
 		} elseif (!DI::userSession()->getLocalUserId() && DI::userSession()->getRemoteUserId()) {
 			$remoteUser                = Contact::getById(DI::userSession()->getRemoteUserId(), $fields);
 			$nav_info['nav']['remote'] = DI::l10n()->t('Guest');
-		} elseif (Profile::getMyURL()) {
+		} elseif (DI::userSession()->getMyUrl()) {
 			$remoteUser                = Contact::getByURL($homelink, null, $fields);
 			$nav_info['nav']['remote'] = DI::l10n()->t('Visitor');
 		} else {

@@ -87,7 +87,7 @@ class Renderer
 			$output = $t->replaceMacros($template, $vars);
 		} catch (Exception $e) {
 			DI::logger()->critical($e->getMessage(), ['template' => $template, 'vars' => $vars]);
-			$message = DI::app()->isSiteAdmin() ?
+			$message = DI::userSession()->isSiteAdmin() ?
 				$e->getMessage() :
 				DI::l10n()->t('Friendica can\'t display this page at the moment, please contact the administrator.');
 			throw new ServiceUnavailableException($message);
@@ -116,7 +116,7 @@ class Renderer
 			$template = $t->getTemplateFile($file, $subDir);
 		} catch (Exception $e) {
 			DI::logger()->critical($e->getMessage(), ['file' => $file, 'subDir' => $subDir]);
-			$message = DI::app()->isSiteAdmin() ?
+			$message = DI::userSession()->isSiteAdmin() ?
 				$e->getMessage() :
 				DI::l10n()->t('Friendica can\'t display this page at the moment, please contact the administrator.');
 			throw new ServiceUnavailableException($message);
@@ -145,7 +145,7 @@ class Renderer
 		} else {
 			$admin_message = DI::l10n()->t('template engine cannot be registered without a name.');
 			DI::logger()->critical($admin_message, ['class' => $class]);
-			$message = DI::app()->isSiteAdmin() ?
+			$message = DI::userSession()->isSiteAdmin() ?
 				$admin_message :
 				DI::l10n()->t('Friendica can\'t display this page at the moment, please contact the administrator.');
 			throw new ServiceUnavailableException($message);
@@ -179,7 +179,7 @@ class Renderer
 
 		$admin_message = DI::l10n()->t('template engine is not registered!');
 		DI::logger()->critical($admin_message, ['template_engine' => $template_engine]);
-		$message = DI::app()->isSiteAdmin() ?
+		$message = DI::userSession()->isSiteAdmin() ?
 			$admin_message :
 			DI::l10n()->t('Friendica can\'t display this page at the moment, please contact the administrator.');
 		throw new ServiceUnavailableException($message);

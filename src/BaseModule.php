@@ -356,7 +356,7 @@ abstract class BaseModule implements ICanHandleRequests
 	 */
 	public static function getFormSecurityToken(string $typename = ''): string
 	{
-		$user      = User::getById(DI::app()->getLoggedInUserId(), ['guid', 'prvkey']);
+		$user      = User::getById(DI::userSession()->getLocalUserId(), ['guid', 'prvkey']);
 		$timestamp = time();
 		$sec_hash  = hash('whirlpool', ($user['guid'] ?? '') . ($user['prvkey'] ?? '') . session_id() . $timestamp . $typename);
 
@@ -390,7 +390,7 @@ abstract class BaseModule implements ICanHandleRequests
 
 		$max_livetime = 10800; // 3 hours
 
-		$user = User::getById(DI::app()->getLoggedInUserId(), ['guid', 'prvkey']);
+		$user = User::getById(DI::userSession()->getLocalUserId(), ['guid', 'prvkey']);
 
 		$x = explode('.', $hash);
 		if (time() > (intval($x[0]) + $max_livetime)) {

@@ -66,7 +66,7 @@ class Contact extends BaseModeration
 				$this->baseUrl->redirect('moderation/blocklist/contact');
 			}
 
-			if (Network::isLocalLink($contact['nurl'])) {
+			if ($this->baseUrl->isLocalUrl($contact['nurl'])) {
 				$this->systemMessages->addNotice($this->t('You can\'t block a local contact, please block the user instead'));
 				$this->baseUrl->redirect('moderation/blocklist/contact');
 			}

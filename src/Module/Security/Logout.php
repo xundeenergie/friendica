@@ -64,7 +64,7 @@ class Logout extends BaseModule
 	{
 		$visitor_home = null;
 		if ($this->session->getRemoteUserId()) {
-			$visitor_home = Profile::getMyURL();
+			$visitor_home = $this->session->getMyUrl();
 			$this->cache->delete('zrlInit:' . $visitor_home);
 		}
 

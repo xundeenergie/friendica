@@ -83,7 +83,7 @@ class HttpClient implements ICanSendHttpRequests
 			return CurlResult::createErrorCurl($this->logger, $url);
 		}
 
-		if (Network::isLocalLink($url)) {
+		if ($this->baseUrl->isLocalUrl($url)) {
 			$this->logger->info('Local link', ['url' => $url]);
 		}
 
@@ -249,7 +249,7 @@ class HttpClient implements ICanSendHttpRequests
 	{
 		$this->profiler->startRecording('network');
 
-		if (Network::isLocalLink($url)) {
+		if ($this->baseUrl->isLocalUrl($url)) {
 			$this->logger->debug('Local link', ['url' => $url]);
 		}
 
