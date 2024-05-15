@@ -1514,14 +1514,6 @@ class Conversation
 
 			[$categories, $folders] = $this->item->determineCategoriesTerms($item, $this->session->getLocalUserId());
 
-			if (!empty($item['title'])) {
-				$title = $item['title'];
-			} elseif (!empty($item['content-warning']) && $this->pConfig->get($this->session->getLocalUserId(), 'system', 'disable_cw', false)) {
-				$title = ucfirst($item['content-warning']);
-			} else {
-				$title = '';
-			}
-
 			if (!empty($item['featured'])) {
 				$pinned = $this->l10n->t('Pinned item');
 			} else {
@@ -1547,7 +1539,8 @@ class Conversation
 				'sparkle'              => $sparkle,
 				'lock'                 => false,
 				'thumb'                => $this->baseURL->remove($this->item->getAuthorAvatar($item)),
-				'title'                => $title,
+				'title'                => $item['title'],
+				'summary'              => $item['content-warning'],
 				'body_html'            => $body_html,
 				'tags'                 => $tags['tags'],
 				'hashtags'             => $tags['hashtags'],
