@@ -741,8 +741,8 @@ function scrollToItem(elementId) {
 	}
 
 	// Define the colors which are used for highlighting
-	var colWhite = { backgroundColor: "#F5F5F5" };
-	var colShiny = { backgroundColor: "#FFF176" };
+	var colWhite = { backgroundColor: "#7f7f7f" };
+	var colShiny = { backgroundColor: "#7e763a" };
 
 	// Get the Item Position (we need to substract 100 to match correct position
 	var itemPos = $el.offset().top - 100;
