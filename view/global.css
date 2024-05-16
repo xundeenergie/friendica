@@ -783,3 +783,9 @@ figure.img-allocated-height img{
 	font-weight: bold;
 	font-style: italic;
 }
+
+summary.wall-item-summary {
+	font-weight: bold;
+	font-style: oblique;
+  padding-bottom: 5px;
+}

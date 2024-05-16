@@ -218,7 +218,7 @@ class Connectors extends BaseSettings
 					Item::COMPLETION_LIKE    => $this->t('Any conversation my follows interacted with, including likes'),
 				]
 			],
-			'$enable_cw'               => ['enable_cw', $this->t('Enable Content Warning'), $enable_cw, $this->t('Users on networks like Mastodon or Pleroma are able to set a content warning field which collapse their post by default. This enables the automatic collapsing instead of setting the content warning as the post title. Doesn\'t affect any other content filtering you eventually set up.')],
+			'$enable_cw'               => ['enable_cw', $this->t("Collapse sensitive posts"), $enable_cw, $this->t('If a post is marked as "sensitive", it will be displayed in a collapsed state, if this option is enabled.')],
 			'$enable_smart_shortening' => ['enable_smart_shortening', $this->t('Enable intelligent shortening'), $enable_smart_shortening, $this->t('Normally the system tries to find the best link to add to shortened posts. If disabled, every shortened post will always point to the original friendica post.')],
 			'$simple_shortening'       => ['simple_shortening', $this->t('Enable simple text shortening'), $simple_shortening, $this->t('Normally the system shortens posts at the next line feed. If this option is enabled then the system will shorten the text at the maximum character limit.')],
 			'$attach_link_title'       => ['attach_link_title', $this->t('Attach the link title'), $attach_link_title, $this->t('When activated, the title of the attached link will be added as a title on posts to Diaspora. This is mostly helpful with "remote-self" contacts that share feed content.')],

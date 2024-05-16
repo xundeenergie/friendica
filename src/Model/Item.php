@@ -3347,7 +3347,6 @@ class Item
 		$item['tags'] = $tags['tags'];
 		$item['hashtags'] = $tags['hashtags'];
 		$item['mentions'] = $tags['mentions'];
-		$sensitive = $item['sensitive'] && !DI::pConfig()->get($uid, 'system', 'display_sensitive', false);
 
 		if (!$is_preview) {
 			$item['body'] = preg_replace("#\s*\[attachment .*?].*?\[/attachment]\s*#ism", "\n", $item['body']);
@@ -3415,11 +3414,11 @@ class Item
 			$shared_links = array_merge($shared_links, $sharedSplitAttachments['visual']->column('url'));
 			$shared_links = array_merge($shared_links, $sharedSplitAttachments['link']->column('url'));
 			$shared_links = array_merge($shared_links, $sharedSplitAttachments['additional']->column('url'));
-			$item['body'] = self::replaceVisualAttachments($sharedSplitAttachments['visual'], $item['body'], $sensitive);
+			$item['body'] = self::replaceVisualAttachments($sharedSplitAttachments['visual'], $item['body']);
 		}
 
 		$itemSplitAttachments = DI::postMediaRepository()->splitAttachments($item['uri-id'], $shared_links, $item['has-media'] ?? false);
-		$item['body'] = self::replaceVisualAttachments($itemSplitAttachments['visual'], $item['body'] ?? '', $sensitive);
+		$item['body'] = self::replaceVisualAttachments($itemSplitAttachments['visual'], $item['body'] ?? '');
 
 		self::putInCache($item);
 		$item['body'] = $body;
@@ -3440,8 +3439,8 @@ class Item
 				$filter_reasons[] = DI::l10n()->t('Content from %s is collapsed', $item['author-name']);
 			}
 
-			if (!empty($item['content-warning']) && (!$uid || !DI::pConfig()->get($uid, 'system', 'disable_cw', false))) {
-				$filter_reasons[] = DI::l10n()->t('Content warning: %s', $item['content-warning']);
+			if ($item['sensitive'] && (!$uid || !DI::pConfig()->get($uid, 'system', 'disable_cw', false))) {
+				$filter_reasons[] = DI::l10n()->t('Sensitive content');
 			}
 
 			$item['attachments'] = $itemSplitAttachments;
@@ -3474,9 +3473,9 @@ class Item
 		}
 
 		if (!empty($sharedSplitAttachments)) {
-			$s = self::addGallery($s, $sharedSplitAttachments['visual'], $sensitive);
-			$s = self::addVisualAttachments($sharedSplitAttachments['visual'], $shared_item, $s, true, $sensitive);
-			$s = self::addLinkAttachment($shared_uri_id ?: $item['uri-id'], $sharedSplitAttachments, $body, $s, true, $quote_shared_links, $sensitive);
+			$s = self::addGallery($s, $sharedSplitAttachments['visual']);
+			$s = self::addVisualAttachments($sharedSplitAttachments['visual'], $shared_item, $s, true);
+			$s = self::addLinkAttachment($shared_uri_id ?: $item['uri-id'], $sharedSplitAttachments, $body, $s, true, $quote_shared_links);
 			$s = self::addNonVisualAttachments($sharedSplitAttachments['additional'], $item, $s, true);
 			$body = BBCode::removeSharedData($body);
 		}
@@ -3487,9 +3486,9 @@ class Item
 			$s = substr($s, 0, $pos);
 		}
 
-		$s = self::addGallery($s, $itemSplitAttachments['visual'], $sensitive);
-		$s = self::addVisualAttachments($itemSplitAttachments['visual'], $item, $s, false, $sensitive);
-		$s = self::addLinkAttachment($item['uri-id'], $itemSplitAttachments, $body, $s, false, $shared_links, $sensitive);
+		$s = self::addGallery($s, $itemSplitAttachments['visual']);
+		$s = self::addVisualAttachments($itemSplitAttachments['visual'], $item, $s, false);
+		$s = self::addLinkAttachment($item['uri-id'], $itemSplitAttachments, $body, $s, false, $shared_links);
 		$s = self::addNonVisualAttachments($itemSplitAttachments['additional'], $item, $s, false);
 		$s = self::addQuestions($item, $s);
 
@@ -3523,10 +3522,9 @@ class Item
 	 *
 	 * @param string     $s
 	 * @param PostMedias $PostMedias
-	 * @param bool       $sensitive
 	 * @return string
 	 */
-	private static function addGallery(string $s, PostMedias $PostMedias, bool $sensitive): string
+	private static function addGallery(string $s, PostMedias $PostMedias): string
 	{
 		foreach ($PostMedias as $PostMedia) {
 			if (!$PostMedia->preview || ($PostMedia->type !== Post\Media::IMAGE)) {
@@ -3536,10 +3534,9 @@ class Item
 			if ($PostMedia->hasDimensions()) {
 				$pattern = '#<a href="' . preg_quote($PostMedia->url) . '">(.*?)"></a>#';
 
-				$s = preg_replace_callback($pattern, function () use ($PostMedia, $sensitive) {
+				$s = preg_replace_callback($pattern, function () use ($PostMedia) {
 					return Renderer::replaceMacros(Renderer::getMarkupTemplate('content/image/single_with_height_allocation.tpl'), [
 						'$image' => $PostMedia,
-						'$sensitive' => $sensitive,
 						'$allocated_height' => $PostMedia->getAllocatedHeight(),
 						'$allocated_max_width' => ($PostMedia->previewWidth ?? $PostMedia->width) . 'px',
 					]);
@@ -3608,10 +3605,9 @@ class Item
 	 *
 	 * @param PostMedias $PostMedias
 	 * @param string     $body
-	 * @param bool       $sensitive
 	 * @return string modified body
 	 */
-	private static function replaceVisualAttachments(PostMedias $PostMedias, string $body, bool $sensitive): string
+	private static function replaceVisualAttachments(PostMedias $PostMedias, string $body): string
 	{
 		DI::profiler()->startRecording('rendering');
 
@@ -3620,7 +3616,7 @@ class Item
 				if (DI::baseUrl()->isLocalUri($PostMedia->preview)) {
 					continue;
 				}
-				$proxy   = DI::baseUrl() . $PostMedia->getPreviewPath(Proxy::SIZE_LARGE, $sensitive);
+				$proxy   = DI::baseUrl() . $PostMedia->getPreviewPath(Proxy::SIZE_LARGE);
 				$search  = ['[img=' . $PostMedia->preview . ']', ']' . $PostMedia->preview . '[/img]'];
 				$replace = ['[img=' . $proxy . ']', ']' . $proxy . '[/img]'];
 
@@ -3629,7 +3625,7 @@ class Item
 				if (DI::baseUrl()->isLocalUri($PostMedia->url)) {
 					continue;
 				}
-				$proxy   = DI::baseUrl() . $PostMedia->getPreviewPath(Proxy::SIZE_LARGE, $sensitive);
+				$proxy   = DI::baseUrl() . $PostMedia->getPreviewPath(Proxy::SIZE_LARGE);
 				$search  = ['[img=' . $PostMedia->url . ']', ']' . $PostMedia->url . '[/img]'];
 				$replace = ['[img=' . $proxy . ']', ']' . $proxy . '[/img]'];
 
@@ -3647,11 +3643,10 @@ class Item
 	 * @param array      $item
 	 * @param string     $content
 	 * @param bool       $shared
-	 * @param bool       $sensitive
 	 * @return string modified content
 	 * @throws ServiceUnavailableException
 	 */
-	private static function addVisualAttachments(PostMedias $PostMedias, array $item, string $content, bool $shared, bool $sensitive): string
+	private static function addVisualAttachments(PostMedias $PostMedias, array $item, string $content, bool $shared): string
 	{
 		DI::profiler()->startRecording('rendering');
 		$leading  = '';
@@ -3666,7 +3661,7 @@ class Item
 
 			if ($PostMedia->mimetype->type == 'image' || $PostMedia->preview) {
 				$preview_size = Proxy::SIZE_MEDIUM;
-				$preview_url = DI::baseUrl() . $PostMedia->getPreviewPath($preview_size, $sensitive);
+				$preview_url = DI::baseUrl() . $PostMedia->getPreviewPath($preview_size);
 			} else {
 				$preview_size = 0;
 				$preview_url = '';
@@ -3761,12 +3756,11 @@ class Item
 	 * @param string       $content
 	 * @param bool         $shared
 	 * @param array        $ignore_links A list of URLs to ignore
-	 * @param bool         $sensitive
 	 * @return string modified content
 	 * @throws InternalServerErrorException
 	 * @throws ServiceUnavailableException
 	 */
-	private static function addLinkAttachment(int $uriid, array $attachments, string $body, string $content, bool $shared, array $ignore_links, bool $sensitive): string
+	private static function addLinkAttachment(int $uriid, array $attachments, string $body, string $content, bool $shared, array $ignore_links): string
 	{
 		DI::profiler()->startRecording('rendering');
 		// Don't show a preview when there is a visual attachment (audio or video)
@@ -3809,9 +3803,9 @@ class Item
 
 			if ($preview && $attachment->preview) {
 				if ($attachment->previewWidth >= 500) {
-					$data['image'] = DI::baseUrl() . $attachment->getPreviewPath(Proxy::SIZE_MEDIUM, $sensitive);
+					$data['image'] = DI::baseUrl() . $attachment->getPreviewPath(Proxy::SIZE_MEDIUM);
 				} else {
-					$data['preview'] = DI::baseUrl() . $attachment->getPreviewPath(Proxy::SIZE_MEDIUM, $sensitive);
+					$data['preview'] = DI::baseUrl() . $attachment->getPreviewPath(Proxy::SIZE_MEDIUM);
 				}
 			}
 
@@ -3834,11 +3828,6 @@ class Item
 			}
 		} elseif (preg_match("/.*(\[attachment.*?\].*?\[\/attachment\]).*/ism", $body, $match)) {
 			$data = BBCode::getAttachmentData($match[1]);
-		}
-
-		if ($sensitive) {
-			$data['image']   = '';
-			$data['preview'] = '';
 		}
 
 		DI::profiler()->stopRecording();

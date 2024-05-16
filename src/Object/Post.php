@@ -465,14 +465,6 @@ class Post
 
 		list($categories, $folders) = DI::contentItem()->determineCategoriesTerms($item, DI::userSession()->getLocalUserId());
 
-		if (!empty($item['title'])) {
-			$title = $item['title'];
-		} elseif (!empty($item['content-warning']) && DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'disable_cw', false)) {
-			$title = ucfirst($item['content-warning']);
-		} else {
-			$title = '';
-		}
-
 		$hide_dislike = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'hide_dislike');
 		if ($hide_dislike) {
 			$buttons['dislike'] = false;
@@ -572,7 +564,8 @@ class Post
 			'thumb'           => DI::baseUrl()->remove(DI::contentItem()->getAuthorAvatar($item)),
 			'osparkle'        => $osparkle,
 			'sparkle'         => $sparkle,
-			'title'           => $title,
+			'title'           => $item['title'],
+			'summary'         => $item['content-warning'],
 			'localtime'       => DateTimeFormat::local($item['created'], 'r'),
 			'ago'             => $item['app'] ? DI::l10n()->t('%s from %s', $ago, $item['app']) : $ago,
 			'app'             => $item['app'],
