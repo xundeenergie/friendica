@@ -1201,7 +1201,7 @@ class Probe
 
 		if (!empty($webfinger['aliases']) && is_array($webfinger['aliases'])) {
 			foreach ($webfinger['aliases'] as $alias) {
-				if (empty($data['url']) && !strstr($alias, '@')) {
+				if (empty($data['url']) && Network::isValidHttpUrl($alias)) {
 					$data['url'] = $alias;
 				} elseif (Network::isValidHttpUrl($alias) && !Strings::compareLink($alias, $data['url'])) {
 					$data['alias'] = $alias;
@@ -1455,7 +1455,7 @@ class Probe
 
 		if (!empty($webfinger['aliases']) && is_array($webfinger['aliases'])) {
 			foreach ($webfinger['aliases'] as $alias) {
-				if (strstr($alias, '@') && !strstr(Strings::normaliseLink($alias), 'http://')) {
+				if (strstr($alias, '@') && !Network::isValidHttpUrl($alias)) {
 					$data['addr'] = str_replace('acct:', '', $alias);
 				}
 			}
@@ -1463,7 +1463,7 @@ class Probe
 
 		if (
 			!empty($webfinger['subject']) && strstr($webfinger['subject'], '@')
-			&& !strstr(Strings::normaliseLink($webfinger['subject']), 'http://')
+			&& !Network::isValidHttpUrl($webfinger['subject'])
 		) {
 			$data['addr'] = str_replace('acct:', '', $webfinger['subject']);
 		}
