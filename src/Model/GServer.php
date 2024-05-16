@@ -1589,6 +1589,9 @@ class GServer
 		$name = 'nomad';
 		$curlResult = DI::httpClient()->get($url . '/manifest', 'application/manifest+json', [HttpClientOptions::REQUEST => HttpClientRequest::SERVERINFO]);
 		if (!$curlResult->isSuccess() || ($curlResult->getBodyString() == '')) {
+			if ($curlResult->getReturnCode() == 418) {
+				$name = 'streams';
+			}
 			return $name;
 		}
 
