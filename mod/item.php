@@ -234,13 +234,15 @@ function item_insert(int $uid, array $request, bool $preview, string $return_pat
 
 function item_process(array $post, array $request, bool $preview, string $return_path): array
 {
-	$post['self']       = true;
-	$post['api_source'] = false;
-	$post['attach']     = '';
-	$post['title']      = trim($request['title'] ?? '');
-	$post['body']       = $request['body'] ?? '';
-	$post['location']   = trim($request['location'] ?? '');
-	$post['coord']      = trim($request['coord'] ?? '');
+	$post['self']            = true;
+	$post['api_source']      = false;
+	$post['attach']          = '';
+	$post['title']           = trim($request['title'] ?? '');
+	$post['content-warning'] = trim($request['summary'] ?? '');
+	$post['sensitive']       = !empty($request['sensitive'] ?? false);
+	$post['body']            = $request['body'] ?? '';
+	$post['location']        = trim($request['location'] ?? '');
+	$post['coord']           = trim($request['coord'] ?? '');
 
 	$post = DI::contentItem()->addCategories($post, $request['category'] ?? '');
 
