@@ -765,7 +765,7 @@ class Transmitter
 		}
 
 		if (!empty($item['parent']) && (!$exclusive || ($item['private'] == Item::PRIVATE))) {
-			if ($item['private'] == Item::PRIVATE) {
+			if ($item['private'] == Item::PRIVATE || $item['gravity'] == Item::GRAVITY_ACTIVITY) {
 				$condition = ['parent' => $item['parent'], 'uri-id' => $item['thr-parent-id']];
 			} else {
 				$condition = ['parent' => $item['parent']];
@@ -812,6 +812,14 @@ class Transmitter
 				}
 			}
 			DBA::close($parents);
+		}
+
+		if (!empty($item['quote-uri-id']) && in_array($item['private'], [Item::PUBLIC, Item::UNLISTED])) {
+			$quoted = Post::selectFirst(['author-link'], ['uri-id' => $item['quote-uri-id']]);
+			$profile = APContact::getByURL($quoted['author-link'], false);
+			if (!empty($profile)) {
+				$data['cc'][] = $profile['url'];
+			}
 		}
 
 		$data['to']       = array_unique($data['to']);
