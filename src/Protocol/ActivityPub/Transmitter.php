@@ -513,10 +513,10 @@ class Transmitter
 		}
 
 		$permissions = [
-			'to' => [$parent['author-link']],
-			'cc' => [],
-			'bto' => [],
-			'bcc' => [],
+			'to'       => [$parent['author-link']],
+			'cc'       => [],
+			'bto'      => [],
+			'bcc'      => [],
 			'audience' => [],
 		];
 
@@ -653,7 +653,7 @@ class Transmitter
 			$networks = [Protocol::ACTIVITYPUB, Protocol::OSTATUS];
 		}
 
-		$data = ['to' => [], 'cc' => [], 'bcc' => [] , 'audience' => $audience];
+		$data = ['to' => [], 'cc' => [], 'bto' => [], 'bcc' => [], 'audience' => $audience];
 
 		if ($item['gravity'] == Item::GRAVITY_PARENT) {
 			$actor_profile = APContact::getByURL($item['owner-link']);
@@ -807,7 +807,7 @@ class Transmitter
 					if (($profile['type'] == 'Group') || ($parent['uri'] == $item['thr-parent'])) {
 						$data['to'][] = $profile['url'];
 					} else {
-						$data['cc'][] = $profile['url'];
+						$data['bto'][] = $profile['url'];
 					}
 				}
 			}
@@ -824,6 +824,7 @@ class Transmitter
 
 		$data['to']       = array_unique($data['to']);
 		$data['cc']       = array_unique($data['cc']);
+		$data['bto']      = array_unique($data['bto']);
 		$data['bcc']      = array_unique($data['bcc']);
 		$data['audience'] = array_unique($data['audience']);
 
@@ -835,13 +836,21 @@ class Transmitter
 			unset($data['cc'][$key]);
 		}
 
+		if (($key = array_search($item['author-link'], $data['bto'])) !== false) {
+			unset($data['bto'][$key]);
+		}
+
 		if (($key = array_search($item['author-link'], $data['bcc'])) !== false) {
 			unset($data['bcc'][$key]);
-		}
+		}	
 
 		foreach ($data['to'] as $to) {
 			if (($key = array_search($to, $data['cc'])) !== false) {
 				unset($data['cc'][$key]);
+			}
+
+			if (($key = array_search($to, $data['bto'])) !== false) {
+				unset($data['bto'][$key]);
 			}
 
 			if (($key = array_search($to, $data['bcc'])) !== false) {
@@ -850,14 +859,25 @@ class Transmitter
 		}
 
 		foreach ($data['cc'] as $cc) {
+			if (($key = array_search($cc, $data['bto'])) !== false) {
+				unset($data['bto'][$key]);
+			}
+
 			if (($key = array_search($cc, $data['bcc'])) !== false) {
 				unset($data['bcc'][$key]);
 			}
 		}
 
-		$receivers = ['to' => array_values($data['to']), 'cc' => array_values($data['cc']), 'bcc' => array_values($data['bcc']), 'audience' => array_values($data['audience'])];
+		foreach ($data['bcc'] as $cc) {
+			if (($key = array_search($cc, $data['bto'])) !== false) {
+				unset($data['bto'][$key]);
+			}
+		}
+
+		$receivers = ['to' => array_values($data['to']), 'cc' => array_values($data['cc']), 'bto' => array_values($data['bto']), 'bcc' => array_values($data['bcc']), 'audience' => array_values($data['audience'])];
 
 		if (!$blindcopy) {
+			unset($receivers['bto']);
 			unset($receivers['bcc']);
 		}
 
@@ -883,7 +903,7 @@ class Transmitter
 			return;
 		}
 
-		foreach (['to' => Tag::TO, 'cc' => Tag::CC, 'bcc' => Tag::BCC, 'audience' => Tag::AUDIENCE] as $element => $type) {
+		foreach (['to' => Tag::TO, 'cc' => Tag::CC, 'bto' => Tag::BTO, 'bcc' => Tag::BCC, 'audience' => Tag::AUDIENCE] as $element => $type) {
 			if (!empty($receivers[$element])) {
 				foreach ($receivers[$element] as $receiver) {
 					if ($receiver == ActivityPub::PUBLIC_COLLECTION) {
@@ -906,13 +926,13 @@ class Transmitter
 	 */
 	public static function getReceiversForUriId(int $uri_id, bool $blindcopy)
 	{
-		$tags = Tag::getByURIId($uri_id, [Tag::TO, Tag::CC, Tag::BCC, Tag::AUDIENCE]);
+		$tags = Tag::getByURIId($uri_id, [Tag::TO, Tag::CC, Tag::BTO, Tag::BCC, Tag::AUDIENCE]);
 		if (empty($tags)) {
 			Logger::debug('No receivers found', ['uri-id' => $uri_id]);
 			$post = Post::selectFirst(Item::DELIVER_FIELDLIST, ['uri-id' => $uri_id, 'origin' => true]);
 			if (!empty($post)) {
 				ActivityPub\Transmitter::storeReceiversForItem($post);
-				$tags = Tag::getByURIId($uri_id, [Tag::TO, Tag::CC, Tag::BCC, Tag::AUDIENCE]);
+				$tags = Tag::getByURIId($uri_id, [Tag::TO, Tag::CC, Tag::BTO, Tag::BCC, Tag::AUDIENCE]);
 				Logger::debug('Receivers are created', ['uri-id' => $uri_id, 'receivers' => count($tags)]);
 			} else {
 				Logger::debug('Origin item not found', ['uri-id' => $uri_id]);
@@ -922,6 +942,7 @@ class Transmitter
 		$receivers = [
 			'to'       => [],
 			'cc'       => [],
+			'bto'      => [],
 			'bcc'      => [],
 			'audience' => [],
 		];
@@ -934,6 +955,9 @@ class Transmitter
 				case Tag::CC:
 					$receivers['cc'][] = $receiver['url'];
 					break;
+				case Tag::BTO:
+					$receivers['bto'][] = $receiver['url'];
+					break;
 				case Tag::BCC:
 					$receivers['bcc'][] = $receiver['url'];
 					break;
@@ -944,6 +968,7 @@ class Transmitter
 		}
 
 		if (!$blindcopy) {
+			unset($receivers['bto']);
 			unset($receivers['bcc']);
 		}
 
@@ -1093,7 +1118,7 @@ class Transmitter
 				continue;
 			}
 
-			$blindcopy = in_array($element, ['bto', 'bcc']);
+			$blindcopy = in_array($element, ['bcc']);
 
 			foreach ($permissions[$element] as $receiver) {
 				if (empty($receiver) || Network::isUrlBlocked($receiver)) {
