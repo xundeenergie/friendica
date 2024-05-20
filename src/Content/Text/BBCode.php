@@ -2119,7 +2119,7 @@ class BBCode
 	private static function idnUrl(string $url): string
 	{
 		$parts = parse_url($url);
-		if (empty($parts)) {
+		if (empty($parts['host'])) {
 			return $url;
 		}
 
