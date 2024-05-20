@@ -117,7 +117,7 @@ class Probe
 			'photo', 'photo_medium', 'photo_small', 'header',
 			'account-type', 'community', 'keywords', 'location', 'about', 'xmpp', 'matrix',
 			'hide', 'batch', 'notify', 'poll', 'request', 'confirm', 'subscribe', 'poco',
-			'following', 'followers', 'inbox', 'outbox', 'sharedinbox',
+			'openwebauth', 'following', 'followers', 'inbox', 'outbox', 'sharedinbox',
 			'priority', 'network', 'pubkey', 'manually-approve', 'baseurl', 'gsid'
 		];
 
@@ -384,6 +384,12 @@ class Probe
 				unset($data['networks']);
 				if (!empty($data['network'])) {
 					$networks[$data['network']] = $data;
+					$ap_profile['guid']        = $ap_profile['guid']  ?? $data['guid'] ?? null;
+					$ap_profile['about']       = $ap_profile['about'] ?? $data['about'] ?? null;
+					$ap_profile['keywords']    = $data['keywords'] ?? null;
+					$ap_profile['location']    = $data['location'] ?? null;
+					$ap_profile['poco']        = $data['poco'] ?? null;
+					$ap_profile['openwebauth'] = $data['openwebauth'] ?? null;
 				}
 				$data = $ap_profile;
 				$data['networks'] = $networks;
@@ -524,6 +530,8 @@ class Probe
 		foreach ($webfinger['links'] as $link) {
 			if (!empty($link['template']) && ($link['rel'] === ActivityNamespace::OSTATUSSUB)) {
 				$result['subscribe'] = $link['template'];
+			} elseif (!empty($link['href']) && ($link['rel'] === ActivityNamespace::OPENWEBAUTH) && ($link['type'] === 'application/x-zot+json')) {
+				$result['openwebauth'] = $link['href'];
 			}
 		}
 
@@ -855,7 +863,7 @@ class Probe
 		}
 
 		foreach ($webfinger['links'] as $link) {
-			if (($link['rel'] == 'http://webfinger.net/rel/avatar') && !empty($link['href'])) {
+			if (($link['rel'] == ActivityNamespace::WEBFINGERAVATAR) && !empty($link['href'])) {
 				$data['photo'] = $link['href'];
 			} elseif (($link['rel'] == 'http://openid.net/specs/connect/1.0/issuer') && !empty($link['href'])) {
 				$data['baseurl'] = trim($link['href'], '/');
@@ -1178,17 +1186,17 @@ class Probe
 				$data['network'] = Protocol::DFRN;
 			} elseif (($link['rel'] == ActivityNamespace::FEED) && !empty($link['href'])) {
 				$data['poll'] = $link['href'];
-			} elseif (($link['rel'] == 'http://webfinger.net/rel/profile-page') && (($link['type'] ?? '') == 'text/html') && !empty($link['href'])) {
+			} elseif (($link['rel'] == ActivityNamespace::WEBFINGERPROFILE) && (($link['type'] ?? '') == 'text/html') && !empty($link['href'])) {
 				$data['url'] = $link['href'];
-			} elseif (($link['rel'] == 'http://microformats.org/profile/hcard') && !empty($link['href'])) {
+			} elseif (($link['rel'] == ActivityNamespace::HCARD) && !empty($link['href'])) {
 				$hcard_url = $link['href'];
 			} elseif (($link['rel'] == ActivityNamespace::POCO) && !empty($link['href'])) {
 				$data['poco'] = $link['href'];
-			} elseif (($link['rel'] == 'http://webfinger.net/rel/avatar') && !empty($link['href'])) {
+			} elseif (($link['rel'] == ActivityNamespace::WEBFINGERAVATAR) && !empty($link['href'])) {
 				$data['photo'] = $link['href'];
-			} elseif (($link['rel'] == 'http://joindiaspora.com/seed_location') && !empty($link['href'])) {
+			} elseif (($link['rel'] == ActivityNamespace::DIASPORA_SEED) && !empty($link['href'])) {
 				$data['baseurl'] = trim($link['href'], '/');
-			} elseif (($link['rel'] == 'http://joindiaspora.com/guid') && !empty($link['href'])) {
+			} elseif (($link['rel'] == ActivityNamespace::DIASPORA_GUID) && !empty($link['href'])) {
 				$data['guid'] = $link['href'];
 			} elseif (($link['rel'] == 'diaspora-public-key') && !empty($link['href'])) {
 				$data['pubkey'] = base64_decode($link['href']);
@@ -1361,15 +1369,15 @@ class Probe
 		// The array is reversed to take into account the order of preference for same-rel links
 		// See: https://tools.ietf.org/html/rfc7033#section-4.4.4
 		foreach (array_reverse($webfinger['links']) as $link) {
-			if (($link['rel'] == 'http://microformats.org/profile/hcard') && !empty($link['href'])) {
+			if (($link['rel'] == ActivityNamespace::HCARD) && !empty($link['href'])) {
 				$hcard_url = $link['href'];
-			} elseif (($link['rel'] == 'http://joindiaspora.com/seed_location') && !empty($link['href'])) {
+			} elseif (($link['rel'] == ActivityNamespace::DIASPORA_SEED) && !empty($link['href'])) {
 				$data['baseurl'] = trim($link['href'], '/');
-			} elseif (($link['rel'] == 'http://joindiaspora.com/guid') && !empty($link['href'])) {
+			} elseif (($link['rel'] == ActivityNamespace::DIASPORA_GUID) && !empty($link['href'])) {
 				$data['guid'] = $link['href'];
-			} elseif (($link['rel'] == 'http://webfinger.net/rel/profile-page') && (($link['type'] ?? '') == 'text/html') && !empty($link['href'])) {
+			} elseif (($link['rel'] == ActivityNamespace::WEBFINGERPROFILE) && (($link['type'] ?? '') == 'text/html') && !empty($link['href'])) {
 				$data['url'] = $link['href'];
-			} elseif (($link['rel'] == 'http://webfinger.net/rel/profile-page') && empty($link['type']) && !empty($link['href'])) {
+			} elseif (($link['rel'] == ActivityNamespace::WEBFINGERPROFILE) && empty($link['type']) && !empty($link['href'])) {
 				$profile_url = $link['href'];
 			} elseif (($link['rel'] == ActivityNamespace::FEED) && !empty($link['href'])) {
 				$data['poll'] = $link['href'];
@@ -1472,7 +1480,7 @@ class Probe
 			// The array is reversed to take into account the order of preference for same-rel links
 			// See: https://tools.ietf.org/html/rfc7033#section-4.4.4
 			foreach (array_reverse($webfinger['links']) as $link) {
-				if (($link['rel'] == 'http://webfinger.net/rel/profile-page')
+				if (($link['rel'] == ActivityNamespace::WEBFINGERPROFILE)
 					&& (($link['type'] ?? '') == 'text/html')
 					&& ($link['href'] != '')
 				) {
@@ -2066,6 +2074,7 @@ class Probe
 				'hide'             => !$owner['net-publish'], 'batch' => '', 'notify' => $owner['notify'],
 				'poll'             => $owner['poll'],
 				'subscribe'        => $approfile['generator']['url'] . '/contact/follow?url={uri}', 'poco' => $owner['poco'],
+				'openwebauth'      => $approfile['generator']['url'] . '/owa',
 				'following'        => $approfile['following'], 'followers' => $approfile['followers'],
 				'inbox'            => $approfile['inbox'], 'outbox' => $approfile['outbox'],
 				'sharedinbox'      => $approfile['endpoints']['sharedInbox'], 'network' => Protocol::DFRN,

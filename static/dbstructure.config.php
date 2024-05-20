@@ -56,7 +56,7 @@ use Friendica\Database\DBA;
 
 // This file is required several times during the test in DbaDefinition which justifies this condition
 if (!defined('DB_UPDATE_VERSION')) {
-	define('DB_UPDATE_VERSION', 1560);
+	define('DB_UPDATE_VERSION', 1561);
 }
 
 return [
@@ -79,6 +79,7 @@ return [
 			"local-comments" => ["type" => "int unsigned", "comment" => "Number of local comments"],
 			"directory-type" => ["type" => "tinyint", "default" => "0", "comment" => "Type of directory service (Poco, Mastodon)"],
 			"poco" => ["type" => "varbinary(383)", "not null" => "1", "default" => "", "comment" => ""],
+			"openwebauth" => ["type" => "varbinary(383)", "comment" => "Path to the OpenWebAuth endpoint"],
 			"noscrape" => ["type" => "varbinary(383)", "not null" => "1", "default" => "", "comment" => ""],
 			"network" => ["type" => "char(4)", "not null" => "1", "default" => "", "comment" => ""],
 			"protocol" => ["type" => "tinyint unsigned", "comment" => "The protocol of the server"],

@@ -583,7 +583,7 @@ class App
 						}
 					}
 
-					Model\Profile::zrlInit($this);
+					Model\Profile::zrlInit();
 				} else {
 					// Someone came with an invalid parameter, maybe as a DDoS attempt
 					// We simply stop processing here

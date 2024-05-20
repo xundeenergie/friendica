@@ -1446,6 +1446,7 @@ class Contact
 			}
 		}
 
+		GServer::updateFromProbeArray($data);
 		self::updateFromProbeArray($contact_id, $data);
 
 		// Don't return a number for a deleted account
@@ -2673,6 +2674,7 @@ class Contact
 			}
 		}
 
+		GServer::updateFromProbeArray($data);
 		return self::updateFromProbeArray($id, $data);
 	}
 
@@ -3215,6 +3217,7 @@ class Contact
 		}
 
 		if ($probed) {
+			GServer::updateFromProbeArray($ret);
 			self::updateFromProbeArray($contact_id, $ret);
 		} else {
 			try {
