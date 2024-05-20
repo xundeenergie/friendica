@@ -42,6 +42,7 @@ use Friendica\Module\BaseProfile;
 use Friendica\Network\HTTPException;
 use Friendica\Network\Probe;
 use Friendica\Protocol\Activity;
+use Friendica\Protocol\ActivityNamespace;
 use Friendica\Security\Security;
 use Friendica\Util\Crypto;
 use Friendica\Util\DateTimeFormat;
@@ -408,7 +409,7 @@ function photos_post()
 
 							if (count($links)) {
 								foreach ($links as $link) {
-									if ($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page') {
+									if ($link['@attributes']['rel'] === ActivityNamespace::WEBFINGERPROFILE) {
 										$profile = $link['@attributes']['href'];
 									}
 

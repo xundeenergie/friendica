@@ -711,13 +711,11 @@ class Profile
 	 *
 	 * It would be favourable to harmonize the two implementations.
 	 *
-	 * @param App $a Application instance.
-	 *
 	 * @return void
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public static function zrlInit(App $a)
+	public static function zrlInit()
 	{
 		$my_url = DI::userSession()->getMyUrl();
 		$my_url = Network::isUrlValid($my_url);

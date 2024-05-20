@@ -90,7 +90,7 @@ class APContact
 				$data['url'] = $link['href'];
 			}
 
-			if (!empty($link['href']) && !empty($link['type']) && ($link['rel'] == 'http://webfinger.net/rel/profile-page') && ($link['type'] == 'text/html')) {
+			if (!empty($link['href']) && !empty($link['type']) && ($link['rel'] == ActivityNamespace::WEBFINGERPROFILE) && ($link['type'] == 'text/html')) {
 				$data['alias'] = $link['href'];
 			}
 		}

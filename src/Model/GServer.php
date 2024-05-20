@@ -2484,6 +2484,25 @@ class GServer
 		DI::keyValue()->set('poco_last_federation_discovery', time());
 	}
 
+	public static function updateFromProbeArray(array $data)
+	{
+		if (empty($data['gsid']) || empty($data['openwebauth'])) {
+			return;
+		}
+
+		$gserver = DBA::selectFirst('gserver', ['openwebauth'], ['id' => $data['gsid']]);
+		if (!DBA::isResult($gserver)) {
+			return;
+		}
+
+		if ($data['openwebauth'] == $gserver['openwebauth']) {
+			return;
+		}
+
+		Logger::debug('Set Open Web Auth path', ['baseurl' => $data['baseurl'], 'openwebauth' => $data['openwebauth']]);
+		self::update(['openwebauth' => $data['openwebauth']], ['id' => $data['gsid']]);
+	}
+
 	/**
 	 * Set the protocol for the given server
 	 *
