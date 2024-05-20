@@ -48,6 +48,7 @@ use Friendica\Util\ParseUrl;
 use Friendica\Util\Proxy;
 use Friendica\Util\Strings;
 use Friendica\Util\XML;
+use GuzzleHttp\Psr7\Uri;
 
 class BBCode
 {
@@ -147,7 +148,7 @@ class BBCode
 					case 'title':
 						$value = self::toPlaintext(html_entity_decode($value, ENT_QUOTES, 'UTF-8'));
 						$value = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
-						$data['title'] = self::escapeUrl($value);
+						$data['title'] = self::escapeContent($value);
 
 					default:
 						$data[$field] = html_entity_decode($value, ENT_QUOTES, 'UTF-8');
@@ -312,6 +313,7 @@ class BBCode
 
 	public static function proxyUrl(string $image, int $simplehtml = self::INTERNAL, int $uriid = 0, string $size = ''): string
 	{
+		$image = self::idnUrl($image);
 		// Only send proxied pictures to API and for internal display
 		if (!in_array($simplehtml, [self::INTERNAL, self::MASTODON_API, self::TWITTER_API])) {
 			return $image;
@@ -2106,7 +2108,23 @@ class BBCode
 
 	private static function escapeUrl(string $url): string
 	{
+		return self::escapeContent(self::idnUrl($url));
+	}
+
+	private static function escapeContent(string $url): string
+	{
 		return str_replace(['[', ']'], ['&#91;', '&#93;'], $url);
+	}
+
+	private static function idnUrl(string $url): string
+	{
+		$parts = parse_url($url);
+		if (empty($parts)) {
+			return $url;
+		}
+
+		$parts['host'] = idn_to_ascii(urldecode($parts['host']));
+		return (string)Uri::fromParts($parts);
 	}
 
 	private static function unifyLinks(string $text): string
