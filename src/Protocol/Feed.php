@@ -374,10 +374,12 @@ class Feed
 
 			$guid = XML::getFirstNodeValue($xpath, 'guid/text()', $entry);
 			if (!empty($guid)) {
-				$item['uri'] = $guid;
+				if (empty($item['uri'])) {
+					$item['uri'] = $guid;
+				}
 
 				// Don't use the GUID value directly but instead use it as a basis for the GUID
-				$item['guid'] = Item::guidFromUri($guid, parse_url($guid, PHP_URL_HOST) ?? parse_url($item['plink'], PHP_URL_HOST));
+				$item['guid'] = Item::guidFromUri($guid, parse_url($item['plink'], PHP_URL_HOST));
 			}
 
 			if (empty($item['uri'])) {
@@ -410,7 +412,7 @@ class Feed
 				$item['title'] = XML::getFirstNodeValue($xpath, 'itunes:title/text()', $entry);
 			}
 
-			$item['title'] = html_entity_decode($item['title'], ENT_QUOTES, 'UTF-8');
+			$item['title'] = trim(html_entity_decode($item['title'], ENT_QUOTES, 'UTF-8'));
 
 			$published = XML::getFirstNodeValue($xpath, $atomns . ':published/text()', $entry);
 
@@ -538,28 +540,14 @@ class Feed
 				$summary = '';
 			}
 
-			if ($body == $summary) {
-				$summary = '';
-			}
-
 			// remove the content of the title if it is identically to the body
 			// This helps with auto generated titles e.g. from tumblr
 			if (self::titleIsBody($item['title'], $body)) {
 				$item['title'] = '';
 			}
 
-			if (!HTML::isHTML($body)) {
-				$html = BBCode::convert($body, false, BBCode::EXTERNAL);
-				if ($body != $html) {
-					Logger::debug('Body contained no HTML', ['original' => $body, 'converted' => $html]);
-					$body = $html;
-				}
-			}
-
-			$item['body'] = HTML::toBBCode($body, $basepath);
-
-			// Remove tracking pixels
-			$item['body'] = preg_replace("/\[img=1x1\]([^\[\]]*)\[\/img\]/Usi", '', $item['body']);
+			$item['body'] = self::formatBody($body, $basepath);
+			$summary = self::formatBody($summary, $basepath);
 
 			if (($item['body'] == '') && ($item['title'] != '')) {
 				$item['body'] = $item['title'];
@@ -593,24 +581,18 @@ class Feed
 				$item['body'] = str_replace($item['plink'], '', $item['body']);
 				$item['body'] = trim(preg_replace('/\[url\=\](\w+.*?)\[\/url\]/i', '', $item['body']));
 
-				// Replace the content when the title is longer than the body
-				$replace = (strlen($item['title']) > strlen($item['body']));
+				$summary = str_replace($item['plink'], '', $summary);
+				$summary = trim(preg_replace('/\[url\=\](\w+.*?)\[\/url\]/i', '', $summary));
 
-				// Replace it, when there is an image in the body
-				if (strstr($item['body'], '[/img]')) {
-					$replace = true;
-				}
-
-				// Replace it, when there is a link in the body
-				if (strstr($item['body'], '[/url]')) {
-					$replace = true;
+				if (!empty($summary) && self::replaceBodyWithTitle($summary, $item['title'])) {
+					$summary = '';
 				}
 
 				$saved_body = $item['body'];
 				$saved_title = $item['title'];
 
-				if ($replace) {
-					$item['body'] = trim($item['title']);
+				if (self::replaceBodyWithTitle($item['body'], $item['title'])) {
+					$item['body'] = $summary ?: $item['title'];
 				}
 
 				$data = ParseUrl::getSiteinfoCached($item['plink']);
@@ -677,10 +659,6 @@ class Feed
 					}
 				}
 			} else {
-				if (!empty($summary)) {
-					$item['content-warning'] = HTML::toBBCode($summary, $basepath);
-				}
-
 				if ($fetch_further_information == LocalRelationship::FFI_KEYWORD) {
 					if (empty($taglist)) {
 						$taglist = PageInfo::getTagsFromUrl($item['plink'], $preview, $contact['ffi_keyword_denylist'] ?? '');
@@ -1307,5 +1285,38 @@ class Feed
 		}
 
 		return substr($title, 0, $pos) . $trailer;
+	}
+
+	private static function formatBody(string $body, string $basepath): string
+	{
+		if (!HTML::isHTML($body)) {
+			$html = BBCode::convert($body, false, BBCode::EXTERNAL);
+			if ($body != $html) {
+				Logger::debug('Body contained no HTML', ['original' => $body, 'converted' => $html]);
+				$body = $html;
+			}
+		}
+
+		$body = HTML::toBBCode($body, $basepath);
+
+		// Remove tracking pixels
+		return preg_replace("/\[img=1x1\]([^\[\]]*)\[\/img\]/Usi", '', $body);
+	}
+
+	private static function replaceBodyWithTitle(string $body, string $title): bool
+	{
+		// Replace the content when the title is longer than the body
+		$replace = (strlen($title) > strlen($body));
+
+		// Replace it, when there is an image in the body
+		if (strstr($body, '[/img]')) {
+			$replace = true;
+		}
+
+		// Replace it, when there is a link in the body
+		if (strstr($body, '[/url]')) {
+			$replace = true;
+		}
+		return $replace;
 	}
 }
