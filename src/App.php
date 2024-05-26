@@ -621,6 +621,11 @@ class App
 				Core\Hook::loadHooks();
 			}
 
+			// Compatibility with Hubzilla
+			if ($moduleName == 'rpost') {
+				$this->baseURL->redirect('compose');
+			}
+
 			// Compatibility with the Android Diaspora client
 			if ($moduleName == 'stream') {
 				$this->baseURL->redirect('network?order=post');

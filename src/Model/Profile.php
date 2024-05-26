@@ -730,16 +730,20 @@ class Profile
 		Hook::callAll('zrl_init', $arr);
 
 		// Try to find the public contact entry of the visitor.
-		$cid = Contact::getIdForURL($my_url);
-		if (!$cid) {
-			Logger::info('No contact record found for ' . $my_url);
+		$contact = Contact::getByURL($my_url, null, ['id', 'url', 'gsid']);
+		if (empty($contact)) {
+			Logger::info('No contact record found', ['url' => $my_url]);
 			return;
 		}
 
-		$contact = DBA::selectFirst('contact',['id', 'url'], ['id' => $cid]);
+		if (DI::userSession()->getRemoteUserId() && DI::userSession()->getRemoteUserId() == $contact['id']) {
+			Logger::info('The visitor is already authenticated', ['url' => $my_url]);
+			return;
+		}
 
-		if (DBA::isResult($contact) && DI::userSession()->getRemoteUserId() && DI::userSession()->getRemoteUserId() == $contact['id']) {
-			Logger::info('The visitor ' . $my_url . ' is already authenticated');
+		$gserver = DBA::selectFirst('gserver', ['url', 'authredirect'], ['id' => $contact['gsid']]);
+		if (empty($gserver) || empty($gserver['authredirect'])) {
+			Logger::info('No server record found or magic path not defined for server', ['id' => $contact['gsid'], 'gserver' => $gserver]);
 			return;
 		}
 
@@ -752,7 +756,7 @@ class Profile
 			DI::cache()->set($cachekey, true, Duration::MINUTE);
 		}
 
-		Logger::info('Not authenticated. Invoking reverse magic-auth for ' . $my_url);
+		Logger::info('Not authenticated. Invoking reverse magic-auth', ['url' => $my_url]);
 
 		// Remove the "addr" parameter from the destination. It is later added as separate parameter again.
 		$addr_request = 'addr=' . urlencode($addr);
@@ -761,19 +765,11 @@ class Profile
 		// The other instance needs to know where to redirect.
 		$dest = urlencode(DI::baseUrl() . '/' . $query);
 
-		// We need to extract the basebath from the profile url
-		// to redirect the visitors '/magic' module.
-		$basepath = Contact::getBasepath($contact['url']);
+		if ($gserver['url'] != DI::baseUrl() && !strstr($dest, '/magic')) {
+			$magic_path = $gserver['authredirect'] . '?f=&rev=1&owa=1&dest=' . $dest . '&' . $addr_request;
 
-		if ($basepath != DI::baseUrl() && !strstr($dest, '/magic')) {
-			$magic_path = $basepath . '/magic' . '?owa=1&dest=' . $dest . '&' . $addr_request;
-
-			// We have to check if the remote server does understand /magic without invoking something
-			$serverret = DI::httpClient()->head($basepath . '/magic', [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::HTML, HttpClientOptions::REQUEST => HttpClientRequest::MAGICAUTH]);
-			if ($serverret->isSuccess()) {
-				Logger::info('Doing magic auth for visitor ' . $my_url . ' to ' . $magic_path);
-				System::externalRedirect($magic_path);
-			}
+			Logger::info('Doing magic auth for visitor ' . $my_url . ' to ' . $magic_path);
+			System::externalRedirect($magic_path);
 		}
 	}
 

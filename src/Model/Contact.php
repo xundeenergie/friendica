@@ -3580,13 +3580,17 @@ class Contact
 			return $destination;
 		}
 
+		if (DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'stay_local') && ($url == '')) {
+			return 'contact/' . $contact['id'] . '/conversations';
+		}
+
+		if (Strings::compareLink($contact['url'], $url) || Strings::compareLink($contact['alias'], $url)) {
+			$url = '';
+		}
+
 		// Only redirections to the same host do make sense
 		if (($url != '') && (parse_url($url, PHP_URL_HOST) != parse_url($contact['url'], PHP_URL_HOST))) {
 			return $url;
-		}
-
-		if (DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'stay_local') && ($url == '')) {
-			return 'contact/' . $contact['id'] . '/conversations';
 		}
 
 		if (!empty($contact['network']) && $contact['network'] != Protocol::DFRN) {
@@ -3599,7 +3603,7 @@ class Contact
 
 		$redirect = 'contact/redir/' . $contact['id'];
 
-		if (($url != '') && !Strings::compareLink($contact['url'], $url)) {
+		if ($url != '') {
 			$redirect .= '?url=' . $url;
 		}
 
