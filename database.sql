@@ -1,6 +1,6 @@
 -- ------------------------------------------
 -- Friendica 2024.06-dev (Yellow Archangel)
--- DB_UPDATE_VERSION 1561
+-- DB_UPDATE_VERSION 1562
 -- ------------------------------------------
 
 
@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `gserver` (
 	`directory-type` tinyint DEFAULT 0 COMMENT 'Type of directory service (Poco, Mastodon)',
 	`poco` varbinary(383) NOT NULL DEFAULT '' COMMENT '',
 	`openwebauth` varbinary(383) COMMENT 'Path to the OpenWebAuth endpoint',
+	`authredirect` varbinary(383) COMMENT 'Path to the authRedirect endpoint',
 	`noscrape` varbinary(383) NOT NULL DEFAULT '' COMMENT '',
 	`network` char(4) NOT NULL DEFAULT '' COMMENT '',
 	`protocol` tinyint unsigned COMMENT 'The protocol of the server',
