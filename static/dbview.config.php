@@ -1333,6 +1333,32 @@
 			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored` OR `channel-only`))
 			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`)"
 	],
+	"network-thread-circle-view" => [
+		"fields" => [
+			"uri-id" => ["post-thread-user", "uri-id"],
+			"parent" => ["post-thread-user", "post-user-id"],
+			"received" => ["post-thread-user", "received"],
+			"commented" => ["post-thread-user", "commented"],
+			"created" => ["post-thread-user", "created"],
+			"uid" => ["post-thread-user", "uid"],
+			"starred" => ["post-thread-user", "starred"],
+			"mention" => ["post-thread-user", "mention"],
+			"network" => ["post-thread-user", "network"],
+			"contact-id" => ["post-thread-user", "contact-id"],
+			"contact-type" => ["ownercontact", "contact-type"],
+		],
+		"query" => "FROM `post-thread-user`
+			INNER JOIN `post-user` ON `post-user`.`id` = `post-thread-user`.`post-user-id`
+			STRAIGHT_JOIN `contact` ON `contact`.`id` = `post-thread-user`.`contact-id`
+			STRAIGHT_JOIN `contact` AS `authorcontact` ON `authorcontact`.`id` = `post-thread-user`.`author-id`
+			STRAIGHT_JOIN `contact` AS `ownercontact` ON `ownercontact`.`id` = `post-thread-user`.`owner-id`
+			WHERE `post-user`.`visible` AND NOT `post-user`.`deleted`
+			AND (NOT `contact`.`readonly` AND NOT `contact`.`blocked` AND NOT `contact`.`pending`)
+			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
+			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
+			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored`))
+			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`)"
+	],
 	"owner-view" => [
 		"fields" => [
 			"id" => ["contact", "id"],
