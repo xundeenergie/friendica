@@ -1,6 +1,6 @@
 -- ------------------------------------------
 -- Friendica 2024.06-dev (Yellow Archangel)
--- DB_UPDATE_VERSION 1562
+-- DB_UPDATE_VERSION 1563
 -- ------------------------------------------
 
 
@@ -3358,6 +3358,34 @@ CREATE VIEW `network-thread-view` AS SELECT
 			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
 			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
 			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored` OR `channel-only`))
+			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`);
+
+--
+-- VIEW network-thread-circle-view
+--
+DROP VIEW IF EXISTS `network-thread-circle-view`;
+CREATE VIEW `network-thread-circle-view` AS SELECT 
+	`post-thread-user`.`uri-id` AS `uri-id`,
+	`post-thread-user`.`post-user-id` AS `parent`,
+	`post-thread-user`.`received` AS `received`,
+	`post-thread-user`.`commented` AS `commented`,
+	`post-thread-user`.`created` AS `created`,
+	`post-thread-user`.`uid` AS `uid`,
+	`post-thread-user`.`starred` AS `starred`,
+	`post-thread-user`.`mention` AS `mention`,
+	`post-thread-user`.`network` AS `network`,
+	`post-thread-user`.`contact-id` AS `contact-id`,
+	`ownercontact`.`contact-type` AS `contact-type`
+	FROM `post-thread-user`
+			INNER JOIN `post-user` ON `post-user`.`id` = `post-thread-user`.`post-user-id`
+			STRAIGHT_JOIN `contact` ON `contact`.`id` = `post-thread-user`.`contact-id`
+			STRAIGHT_JOIN `contact` AS `authorcontact` ON `authorcontact`.`id` = `post-thread-user`.`author-id`
+			STRAIGHT_JOIN `contact` AS `ownercontact` ON `ownercontact`.`id` = `post-thread-user`.`owner-id`
+			WHERE `post-user`.`visible` AND NOT `post-user`.`deleted`
+			AND (NOT `contact`.`readonly` AND NOT `contact`.`blocked` AND NOT `contact`.`pending`)
+			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
+			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
+			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored`))
 			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`);
 
 --
