@@ -795,7 +795,7 @@ class Profile
 
 		// Authenticate the visitor.
 		DI::userSession()->setMultiple([
-			'authenticated'  => 1,
+			'authenticated'  => 0,
 			'visitor_id'     => $visitor['id'],
 			'visitor_handle' => $visitor['addr'],
 			'visitor_home'   => $visitor['url'],

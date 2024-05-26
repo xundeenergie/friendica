@@ -156,9 +156,7 @@ class Magic extends BaseModule
 
 		$header = [
 			'Accept'          => 'application/x-zot+json',
-			'Content-Type'    => 'application/x-zot+json',
 			'X-Open-Web-Auth' => Strings::getRandomHex(),
-			'Host'            => strtolower(parse_url($gserver['url'], PHP_URL_HOST)),
 		];
 
 		// Create a header that is signed with the local users private key.
