@@ -737,7 +737,7 @@ class GServer
 			}
 		}
 
-		if (in_array($serverdata['platform'] ?? '', ['hubzilla', 'streams', 'osada', 'mistpark', 'roadhouse', 'zap'])) {
+		if (in_array($serverdata['platform'] ?? '', ['friendica', 'hubzilla', 'streams', 'osada', 'mistpark', 'roadhouse', 'zap'])) {
 			$serverdata = self::getZotData($url, $serverdata);
 		}
 
@@ -1673,7 +1673,7 @@ class GServer
 			$serverdata['info'] = $data['location'];
 		}
 
-		if (!empty($data['project']) && in_array($data['project'], ['hubzilla', 'streams', 'osada', 'mistpark', 'roadhouse', 'zap'])) {
+		if (!empty($data['project']) && in_array($data['project'], ['friendica', 'hubzilla', 'streams', 'osada', 'mistpark', 'roadhouse', 'zap'])) {
 			$serverdata['platform'] = $data['project'];
 		}
 
@@ -1691,9 +1691,6 @@ class GServer
 					break;
 				case 'approve':
 					$serverdata['register_policy'] = Register::APPROVE;
-					break;
-				default:
-					echo $data['register_policy'] . "\n";
 					break;
 			}
 		}
@@ -2568,17 +2565,17 @@ class GServer
 			return;
 		}
 
-		$gserver = DBA::selectFirst('gserver', ['openwebauth'], ['id' => $data['gsid']]);
+		$gserver = DBA::selectFirst('gserver', ['url', 'openwebauth'], ['id' => $data['gsid']]);
 		if (!DBA::isResult($gserver)) {
 			return;
 		}
 
-		if ($data['openwebauth'] == $gserver['openwebauth']) {
-			return;
+		$serverdata = self::getZotData($gserver['url'], []);
+		if (empty($serverdata)) {
+			$serverdata = ['openwebauth' => $data['openwebauth']];
 		}
 
-		Logger::debug('Set Open Web Auth path', ['baseurl' => $data['baseurl'], 'openwebauth' => $data['openwebauth']]);
-		self::update(['openwebauth' => $data['openwebauth']], ['id' => $data['gsid']]);
+		self::update($serverdata, ['id' => $data['gsid']]);
 	}
 
 	/**
