@@ -3557,6 +3557,10 @@ class Contact
 	 */
 	public static function magicLinkById(int $cid, string $url = ''): string
 	{
+		if (($url == '') && DI::userSession()->isAuthenticated() && DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'stay_local')) {
+			return 'contact/' . $cid . '/conversations';
+		}
+
 		$contact = DBA::selectFirst('contact', ['id', 'network', 'url', 'alias', 'uid'], ['id' => $cid]);
 
 		return self::magicLinkByContact($contact, $url);
@@ -3584,7 +3588,7 @@ class Contact
 			return 'contact/' . $contact['id'] . '/conversations';
 		}
 
-		if (Strings::compareLink($contact['url'], $url) || Strings::compareLink($contact['alias'], $url)) {
+		if (Strings::compareLink($contact['url'], $url) || Strings::compareLink($contact['alias'] ?? '', $url)) {
 			$url = '';
 		}
 
