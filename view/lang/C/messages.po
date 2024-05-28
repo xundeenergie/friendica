@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.06-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-26 15:56+0000\n"
+"POT-Creation-Date: 2024-05-27 04:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,8 +63,8 @@ msgstr ""
 #: src/Module/Post/Edit.php:76 src/Module/Profile/Common.php:75
 #: src/Module/Profile/Contacts.php:78 src/Module/Profile/Photos.php:92
 #: src/Module/Profile/Schedule.php:39 src/Module/Profile/Schedule.php:56
-#: src/Module/Register.php:78 src/Module/Register.php:91
-#: src/Module/Register.php:207 src/Module/Register.php:246
+#: src/Module/Register.php:84 src/Module/Register.php:97
+#: src/Module/Register.php:213 src/Module/Register.php:252
 #: src/Module/Search/Directory.php:37 src/Module/Settings/Account.php:50
 #: src/Module/Settings/Account.php:386 src/Module/Settings/Channels.php:66
 #: src/Module/Settings/Channels.php:141 src/Module/Settings/Delegation.php:90
@@ -388,14 +388,14 @@ msgid "Save"
 msgstr ""
 
 #: mod/photos.php:66 mod/photos.php:129 mod/photos.php:573
-#: src/Model/Event.php:512 src/Model/Profile.php:234
+#: src/Model/Event.php:512 src/Model/Profile.php:227
 #: src/Module/Calendar/Export.php:74 src/Module/Calendar/Show.php:74
 #: src/Module/DFRN/Poll.php:43 src/Module/Feed.php:64 src/Module/HCard.php:51
 #: src/Module/Profile/Common.php:62 src/Module/Profile/Common.php:71
 #: src/Module/Profile/Contacts.php:64 src/Module/Profile/Contacts.php:72
 #: src/Module/Profile/Conversations.php:91 src/Module/Profile/Media.php:56
 #: src/Module/Profile/Photos.php:83 src/Module/Profile/RemoteFollow.php:71
-#: src/Module/Register.php:268
+#: src/Module/Register.php:274
 msgid "User not found."
 msgstr ""
 
@@ -449,7 +449,7 @@ msgid "%1$s was tagged in %2$s by %3$s"
 msgstr ""
 
 #: mod/photos.php:577 src/Module/Conversation/Community.php:160
-#: src/Module/Directory.php:48 src/Module/Profile/Photos.php:293
+#: src/Module/Directory.php:49 src/Module/Profile/Photos.php:293
 #: src/Module/Search/Index.php:65
 msgid "Public access denied."
 msgstr ""
@@ -656,11 +656,11 @@ msgstr ""
 msgid "Map"
 msgstr ""
 
-#: src/App.php:438
+#: src/App.php:441
 msgid "No system theme config value set."
 msgstr ""
 
-#: src/App.php:546
+#: src/App.php:549
 msgid "Apologies but the website is unavailable at the moment."
 msgstr ""
 
@@ -1384,7 +1384,7 @@ msgid "Public post"
 msgstr ""
 
 #: src/Content/Conversation.php:424 src/Content/Widget/VCard.php:131
-#: src/Model/Profile.php:483 src/Module/Admin/Logs/View.php:94
+#: src/Model/Profile.php:476 src/Module/Admin/Logs/View.php:94
 #: src/Module/Post/Edit.php:181
 msgid "Message"
 msgstr ""
@@ -1891,7 +1891,7 @@ msgstr ""
 
 #: src/Content/Item.php:430 src/Content/Item.php:453 src/Model/Contact.php:1168
 #: src/Model/Contact.php:1224 src/Model/Contact.php:1234
-#: src/Module/Directory.php:157 src/Module/Settings/Profile/Index.php:259
+#: src/Module/Directory.php:158 src/Module/Settings/Profile/Index.php:259
 msgid "View Profile"
 msgstr ""
 
@@ -1900,7 +1900,7 @@ msgid "View Photos"
 msgstr ""
 
 #: src/Content/Item.php:432 src/Model/Contact.php:1202
-#: src/Model/Profile.php:468
+#: src/Model/Profile.php:461
 msgid "Network Posts"
 msgstr ""
 
@@ -2058,7 +2058,7 @@ msgstr ""
 msgid "Home Page"
 msgstr ""
 
-#: src/Content/Nav.php:255 src/Module/Register.php:169
+#: src/Content/Nav.php:255 src/Module/Register.php:175
 #: src/Module/Security/Login.php:124
 msgid "Register"
 msgstr ""
@@ -2138,7 +2138,7 @@ msgid "Information about this friendica instance"
 msgstr ""
 
 #: src/Content/Nav.php:301 src/Module/Admin/Tos.php:78
-#: src/Module/BaseAdmin.php:95 src/Module/Register.php:177
+#: src/Module/BaseAdmin.php:95 src/Module/Register.php:183
 #: src/Module/Tos.php:101
 msgid "Terms of Service"
 msgstr ""
@@ -2313,7 +2313,7 @@ msgid "The end"
 msgstr ""
 
 #: src/Content/Text/HTML.php:861 src/Content/Widget/VCard.php:127
-#: src/Model/Profile.php:477 src/Module/Contact/Profile.php:478
+#: src/Model/Profile.php:470 src/Module/Contact/Profile.php:478
 msgid "Follow"
 msgstr ""
 
@@ -2353,7 +2353,7 @@ msgid "Examples: Robert Morgenstein, Fishing"
 msgstr ""
 
 #: src/Content/Widget.php:82 src/Module/Contact.php:460
-#: src/Module/Directory.php:96 view/theme/vier/theme.php:197
+#: src/Module/Directory.php:97 view/theme/vier/theme.php:197
 msgid "Find"
 msgstr ""
 
@@ -2374,7 +2374,7 @@ msgstr ""
 msgid "Invite Friends"
 msgstr ""
 
-#: src/Content/Widget.php:87 src/Module/Directory.php:88
+#: src/Content/Widget.php:87 src/Module/Directory.php:89
 #: view/theme/vier/theme.php:202
 msgid "Global Directory"
 msgstr ""
@@ -2486,46 +2486,46 @@ msgid "More Trending Tags"
 msgstr ""
 
 #: src/Content/Widget/VCard.php:105 src/Model/Contact.php:1196
-#: src/Model/Profile.php:462
+#: src/Model/Profile.php:455
 msgid "Post to group"
 msgstr ""
 
 #: src/Content/Widget/VCard.php:110 src/Model/Contact.php:1200
-#: src/Model/Profile.php:466 src/Module/Moderation/Item/Source.php:85
+#: src/Model/Profile.php:459 src/Module/Moderation/Item/Source.php:85
 msgid "Mention"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:120 src/Model/Profile.php:381
+#: src/Content/Widget/VCard.php:120 src/Model/Profile.php:374
 #: src/Module/Contact/Profile.php:414 src/Module/Profile/Profile.php:199
 msgid "XMPP:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:121 src/Model/Profile.php:382
+#: src/Content/Widget/VCard.php:121 src/Model/Profile.php:375
 #: src/Module/Contact/Profile.php:416 src/Module/Profile/Profile.php:203
 msgid "Matrix:"
 msgstr ""
 
 #: src/Content/Widget/VCard.php:122 src/Model/Event.php:82
 #: src/Model/Event.php:109 src/Model/Event.php:471 src/Model/Event.php:960
-#: src/Model/Profile.php:376 src/Module/Contact/Profile.php:412
-#: src/Module/Directory.php:147 src/Module/Notifications/Introductions.php:187
+#: src/Model/Profile.php:369 src/Module/Contact/Profile.php:412
+#: src/Module/Directory.php:148 src/Module/Notifications/Introductions.php:187
 #: src/Module/Profile/Profile.php:221
 msgid "Location:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:125 src/Model/Profile.php:490
+#: src/Content/Widget/VCard.php:125 src/Model/Profile.php:483
 #: src/Module/Notifications/Introductions.php:201
 msgid "Network:"
 msgstr ""
 
 #: src/Content/Widget/VCard.php:129 src/Model/Contact.php:1228
-#: src/Model/Contact.php:1240 src/Model/Profile.php:479
+#: src/Model/Contact.php:1240 src/Model/Profile.php:472
 #: src/Module/Contact/Profile.php:470
 msgid "Unfollow"
 msgstr ""
 
 #: src/Content/Widget/VCard.php:135 src/Model/Contact.php:1198
-#: src/Model/Profile.php:464
+#: src/Model/Profile.php:457
 msgid "View group"
 msgstr ""
 
@@ -3581,149 +3581,144 @@ msgstr ""
 msgid "Wall Photos"
 msgstr ""
 
-#: src/Model/Profile.php:364 src/Module/Profile/Profile.php:283
+#: src/Model/Profile.php:357 src/Module/Profile/Profile.php:283
 #: src/Module/Profile/Profile.php:285
 msgid "Edit profile"
 msgstr ""
 
-#: src/Model/Profile.php:366
+#: src/Model/Profile.php:359
 msgid "Change profile photo"
 msgstr ""
 
-#: src/Model/Profile.php:379 src/Module/Directory.php:152
+#: src/Model/Profile.php:372 src/Module/Directory.php:153
 #: src/Module/Profile/Profile.php:209
 msgid "Homepage:"
 msgstr ""
 
-#: src/Model/Profile.php:380 src/Module/Contact/Profile.php:418
+#: src/Model/Profile.php:373 src/Module/Contact/Profile.php:418
 #: src/Module/Notifications/Introductions.php:189
 msgid "About:"
 msgstr ""
 
-#: src/Model/Profile.php:481
+#: src/Model/Profile.php:474
 msgid "Atom feed"
 msgstr ""
 
-#: src/Model/Profile.php:488
+#: src/Model/Profile.php:481
 msgid "This website has been verified to belong to the same person."
 msgstr ""
 
-#: src/Model/Profile.php:539
+#: src/Model/Profile.php:532
 msgid "F d"
 msgstr ""
 
-#: src/Model/Profile.php:603 src/Model/Profile.php:680
+#: src/Model/Profile.php:596 src/Model/Profile.php:673
 msgid "[today]"
 msgstr ""
 
-#: src/Model/Profile.php:612
+#: src/Model/Profile.php:605
 msgid "Birthday Reminders"
 msgstr ""
 
-#: src/Model/Profile.php:613
+#: src/Model/Profile.php:606
 msgid "Birthdays this week:"
 msgstr ""
 
-#: src/Model/Profile.php:629
+#: src/Model/Profile.php:622
 msgid "g A l F d"
 msgstr ""
 
-#: src/Model/Profile.php:667
+#: src/Model/Profile.php:660
 msgid "[No description]"
 msgstr ""
 
-#: src/Model/Profile.php:693
+#: src/Model/Profile.php:686
 msgid "Event Reminders"
 msgstr ""
 
-#: src/Model/Profile.php:694
+#: src/Model/Profile.php:687
 msgid "Upcoming events the next 7 days:"
 msgstr ""
 
-#: src/Model/Profile.php:876
-#, php-format
-msgid "OpenWebAuth: %1$s welcomes %2$s"
-msgstr ""
-
-#: src/Model/Profile.php:1016
+#: src/Model/Profile.php:797
 msgid "Hometown:"
 msgstr ""
 
-#: src/Model/Profile.php:1017
+#: src/Model/Profile.php:798
 msgid "Marital Status:"
 msgstr ""
 
-#: src/Model/Profile.php:1018
+#: src/Model/Profile.php:799
 msgid "With:"
 msgstr ""
 
-#: src/Model/Profile.php:1019
+#: src/Model/Profile.php:800
 msgid "Since:"
 msgstr ""
 
-#: src/Model/Profile.php:1020
+#: src/Model/Profile.php:801
 msgid "Sexual Preference:"
 msgstr ""
 
-#: src/Model/Profile.php:1021
+#: src/Model/Profile.php:802
 msgid "Political Views:"
 msgstr ""
 
-#: src/Model/Profile.php:1022
+#: src/Model/Profile.php:803
 msgid "Religious Views:"
 msgstr ""
 
-#: src/Model/Profile.php:1023
+#: src/Model/Profile.php:804
 msgid "Likes:"
 msgstr ""
 
-#: src/Model/Profile.php:1024
+#: src/Model/Profile.php:805
 msgid "Dislikes:"
 msgstr ""
 
-#: src/Model/Profile.php:1025
+#: src/Model/Profile.php:806
 msgid "Title/Description:"
 msgstr ""
 
-#: src/Model/Profile.php:1026 src/Module/Admin/Summary.php:197
+#: src/Model/Profile.php:807 src/Module/Admin/Summary.php:197
 #: src/Module/Moderation/Report/Create.php:280
 #: src/Module/Moderation/Summary.php:76
 msgid "Summary"
 msgstr ""
 
-#: src/Model/Profile.php:1027
+#: src/Model/Profile.php:808
 msgid "Musical interests"
 msgstr ""
 
-#: src/Model/Profile.php:1028
+#: src/Model/Profile.php:809
 msgid "Books, literature"
 msgstr ""
 
-#: src/Model/Profile.php:1029
+#: src/Model/Profile.php:810
 msgid "Television"
 msgstr ""
 
-#: src/Model/Profile.php:1030
+#: src/Model/Profile.php:811
 msgid "Film/dance/culture/entertainment"
 msgstr ""
 
-#: src/Model/Profile.php:1031
+#: src/Model/Profile.php:812
 msgid "Hobbies/Interests"
 msgstr ""
 
-#: src/Model/Profile.php:1032
+#: src/Model/Profile.php:813
 msgid "Love/romance"
 msgstr ""
 
-#: src/Model/Profile.php:1033
+#: src/Model/Profile.php:814
 msgid "Work/employment"
 msgstr ""
 
-#: src/Model/Profile.php:1034
+#: src/Model/Profile.php:815
 msgid "School/education"
 msgstr ""
 
-#: src/Model/Profile.php:1035
+#: src/Model/Profile.php:816
 msgid "Contact information and Social Networks"
 msgstr ""
 
@@ -3777,13 +3772,13 @@ msgstr ""
 msgid "Invalid OpenID url"
 msgstr ""
 
-#: src/Model/User.php:1218 src/Security/Authentication.php:230
+#: src/Model/User.php:1218 src/Security/Authentication.php:228
 msgid ""
 "We encountered a problem while logging in with the OpenID you provided. "
 "Please check the correct spelling of the ID."
 msgstr ""
 
-#: src/Model/User.php:1218 src/Security/Authentication.php:230
+#: src/Model/User.php:1218 src/Security/Authentication.php:228
 msgid "The error message was:"
 msgstr ""
 
@@ -4135,14 +4130,14 @@ msgstr ""
 
 #: src/Module/Admin/Features.php:67
 #: src/Module/Notifications/Introductions.php:144
-#: src/Module/OAuth/Acknowledge.php:55 src/Module/Register.php:132
+#: src/Module/OAuth/Acknowledge.php:55 src/Module/Register.php:138
 #: src/Module/Settings/TwoFactor/Trusted.php:129
 msgid "No"
 msgstr ""
 
 #: src/Module/Admin/Features.php:67 src/Module/Contact/Revoke.php:108
 #: src/Module/Notifications/Introductions.php:144
-#: src/Module/OAuth/Acknowledge.php:54 src/Module/Register.php:131
+#: src/Module/OAuth/Acknowledge.php:54 src/Module/Register.php:137
 #: src/Module/Settings/TwoFactor/Trusted.php:129
 msgid "Yes"
 msgstr ""
@@ -4516,7 +4511,7 @@ msgstr ""
 msgid "Republish users to directory"
 msgstr ""
 
-#: src/Module/Admin/Site.php:460 src/Module/Register.php:153
+#: src/Module/Admin/Site.php:460 src/Module/Register.php:159
 msgid "Registration"
 msgstr ""
 
@@ -6242,7 +6237,7 @@ msgstr ""
 #: src/Module/Moderation/Blocklist/Server/Index.php:87
 #: src/Module/Moderation/Blocklist/Server/Index.php:115
 #: src/Module/Moderation/Blocklist/Server/Index.php:116
-#: src/Module/Moderation/Item/Delete.php:67 src/Module/Register.php:149
+#: src/Module/Moderation/Item/Delete.php:67 src/Module/Register.php:155
 #: src/Module/Security/TwoFactor/Verify.php:101
 #: src/Module/Settings/Channels.php:190 src/Module/Settings/Channels.php:211
 #: src/Module/Settings/TwoFactor/Index.php:161
@@ -7432,19 +7427,19 @@ msgstr ""
 msgid "Lookup address:"
 msgstr ""
 
-#: src/Module/Directory.php:74
+#: src/Module/Directory.php:75
 msgid "No entries (some entries may be hidden)."
 msgstr ""
 
-#: src/Module/Directory.php:90
+#: src/Module/Directory.php:91
 msgid "Find on this site"
 msgstr ""
 
-#: src/Module/Directory.php:92
+#: src/Module/Directory.php:93
 msgid "Results for:"
 msgstr ""
 
-#: src/Module/Directory.php:94
+#: src/Module/Directory.php:95
 msgid "Site Directory"
 msgstr ""
 
@@ -9013,21 +9008,21 @@ msgstr ""
 msgid "ignored"
 msgstr ""
 
-#: src/Module/Photo.php:124
+#: src/Module/Photo.php:122
 msgid "The Photo is not available."
 msgstr ""
 
-#: src/Module/Photo.php:149
+#: src/Module/Photo.php:147
 #, php-format
 msgid "The Photo with id %s is not available."
 msgstr ""
 
-#: src/Module/Photo.php:190
+#: src/Module/Photo.php:188
 #, php-format
 msgid "Invalid external resource with url %s."
 msgstr ""
 
-#: src/Module/Photo.php:192
+#: src/Module/Photo.php:190
 #, php-format
 msgid "Invalid photo with id %s."
 msgstr ""
@@ -9301,170 +9296,170 @@ msgstr ""
 msgid "Remove post"
 msgstr ""
 
-#: src/Module/Register.php:85
+#: src/Module/Register.php:91
 msgid "Only parent users can create additional accounts."
 msgstr ""
 
-#: src/Module/Register.php:100 src/Module/User/Import.php:112
+#: src/Module/Register.php:106 src/Module/User/Import.php:112
 msgid ""
 "This site has exceeded the number of allowed daily account registrations. "
 "Please try again tomorrow."
 msgstr ""
 
-#: src/Module/Register.php:117
+#: src/Module/Register.php:123
 msgid ""
 "You may (optionally) fill in this form via OpenID by supplying your OpenID "
 "and clicking \"Register\"."
 msgstr ""
 
-#: src/Module/Register.php:118
+#: src/Module/Register.php:124
 msgid ""
 "If you are not familiar with OpenID, please leave that field blank and fill "
 "in the rest of the items."
 msgstr ""
 
-#: src/Module/Register.php:119
+#: src/Module/Register.php:125
 msgid "Your OpenID (optional): "
 msgstr ""
 
-#: src/Module/Register.php:128
+#: src/Module/Register.php:134
 msgid "Include your profile in member directory?"
 msgstr ""
 
-#: src/Module/Register.php:149
+#: src/Module/Register.php:155
 msgid "Note for the admin"
 msgstr ""
 
-#: src/Module/Register.php:149
+#: src/Module/Register.php:155
 msgid "Leave a message for the admin, why you want to join this node"
 msgstr ""
 
-#: src/Module/Register.php:150
+#: src/Module/Register.php:156
 msgid "Membership on this site is by invitation only."
 msgstr ""
 
-#: src/Module/Register.php:151
+#: src/Module/Register.php:157
 msgid "Your invitation code: "
 msgstr ""
 
-#: src/Module/Register.php:159
+#: src/Module/Register.php:165
 msgid "Your Display Name (as you would like it to be displayed on this system"
 msgstr ""
 
-#: src/Module/Register.php:160
+#: src/Module/Register.php:166
 msgid ""
 "Your Email Address: (Initial information will be send there, so this has to "
 "be an existing address.)"
 msgstr ""
 
-#: src/Module/Register.php:161
+#: src/Module/Register.php:167
 msgid "Please repeat your e-mail address:"
 msgstr ""
 
-#: src/Module/Register.php:163 src/Module/Security/PasswordTooLong.php:100
+#: src/Module/Register.php:169 src/Module/Security/PasswordTooLong.php:100
 #: src/Module/Settings/Account.php:564
 msgid "New Password:"
 msgstr ""
 
-#: src/Module/Register.php:163
+#: src/Module/Register.php:169
 msgid "Leave empty for an auto generated password."
 msgstr ""
 
-#: src/Module/Register.php:164 src/Module/Security/PasswordTooLong.php:101
+#: src/Module/Register.php:170 src/Module/Security/PasswordTooLong.php:101
 #: src/Module/Settings/Account.php:565
 msgid "Confirm:"
 msgstr ""
 
-#: src/Module/Register.php:165
+#: src/Module/Register.php:171
 #, php-format
 msgid ""
 "Choose a profile nickname. This must begin with a text character. Your "
 "profile address on this site will then be \"<strong>nickname@%s</strong>\"."
 msgstr ""
 
-#: src/Module/Register.php:166
+#: src/Module/Register.php:172
 msgid "Choose a nickname: "
 msgstr ""
 
-#: src/Module/Register.php:174 src/Module/User/Import.php:118
+#: src/Module/Register.php:180 src/Module/User/Import.php:118
 msgid "Import"
 msgstr ""
 
-#: src/Module/Register.php:175
+#: src/Module/Register.php:181
 msgid "Import your profile to this friendica instance"
 msgstr ""
 
-#: src/Module/Register.php:182
+#: src/Module/Register.php:188
 msgid "Note: This node explicitly contains adult content"
 msgstr ""
 
-#: src/Module/Register.php:184 src/Module/Settings/Delegation.php:181
+#: src/Module/Register.php:190 src/Module/Settings/Delegation.php:181
 msgid "Parent Password:"
 msgstr ""
 
-#: src/Module/Register.php:184 src/Module/Settings/Delegation.php:181
+#: src/Module/Register.php:190 src/Module/Settings/Delegation.php:181
 msgid ""
 "Please enter the password of the parent account to legitimize your request."
 msgstr ""
 
-#: src/Module/Register.php:213
+#: src/Module/Register.php:219
 msgid "Password doesn't match."
 msgstr ""
 
-#: src/Module/Register.php:219
+#: src/Module/Register.php:225
 msgid "Please enter your password."
 msgstr ""
 
-#: src/Module/Register.php:261
+#: src/Module/Register.php:267
 msgid "You have entered too much information."
 msgstr ""
 
-#: src/Module/Register.php:284
+#: src/Module/Register.php:290
 msgid "Please enter the identical mail address in the second field."
 msgstr ""
 
-#: src/Module/Register.php:292
+#: src/Module/Register.php:298
 msgid "Nickname cannot start with a digit."
 msgstr ""
 
-#: src/Module/Register.php:294
+#: src/Module/Register.php:300
 msgid "Nickname can only contain US-ASCII characters."
 msgstr ""
 
-#: src/Module/Register.php:323
+#: src/Module/Register.php:329
 msgid "The additional account was created."
 msgstr ""
 
-#: src/Module/Register.php:348
+#: src/Module/Register.php:354
 msgid ""
 "Registration successful. Please check your email for further instructions."
 msgstr ""
 
-#: src/Module/Register.php:355
+#: src/Module/Register.php:361
 #, php-format
 msgid ""
 "Failed to send email message. Here your accout details:<br> login: %s<br> "
 "password: %s<br><br>You can change your password after login."
 msgstr ""
 
-#: src/Module/Register.php:361
+#: src/Module/Register.php:367
 msgid "Registration successful."
 msgstr ""
 
-#: src/Module/Register.php:370 src/Module/Register.php:377
-#: src/Module/Register.php:387
+#: src/Module/Register.php:376 src/Module/Register.php:383
+#: src/Module/Register.php:393
 msgid "Your registration can not be processed."
 msgstr ""
 
-#: src/Module/Register.php:376
+#: src/Module/Register.php:382
 msgid "You have to leave a request note for the admin."
 msgstr ""
 
-#: src/Module/Register.php:386
+#: src/Module/Register.php:392
 msgid "An internal error occured."
 msgstr ""
 
-#: src/Module/Register.php:408
+#: src/Module/Register.php:414
 msgid "Your registration is pending approval by the site owner."
 msgstr ""
 
@@ -12588,21 +12583,26 @@ msgstr ""
 msgid "The folder %s must be writable by webserver."
 msgstr ""
 
-#: src/Security/Authentication.php:216
+#: src/Security/Authentication.php:214
 msgid "Login failed."
 msgstr ""
 
-#: src/Security/Authentication.php:261
+#: src/Security/Authentication.php:259
 msgid "Login failed. Please check your credentials."
 msgstr ""
 
-#: src/Security/Authentication.php:375
+#: src/Security/Authentication.php:373
 #, php-format
 msgid "Welcome %s"
 msgstr ""
 
-#: src/Security/Authentication.php:376
+#: src/Security/Authentication.php:374
 msgid "Please upload a profile photo."
+msgstr ""
+
+#: src/Security/OpenWebAuth.php:163
+#, php-format
+msgid "OpenWebAuth: %1$s welcomes %2$s"
 msgstr ""
 
 #: src/Util/EMailer/MailBuilder.php:260
