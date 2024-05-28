@@ -373,17 +373,22 @@ class Feed
 			}
 
 			$guid = XML::getFirstNodeValue($xpath, 'guid/text()', $entry);
+			$host = self::getHostname($item, $guid, $basepath);
 			if (!empty($guid)) {
 				if (empty($item['uri'])) {
 					$item['uri'] = $guid;
 				}
 
 				// Don't use the GUID value directly but instead use it as a basis for the GUID
-				$item['guid'] = Item::guidFromUri($guid, parse_url($item['plink'], PHP_URL_HOST));
+				$item['guid'] = Item::guidFromUri($guid, $host);
 			}
 
 			if (empty($item['uri'])) {
 				$item['uri'] = $item['plink'];
+			}
+
+			if (!parse_url($item['uri'], PHP_URL_HOST)) {
+				$item['uri'] = 'feed::' . $host . ':' . $item['uri'];
 			}
 
 			$orig_plink = $item['plink'];
@@ -565,8 +570,12 @@ class Feed
 				Logger::info('Feed is too old', ['created' => $item['created'], 'uid' => $item['uid'], 'uri' => $item['uri']]);
 				continue;
 			}
-
-			$fetch_further_information = $contact['fetch_further_information'] ?? LocalRelationship::FFI_NONE;
+			
+			if (!empty($item['plink'])) {
+				$fetch_further_information = $contact['fetch_further_information'] ?? LocalRelationship::FFI_NONE;
+			} else {
+				$fetch_further_information = LocalRelationship::FFI_NONE;
+			}
 
 			$preview = '';
 			if (in_array($fetch_further_information, [LocalRelationship::FFI_INFORMATION, LocalRelationship::FFI_BOTH])) {
@@ -753,6 +762,38 @@ class Feed
 		return ['header' => $author, 'items' => $items];
 	}
 
+	/**
+	 * Return the hostname out of a variety of provided URL
+	 *
+	 * @param array $item
+	 * @param string|null $guid
+	 * @param string|null $basepath
+	 * @return string
+	 */
+	private static function getHostname(array $item, string $guid = null, string $basepath = null): string
+	{
+		$host = parse_url($item['plink'], PHP_URL_HOST);
+		if (!empty($host)) {
+			return $host;
+		}
+
+		$host = parse_url($item['uri'], PHP_URL_HOST);
+		if (!empty($host)) {
+			return $host;
+		}
+
+		$host = parse_url($guid, PHP_URL_HOST);
+		if (!empty($host)) {
+			return $host;
+		}
+
+		$host = parse_url($item['author-link'], PHP_URL_HOST);
+		if (!empty($host)) {
+			return $host;
+		}
+
+		return parse_url($basepath, PHP_URL_HOST);
+	}
 	/**
 	 * Automatically adjust the poll frequency according to the post frequency
 	 *
