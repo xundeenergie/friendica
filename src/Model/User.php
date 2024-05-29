@@ -1492,6 +1492,12 @@ class User
 	 */
 	public static function block(int $uid, bool $block = true): bool
 	{
+		$self = Contact::getPublicIdByUserId($uid);
+		if ($block) {
+			Contact::block($self['id']);
+		} else {
+			Contact::unblock($self['id']);
+		}
 		return DBA::update('user', ['blocked' => $block], ['uid' => $uid]);
 	}
 
