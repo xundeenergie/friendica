@@ -626,11 +626,8 @@ class Contact
 	 */
 	public static function getPublicIdByUserId(int $uid)
 	{
-		$self = DBA::selectFirst('contact', ['url'], ['self' => true, 'uid' => $uid]);
-		if (!DBA::isResult($self)) {
-			return false;
-		}
-		return self::getIdForURL($self['url']);
+		$self = self::selectFirstAccountUser(['pid'], ['self' => true, 'uid' => $uid]);
+		return $self['pid'] ?? false;
 	}
 
 	/**
