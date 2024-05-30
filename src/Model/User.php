@@ -1494,9 +1494,9 @@ class User
 	{
 		$self = Contact::getPublicIdByUserId($uid);
 		if ($block) {
-			Contact::block($self['id']);
+			Contact::block($self);
 		} else {
-			Contact::unblock($self['id']);
+			Contact::unblock($self);
 		}
 		return DBA::update('user', ['blocked' => $block], ['uid' => $uid]);
 	}
