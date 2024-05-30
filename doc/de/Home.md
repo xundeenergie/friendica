@@ -1,7 +1,7 @@
-Friendica - Dokumentation und Ressourcen
-=====================================
+Hilfe
+=====
 
-**Inhalte**
+**Dokumentation für Benutzer**
 
 * Allgemeine Funktionen - Erste Schritte
 	* [Account - Basics](help/Account-Basics)
@@ -60,18 +60,18 @@ Friendica - Dokumentation und Ressourcen
 * [Translation of Friendica](help/translations) (EN)
 * [Run tests](help/Tests) (EN)
 
-**Externe Ressourcen**
+**Links**
 
-* [Haupt-Webseite](https://friendi.ca)
-* Support Kanäle
-  * Friendica Support Gruppe: [@helpers@forum.friendi.ca](https://forum.friendi.ca/~helpers)
-  * [Mailing Listen Archiv](http://mailman.friendi.ca/mailman/listinfo/support-friendi.ca) zum Abonnieren der Liste eine E-Mail an ``support-request(at)friendi.ca?subject=subscribe`` senden
-  * Chats der Friendica Community (die IRC, Matrix und XMPP Räume sind mit einer Brücke verbunden) Logs dieser öffentlichen Chaträume können [hier aus dem IRC](https://gnusociarg.nsupdate.info/2021/%23frie) und [hier aus der Matrix](https://view.matrix.org/alias/%23friendi.ca:matrix.org/) gefunden werden.
-    * XMPP/Jabber MUC: support(at)forum.friendi.ca
+* [Webseite](https://friendi.ca)
+* Support
+  * Friendica Helpers Gruppe: [@helpers@forum.friendi.ca](https://forum.friendi.ca/~helpers)
+  * Chats der Friendica Community (die IRC, Matrix und XMPP Räume sind mit einer Brücke verbunden) Logs dieser öffentlichen Chaträume können via [IRC](https://gnusociarg.nsupdate.info/2021/%23frie) und [Matrix](https://view.matrix.org/alias/%23friendi.ca:matrix.org/) gefunden werden.
+    * XMPP: support(at)forum.friendi.ca
     * IRC: #friendica auf [libera.chat](https://web.libera.chat/?channels=#friendica)
-    * Matrix: [#friendi.ca](https://matrix.to/#/#friendi.ca:matrix.org) oder [#friendica-en](https://matrix.to/#/#friendica-en:matrix.org) auf matrix.org
+    * Matrix: [#friendi.ca](https://matrix.to/#/#friendi.ca:matrix.org)
+  * [Mailing Listen Archiv](http://mailman.friendi.ca/mailman/listinfo/support-friendi.ca) benötigt Abonnement per E-Mail an ``support-request(at)friendi.ca?subject=subscribe``
 
-**Über diese Seite**
+**Über**
 
-* [Seite/Friendica-Version](friendica)
-* [Mitwirkenden bei Friendica](credits)
+* [Server Information](friendica)
+* [Mitwirkende](credits)
