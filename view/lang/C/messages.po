@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.06-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-27 04:49+0000\n"
+"POT-Creation-Date: 2024-06-01 08:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -631,7 +631,7 @@ msgstr ""
 #: src/Module/Moderation/Users/Active.php:136
 #: src/Module/Moderation/Users/Blocked.php:136
 #: src/Module/Moderation/Users/Index.php:151
-#: src/Module/Settings/Connectors.php:244
+#: src/Module/Settings/Connectors.php:254
 #: src/Module/Settings/Server/Index.php:109
 msgid "Delete"
 msgstr ""
@@ -1885,31 +1885,31 @@ msgstr ""
 msgid "Follow Thread"
 msgstr ""
 
-#: src/Content/Item.php:429 src/Model/Contact.php:1233
+#: src/Content/Item.php:429 src/Model/Contact.php:1230
 msgid "View Status"
 msgstr ""
 
-#: src/Content/Item.php:430 src/Content/Item.php:453 src/Model/Contact.php:1168
-#: src/Model/Contact.php:1224 src/Model/Contact.php:1234
+#: src/Content/Item.php:430 src/Content/Item.php:453 src/Model/Contact.php:1165
+#: src/Model/Contact.php:1221 src/Model/Contact.php:1231
 #: src/Module/Directory.php:158 src/Module/Settings/Profile/Index.php:259
 msgid "View Profile"
 msgstr ""
 
-#: src/Content/Item.php:431 src/Model/Contact.php:1235
+#: src/Content/Item.php:431 src/Model/Contact.php:1232
 msgid "View Photos"
 msgstr ""
 
-#: src/Content/Item.php:432 src/Model/Contact.php:1202
+#: src/Content/Item.php:432 src/Model/Contact.php:1199
 #: src/Model/Profile.php:461
 msgid "Network Posts"
 msgstr ""
 
-#: src/Content/Item.php:433 src/Model/Contact.php:1226
-#: src/Model/Contact.php:1237
+#: src/Content/Item.php:433 src/Model/Contact.php:1223
+#: src/Model/Contact.php:1234
 msgid "View Contact"
 msgstr ""
 
-#: src/Content/Item.php:434 src/Model/Contact.php:1238
+#: src/Content/Item.php:434 src/Model/Contact.php:1235
 msgid "Send PM"
 msgstr ""
 
@@ -1949,7 +1949,7 @@ msgid "Search Text"
 msgstr ""
 
 #: src/Content/Item.php:450 src/Content/Widget.php:80
-#: src/Model/Contact.php:1227 src/Model/Contact.php:1239
+#: src/Model/Contact.php:1224 src/Model/Contact.php:1236
 #: src/Module/Contact/Follow.php:167 view/theme/vier/theme.php:195
 msgid "Connect/Follow"
 msgstr ""
@@ -2176,7 +2176,7 @@ msgstr ""
 msgid "See all notifications"
 msgstr ""
 
-#: src/Content/Nav.php:315 src/Module/Settings/Connectors.php:244
+#: src/Content/Nav.php:315 src/Module/Settings/Connectors.php:254
 msgid "Mark as seen"
 msgstr ""
 
@@ -2431,7 +2431,7 @@ msgstr ""
 msgid "Organisations"
 msgstr ""
 
-#: src/Content/Widget.php:537 src/Model/Contact.php:1730
+#: src/Content/Widget.php:537 src/Model/Contact.php:1727
 msgid "News"
 msgstr ""
 
@@ -2485,12 +2485,12 @@ msgstr[1] ""
 msgid "More Trending Tags"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:105 src/Model/Contact.php:1196
+#: src/Content/Widget/VCard.php:105 src/Model/Contact.php:1193
 #: src/Model/Profile.php:455
 msgid "Post to group"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:110 src/Model/Contact.php:1200
+#: src/Content/Widget/VCard.php:110 src/Model/Contact.php:1197
 #: src/Model/Profile.php:459 src/Module/Moderation/Item/Source.php:85
 msgid "Mention"
 msgstr ""
@@ -2518,13 +2518,13 @@ msgstr ""
 msgid "Network:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:129 src/Model/Contact.php:1228
-#: src/Model/Contact.php:1240 src/Model/Profile.php:472
+#: src/Content/Widget/VCard.php:129 src/Model/Contact.php:1225
+#: src/Model/Contact.php:1237 src/Model/Profile.php:472
 #: src/Module/Contact/Profile.php:470
 msgid "Unfollow"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:135 src/Model/Contact.php:1198
+#: src/Content/Widget/VCard.php:135 src/Model/Contact.php:1195
 #: src/Model/Profile.php:457
 msgid "View group"
 msgstr ""
@@ -3298,90 +3298,90 @@ msgstr ""
 msgid "Edit circles"
 msgstr ""
 
-#: src/Model/Contact.php:1247 src/Module/Moderation/Users/Pending.php:102
+#: src/Model/Contact.php:1244 src/Module/Moderation/Users/Pending.php:102
 #: src/Module/Notifications/Introductions.php:132
 #: src/Module/Notifications/Introductions.php:204
 msgid "Approve"
 msgstr ""
 
-#: src/Model/Contact.php:1726
+#: src/Model/Contact.php:1723
 msgid "Organisation"
 msgstr ""
 
-#: src/Model/Contact.php:1734
+#: src/Model/Contact.php:1731
 msgid "Group"
 msgstr ""
 
-#: src/Model/Contact.php:1738 src/Module/Moderation/BaseUsers.php:131
+#: src/Model/Contact.php:1735 src/Module/Moderation/BaseUsers.php:131
 msgid "Relay"
 msgstr ""
 
-#: src/Model/Contact.php:3048
+#: src/Model/Contact.php:3045
 msgid "Disallowed profile URL."
 msgstr ""
 
-#: src/Model/Contact.php:3053 src/Module/Friendica.php:100
+#: src/Model/Contact.php:3050 src/Module/Friendica.php:100
 msgid "Blocked domain"
 msgstr ""
 
-#: src/Model/Contact.php:3058
+#: src/Model/Contact.php:3055
 msgid "Connect URL missing."
 msgstr ""
 
-#: src/Model/Contact.php:3067
+#: src/Model/Contact.php:3064
 msgid ""
 "The contact could not be added. Please check the relevant network "
 "credentials in your Settings -> Social Networks page."
 msgstr ""
 
-#: src/Model/Contact.php:3085
+#: src/Model/Contact.php:3082
 #, php-format
 msgid "Expected network %s does not match actual network %s"
 msgstr ""
 
-#: src/Model/Contact.php:3102
+#: src/Model/Contact.php:3099
 msgid "This seems to be a relay account. They can't be followed by users."
 msgstr ""
 
-#: src/Model/Contact.php:3109
+#: src/Model/Contact.php:3106
 msgid "The profile address specified does not provide adequate information."
 msgstr ""
 
-#: src/Model/Contact.php:3111
+#: src/Model/Contact.php:3108
 msgid "No compatible communication protocols or feeds were discovered."
 msgstr ""
 
-#: src/Model/Contact.php:3114
+#: src/Model/Contact.php:3111
 msgid "An author or name was not found."
 msgstr ""
 
-#: src/Model/Contact.php:3117
+#: src/Model/Contact.php:3114
 msgid "No browser URL could be matched to this address."
 msgstr ""
 
-#: src/Model/Contact.php:3120
+#: src/Model/Contact.php:3117
 msgid ""
 "Unable to match @-style Identity Address with a known protocol or email "
 "contact."
 msgstr ""
 
-#: src/Model/Contact.php:3121
+#: src/Model/Contact.php:3118
 msgid "Use mailto: in front of address to force email check."
 msgstr ""
 
-#: src/Model/Contact.php:3127
+#: src/Model/Contact.php:3124
 msgid ""
 "The profile address specified belongs to a network which has been disabled "
 "on this site."
 msgstr ""
 
-#: src/Model/Contact.php:3132
+#: src/Model/Contact.php:3129
 msgid ""
 "Limited profile. This person will be unable to receive direct/personal "
 "notifications from you."
 msgstr ""
 
-#: src/Model/Contact.php:3198
+#: src/Model/Contact.php:3195
 msgid "Unable to retrieve contact information."
 msgstr ""
 
@@ -3860,7 +3860,7 @@ msgstr ""
 msgid "Profile Photos"
 msgstr ""
 
-#: src/Model/User.php:1604
+#: src/Model/User.php:1610
 #, php-format
 msgid ""
 "\n"
@@ -3868,7 +3868,7 @@ msgid ""
 "\t\t\tthe administrator of %2$s has set up an account for you."
 msgstr ""
 
-#: src/Model/User.php:1607
+#: src/Model/User.php:1613
 #, php-format
 msgid ""
 "\n"
@@ -3904,12 +3904,12 @@ msgid ""
 "\t\tThank you and welcome to %4$s."
 msgstr ""
 
-#: src/Model/User.php:1639 src/Model/User.php:1745
+#: src/Model/User.php:1645 src/Model/User.php:1751
 #, php-format
 msgid "Registration details for %s"
 msgstr ""
 
-#: src/Model/User.php:1659
+#: src/Model/User.php:1665
 #, php-format
 msgid ""
 "\n"
@@ -3925,12 +3925,12 @@ msgid ""
 "\t\t"
 msgstr ""
 
-#: src/Model/User.php:1678
+#: src/Model/User.php:1684
 #, php-format
 msgid "Registration at %s"
 msgstr ""
 
-#: src/Model/User.php:1702
+#: src/Model/User.php:1708
 #, php-format
 msgid ""
 "\n"
@@ -3939,7 +3939,7 @@ msgid ""
 "\t\t\t"
 msgstr ""
 
-#: src/Model/User.php:1710
+#: src/Model/User.php:1716
 #, php-format
 msgid ""
 "\n"
@@ -3977,7 +3977,7 @@ msgid ""
 "\t\t\tThank you and welcome to %2$s."
 msgstr ""
 
-#: src/Model/User.php:1772
+#: src/Model/User.php:1778
 msgid ""
 "User with delegates can't be removed, please remove delegate users first"
 msgstr ""
@@ -4050,8 +4050,8 @@ msgstr ""
 #: src/Module/Admin/Logs/Settings.php:90 src/Module/Admin/Site.php:458
 #: src/Module/Admin/Themes/Index.php:113 src/Module/Admin/Tos.php:86
 #: src/Module/Settings/Account.php:558 src/Module/Settings/Addons.php:78
-#: src/Module/Settings/Connectors.php:160
-#: src/Module/Settings/Connectors.php:246
+#: src/Module/Settings/Connectors.php:163
+#: src/Module/Settings/Connectors.php:256
 #: src/Module/Settings/Delegation.php:193 src/Module/Settings/Display.php:309
 #: src/Module/Settings/Features.php:75
 msgid "Save Settings"
@@ -6160,7 +6160,7 @@ msgstr ""
 msgid "Display"
 msgstr ""
 
-#: src/Module/BaseSettings.php:132 src/Module/Settings/Connectors.php:204
+#: src/Module/BaseSettings.php:132 src/Module/Settings/Connectors.php:213
 msgid "Social Networks"
 msgstr ""
 
@@ -9126,20 +9126,20 @@ msgstr ""
 
 #: src/Module/Profile/Conversations.php:106
 #: src/Module/Profile/Conversations.php:109 src/Module/Profile/Profile.php:351
-#: src/Module/Profile/Profile.php:354 src/Protocol/Feed.php:1073
+#: src/Module/Profile/Profile.php:354 src/Protocol/Feed.php:1114
 #: src/Protocol/OStatus.php:1011
 #, php-format
 msgid "%s's timeline"
 msgstr ""
 
 #: src/Module/Profile/Conversations.php:107 src/Module/Profile/Profile.php:352
-#: src/Protocol/Feed.php:1077 src/Protocol/OStatus.php:1016
+#: src/Protocol/Feed.php:1118 src/Protocol/OStatus.php:1016
 #, php-format
 msgid "%s's posts"
 msgstr ""
 
 #: src/Module/Profile/Conversations.php:108 src/Module/Profile/Profile.php:353
-#: src/Protocol/Feed.php:1080 src/Protocol/OStatus.php:1020
+#: src/Protocol/Feed.php:1121 src/Protocol/OStatus.php:1020
 #, php-format
 msgid "%s's comments"
 msgstr ""
@@ -10368,197 +10368,221 @@ msgstr ""
 msgid "Delete entry from the channel list?"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:120
+#: src/Module/Settings/Connectors.php:122
 msgid "Failed to connect with email account using the settings provided."
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:166
-#: src/Module/Settings/Connectors.php:167
+#: src/Module/Settings/Connectors.php:169
+#: src/Module/Settings/Connectors.php:170
 msgid "Diaspora (Socialhome, Hubzilla)"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:166
-#: src/Module/Settings/Connectors.php:170
+#: src/Module/Settings/Connectors.php:169
+#: src/Module/Settings/Connectors.php:173
 #, php-format
 msgid "Built-in support for %s connectivity is enabled"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:167
-#: src/Module/Settings/Connectors.php:169
+#: src/Module/Settings/Connectors.php:170
+#: src/Module/Settings/Connectors.php:172
 #, php-format
 msgid "Built-in support for %s connectivity is disabled"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:169
-#: src/Module/Settings/Connectors.php:170
+#: src/Module/Settings/Connectors.php:172
+#: src/Module/Settings/Connectors.php:173
 msgid "OStatus (GNU Social)"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:182
+#: src/Module/Settings/Connectors.php:185
 msgid "Email access is disabled on this site."
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:197
-#: src/Module/Settings/Connectors.php:244
+#: src/Module/Settings/Connectors.php:200
+#: src/Module/Settings/Connectors.php:254
 msgid "None"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:209
+#: src/Module/Settings/Connectors.php:204
+msgid "Default (Mastodon will display the title and a link to the post)"
+msgstr ""
+
+#: src/Module/Settings/Connectors.php:205
+msgid ""
+"Use the summary (Mastodon and some others will treat it as content warning)"
+msgstr ""
+
+#: src/Module/Settings/Connectors.php:206
+msgid "Embed the title in the body"
+msgstr ""
+
+#: src/Module/Settings/Connectors.php:218
 msgid "General Social Media Settings"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:212
+#: src/Module/Settings/Connectors.php:221
 msgid "Followed content scope"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:214
+#: src/Module/Settings/Connectors.php:223
 msgid ""
 "By default, conversations in which your follows participated but didn't "
 "start will be shown in your timeline. You can turn this behavior off, or "
 "expand it to the conversations in which your follows liked a post."
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:216
+#: src/Module/Settings/Connectors.php:225
 msgid "Only conversations my follows started"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:217
+#: src/Module/Settings/Connectors.php:226
 msgid "Conversations my follows started or commented on (default)"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:218
+#: src/Module/Settings/Connectors.php:227
 msgid "Any conversation my follows interacted with, including likes"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:221
+#: src/Module/Settings/Connectors.php:230
 msgid "Collapse sensitive posts"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:221
+#: src/Module/Settings/Connectors.php:230
 msgid ""
 "If a post is marked as \"sensitive\", it will be displayed in a collapsed "
 "state, if this option is enabled."
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:222
+#: src/Module/Settings/Connectors.php:231
 msgid "Enable intelligent shortening"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:222
+#: src/Module/Settings/Connectors.php:231
 msgid ""
 "Normally the system tries to find the best link to add to shortened posts. "
 "If disabled, every shortened post will always point to the original "
 "friendica post."
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:223
+#: src/Module/Settings/Connectors.php:232
 msgid "Enable simple text shortening"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:223
+#: src/Module/Settings/Connectors.php:232
 msgid ""
 "Normally the system shortens posts at the next line feed. If this option is "
 "enabled then the system will shorten the text at the maximum character limit."
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:224
+#: src/Module/Settings/Connectors.php:233
 msgid "Attach the link title"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:224
+#: src/Module/Settings/Connectors.php:233
 msgid ""
 "When activated, the title of the attached link will be added as a title on "
 "posts to Diaspora. This is mostly helpful with \"remote-self\" contacts that "
 "share feed content."
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:225
+#: src/Module/Settings/Connectors.php:234
 msgid "API: Use spoiler field as title"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:225
+#: src/Module/Settings/Connectors.php:234
 msgid ""
 "When activated, the \"spoiler_text\" field in the API will be used for the "
 "title on standalone posts. When deactivated it will be used for spoiler "
 "text. For comments it will always be used for spoiler text."
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:226
+#: src/Module/Settings/Connectors.php:235
 msgid "API: Automatically links at the end of the post as attached posts"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:226
+#: src/Module/Settings/Connectors.php:235
 msgid ""
 "When activated, added links at the end of the post react the same way as "
 "added links in the web interface."
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:227
+#: src/Module/Settings/Connectors.php:236
+msgid "Article Mode"
+msgstr ""
+
+#: src/Module/Settings/Connectors.php:236
+msgid ""
+"Controls how posts with titles are transmitted. Mastodon and its forks don't "
+"display the content of these posts if the post is created in the correct "
+"(default) way."
+msgstr ""
+
+#: src/Module/Settings/Connectors.php:237
 msgid "Your legacy ActivityPub/GNU Social account"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:227
+#: src/Module/Settings/Connectors.php:237
 msgid ""
 "If you enter your old account name from an ActivityPub based system or your "
 "GNU Social/Statusnet account name here (in the format user@domain.tld), your "
 "contacts will be added automatically. The field will be emptied when done."
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:229
+#: src/Module/Settings/Connectors.php:239
 msgid "Repair OStatus subscriptions"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:233
+#: src/Module/Settings/Connectors.php:243
 msgid "Email/Mailbox Setup"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:234
+#: src/Module/Settings/Connectors.php:244
 msgid ""
 "If you wish to communicate with email contacts using this service "
 "(optional), please specify how to connect to your mailbox."
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:235
+#: src/Module/Settings/Connectors.php:245
 msgid "Last successful email check:"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:237
+#: src/Module/Settings/Connectors.php:247
 msgid "IMAP server name:"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:238
+#: src/Module/Settings/Connectors.php:248
 msgid "IMAP port:"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:239
+#: src/Module/Settings/Connectors.php:249
 msgid "Security:"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:240
+#: src/Module/Settings/Connectors.php:250
 msgid "Email login name:"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:241
+#: src/Module/Settings/Connectors.php:251
 msgid "Email password:"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:242
+#: src/Module/Settings/Connectors.php:252
 msgid "Reply-to address:"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:243
+#: src/Module/Settings/Connectors.php:253
 msgid "Send public posts to all email contacts:"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:244
+#: src/Module/Settings/Connectors.php:254
 msgid "Action after import:"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:244
+#: src/Module/Settings/Connectors.php:254
 msgid "Move to folder"
 msgstr ""
 
-#: src/Module/Settings/Connectors.php:245
+#: src/Module/Settings/Connectors.php:255
 msgid "Move to folder:"
 msgstr ""
 
