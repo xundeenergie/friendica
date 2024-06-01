@@ -1788,11 +1788,37 @@ class Transmitter
 			$isCommunityPost = false;
 		}
 
+		$title   = $item['title'];
+		$summary = $item['content-warning'] ?: BBCode::toPlaintext(BBCode::getAbstract($item['body'], Protocol::ACTIVITYPUB));
+		$source  = $item['body'];
+
 		if ($item['event-type'] == 'event') {
 			$type = 'Event';
-		} elseif (!empty($item['title'])) {
+		} elseif (!empty($title)) {
 			if (!$isCommunityPost || empty($link)) {
-				$type = 'Article';
+				switch (DI::pConfig()->get($item['uid'], 'system', 'article_mode') ?? ActivityPub::ARTICLE_DEFAULT) {
+					case ActivityPub::ARTICLE_DEFAULT:
+						$type = 'Article';
+						break;
+					case ActivityPub::ARTICLE_USE_SUMMARY:
+						$type = 'Note';
+						if (!$summary) {
+							$summary = $title;
+						} else {
+							$item['raw-body'] = '[b]' . $title . "[/b]\n\n" . $item['raw-body'];
+							$item['body']     = '[b]' . $title . "[/b]\n\n" . $item['body'];
+							$source           = '[h4]' . $title . "[/h4]\n" . $source;
+						}
+						$title = '';
+						break;
+					case ActivityPub::ARTICLE_EMBED_TITLE:
+						$type = 'Note';
+						$item['raw-body'] = '[b]' . $title . "[/b]\n\n" . $item['raw-body'];
+						$item['body']     = '[b]' . $title . "[/b]\n\n" . $item['body'];
+						$source           = '[h4]' . $title . "[/h4]\n" . $source;
+						$title = '';
+						break;
+				}
 			} else {
 				// "Page" is used by Lemmy for posts that contain an external link
 				$type = 'Page';
@@ -1812,8 +1838,6 @@ class Transmitter
 		if ($item['deleted']) {
 			return $data;
 		}
-
-		$data['summary'] = $item['content-warning'] ?: BBCode::toPlaintext(BBCode::getAbstract($item['body'], Protocol::ACTIVITYPUB));
 
 		if ($item['uri'] != $item['thr-parent']) {
 			$data['inReplyTo'] = $item['thr-parent'];
@@ -1840,8 +1864,12 @@ class Transmitter
 			$data['conversation'] = $data['context'] = $item['conversation'];
 		}
 
-		if (!empty($item['title'])) {
-			$data['name'] = BBCode::toPlaintext($item['title'], false);
+		if (!empty($title)) {
+			$data['name'] = BBCode::toPlaintext($title, false);
+		}
+
+		if (!empty($summary)) {
+			$data['summary'] = $summary;
 		}
 
 		$permission_block = self::getReceiversForUriId($item['uri-id'], false);
@@ -1926,9 +1954,7 @@ class Transmitter
 		}
 
 		if (!empty($item['quote-uri-id']) && ($item['quote-uri-id'] != $item['uri-id'])) {
-			$source = DI::contentItem()->addSharedPost($item, $item['body']);
-		} else {
-			$source = $item['body'];
+			$source = DI::contentItem()->addSharedPost($item, $source);
 		}
 
 		$data['source'] = ['content' => $source, 'mediaType' => "text/bbcode"];
