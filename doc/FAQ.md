@@ -103,6 +103,9 @@ When a certain language is forced, the language remains until session is closed.
 <a name="contacts"></a>
 ### How do blocked, ignored, archived and hidden contacts behave?
 
+These are various categories of contacts that are restricted in some way.
+Many of these types are related to [Safety](help/Safety).
+
 ##### Blocked
 
 Direct communication will be blocked.

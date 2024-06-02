@@ -14,6 +14,7 @@ Help
 * You and other users
 	* [Connectors](help/Connectors)
 	* [Making Friends](help/Making-Friends)
+	* [Safety](help/Safety)
 	* [Circles and Privacy](help/Circles-and-Privacy)
 	* [Tags and Mentions](help/Tags-and-Mentions)
 	* [Community Groups](help/Groups)
