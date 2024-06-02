@@ -62,14 +62,12 @@ Hilfe
 
 **Links**
 
-* [Webseite](https://friendi.ca)
-* Support
-  * Friendica Helpers Gruppe: [@helpers@forum.friendi.ca](https://forum.friendi.ca/~helpers)
-  * Chats der Friendica Community (die IRC, Matrix und XMPP Räume sind mit einer Brücke verbunden) Logs dieser öffentlichen Chaträume können via [IRC](https://gnusociarg.nsupdate.info/2021/%23frie) und [Matrix](https://view.matrix.org/alias/%23friendi.ca:matrix.org/) gefunden werden.
-    * XMPP: support(at)forum.friendi.ca
-    * IRC: #friendica auf [libera.chat](https://web.libera.chat/?channels=#friendica)
-    * Matrix: [#friendi.ca](https://matrix.to/#/#friendi.ca:matrix.org)
-  * [Mailing Listen Archiv](http://mailman.friendi.ca/mailman/listinfo/support-friendi.ca) benötigt Abonnement per E-Mail an ``support-request(at)friendi.ca?subject=subscribe``
+* Website: [https://friendi.ca](https://friendi.ca)
+* Help Group: [@helpers@forum.friendi.ca](https://forum.friendi.ca/~helpers)
+* XMPP: [support@forum.friendi.ca](xmpp:support@forum.friendi.ca?join)
+* IRC: [https://web.libera.chat/?channels=#friendica](https://web.libera.chat/?channels=#friendica)
+* Matrix: [https://matrix.to/#/#friendi.ca:matrix.org](https://matrix.to/#/#friendi.ca:matrix.org)
+* Mailing List: [https://mailman.friendi.ca/mailman/listinfo/support-friendi.ca](http://mailman.friendi.ca/mailman/listinfo/support-friendi.ca)
 
 **Über**
 
