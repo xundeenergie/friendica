@@ -100,6 +100,36 @@
 		"query" => "FROM `post-counts`
 			INNER JOIN `verb` ON `verb`.`id` = `post-counts`.`vid`"
 	],
+	"post-engagement-user-view" => [
+		"fields" => [
+			"uid" => ["post-thread-user", "uid"],
+			"uri-id" => ["post-engagement", "uri-id"],
+			"owner-id" => ["post-engagement", "owner-id"],
+			"media-type" => ["post-engagement", "media-type"],
+			"language" => ["post-engagement", "language"],
+			"searchtext" => ["post-engagement", "searchtext"],
+			"size" => ["post-engagement", "size"],
+			"commented" => ["post-thread-user", "commented"],
+			"received" => ["post-thread-user", "received"],
+			"created" => ["post-thread-user", "created"],
+			"network" => ["post-thread-user", "network"],
+			"restricted" => ["post-engagement", "language"],
+			"comments" => "0",
+			"activities" => "0",
+		],
+		"query" => "FROM `post-thread-user`
+			INNER JOIN `post-engagement` ON `post-engagement`.`uri-id` = `post-thread-user`.`uri-id`
+			INNER JOIN `post-user` ON `post-user`.`id` = `post-thread-user`.`post-user-id`
+			STRAIGHT_JOIN `contact` ON `contact`.`id` = `post-thread-user`.`contact-id`
+			STRAIGHT_JOIN `contact` AS `authorcontact` ON `authorcontact`.`id` = `post-thread-user`.`author-id`
+			STRAIGHT_JOIN `contact` AS `ownercontact` ON `ownercontact`.`id` = `post-thread-user`.`owner-id`
+			WHERE `post-user`.`visible` AND NOT `post-user`.`deleted`
+			AND (NOT `contact`.`readonly` AND NOT `contact`.`blocked` AND NOT `contact`.`pending`)
+			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
+			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
+			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`authorcontact`.`id`, `ownercontact`.`id`) AND (`blocked` OR `ignored`))
+			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`)"
+	],
 	"post-timeline-view" => [
 		"fields" => [
 			"uid" => ["post-user", "uid"],
