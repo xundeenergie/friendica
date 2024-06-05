@@ -60,7 +60,7 @@ If they delete you as a contact and then add you again, they will return to appa
 You will not be notified when this happens.
 
 When you block a person, your server will notify their server that the block has occurred.
-This is so that if you have, for example, Alice and Bob following you from the same server, and you want to block Alice but not Bob, their server can decide which accounts should see your post.
+This is so that if, for example, Alice and Bob follow you from the same server, and you want to block Alice but not Bob, their server can decide which accounts should see your post.
 This does mean that the administrator of their server can see that you have applied the block, and may inform the blocked person.
 In some cases this could lead to retaliation.
 There are several other ways someone can determine that you have blocked them, and see your public posts despite the block.
@@ -69,5 +69,5 @@ For example, they can simply log out and view your posts.
 Archiving
 ---
 
-Archiving is stimilar to blocking.
+Archiving is similar to blocking.
 However, existing posts this person made before being archived will be visible in your stream.
