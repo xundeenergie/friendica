@@ -75,14 +75,14 @@ class ExpirePosts
 	{
 		Logger::notice('Delete expired posts');
 		// physically remove anything that has been deleted for more than two months
-		$condition = ["`gravity` = ? AND `deleted` AND `changed` < ?", Item::GRAVITY_PARENT, DateTimeFormat::utc('now - 60 days')];
+		$condition = ["`gravity` = ? AND `deleted` AND `edited` < ?", Item::GRAVITY_PARENT, DateTimeFormat::utc('now - 60 days')];
 		$pass = 0;
 		do {
 			++$pass;
-			$rows = Post::select(['guid', 'uri-id', 'uid'],  $condition, ['limit' => 100]);
+			$rows = DBA::select('post-user', ['uri-id', 'uid'], $condition, ['limit' => 1000]);
 			$affected_count = 0;
 			while ($row = Post::fetch($rows)) {
-				Logger::info('Delete expired item', ['pass' => $pass, 'uri-id' => $row['uri-id'], 'guid' => $row['guid']]);
+				Logger::info('Delete expired item', ['pass' => $pass, 'uri-id' => $row['uri-id']]);
 				Post\User::delete(['parent-uri-id' => $row['uri-id'], 'uid' => $row['uid']]);
 				$affected_count += DBA::affectedRows();
 				Post\Origin::delete(['parent-uri-id' => $row['uri-id'], 'uid' => $row['uid']]);
@@ -273,7 +273,7 @@ class ExpirePosts
 			$pass = 0;
 			do {
 				++$pass;
-				$uris = DBA::select('item-uri', ['id'], $condition, ['limit' => 100]);
+				$uris = DBA::select('item-uri', ['id'], $condition, ['limit' => 1000]);
 
 				Logger::notice('Start deleting expired threads', ['pass' => $pass]);
 				$affected_count = 0;
@@ -301,7 +301,7 @@ class ExpirePosts
 			$pass = 0;
 			do {
 				++$pass;
-				$uris = DBA::select('item-uri', ['id'], $condition, ['limit' => 100]);
+				$uris = DBA::select('item-uri', ['id'], $condition, ['limit' => 1000]);
 
 				Logger::notice('Start deleting unclaimed public items', ['pass' => $pass]);
 				$affected_count = 0;
