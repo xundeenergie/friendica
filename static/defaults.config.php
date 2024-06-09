@@ -449,6 +449,15 @@ return [
 		// Optimizes all tables instead of only tables like workerqueue or the cache
 		'optimize_all_tables' => false,
 
+		// page_execution_logfile (Path)
+		// Name of a logfile to log slow page executions.
+		'page_execution_logfile' => '',
+
+		// page_execution_log_limit (Integer)
+		// If a page execution lasts longer than this value in seconds it is logged.
+		// Inactive if system => page_execution_logfile is empty.
+		'page_execution_log_limit' => 2,
+
 		// paranoia (Boolean)
 		// Log out users if their IP address changed.
 		'paranoia' => false,
