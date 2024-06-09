@@ -287,6 +287,7 @@ class APContact
 		} elseif ($apcontact['type'] == 'Tombstone') {
 			// The "inbox" field must have a content
 			$apcontact['inbox'] = '';
+			$apcontact['addr']  = '';
 		}
 
 		// Quit if this doesn't seem to be an account at all
@@ -294,7 +295,7 @@ class APContact
 			return $fetched_contact;
 		}
 
-		if (empty($apcontact['addr'])) {
+		if (empty($apcontact['addr']) && ($apcontact['type'] != 'Tombstone')) {
 			try {
 				$apcontact['addr'] = $apcontact['nick'] . '@' . (new Uri($apcontact['url']))->getAuthority();
 			} catch (\Throwable $e) {

@@ -277,12 +277,15 @@ class Receiver
 			}
 		}
 
-		if (Post::exists(['uri' => $object_id, 'gravity' => [Item::GRAVITY_PARENT, Item::GRAVITY_COMMENT]])) {
+		$type = JsonLD::fetchElement($activity, '@type');
+
+		// Several activities are only done on content types, so we can assume "Note" here.
+		if (Post::exists(['uri' => $object_id, 'gravity' => [Item::GRAVITY_PARENT, Item::GRAVITY_COMMENT]]) || (in_array($type, ['as:Like', 'as:Dislike', 'litepub:EmojiReact', 'as:Announce', 'as:View']))) {
 			// We just assume "note" since it doesn't make a difference for the further processing
 			return 'as:Note';
 		}
 
-		$profile = APContact::getByURL($object_id);
+		$profile = APContact::getByURL($object_id, false);
 		if (!empty($profile['type'])) {
 			APContact::unmarkForArchival($profile);
 			return 'as:' . $profile['type'];
@@ -1183,9 +1186,6 @@ class Receiver
 			$profile   = APContact::getByURL($actor);
 			$followers = $profile['followers'] ?? '';
 			$isGroup  = ($profile['type'] ?? '') == 'Group';
-			if ($push) {
-				Contact::updateByUrlIfNeeded($actor);
-			}
 			Logger::info('Got actor and followers', ['actor' => $actor, 'followers' => $followers]);
 		} else {
 			Logger::info('Empty actor', ['activity' => $activity]);
