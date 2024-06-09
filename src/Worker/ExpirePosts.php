@@ -253,7 +253,7 @@ class ExpirePosts
 		if (!empty($expire_days)) {
 			Logger::notice('Start collecting expired threads', ['expiry_days' => $expire_days]);
 			$condition = [
-				"`id` IN (SELECT `uri-id` FROM `post-thread` WHERE `received` < ?
+				"`received` < ?
 				AND NOT `uri-id` IN (SELECT `uri-id` FROM `post-thread-user`
 					WHERE (`mention` OR `starred` OR `wall`) AND `uri-id` = `post-thread`.`uri-id`)
 				AND NOT `uri-id` IN (SELECT `uri-id` FROM `post-category`
@@ -267,18 +267,18 @@ class ExpirePosts
 				AND NOT `uri-id` IN (SELECT `parent-uri-id` FROM `post-user`
 					WHERE (`origin` OR `event-id` != 0 OR `post-type` = ?) AND `parent-uri-id` = `post-thread`.`uri-id`)
 				AND NOT `uri-id` IN (SELECT `uri-id` FROM `post-content`
-					WHERE `resource-id` != 0 AND `uri-id` = `post-thread`.`uri-id`))",
+					WHERE `resource-id` != 0 AND `uri-id` = `post-thread`.`uri-id`)",
 				DateTimeFormat::utc('now - ' . (int)$expire_days . ' days'), Item::PT_PERSONAL_NOTE
 			];
 			$pass = 0;
 			do {
 				++$pass;
-				$uris = DBA::select('item-uri', ['id'], $condition, ['limit' => 1000]);
+				$uris = DBA::select('post-thread', ['uri-id'], $condition, ['limit' => 1000]);
 
 				Logger::notice('Start deleting expired threads', ['pass' => $pass]);
 				$affected_count = 0;
 				while ($rows = DBA::toArray($uris, false, 100)) {
-					$ids = array_column($rows, 'id');
+					$ids = array_column($rows, 'uri-id');
 					DBA::delete('item-uri', ['id' => $ids]);
 					$affected_count += DBA::affectedRows();
 				}
@@ -291,22 +291,22 @@ class ExpirePosts
 		if (!empty($expire_days_unclaimed)) {
 			Logger::notice('Start collecting unclaimed public items', ['expiry_days' => $expire_days_unclaimed]);
 			$condition = [
-				"`id` IN (SELECT `uri-id` FROM `post-user` WHERE `gravity` = ? AND `uid` = ? AND `received` < ?
+				"`gravity` = ? AND `uid` = ? AND `received` < ?
 				AND NOT `uri-id` IN (SELECT `parent-uri-id` FROM `post-user` AS `i` WHERE `i`.`uid` != ?
 					AND `i`.`parent-uri-id` = `post-user`.`uri-id`)
 				AND NOT `uri-id` IN (SELECT `parent-uri-id` FROM `post-user` AS `i` WHERE `i`.`uid` = ?
-					AND `i`.`parent-uri-id` = `post-user`.`uri-id` AND `i`.`received` > ?))",
+					AND `i`.`parent-uri-id` = `post-user`.`uri-id` AND `i`.`received` > ?)",
 				Item::GRAVITY_PARENT, 0, DateTimeFormat::utc('now - ' . (int)$expire_days_unclaimed . ' days'), 0, 0, DateTimeFormat::utc('now - ' . (int)$expire_days_unclaimed . ' days')
 			];
 			$pass = 0;
 			do {
 				++$pass;
-				$uris = DBA::select('item-uri', ['id'], $condition, ['limit' => 1000]);
+				$uris = DBA::select('post-user', ['uri-id'], $condition, ['limit' => 1000]);
 
 				Logger::notice('Start deleting unclaimed public items', ['pass' => $pass]);
 				$affected_count = 0;
 				while ($rows = DBA::toArray($uris, false, 100)) {
-					$ids = array_column($rows, 'id');
+					$ids = array_column($rows, 'uri-id');
 					DBA::delete('item-uri', ['id' => $ids]);
 					$affected_count += DBA::affectedRows();
 				}
