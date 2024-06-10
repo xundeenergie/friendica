@@ -59,7 +59,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-06-02 07:05+0000\n"
 "PO-Revision-Date: 2011-05-05 10:19+0000\n"
-"Last-Translator: Raroun, 2023-2024\n"
+"Last-Translator: Tobias Diekershoff <tobias.diekershoff@gmx.net>, 2016-2024\n"
 "Language-Team: German (http://app.transifex.com/Friendica/friendica/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1719,14 +1719,14 @@ msgstr "Die Foto-Metadaten werden ausgelesen. Dadurch kann der Aufnahmeort (wenn
 
 #: src/Content/Feature.php:110
 msgid "Display the community in the navigation"
-msgstr ""
+msgstr "Gemeinschaftsseiten in Navigation anzeigen"
 
 #: src/Content/Feature.php:110
 msgid ""
 "If enabled, the community can be accessed via the navigation menu. "
 "Independent from this setting, the community timelines can always be "
 "accessed via the channels."
-msgstr ""
+msgstr "Soll die Gemeinschaftsseite im Navigationsmenü verlinkt sein? Unabhängig von dieser Einstellung kann immer über Kanäle auf die Gemeinschaftszeitleiste zugegriffen werden."
 
 #: src/Content/Feature.php:115
 msgid "Post Composition Features"
@@ -1767,7 +1767,7 @@ msgstr "Eigene Beiträge mit Kategorien versehen"
 
 #: src/Content/Feature.php:128
 msgid "Network Widgets"
-msgstr ""
+msgstr "Netzwerk Widges"
 
 #: src/Content/Feature.php:129 src/Content/Widget.php:216
 #: src/Model/Circle.php:601 src/Module/Contact.php:400
@@ -1831,7 +1831,7 @@ msgstr "Gespeicherte Suchen"
 
 #: src/Content/Feature.php:135
 msgid "Display posts that contain subscribed hashtags."
-msgstr ""
+msgstr "Weitergeleitete Beiträge anzeigen, wenn abonnierte Hashtags enthalten sind."
 
 #: src/Content/Feature.php:136 src/Content/Widget.php:319
 msgid "Saved Folders"
@@ -1839,7 +1839,7 @@ msgstr "Gespeicherte Ordner"
 
 #: src/Content/Feature.php:136
 msgid "Display a list of folders in which posts are stored."
-msgstr ""
+msgstr "Ordnerliste anzeigen in denen Beiträge gespeichert sind."
 
 #: src/Content/Feature.php:137 src/Module/Conversation/Timeline.php:199
 msgid "Own Contacts"
@@ -1994,7 +1994,7 @@ msgstr "Sprachen"
 
 #: src/Content/Item.php:445 src/Object/Post.php:596
 msgid "Search Text"
-msgstr ""
+msgstr "Suchtext"
 
 #: src/Content/Item.php:450 src/Content/Widget.php:80
 #: src/Model/Contact.php:1224 src/Model/Contact.php:1236
@@ -2844,11 +2844,11 @@ msgstr "Fehler: GNU Multiple Precision PHP Modul wird benötigt, ist aber nicht 
 
 #: src/Core/Installer.php:499
 msgid "IDN Functions PHP module"
-msgstr ""
+msgstr "PHP Modul: IDN Functions"
 
 #: src/Core/Installer.php:500
 msgid "Error: IDN Functions PHP module required but not installed."
-msgstr ""
+msgstr "Fehler: Das PHP Modul IDN Functions wird benötigt ist aber nicht installiert."
 
 #: src/Core/Installer.php:523
 msgid ""
@@ -3578,7 +3578,7 @@ msgstr "Inhalt vom %s ist zugeklappt"
 
 #: src/Model/Item.php:3443
 msgid "Sensitive content"
-msgstr ""
+msgstr "Sensitiver Inhalt"
 
 #: src/Model/Item.php:3912
 msgid "bytes"
@@ -4181,7 +4181,7 @@ msgstr "Ja"
 
 #: src/Module/Admin/Features.php:67
 msgid "Locked"
-msgstr ""
+msgstr "Abgeschlossen"
 
 #: src/Module/Admin/Features.php:81
 msgid "Manage Additional Features"
@@ -4457,7 +4457,7 @@ msgstr "Erstellt"
 
 #: src/Module/Admin/Queue.php:80
 msgid "Next Try"
-msgstr ""
+msgstr "Nächster Versuch"
 
 #: src/Module/Admin/Queue.php:81
 msgid "Priority"
@@ -5400,13 +5400,13 @@ msgstr "Auf großen Knoten kann die Volltext-Suche das System ausbremsen."
 
 #: src/Module/Admin/Site.php:576
 msgid "Limited search scope"
-msgstr ""
+msgstr "Suchfeld begrenzen"
 
 #: src/Module/Admin/Site.php:576
 msgid ""
 "If enabled, searches will only be performed in the data used for the "
 "channels and not in all posts."
-msgstr ""
+msgstr "Ist dies aktiviert, werden bei Suchen nur die Daten der Kanäle durchsucht anstatt alle Beiträge zu durchsuchen."
 
 #: src/Module/Admin/Site.php:577
 msgid "Maximum age of items in the search table"
@@ -7067,13 +7067,13 @@ msgstr "Beiträge von diesem Kontakt werden in keinem Kanal angezeigt"
 
 #: src/Module/Contact/Profile.php:441
 msgid "Channel Only"
-msgstr ""
+msgstr "Ausschließlich Kanäle"
 
 #: src/Module/Contact/Profile.php:441
 msgid ""
 "If enabled, posts from this contact will only appear in channels and network"
 " streams in circles, but not in the general network stream."
-msgstr ""
+msgstr "Ist dies aktiviert, werden Beiträge dieses Kontakt nur in Kanälen und Circles angezeigt werden, aber nicht im allgemeinen Netzwerk Stream."
 
 #: src/Module/Contact/Profile.php:509
 msgid "Refetch contact data"
@@ -7991,7 +7991,7 @@ msgstr "Öffentliche Gruppe"
 
 #: src/Module/Moderation/BaseUsers.php:122 src/Module/Settings/Account.php:503
 msgid "Public Group - Restricted"
-msgstr ""
+msgstr "Öffentliche Gruppe - Beschränkt"
 
 #: src/Module/Moderation/BaseUsers.php:123 src/Module/Settings/Account.php:510
 msgid "Automatic Friend Page"
@@ -9138,19 +9138,19 @@ msgstr "Sichtbar für:"
 
 #: src/Module/Privacy/PermissionTooltip.php:133
 msgid "CC:"
-msgstr ""
+msgstr "CC:"
 
 #: src/Module/Privacy/PermissionTooltip.php:134
 msgid "BCC:"
-msgstr ""
+msgstr "BCC:"
 
 #: src/Module/Privacy/PermissionTooltip.php:135
 msgid "Audience:"
-msgstr ""
+msgstr "Publikum:"
 
 #: src/Module/Privacy/PermissionTooltip.php:136
 msgid "Attributed To:"
-msgstr ""
+msgstr "Zuzuschreiben:"
 
 #: src/Module/Privacy/PermissionTooltip.php:234
 #, php-format
@@ -9855,7 +9855,7 @@ msgstr "Bestätigt alle Kontaktanfragen automatisch."
 
 #: src/Module/Settings/Account.php:505
 msgid "Contact requests have to be manually approved."
-msgstr ""
+msgstr "Kontaktanfragen müssen manuell akzeptiert werden."
 
 #: src/Module/Settings/Account.php:512
 msgid ""
@@ -10452,16 +10452,16 @@ msgstr "Keine"
 
 #: src/Module/Settings/Connectors.php:204
 msgid "Default (Mastodon will display the title and a link to the post)"
-msgstr ""
+msgstr "Grundeinstellung (Mastodon zweigt den Titel und einen Link auf den Beitrag)"
 
 #: src/Module/Settings/Connectors.php:205
 msgid ""
 "Use the summary (Mastodon and some others will treat it as content warning)"
-msgstr ""
+msgstr "Verwende die Zusammenfassung (sie wird auf Mastodon und anderen als Inhaltswarnung behandelt)"
 
 #: src/Module/Settings/Connectors.php:206
 msgid "Embed the title in the body"
-msgstr ""
+msgstr "Titel in Nachrichtenkörper einbetten"
 
 #: src/Module/Settings/Connectors.php:218
 msgid "General Social Media Settings"
@@ -10556,14 +10556,14 @@ msgstr "Wenn dies aktiviert ist, reagieren hinzugefügte Links am Ende des Beitr
 
 #: src/Module/Settings/Connectors.php:236
 msgid "Article Mode"
-msgstr ""
+msgstr "Artikel Modus"
 
 #: src/Module/Settings/Connectors.php:236
 msgid ""
 "Controls how posts with titles are transmitted. Mastodon and its forks don't"
 " display the content of these posts if the post is created in the correct "
 "(default) way."
-msgstr ""
+msgstr "Kontrolliert wie Beiträge mit Titeln übermittel werden. Mastodon und dessen Forks stellen den Inhalt dieser Beiträge nicht dar, wenn sie an sich korrekt in den Grundeinstellungen übertragen werden."
 
 #: src/Module/Settings/Connectors.php:237
 msgid "Your legacy ActivityPub/GNU Social account"
