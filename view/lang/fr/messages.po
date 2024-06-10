@@ -5410,13 +5410,13 @@ msgstr "La recherche textuelle peut ralentir considérablement les systèmes de 
 
 #: src/Module/Admin/Site.php:576
 msgid "Limited search scope"
-msgstr ""
+msgstr "Champ de recherche limité"
 
 #: src/Module/Admin/Site.php:576
 msgid ""
 "If enabled, searches will only be performed in the data used for the "
 "channels and not in all posts."
-msgstr ""
+msgstr "Si activé, les recherches ne seront effectuées que dans les données utilisées pour les chaînes et non dans toutes les publications."
 
 #: src/Module/Admin/Site.php:577
 msgid "Maximum age of items in the search table"
@@ -10488,16 +10488,16 @@ msgstr "Aucun(e)"
 
 #: src/Module/Settings/Connectors.php:204
 msgid "Default (Mastodon will display the title and a link to the post)"
-msgstr ""
+msgstr "Par défaut (Mastodon affichera le titre et un lien vers la publication)"
 
 #: src/Module/Settings/Connectors.php:205
 msgid ""
 "Use the summary (Mastodon and some others will treat it as content warning)"
-msgstr ""
+msgstr "Utiliser le résumé (Mastodon et quelques autres le considèreront comme un avertissement de contenu)"
 
 #: src/Module/Settings/Connectors.php:206
 msgid "Embed the title in the body"
-msgstr ""
+msgstr "Intégrer le titre dans le corps du texte"
 
 #: src/Module/Settings/Connectors.php:218
 msgid "General Social Media Settings"
@@ -10592,14 +10592,14 @@ msgstr "Quand activé, les liens ajoutés à la fin d'une publication fonctionne
 
 #: src/Module/Settings/Connectors.php:236
 msgid "Article Mode"
-msgstr ""
+msgstr "Mode Article"
 
 #: src/Module/Settings/Connectors.php:236
 msgid ""
 "Controls how posts with titles are transmitted. Mastodon and its forks don't"
 " display the content of these posts if the post is created in the correct "
 "(default) way."
-msgstr ""
+msgstr "Contrôle la façon dont les publications avec des titres sont transmises. Mastodon et ses forks n'affichent pas le contenu de ces publications si la publication est créée de la bonne manière (par défaut)."
 
 #: src/Module/Settings/Connectors.php:237
 msgid "Your legacy ActivityPub/GNU Social account"
