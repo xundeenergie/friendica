@@ -2124,7 +2124,12 @@ class BBCode
 		}
 
 		$parts['host'] = idn_to_ascii(urldecode($parts['host']));
-		return (string)Uri::fromParts($parts);
+		try {
+			return (string)Uri::fromParts($parts);
+		} catch (\Throwable $th) {
+			Logger::notice('Exception on unparsing url', ['url' => $url, 'parts' => $parts, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return $url;
+		}
 	}
 
 	private static function unifyLinks(string $text): string
