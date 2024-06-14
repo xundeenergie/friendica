@@ -2653,6 +2653,14 @@ class Contact
 
 		$data = Probe::uri($contact['url'], $network, $contact['uid']);
 
+		if (in_array($data['network'], Protocol::FEDERATED) && (parse_url($data['url'], PHP_URL_SCHEME) == 'http')) {
+			$ssl_url = str_replace('http://', 'https://', $contact['url']);
+			$ssl_data = Probe::uri($ssl_url, $network, $contact['uid']);
+			if (($ssl_data['network'] == $data['network']) && (parse_url($ssl_data['url'], PHP_URL_SCHEME) != 'http')) {
+				$data = $ssl_data;
+			}
+		}
+
 		if ($data['network'] == Protocol::DIASPORA) {
 			try {
 				DI::dsprContact()->updateFromProbeArray($data);
@@ -2811,7 +2819,7 @@ class Contact
 		// We must not try to update relay contacts via probe. They are no real contacts.
 		// See Relay::updateContact() for more details.
 		// We check after the probing to be able to correct falsely detected contact types.
-		if (($contact['contact-type'] == self::TYPE_RELAY) && Strings::compareLink($contact['url'], $contact['baseurl']) &&
+		if (($contact['contact-type'] == self::TYPE_RELAY) && Strings::compareLink($contact['url'], $contact['baseurl'] ?? '') &&
 			(!Strings::compareLink($ret['url'], $contact['url']) || in_array($ret['network'], [Protocol::FEED, Protocol::PHANTOM]))
 		) {
 			if (GServer::reachable($contact)) {
