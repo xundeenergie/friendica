@@ -2646,7 +2646,7 @@ class BBCode
 					$bbcode = "\n" . '[audio]' . $url . '[/audio]' . "\n";
 					break;
 				default:
-					$bbcode = "\n" . '[img]' . $url . '[/img]' . "\n";
+					$bbcode = "\n" . '[img=' . $url . '][/img]' . "\n";
 					break;
 			}
 
