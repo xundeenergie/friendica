@@ -1547,24 +1547,25 @@ class Contact
 	/**
 	 * Returns posts from a given contact url
 	 *
-	 * @param string $contact_url Contact URL
-	 * @param bool   $thread_mode
-	 * @param int    $update      Update mode
-	 * @param int    $parent      Item parent ID for the update mode
-	 * @param bool   $only_media  Only display media content
+	 * @param string $contact_url  Contact URL
+	 * @param int    $uid          User ID
+	 * @param bool   $only_media   Only display media content
+	 * @param string $last_created Newest creation date, used for paging
 	 * @return string posts in HTML
 	 * @throws \Exception
 	 */
-	public static function getPostsFromUrl(string $contact_url, int $uid, bool $only_media = false): string
+	public static function getPostsFromUrl(string $contact_url, int $uid, bool $only_media = false, string $last_created = null): string
 	{
-		return self::getPostsFromId(self::getIdForURL($contact_url), $uid, $only_media);
+		return self::getPostsFromId(self::getIdForURL($contact_url), $uid, $only_media, $last_created);
 	}
 
 	/**
 	 * Returns posts from a given contact id
 	 *
-	 * @param int  $cid         Contact ID
-	 * @param bool $only_media  Only display media content
+	 * @param int    $cid          Contact ID
+	 * @param int    $uid          User ID
+	 * @param bool   $only_media   Only display media content
+	 * @param string $last_created Newest creation date, used for paging
 	 * @return string posts in HTML
 	 * @throws \Exception
 	 */
