@@ -1478,3 +1478,12 @@ function update_1564()
 
 	return Update::SUCCESS;
 }
+
+function update_1566()
+{
+	$users = DBA::select('user', ['uid'], ["`account-type` = ? AND `verified` AND NOT `blocked` AND NOT `account_removed` AND NOT `account_expired` AND `uid` > ?", User::ACCOUNT_TYPE_RELAY, 0]);
+	while ($user = DBA::fetch($users)) {
+		Profile::setResponsibleRelayContact($user['uid']);
+	}
+	DBA::close($users);
+}
