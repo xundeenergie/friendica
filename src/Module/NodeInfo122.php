@@ -31,10 +31,10 @@ use Friendica\Util\Profiler;
 use Psr\Log\LoggerInterface;
 
 /**
- * Version 2.0 of Nodeinfo, a standardized way of exposing metadata about a server running one of the distributed social networks.
+ * Version 2.2 of Nodeinfo, a standardized way of exposing metadata about a server running one of the distributed social networks.
  * @see https://github.com/jhass/nodeinfo/blob/master/PROTOCOL.md
  */
-class NodeInfo120 extends BaseModule
+class NodeInfo122 extends BaseModule
 {
 	/** @var IManageConfigValues */
 	protected $config;
@@ -49,18 +49,22 @@ class NodeInfo120 extends BaseModule
 	protected function rawContent(array $request = [])
 	{
 		$nodeinfo = [
-			'version'  => '2.0',
-			'software' => [
-				'name'    => 'friendica',
-				'version' => App::VERSION . '-' . DB_UPDATE_VERSION,
+			'version'   => '2.2',
+			'instance'  => [
+				'name'        => $this->config->get('config', 'sitename'),
+				'description' => $this->config->get('config', 'info'),
+			],
+			'software'  => [
+				'name'       => 'friendica',
+				'version'    => App::VERSION . '-' . DB_UPDATE_VERSION,
+				'repository' => 'https://github.com/friendica/friendica',
+				'homepage'   => 'https://friendi.ca',
 			],
 			'protocols'         => ['dfrn', 'activitypub'],
 			'services'          => Nodeinfo::getServices(),
 			'openRegistrations' => Register::getPolicy() !== Register::CLOSED,
 			'usage'             => Nodeinfo::getUsage(),
-			'metadata'          => [
-				'nodeName' => $this->config->get('config', 'sitename'),
-			],
+			'metadata'          => [],
 		];
 
 		if (!empty($this->config->get('system', 'diaspora_enabled'))) {

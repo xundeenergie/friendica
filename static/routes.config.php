@@ -525,6 +525,9 @@ return [
 	'/newmember'          => [Module\Welcome::class,         [R::GET]],
 	'/nodeinfo/1.0'       => [Module\NodeInfo110::class,     [R::GET]],
 	'/nodeinfo/2.0'       => [Module\NodeInfo120::class,     [R::GET]],
+	'/nodeinfo/2.0.json'  => [Module\NodeInfo120::class,     [R::GET]],
+	'/nodeinfo/2.1'       => [Module\NodeInfo121::class,     [R::GET]],
+	'/nodeinfo/2.2'       => [Module\NodeInfo122::class,     [R::GET]],
 	'/nocircle'           => [Module\Circle::class,          [R::GET]],
 
 	'/noscrape' => [
