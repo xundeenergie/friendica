@@ -133,10 +133,13 @@ class Index extends BaseSettings
 			$homepage = 'http://' . $homepage;
 		}
 
+		$user  = User::getById($this->session->getLocalUserId());
+		$about = Profile::addResponsibleRelayContact($about, $user['parent-uid'], $user['account-type'], $user['language']);
+
 		$profileFieldsNew = $this->getProfileFieldsFromInput(
 			$this->session->getLocalUserId(),
-			$request['profile_field'],
-			$request['profile_field_order']
+			(array)$request['profile_field'],
+			(array)$request['profile_field_order']
 		);
 
 		$this->profileFieldRepo->saveCollectionForUser($this->session->getLocalUserId(), $profileFieldsNew);
@@ -186,6 +189,8 @@ class Index extends BaseSettings
 		if (!$owner) {
 			throw new HTTPException\NotFoundException();
 		}
+
+		$owner['about'] = Profile::addResponsibleRelayContact($owner['about'], $owner['parent-uid'], $owner['account-type'], $owner['language']);
 
 		$this->page->registerFooterScript('view/asset/es-jquery-sortable/source/js/jquery-sortable-min.js');
 		$this->page->registerFooterScript(Theme::getPathForFile('js/module/settings/profile/index.js'));
