@@ -60,7 +60,10 @@ class NodeInfo121 extends BaseModule
 			'services'          => Nodeinfo::getServices(),
 			'openRegistrations' => Register::getPolicy() !== Register::CLOSED,
 			'usage'             => Nodeinfo::getUsage(),
-			'metadata'          => [],
+			'metadata'          => [
+				'nodeName'        => $this->config->get('config', 'sitename'),
+				'nodeDescription' => $this->config->get('config', 'info'),
+			],
 		];
 
 		if (!empty($this->config->get('system', 'diaspora_enabled'))) {
