@@ -854,7 +854,7 @@ class Profile
 	 * @param string $language
 	 * @return string
 	 */
-	public static function addResponsibleRelayContact(string $about, int $parent_uid = null, int $account_type, string $language): string
+	public static function addResponsibleRelayContact(string $about = null, int $parent_uid = null, int $account_type, string $language): ?string
 	{
 		if (($account_type != User::ACCOUNT_TYPE_RELAY) || empty($parent_uid)) {
 			return $about;
