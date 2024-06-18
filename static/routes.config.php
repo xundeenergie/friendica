@@ -491,7 +491,8 @@ return [
 	'/logout'             => [Module\Security\Logout::class, [R::GET, R::POST]],
 	'/magic'              => [Module\Magic::class,           [R::GET]],
 	'/manifest'           => [Module\Manifest::class,        [R::GET]],
-	'/friendica.webmanifest'  => [Module\Manifest::class,    [R::GET]],
+	'/manifest.json'      => [Module\Manifest::class,        [R::GET]],
+	'/friendica.webmanifest' => [Module\Manifest::class,     [R::GET]],
 
 	'/media' => [
 		'/attachment/browser'      => [Module\Media\Attachment\Browser::class, [R::GET]],
