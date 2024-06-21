@@ -57,7 +57,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: friendica\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-02 07:05+0000\n"
+"POT-Creation-Date: 2024-06-17 03:41+0000\n"
 "PO-Revision-Date: 2011-05-05 10:19+0000\n"
 "Last-Translator: Tobias Diekershoff <tobias.diekershoff@gmx.net>, 2016-2024\n"
 "Language-Team: German (http://app.transifex.com/Friendica/friendica/language/de/)\n"
@@ -115,7 +115,7 @@ msgstr "Beitrag nicht gefunden."
 #: src/Module/Register.php:84 src/Module/Register.php:97
 #: src/Module/Register.php:213 src/Module/Register.php:252
 #: src/Module/Search/Directory.php:37 src/Module/Settings/Account.php:50
-#: src/Module/Settings/Account.php:386 src/Module/Settings/Channels.php:66
+#: src/Module/Settings/Account.php:391 src/Module/Settings/Channels.php:66
 #: src/Module/Settings/Channels.php:141 src/Module/Settings/Delegation.php:90
 #: src/Module/Settings/Display.php:90 src/Module/Settings/Display.php:197
 #: src/Module/Settings/Profile/Photo/Crop.php:165
@@ -358,8 +358,8 @@ msgstr "Bitte warten"
 #: src/Module/Moderation/Report/Create.php:183
 #: src/Module/Moderation/Report/Create.php:211
 #: src/Module/Moderation/Report/Create.php:263
-#: src/Module/Profile/Profile.php:274
-#: src/Module/Settings/Profile/Index.php:257
+#: src/Module/Profile/Profile.php:276
+#: src/Module/Settings/Profile/Index.php:262
 #: src/Module/Settings/Server/Action.php:79 src/Module/User/Delegation.php:189
 #: src/Object/Post.php:1159 view/theme/duepuntozero/config.php:85
 #: view/theme/frio/config.php:150 view/theme/quattro/config.php:87
@@ -703,11 +703,11 @@ msgstr "Ich mag das nicht (toggle)"
 msgid "Map"
 msgstr "Karte"
 
-#: src/App.php:441
+#: src/App.php:446
 msgid "No system theme config value set."
 msgstr "Es wurde kein Konfigurationswert für das systemweite Theme gesetzt."
 
-#: src/App.php:549
+#: src/App.php:554
 msgid "Apologies but the website is unavailable at the moment."
 msgstr "Entschuldigung, aber die Webseite ist derzeit nicht erreichbar."
 
@@ -1687,7 +1687,7 @@ msgid "Sort by post creation date"
 msgstr "Sortiert nach dem Erstellungsdatum"
 
 #: src/Content/Conversation/Factory/Network.php:41
-#: src/Module/Settings/Profile/Index.php:260
+#: src/Module/Settings/Profile/Index.php:265
 msgid "Personal"
 msgstr "Persönlich"
 
@@ -1807,7 +1807,7 @@ msgid "Display posts with the selected protocols."
 msgstr "Beiträge mit den ausgewählten Protokollen anzeigen."
 
 #: src/Content/Feature.php:133 src/Content/Widget.php:544
-#: src/Module/Settings/Account.php:442
+#: src/Module/Settings/Account.php:447
 msgid "Account Types"
 msgstr "Kontenarten"
 
@@ -1841,7 +1841,7 @@ msgstr "Gespeicherte Ordner"
 msgid "Display a list of folders in which posts are stored."
 msgstr "Ordnerliste anzeigen in denen Beiträge gespeichert sind."
 
-#: src/Content/Feature.php:137 src/Module/Conversation/Timeline.php:199
+#: src/Content/Feature.php:137 src/Module/Conversation/Timeline.php:200
 msgid "Own Contacts"
 msgstr "Eigene Kontakte"
 
@@ -1939,7 +1939,7 @@ msgstr "Status anschauen"
 #: src/Content/Item.php:430 src/Content/Item.php:453
 #: src/Model/Contact.php:1165 src/Model/Contact.php:1221
 #: src/Model/Contact.php:1231 src/Module/Directory.php:158
-#: src/Module/Settings/Profile/Index.php:259
+#: src/Module/Settings/Profile/Index.php:264
 msgid "View Profile"
 msgstr "Profil anschauen"
 
@@ -2050,7 +2050,7 @@ msgstr "Unterhaltungen die du begonnen hast"
 
 #: src/Content/Nav.php:230 src/Module/BaseProfile.php:49
 #: src/Module/BaseSettings.php:98 src/Module/Contact.php:503
-#: src/Module/Contact/Profile.php:425 src/Module/Profile/Profile.php:268
+#: src/Module/Contact/Profile.php:425 src/Module/Profile/Profile.php:270
 #: src/Module/Welcome.php:57 view/theme/frio/theme.php:233
 msgid "Profile"
 msgstr "Profil"
@@ -2343,11 +2343,11 @@ msgstr "$1 hat geschrieben:"
 msgid "Encrypted content"
 msgstr "Verschlüsselter Inhalt"
 
-#: src/Content/Text/BBCode.php:2212
+#: src/Content/Text/BBCode.php:2217
 msgid "Invalid source protocol"
 msgstr "Ungültiges Quell-Protokoll"
 
-#: src/Content/Text/BBCode.php:2231
+#: src/Content/Text/BBCode.php:2236
 msgid "Invalid link protocol"
 msgstr "Ungültiges Link-Protokoll"
 
@@ -2478,7 +2478,7 @@ msgstr "Personen"
 msgid "Organisations"
 msgstr "Organisationen"
 
-#: src/Content/Widget.php:537 src/Model/Contact.php:1727
+#: src/Content/Widget.php:537 src/Model/Contact.php:1728
 msgid "News"
 msgstr "Nachrichten"
 
@@ -2543,12 +2543,12 @@ msgid "Mention"
 msgstr "Mention"
 
 #: src/Content/Widget/VCard.php:120 src/Model/Profile.php:374
-#: src/Module/Contact/Profile.php:414 src/Module/Profile/Profile.php:199
+#: src/Module/Contact/Profile.php:414 src/Module/Profile/Profile.php:201
 msgid "XMPP:"
 msgstr "XMPP:"
 
 #: src/Content/Widget/VCard.php:121 src/Model/Profile.php:375
-#: src/Module/Contact/Profile.php:416 src/Module/Profile/Profile.php:203
+#: src/Module/Contact/Profile.php:416 src/Module/Profile/Profile.php:205
 msgid "Matrix:"
 msgstr "Matrix:"
 
@@ -2556,7 +2556,7 @@ msgstr "Matrix:"
 #: src/Model/Event.php:109 src/Model/Event.php:471 src/Model/Event.php:960
 #: src/Model/Profile.php:369 src/Module/Contact/Profile.php:412
 #: src/Module/Directory.php:148 src/Module/Notifications/Introductions.php:187
-#: src/Module/Profile/Profile.php:221
+#: src/Module/Profile/Profile.php:223
 msgid "Location:"
 msgstr "Ort:"
 
@@ -2576,7 +2576,7 @@ msgstr "Entfolgen"
 msgid "View group"
 msgstr "Gruppe betrachten"
 
-#: src/Core/ACL.php:166 src/Module/Profile/Profile.php:269
+#: src/Core/ACL.php:166 src/Module/Profile/Profile.php:271
 msgid "Yourself"
 msgstr "Du selbst"
 
@@ -3352,84 +3352,84 @@ msgstr "Circles bearbeiten"
 msgid "Approve"
 msgstr "Genehmigen"
 
-#: src/Model/Contact.php:1723
+#: src/Model/Contact.php:1724
 msgid "Organisation"
 msgstr "Organisation"
 
-#: src/Model/Contact.php:1731
+#: src/Model/Contact.php:1732
 msgid "Group"
 msgstr "Gruppe"
 
-#: src/Model/Contact.php:1735 src/Module/Moderation/BaseUsers.php:131
+#: src/Model/Contact.php:1736 src/Module/Moderation/BaseUsers.php:131
 msgid "Relay"
 msgstr "Relais"
 
-#: src/Model/Contact.php:3045
+#: src/Model/Contact.php:3054
 msgid "Disallowed profile URL."
 msgstr "Nicht erlaubte Profil-URL."
 
-#: src/Model/Contact.php:3050 src/Module/Friendica.php:100
+#: src/Model/Contact.php:3059 src/Module/Friendica.php:100
 msgid "Blocked domain"
 msgstr "Blockierte Domain"
 
-#: src/Model/Contact.php:3055
+#: src/Model/Contact.php:3064
 msgid "Connect URL missing."
 msgstr "Connect-URL fehlt"
 
-#: src/Model/Contact.php:3064
+#: src/Model/Contact.php:3073
 msgid ""
 "The contact could not be added. Please check the relevant network "
 "credentials in your Settings -> Social Networks page."
 msgstr "Der Kontakt konnte nicht hinzugefügt werden. Bitte überprüfe die Einstellungen unter Einstellungen -> Soziale Netzwerke"
 
-#: src/Model/Contact.php:3082
+#: src/Model/Contact.php:3091
 #, php-format
 msgid "Expected network %s does not match actual network %s"
 msgstr "Erwartetes Netzwerk %s stimmt nicht mit dem tatsächlichen Netzwerk überein %s"
 
-#: src/Model/Contact.php:3099
+#: src/Model/Contact.php:3108
 msgid "This seems to be a relay account. They can't be followed by users."
 msgstr "Dies scheint ein Relais-Konto zu sein. Diese können nicht von Nutzern gefolgt werden."
 
-#: src/Model/Contact.php:3106
+#: src/Model/Contact.php:3115
 msgid "The profile address specified does not provide adequate information."
 msgstr "Die angegebene Profiladresse liefert unzureichende Informationen."
 
-#: src/Model/Contact.php:3108
+#: src/Model/Contact.php:3117
 msgid "No compatible communication protocols or feeds were discovered."
 msgstr "Es wurden keine kompatiblen Kommunikationsprotokolle oder Feeds gefunden."
 
-#: src/Model/Contact.php:3111
+#: src/Model/Contact.php:3120
 msgid "An author or name was not found."
 msgstr "Es wurde kein Autor oder Name gefunden."
 
-#: src/Model/Contact.php:3114
+#: src/Model/Contact.php:3123
 msgid "No browser URL could be matched to this address."
 msgstr "Zu dieser Adresse konnte keine passende Browser-URL gefunden werden."
 
-#: src/Model/Contact.php:3117
+#: src/Model/Contact.php:3126
 msgid ""
 "Unable to match @-style Identity Address with a known protocol or email "
 "contact."
 msgstr "Konnte die @-Adresse mit keinem der bekannten Protokolle oder Email-Kontakte abgleichen."
 
-#: src/Model/Contact.php:3118
+#: src/Model/Contact.php:3127
 msgid "Use mailto: in front of address to force email check."
 msgstr "Verwende mailto: vor der E-Mail-Adresse, um eine Überprüfung der E-Mail-Adresse zu erzwingen."
 
-#: src/Model/Contact.php:3124
+#: src/Model/Contact.php:3133
 msgid ""
 "The profile address specified belongs to a network which has been disabled "
 "on this site."
 msgstr "Die Adresse dieses Profils gehört zu einem Netzwerk, mit dem die Kommunikation auf dieser Seite ausgeschaltet wurde."
 
-#: src/Model/Contact.php:3129
+#: src/Model/Contact.php:3138
 msgid ""
 "Limited profile. This person will be unable to receive direct/personal "
 "notifications from you."
 msgstr "Eingeschränktes Profil. Diese Person wird keine direkten/privaten Nachrichten von dir erhalten können."
 
-#: src/Model/Contact.php:3195
+#: src/Model/Contact.php:3204
 msgid "Unable to retrieve contact information."
 msgstr "Konnte die Kontaktinformationen nicht empfangen."
 
@@ -3629,8 +3629,8 @@ msgstr "[kein Betreff]"
 msgid "Wall Photos"
 msgstr "Pinnwand-Bilder"
 
-#: src/Model/Profile.php:357 src/Module/Profile/Profile.php:283
-#: src/Module/Profile/Profile.php:285
+#: src/Model/Profile.php:357 src/Module/Profile/Profile.php:285
+#: src/Module/Profile/Profile.php:287
 msgid "Edit profile"
 msgstr "Profil bearbeiten"
 
@@ -3639,7 +3639,7 @@ msgid "Change profile photo"
 msgstr "Profilbild ändern"
 
 #: src/Model/Profile.php:372 src/Module/Directory.php:153
-#: src/Module/Profile/Profile.php:209
+#: src/Module/Profile/Profile.php:211
 msgid "Homepage:"
 msgstr "Homepage:"
 
@@ -3660,7 +3660,7 @@ msgstr "Die Webseite wurde verifiziert und gehört der gleichen Person."
 msgid "F d"
 msgstr "d. F"
 
-#: src/Model/Profile.php:596 src/Model/Profile.php:673
+#: src/Model/Profile.php:596 src/Model/Profile.php:677
 msgid "[today]"
 msgstr "[heute]"
 
@@ -3676,99 +3676,104 @@ msgstr "Geburtstage diese Woche:"
 msgid "g A l F d"
 msgstr "l, d. F G \\U\\h\\r"
 
-#: src/Model/Profile.php:660
+#: src/Model/Profile.php:664
 msgid "[No description]"
 msgstr "[keine Beschreibung]"
 
-#: src/Model/Profile.php:686
+#: src/Model/Profile.php:690
 msgid "Event Reminders"
 msgstr "Veranstaltungserinnerungen"
 
-#: src/Model/Profile.php:687
+#: src/Model/Profile.php:691
 msgid "Upcoming events the next 7 days:"
 msgstr "Veranstaltungen der nächsten 7 Tage:"
 
-#: src/Model/Profile.php:797
+#: src/Model/Profile.php:803
 msgid "Hometown:"
 msgstr "Heimatort:"
 
-#: src/Model/Profile.php:798
+#: src/Model/Profile.php:804
 msgid "Marital Status:"
 msgstr "Familienstand:"
 
-#: src/Model/Profile.php:799
+#: src/Model/Profile.php:805
 msgid "With:"
 msgstr "Mit:"
 
-#: src/Model/Profile.php:800
+#: src/Model/Profile.php:806
 msgid "Since:"
 msgstr "Seit:"
 
-#: src/Model/Profile.php:801
+#: src/Model/Profile.php:807
 msgid "Sexual Preference:"
 msgstr "Sexuelle Vorlieben:"
 
-#: src/Model/Profile.php:802
+#: src/Model/Profile.php:808
 msgid "Political Views:"
 msgstr "Politische Ansichten:"
 
-#: src/Model/Profile.php:803
+#: src/Model/Profile.php:809
 msgid "Religious Views:"
 msgstr "Religiöse Ansichten:"
 
-#: src/Model/Profile.php:804
+#: src/Model/Profile.php:810
 msgid "Likes:"
 msgstr "Likes:"
 
-#: src/Model/Profile.php:805
+#: src/Model/Profile.php:811
 msgid "Dislikes:"
 msgstr "Dislikes:"
 
-#: src/Model/Profile.php:806
+#: src/Model/Profile.php:812
 msgid "Title/Description:"
 msgstr "Titel/Beschreibung:"
 
-#: src/Model/Profile.php:807 src/Module/Admin/Summary.php:197
+#: src/Model/Profile.php:813 src/Module/Admin/Summary.php:197
 #: src/Module/Moderation/Report/Create.php:280
 #: src/Module/Moderation/Summary.php:76
 msgid "Summary"
 msgstr "Zusammenfassung"
 
-#: src/Model/Profile.php:808
+#: src/Model/Profile.php:814
 msgid "Musical interests"
 msgstr "Musikalische Interessen"
 
-#: src/Model/Profile.php:809
+#: src/Model/Profile.php:815
 msgid "Books, literature"
 msgstr "Bücher, Literatur"
 
-#: src/Model/Profile.php:810
+#: src/Model/Profile.php:816
 msgid "Television"
 msgstr "Fernsehen"
 
-#: src/Model/Profile.php:811
+#: src/Model/Profile.php:817
 msgid "Film/dance/culture/entertainment"
 msgstr "Filme/Tänze/Kultur/Unterhaltung"
 
-#: src/Model/Profile.php:812
+#: src/Model/Profile.php:818
 msgid "Hobbies/Interests"
 msgstr "Hobbies/Interessen"
 
-#: src/Model/Profile.php:813
+#: src/Model/Profile.php:819
 msgid "Love/romance"
 msgstr "Liebe/Romantik"
 
-#: src/Model/Profile.php:814
+#: src/Model/Profile.php:820
 msgid "Work/employment"
 msgstr "Arbeit/Anstellung"
 
-#: src/Model/Profile.php:815
+#: src/Model/Profile.php:821
 msgid "School/education"
 msgstr "Schule/Ausbildung"
 
-#: src/Model/Profile.php:816
+#: src/Model/Profile.php:822
 msgid "Contact information and Social Networks"
 msgstr "Kontaktinformationen und Soziale Netzwerke"
+
+#: src/Model/Profile.php:870
+#, php-format
+msgid "Responsible account: %s"
+msgstr "Verantwortlicher Account: %s"
 
 #: src/Model/User.php:233 src/Model/User.php:1303
 msgid "SERIOUS ERROR: Generation of security keys failed."
@@ -4086,7 +4091,7 @@ msgstr "Addon %s konnte nicht installiert werden"
 #: src/Module/Admin/Addons/Index.php:69 src/Module/Admin/Features.php:83
 #: src/Module/Admin/Logs/Settings.php:90 src/Module/Admin/Site.php:460
 #: src/Module/Admin/Themes/Index.php:113 src/Module/Admin/Tos.php:86
-#: src/Module/Settings/Account.php:558 src/Module/Settings/Addons.php:78
+#: src/Module/Settings/Account.php:563 src/Module/Settings/Addons.php:78
 #: src/Module/Settings/Connectors.php:163
 #: src/Module/Settings/Connectors.php:256
 #: src/Module/Settings/Delegation.php:193 src/Module/Settings/Display.php:309
@@ -4562,7 +4567,7 @@ msgid "Policies"
 msgstr "Regeln"
 
 #: src/Module/Admin/Site.php:465 src/Module/Calendar/Event/Form.php:252
-#: src/Module/Contact.php:546 src/Module/Profile/Profile.php:276
+#: src/Module/Contact.php:546 src/Module/Profile/Profile.php:278
 msgid "Advanced"
 msgstr "Erweitert"
 
@@ -6319,7 +6324,7 @@ msgstr "Ort (BBCode nicht erlaubt)"
 msgid "Share this event"
 msgstr "Veranstaltung teilen"
 
-#: src/Module/Calendar/Event/Form.php:251 src/Module/Profile/Profile.php:275
+#: src/Module/Calendar/Event/Form.php:251 src/Module/Profile/Profile.php:277
 msgid "Basic"
 msgstr "Allgemein"
 
@@ -6743,7 +6748,7 @@ msgstr "Profil URL"
 
 #: src/Module/Contact/Follow.php:171 src/Module/Contact/Profile.php:420
 #: src/Module/Notifications/Introductions.php:191
-#: src/Module/Profile/Profile.php:234
+#: src/Module/Profile/Profile.php:236
 msgid "Tags:"
 msgstr "Tags:"
 
@@ -7189,11 +7194,11 @@ msgstr "Fehler %d (%s) beim Abruf der Timeline."
 msgid "Network feed not available."
 msgstr "Netzwerkfeed nicht verfügbar."
 
-#: src/Module/Conversation/Timeline.php:203
+#: src/Module/Conversation/Timeline.php:204
 msgid "Include"
 msgstr "Einschließen"
 
-#: src/Module/Conversation/Timeline.php:204
+#: src/Module/Conversation/Timeline.php:205
 msgid "Hide"
 msgstr "Verbergen"
 
@@ -7413,7 +7418,7 @@ msgid "Twitter Source / Tweet URL (requires API key)"
 msgstr "Twitter Quelle / Tweet URL (benötigt API Schlüssel)"
 
 #: src/Module/Debug/Feed.php:53 src/Module/Filer/SaveTag.php:47
-#: src/Module/Settings/Profile/Index.php:177
+#: src/Module/Settings/Profile/Index.php:180
 msgid "You must be logged in to use this module"
 msgstr "Du musst eingeloggt sein, um dieses Modul benutzen zu können."
 
@@ -7977,23 +7982,23 @@ msgstr "Gelöscht"
 msgid "List of pending user deletions"
 msgstr "Liste der auf Löschung wartenden Benutzer"
 
-#: src/Module/Moderation/BaseUsers.php:119 src/Module/Settings/Account.php:482
+#: src/Module/Moderation/BaseUsers.php:119 src/Module/Settings/Account.php:487
 msgid "Normal Account Page"
 msgstr "Normales Konto"
 
-#: src/Module/Moderation/BaseUsers.php:120 src/Module/Settings/Account.php:489
+#: src/Module/Moderation/BaseUsers.php:120 src/Module/Settings/Account.php:494
 msgid "Soapbox Page"
 msgstr "Marktschreier-Konto"
 
-#: src/Module/Moderation/BaseUsers.php:121 src/Module/Settings/Account.php:496
+#: src/Module/Moderation/BaseUsers.php:121 src/Module/Settings/Account.php:501
 msgid "Public Group"
 msgstr "Öffentliche Gruppe"
 
-#: src/Module/Moderation/BaseUsers.php:122 src/Module/Settings/Account.php:503
+#: src/Module/Moderation/BaseUsers.php:122 src/Module/Settings/Account.php:508
 msgid "Public Group - Restricted"
 msgstr "Öffentliche Gruppe - Beschränkt"
 
-#: src/Module/Moderation/BaseUsers.php:123 src/Module/Settings/Account.php:510
+#: src/Module/Moderation/BaseUsers.php:123 src/Module/Settings/Account.php:515
 msgid "Automatic Friend Page"
 msgstr "Automatische Freunde-Seite"
 
@@ -8002,22 +8007,22 @@ msgid "Private Group"
 msgstr "Private Gruppe"
 
 #: src/Module/Moderation/BaseUsers.php:127
-#: src/Module/Moderation/Summary.php:53 src/Module/Settings/Account.php:453
+#: src/Module/Moderation/Summary.php:53 src/Module/Settings/Account.php:458
 msgid "Personal Page"
 msgstr "Persönliche Seite"
 
 #: src/Module/Moderation/BaseUsers.php:128
-#: src/Module/Moderation/Summary.php:54 src/Module/Settings/Account.php:460
+#: src/Module/Moderation/Summary.php:54 src/Module/Settings/Account.php:465
 msgid "Organisation Page"
 msgstr "Organisationsseite"
 
 #: src/Module/Moderation/BaseUsers.php:129
-#: src/Module/Moderation/Summary.php:55 src/Module/Settings/Account.php:467
+#: src/Module/Moderation/Summary.php:55 src/Module/Settings/Account.php:472
 msgid "News Page"
 msgstr "Nachrichtenseite"
 
 #: src/Module/Moderation/BaseUsers.php:130
-#: src/Module/Moderation/Summary.php:56 src/Module/Settings/Account.php:474
+#: src/Module/Moderation/Summary.php:56 src/Module/Settings/Account.php:479
 msgid "Community Group"
 msgstr "Gemeinschaftsgruppe"
 
@@ -8657,7 +8662,7 @@ msgstr[1] "%s Reports insgesamt"
 msgid "URL of the reported contact."
 msgstr "URL des gemeldeten Kontakts."
 
-#: src/Module/Moderation/Summary.php:57 src/Module/Settings/Account.php:431
+#: src/Module/Moderation/Summary.php:57 src/Module/Settings/Account.php:436
 msgid "Channel Relay"
 msgstr "Kanalrelais"
 
@@ -9172,20 +9177,20 @@ msgid "No contacts."
 msgstr "Keine Kontakte."
 
 #: src/Module/Profile/Conversations.php:106
-#: src/Module/Profile/Conversations.php:109 src/Module/Profile/Profile.php:351
-#: src/Module/Profile/Profile.php:354 src/Protocol/Feed.php:1114
+#: src/Module/Profile/Conversations.php:109 src/Module/Profile/Profile.php:353
+#: src/Module/Profile/Profile.php:356 src/Protocol/Feed.php:1114
 #: src/Protocol/OStatus.php:1011
 #, php-format
 msgid "%s's timeline"
 msgstr "Timeline von %s"
 
-#: src/Module/Profile/Conversations.php:107 src/Module/Profile/Profile.php:352
+#: src/Module/Profile/Conversations.php:107 src/Module/Profile/Profile.php:354
 #: src/Protocol/Feed.php:1118 src/Protocol/OStatus.php:1016
 #, php-format
 msgid "%s's posts"
 msgstr "Beiträge von %s"
 
-#: src/Module/Profile/Conversations.php:108 src/Module/Profile/Profile.php:353
+#: src/Module/Profile/Conversations.php:108 src/Module/Profile/Profile.php:355
 #: src/Protocol/Feed.php:1121 src/Protocol/OStatus.php:1020
 #, php-format
 msgid "%s's comments"
@@ -9220,64 +9225,64 @@ msgstr "Bilddatei ist leer."
 msgid "View Album"
 msgstr "Album betrachten"
 
-#: src/Module/Profile/Profile.php:112 src/Module/Profile/Restricted.php:50
+#: src/Module/Profile/Profile.php:114 src/Module/Profile/Restricted.php:50
 msgid "Profile not found."
 msgstr "Profil nicht gefunden."
 
-#: src/Module/Profile/Profile.php:158
+#: src/Module/Profile/Profile.php:160
 #, php-format
 msgid ""
 "You're currently viewing your profile as <b>%s</b> <a href=\"%s\" "
 "class=\"btn btn-sm pull-right\">Cancel</a>"
 msgstr "Du betrachtest dein Profil gerade als <b>%s</b> <a href=\"%s\" class=\"btn btn-sm pull-right\">Abbrechen</a>"
 
-#: src/Module/Profile/Profile.php:167
+#: src/Module/Profile/Profile.php:169
 msgid "Full Name:"
 msgstr "Kompletter Name:"
 
-#: src/Module/Profile/Profile.php:172
+#: src/Module/Profile/Profile.php:174
 msgid "Member since:"
 msgstr "Mitglied seit:"
 
-#: src/Module/Profile/Profile.php:178
+#: src/Module/Profile/Profile.php:180
 msgid "j F, Y"
 msgstr "j F, Y"
 
-#: src/Module/Profile/Profile.php:179
+#: src/Module/Profile/Profile.php:181
 msgid "j F"
 msgstr "j F"
 
-#: src/Module/Profile/Profile.php:187 src/Util/Temporal.php:168
+#: src/Module/Profile/Profile.php:189 src/Util/Temporal.php:168
 msgid "Birthday:"
 msgstr "Geburtstag:"
 
-#: src/Module/Profile/Profile.php:190
-#: src/Module/Settings/Profile/Index.php:291 src/Util/Temporal.php:170
+#: src/Module/Profile/Profile.php:192
+#: src/Module/Settings/Profile/Index.php:296 src/Util/Temporal.php:170
 msgid "Age: "
 msgstr "Alter: "
 
-#: src/Module/Profile/Profile.php:190
-#: src/Module/Settings/Profile/Index.php:291 src/Util/Temporal.php:170
+#: src/Module/Profile/Profile.php:192
+#: src/Module/Settings/Profile/Index.php:296 src/Util/Temporal.php:170
 #, php-format
 msgid "%d year old"
 msgid_plural "%d years old"
 msgstr[0] "%d Jahr alt"
 msgstr[1] "%d Jahre alt"
 
-#: src/Module/Profile/Profile.php:195
-#: src/Module/Settings/Profile/Index.php:284
+#: src/Module/Profile/Profile.php:197
+#: src/Module/Settings/Profile/Index.php:289
 msgid "Description:"
 msgstr "Beschreibung"
 
-#: src/Module/Profile/Profile.php:261
+#: src/Module/Profile/Profile.php:263
 msgid "Groups:"
 msgstr "Gruppen:"
 
-#: src/Module/Profile/Profile.php:273
+#: src/Module/Profile/Profile.php:275
 msgid "View profile as:"
 msgstr "Das Profil aus der Sicht von jemandem anderen betrachten:"
 
-#: src/Module/Profile/Profile.php:290
+#: src/Module/Profile/Profile.php:292
 msgid "View as"
 msgstr "Betrachten als"
 
@@ -9405,7 +9410,7 @@ msgid "Please repeat your e-mail address:"
 msgstr "Bitte wiederhole deine E-Mail Adresse"
 
 #: src/Module/Register.php:169 src/Module/Security/PasswordTooLong.php:100
-#: src/Module/Settings/Account.php:564
+#: src/Module/Settings/Account.php:569
 msgid "New Password:"
 msgstr "Neues Passwort:"
 
@@ -9414,7 +9419,7 @@ msgid "Leave empty for an auto generated password."
 msgstr "Leer lassen, um das Passwort automatisch zu generieren."
 
 #: src/Module/Register.php:170 src/Module/Security/PasswordTooLong.php:101
-#: src/Module/Settings/Account.php:565
+#: src/Module/Settings/Account.php:570
 msgid "Confirm:"
 msgstr "Bestätigen:"
 
@@ -9640,24 +9645,24 @@ msgid "Update Password"
 msgstr "Passwort aktualisieren"
 
 #: src/Module/Security/PasswordTooLong.php:99
-#: src/Module/Settings/Account.php:566
+#: src/Module/Settings/Account.php:571
 msgid "Current Password:"
 msgstr "Aktuelles Passwort:"
 
 #: src/Module/Security/PasswordTooLong.php:99
-#: src/Module/Settings/Account.php:566
+#: src/Module/Settings/Account.php:571
 msgid "Your current password to confirm the changes"
 msgstr "Dein aktuelles Passwort um die Änderungen zu bestätigen"
 
 #: src/Module/Security/PasswordTooLong.php:100
-#: src/Module/Settings/Account.php:550
+#: src/Module/Settings/Account.php:555
 msgid ""
 "Allowed characters are a-z, A-Z, 0-9 and special characters except white "
 "spaces and accentuated letters."
 msgstr "Erlaube Zeichen sind a-z, A-Z, 0-9 und Sonderzeichen, abgesehen von Leerzeichen und akzentuierten Buchstaben."
 
 #: src/Module/Security/PasswordTooLong.php:100
-#: src/Module/Settings/Account.php:551
+#: src/Module/Settings/Account.php:556
 msgid "Password length is limited to 72 characters."
 msgstr "Die Länge des Passworts ist auf 72 Zeichen begrenzt."
 
@@ -9787,103 +9792,103 @@ msgstr "Ändern der E-Mail nicht möglich. "
 msgid "Settings were not updated."
 msgstr "Einstellungen nicht aktualisiert"
 
-#: src/Module/Settings/Account.php:342
+#: src/Module/Settings/Account.php:347
 msgid "Contact CSV file upload error"
 msgstr "Fehler beim Hochladen der Kontakt CSV Datei"
 
-#: src/Module/Settings/Account.php:361
+#: src/Module/Settings/Account.php:366
 msgid "Importing Contacts done"
 msgstr "Kontakte wurden importiert."
 
-#: src/Module/Settings/Account.php:374
+#: src/Module/Settings/Account.php:379
 msgid "Relocate message has been send to your contacts"
 msgstr "Die Umzugsbenachrichtigung wurde an Deine Kontakte versendet."
 
-#: src/Module/Settings/Account.php:391
+#: src/Module/Settings/Account.php:396
 msgid "Unable to find your profile. Please contact your admin."
 msgstr "Konnte dein Profil nicht finden. Bitte kontaktiere den Admin."
 
-#: src/Module/Settings/Account.php:433
+#: src/Module/Settings/Account.php:438
 msgid ""
 "Account for a service that automatically shares content based on user "
 "defined channels."
 msgstr "Konto für einen Dienst, der automatisch Inhalte basierend auf vom Benutzer definierten Kanälen teilt."
 
-#: src/Module/Settings/Account.php:443
+#: src/Module/Settings/Account.php:448
 msgid "Personal Page Subtypes"
 msgstr "Unterarten der persönlichen Seite"
 
-#: src/Module/Settings/Account.php:444
+#: src/Module/Settings/Account.php:449
 msgid "Community Group Subtypes"
 msgstr "Unterarten der Gemeinschaftsgruppen"
 
-#: src/Module/Settings/Account.php:455
+#: src/Module/Settings/Account.php:460
 msgid "Account for a personal profile."
 msgstr "Konto für ein persönliches Profil."
 
-#: src/Module/Settings/Account.php:462
+#: src/Module/Settings/Account.php:467
 msgid ""
 "Account for an organisation that automatically approves contact requests as "
 "\"Followers\"."
 msgstr "Konto für eine Organisation, das Kontaktanfragen automatisch als \"Follower\" annimmt."
 
-#: src/Module/Settings/Account.php:469
+#: src/Module/Settings/Account.php:474
 msgid ""
 "Account for a news reflector that automatically approves contact requests as"
 " \"Followers\"."
 msgstr "Konto für einen Feedspiegel, das Kontaktanfragen automatisch als \"Follower\" annimmt."
 
-#: src/Module/Settings/Account.php:476
+#: src/Module/Settings/Account.php:481
 msgid "Account for community discussions."
 msgstr "Konto für Diskussionsforen. "
 
-#: src/Module/Settings/Account.php:484
+#: src/Module/Settings/Account.php:489
 msgid ""
 "Account for a regular personal profile that requires manual approval of "
 "\"Friends\" and \"Followers\"."
 msgstr "Konto für ein normales, persönliches Profil. Kontaktanfragen müssen manuell als \"Friend\" oder \"Follower\" bestätigt werden."
 
-#: src/Module/Settings/Account.php:491
+#: src/Module/Settings/Account.php:496
 msgid ""
 "Account for a public profile that automatically approves contact requests as"
 " \"Followers\"."
 msgstr "Konto für ein öffentliches Profil, das Kontaktanfragen automatisch als \"Follower\" annimmt."
 
-#: src/Module/Settings/Account.php:498
+#: src/Module/Settings/Account.php:503
 msgid "Automatically approves all contact requests."
 msgstr "Bestätigt alle Kontaktanfragen automatisch."
 
-#: src/Module/Settings/Account.php:505
+#: src/Module/Settings/Account.php:510
 msgid "Contact requests have to be manually approved."
 msgstr "Kontaktanfragen müssen manuell akzeptiert werden."
 
-#: src/Module/Settings/Account.php:512
+#: src/Module/Settings/Account.php:517
 msgid ""
 "Account for a popular profile that automatically approves contact requests "
 "as \"Friends\"."
 msgstr "Konto für ein gefragtes Profil, das Kontaktanfragen automatisch als \"Friend\" annimmt."
 
-#: src/Module/Settings/Account.php:517
+#: src/Module/Settings/Account.php:522
 msgid "Private Group [Experimental]"
 msgstr "Private Gruppe [experimentell]"
 
-#: src/Module/Settings/Account.php:519
+#: src/Module/Settings/Account.php:524
 msgid "Requires manual approval of contact requests."
 msgstr "Kontaktanfragen müssen manuell bestätigt werden."
 
-#: src/Module/Settings/Account.php:528
+#: src/Module/Settings/Account.php:533
 msgid "OpenID:"
 msgstr "OpenID:"
 
-#: src/Module/Settings/Account.php:528
+#: src/Module/Settings/Account.php:533
 msgid "(Optional) Allow this OpenID to login to this account."
 msgstr "(Optional) Erlaube die Anmeldung für dieses Konto mit dieser OpenID."
 
-#: src/Module/Settings/Account.php:536
+#: src/Module/Settings/Account.php:541
 msgid "Publish your profile in your local site directory?"
 msgstr "Darf dein Profil im lokalen Verzeichnis dieses Servers veröffentlicht werden?"
 
-#: src/Module/Settings/Account.php:536
+#: src/Module/Settings/Account.php:541
 #, php-format
 msgid ""
 "Your profile will be published in this node's <a href=\"%s\">local "
@@ -9891,94 +9896,94 @@ msgid ""
 " system settings."
 msgstr "Dein Profil wird im <a href=\"%s\">lokalen Verzeichnis</a> dieses Knotens veröffentlicht. Je nach Systemeinstellungen kann es öffentlich auffindbar sein."
 
-#: src/Module/Settings/Account.php:542
+#: src/Module/Settings/Account.php:547
 #, php-format
 msgid ""
 "Your profile will also be published in the global friendica directories "
 "(e.g. <a href=\"%s\">%s</a>)."
 msgstr "Dein Profil wird auch in den globalen Friendica Verzeichnissen (z.B. <a href=\"%s\">%s</a>) veröffentlicht werden."
 
-#: src/Module/Settings/Account.php:555
+#: src/Module/Settings/Account.php:560
 msgid "Account Settings"
 msgstr "Kontoeinstellungen"
 
-#: src/Module/Settings/Account.php:556
+#: src/Module/Settings/Account.php:561
 #, php-format
 msgid "Your Identity Address is <strong>'%s'</strong> or '%s'."
 msgstr "Die Adresse deines Profils lautet <strong>'%s'</strong> oder '%s'."
 
-#: src/Module/Settings/Account.php:563
+#: src/Module/Settings/Account.php:568
 msgid "Password Settings"
 msgstr "Passwort-Einstellungen"
 
-#: src/Module/Settings/Account.php:565
+#: src/Module/Settings/Account.php:570
 msgid "Leave password fields blank unless changing"
 msgstr "Lass die Passwort-Felder leer, außer du willst das Passwort ändern"
 
-#: src/Module/Settings/Account.php:567
+#: src/Module/Settings/Account.php:572
 msgid "Password:"
 msgstr "Passwort:"
 
-#: src/Module/Settings/Account.php:567
+#: src/Module/Settings/Account.php:572
 msgid "Your current password to confirm the changes of the email address"
 msgstr "Dein aktuelles Passwort um die Änderungen deiner E-Mail Adresse zu bestätigen"
 
-#: src/Module/Settings/Account.php:570
+#: src/Module/Settings/Account.php:575
 msgid "Delete OpenID URL"
 msgstr "OpenID URL löschen"
 
-#: src/Module/Settings/Account.php:572
+#: src/Module/Settings/Account.php:577
 msgid "Basic Settings"
 msgstr "Grundeinstellungen"
 
-#: src/Module/Settings/Account.php:573
-#: src/Module/Settings/Profile/Index.php:283
+#: src/Module/Settings/Account.php:578
+#: src/Module/Settings/Profile/Index.php:288
 msgid "Display name:"
 msgstr "Anzeigename:"
 
-#: src/Module/Settings/Account.php:574
+#: src/Module/Settings/Account.php:579
 msgid "Email Address:"
 msgstr "E-Mail-Adresse:"
 
-#: src/Module/Settings/Account.php:575
+#: src/Module/Settings/Account.php:580
 msgid "Your Timezone:"
 msgstr "Deine Zeitzone:"
 
-#: src/Module/Settings/Account.php:576
+#: src/Module/Settings/Account.php:581
 msgid "Your Language:"
 msgstr "Deine Sprache:"
 
-#: src/Module/Settings/Account.php:576
+#: src/Module/Settings/Account.php:581
 msgid ""
 "Set the language we use to show you friendica interface and to send you "
 "emails"
 msgstr "Wähle die Sprache, in der wir dir die Friendica-Oberfläche präsentieren sollen und dir E-Mail schicken"
 
-#: src/Module/Settings/Account.php:577
+#: src/Module/Settings/Account.php:582
 msgid "Default Post Location:"
 msgstr "Standardstandort:"
 
-#: src/Module/Settings/Account.php:578
+#: src/Module/Settings/Account.php:583
 msgid "Use Browser Location:"
 msgstr "Standort des Browsers verwenden:"
 
-#: src/Module/Settings/Account.php:580
+#: src/Module/Settings/Account.php:585
 msgid "Security and Privacy Settings"
 msgstr "Sicherheits- und Privatsphäre-Einstellungen"
 
-#: src/Module/Settings/Account.php:582
+#: src/Module/Settings/Account.php:587
 msgid "Maximum Friend Requests/Day:"
 msgstr "Maximale Anzahl von Kontaktanfragen/Tag:"
 
-#: src/Module/Settings/Account.php:582
+#: src/Module/Settings/Account.php:587
 msgid "(to prevent spam abuse)"
 msgstr "(um SPAM zu vermeiden)"
 
-#: src/Module/Settings/Account.php:584
+#: src/Module/Settings/Account.php:589
 msgid "Allow your profile to be searchable globally?"
 msgstr "Darf dein Profil bei Suchanfragen gefunden werden?"
 
-#: src/Module/Settings/Account.php:584
+#: src/Module/Settings/Account.php:589
 msgid ""
 "Activate this setting if you want others to easily find and follow you. Your"
 " profile will be searchable on remote systems. This setting also determines "
@@ -9986,43 +9991,43 @@ msgid ""
 "indexed or not."
 msgstr "Aktiviere diese Einstellung, wenn du von anderen einfach gefunden und gefolgt werden möchtest. Dein Profil wird dann auf anderen Systemen leicht durchsuchbar. Außerdem regelt diese Einstellung ob Friendica Suchmaschinen mitteilen soll, ob dein Profil indiziert werden soll oder nicht."
 
-#: src/Module/Settings/Account.php:585
+#: src/Module/Settings/Account.php:590
 msgid "Hide your contact/friend list from viewers of your profile?"
 msgstr "Liste der Kontakte vor Betrachtern des Profil verbergen?"
 
-#: src/Module/Settings/Account.php:585
+#: src/Module/Settings/Account.php:590
 msgid ""
 "A list of your contacts is displayed on your profile page. Activate this "
 "option to disable the display of your contact list."
 msgstr "Auf deiner Profilseite wird eine Liste deiner Kontakte angezeigt. Aktiviere diese Option wenn du das nicht möchtest."
 
-#: src/Module/Settings/Account.php:586
+#: src/Module/Settings/Account.php:591
 msgid "Hide your public content from anonymous viewers"
 msgstr "Verbirg die öffentliche Inhalte vor anonymen Besuchern"
 
-#: src/Module/Settings/Account.php:586
+#: src/Module/Settings/Account.php:591
 msgid ""
 "Anonymous visitors will only see your basic profile details. Your public "
 "posts and replies will still be freely accessible on the remote servers of "
 "your followers and through relays."
 msgstr "Anonyme Besucher deines Profils werden nur grundlegende Informationen angezeigt bekommen. Deine öffentlichen Beiträge und Kommentare werden weiterhin frei zugänglich auf den Servern deiner Kontakte und über Relays sein."
 
-#: src/Module/Settings/Account.php:587
+#: src/Module/Settings/Account.php:592
 msgid "Make public posts unlisted"
 msgstr "Öffentliche Beiträge nicht listen"
 
-#: src/Module/Settings/Account.php:587
+#: src/Module/Settings/Account.php:592
 msgid ""
 "Your public posts will not appear on the community pages or in search "
 "results, nor be sent to relay servers. However they can still appear on "
 "public feeds on remote servers."
 msgstr "Deine öffentlichen Beiträge werden nicht auf der Gemeinschaftsseite oder in den Suchergebnissen erscheinen, außerdem werden sie nicht an Relay-Server geschickt. Sie werden aber weiterhin in allen öffentlichen Feeds, auch auf entfernten Servern, erscheinen."
 
-#: src/Module/Settings/Account.php:588
+#: src/Module/Settings/Account.php:593
 msgid "Make all posted pictures accessible"
 msgstr "Alle geposteten Bilder zugreifbar machen"
 
-#: src/Module/Settings/Account.php:588
+#: src/Module/Settings/Account.php:593
 msgid ""
 "This option makes every posted picture accessible via the direct link. This "
 "is a workaround for the problem that most other networks can't handle "
@@ -10030,227 +10035,227 @@ msgid ""
 "public on your photo albums though."
 msgstr "Diese Option macht jedes veröffentlichte Bild über den direkten Link zugänglich. Dies ist eine Problemumgehung für das Problem, dass die meisten anderen Netzwerke keine Berechtigungen für Bilder verarbeiten können. Nicht öffentliche Bilder sind in Ihren Fotoalben jedoch immer noch nicht für die Öffentlichkeit sichtbar."
 
-#: src/Module/Settings/Account.php:589
+#: src/Module/Settings/Account.php:594
 msgid "Allow friends to post to your profile page?"
 msgstr "Dürfen deine Kontakte auf deine Pinnwand schreiben?"
 
-#: src/Module/Settings/Account.php:589
+#: src/Module/Settings/Account.php:594
 msgid ""
 "Your contacts may write posts on your profile wall. These posts will be "
 "distributed to your contacts"
 msgstr "Deine Kontakte können Beiträge auf deiner Pinnwand hinterlassen. Diese werden an deine Kontakte verteilt."
 
-#: src/Module/Settings/Account.php:590
+#: src/Module/Settings/Account.php:595
 msgid "Allow friends to tag your posts?"
 msgstr "Dürfen deine Kontakte deine Beiträge mit Schlagwörtern versehen?"
 
-#: src/Module/Settings/Account.php:590
+#: src/Module/Settings/Account.php:595
 msgid "Your contacts can add additional tags to your posts."
 msgstr "Deine Kontakte dürfen deine Beiträge mit zusätzlichen Schlagworten versehen."
 
-#: src/Module/Settings/Account.php:591
+#: src/Module/Settings/Account.php:596
 msgid "Default privacy circle for new contacts"
 msgstr "Voreingestellter Circle für neue Kontakte"
 
-#: src/Module/Settings/Account.php:592
+#: src/Module/Settings/Account.php:597
 msgid "Default privacy circle for new group contacts"
 msgstr "Voreingestellter Circle für neue Gruppenkontakte"
 
-#: src/Module/Settings/Account.php:593
+#: src/Module/Settings/Account.php:598
 msgid "Default Post Permissions"
 msgstr "Standard-Zugriffsrechte für Beiträge"
 
-#: src/Module/Settings/Account.php:597
+#: src/Module/Settings/Account.php:602
 msgid "Expiration settings"
 msgstr "Verfalls-Einstellungen"
 
-#: src/Module/Settings/Account.php:598
+#: src/Module/Settings/Account.php:603
 msgid "Automatically expire posts after this many days:"
 msgstr "Beiträge verfallen automatisch nach dieser Anzahl von Tagen:"
 
-#: src/Module/Settings/Account.php:598
+#: src/Module/Settings/Account.php:603
 msgid "If empty, posts will not expire. Expired posts will be deleted"
 msgstr "Wenn leer, verfallen Beiträge nie automatisch. Verfallene Beiträge werden gelöscht."
 
-#: src/Module/Settings/Account.php:599
+#: src/Module/Settings/Account.php:604
 msgid "Expire posts"
 msgstr "Beiträge verfallen lassen"
 
-#: src/Module/Settings/Account.php:599
+#: src/Module/Settings/Account.php:604
 msgid "When activated, posts and comments will be expired."
 msgstr "Ist dies aktiviert, werden Beiträge und Kommentare verfallen."
 
-#: src/Module/Settings/Account.php:600
+#: src/Module/Settings/Account.php:605
 msgid "Expire personal notes"
 msgstr "Persönliche Notizen verfallen lassen"
 
-#: src/Module/Settings/Account.php:600
+#: src/Module/Settings/Account.php:605
 msgid ""
 "When activated, the personal notes on your profile page will be expired."
 msgstr "Ist dies aktiviert, werden persönliche Notizen auf deiner Pinnwand verfallen."
 
-#: src/Module/Settings/Account.php:601
+#: src/Module/Settings/Account.php:606
 msgid "Expire starred posts"
 msgstr "Markierte Beiträge verfallen lassen"
 
-#: src/Module/Settings/Account.php:601
+#: src/Module/Settings/Account.php:606
 msgid ""
 "Starring posts keeps them from being expired. That behaviour is overwritten "
 "by this setting."
 msgstr "Markierte Beiträge verfallen eigentlich nicht. Mit dieser Option kannst du sie verfallen lassen."
 
-#: src/Module/Settings/Account.php:602
+#: src/Module/Settings/Account.php:607
 msgid "Only expire posts by others"
 msgstr "Nur Beiträge anderer verfallen lassen."
 
-#: src/Module/Settings/Account.php:602
+#: src/Module/Settings/Account.php:607
 msgid ""
 "When activated, your own posts never expire. Then the settings above are "
 "only valid for posts you received."
 msgstr "Wenn aktiviert werden deine eigenen Beiträge niemals verfallen. Die obigen Einstellungen betreffen dann ausschließlich die Beiträge von anderen Accounts."
 
-#: src/Module/Settings/Account.php:605
+#: src/Module/Settings/Account.php:610
 msgid "Notification Settings"
 msgstr "Benachrichtigungseinstellungen"
 
-#: src/Module/Settings/Account.php:606
+#: src/Module/Settings/Account.php:611
 msgid "Send a notification email when:"
 msgstr "Benachrichtigungs-E-Mail senden, wenn:"
 
-#: src/Module/Settings/Account.php:607
+#: src/Module/Settings/Account.php:612
 msgid "You receive an introduction"
 msgstr "– du eine Kontaktanfrage erhältst"
 
-#: src/Module/Settings/Account.php:608
+#: src/Module/Settings/Account.php:613
 msgid "Your introductions are confirmed"
 msgstr "– eine Deiner Kontaktanfragen akzeptiert wurde"
 
-#: src/Module/Settings/Account.php:609
+#: src/Module/Settings/Account.php:614
 msgid "Someone writes on your profile wall"
 msgstr "– jemand etwas auf Deine Pinnwand schreibt"
 
-#: src/Module/Settings/Account.php:610
+#: src/Module/Settings/Account.php:615
 msgid "Someone writes a followup comment"
 msgstr "– jemand auch einen Kommentar verfasst"
 
-#: src/Module/Settings/Account.php:611
+#: src/Module/Settings/Account.php:616
 msgid "You receive a private message"
 msgstr "– du eine private Nachricht erhältst"
 
-#: src/Module/Settings/Account.php:612
+#: src/Module/Settings/Account.php:617
 msgid "You receive a friend suggestion"
 msgstr "– du eine Empfehlung erhältst"
 
-#: src/Module/Settings/Account.php:613
+#: src/Module/Settings/Account.php:618
 msgid "You are tagged in a post"
 msgstr "– du in einem Beitrag erwähnt wirst"
 
-#: src/Module/Settings/Account.php:615
+#: src/Module/Settings/Account.php:620
 msgid "Create a desktop notification when:"
 msgstr "Benachrichtigungen anzeigen wenn:"
 
-#: src/Module/Settings/Account.php:616
+#: src/Module/Settings/Account.php:621
 msgid "Someone tagged you"
 msgstr "Dich jemand erwähnt"
 
-#: src/Module/Settings/Account.php:617
+#: src/Module/Settings/Account.php:622
 msgid "Someone directly commented on your post"
 msgstr "Jemand einen Beitrag von dir kommentiert hat"
 
-#: src/Module/Settings/Account.php:618
+#: src/Module/Settings/Account.php:623
 msgid "Someone liked your content"
 msgstr "Einer deiner Beiträge gemocht wurde"
 
-#: src/Module/Settings/Account.php:618 src/Module/Settings/Account.php:619
+#: src/Module/Settings/Account.php:623 src/Module/Settings/Account.php:624
 msgid "Can only be enabled, when the direct comment notification is enabled."
 msgstr "Kann nur aktiviert werden, wenn die \"Jemand einen Beitrag von dir kommentiert hat  \" Option eingeschaltet ist."
 
-#: src/Module/Settings/Account.php:619
+#: src/Module/Settings/Account.php:624
 msgid "Someone shared your content"
 msgstr "Einer deiner Beiträge geteilt wurde"
 
-#: src/Module/Settings/Account.php:620
+#: src/Module/Settings/Account.php:625
 msgid "Someone commented in your thread"
 msgstr "Jemand hat in deiner Unterhaltung kommentiert"
 
-#: src/Module/Settings/Account.php:621
+#: src/Module/Settings/Account.php:626
 msgid "Someone commented in a thread where you commented"
 msgstr "Jemand in einer Unterhaltung kommentiert hat, in der du auch kommentiert hast"
 
-#: src/Module/Settings/Account.php:622
+#: src/Module/Settings/Account.php:627
 msgid "Someone commented in a thread where you interacted"
 msgstr "Jemand kommentierte in einer Unterhaltung mit der du interagiert hast"
 
-#: src/Module/Settings/Account.php:624
+#: src/Module/Settings/Account.php:629
 msgid "Activate desktop notifications"
 msgstr "Desktop-Benachrichtigungen einschalten"
 
-#: src/Module/Settings/Account.php:624
+#: src/Module/Settings/Account.php:629
 msgid "Show desktop popup on new notifications"
 msgstr "Desktop-Benachrichtigungen einschalten"
 
-#: src/Module/Settings/Account.php:628
+#: src/Module/Settings/Account.php:633
 msgid "Text-only notification emails"
 msgstr "Benachrichtigungs-E-Mail als Rein-Text."
 
-#: src/Module/Settings/Account.php:630
+#: src/Module/Settings/Account.php:635
 msgid "Send text only notification emails, without the html part"
 msgstr "Sende Benachrichtigungs-E-Mail als Rein-Text - ohne HTML-Teil"
 
-#: src/Module/Settings/Account.php:634
+#: src/Module/Settings/Account.php:639
 msgid "Show detailled notifications"
 msgstr "Detaillierte Benachrichtigungen anzeigen"
 
-#: src/Module/Settings/Account.php:636
+#: src/Module/Settings/Account.php:641
 msgid ""
 "Per default, notifications are condensed to a single notification per item. "
 "When enabled every notification is displayed."
 msgstr "Normalerweise werden alle Benachrichtigungen zu einem Thema in einer einzigen Benachrichtigung zusammengefasst. Wenn diese Option aktiviert ist, wird jede Benachrichtigung einzeln angezeigt."
 
-#: src/Module/Settings/Account.php:640
+#: src/Module/Settings/Account.php:645
 msgid "Show notifications of ignored contacts"
 msgstr "Zeige Benachrichtigungen von ignorierten Kontakten"
 
-#: src/Module/Settings/Account.php:642
+#: src/Module/Settings/Account.php:647
 msgid ""
 "You don't see posts from ignored contacts. But you still see their comments."
 " This setting controls if you want to still receive regular notifications "
 "that are caused by ignored contacts or not."
 msgstr "Beiträge von ignorierten Kontakten werden dir nicht angezeigt. Aber du siehst immer noch ihre Kommentare. Diese Einstellung legt fest, ob du dazu weiterhin Benachrichtigungen erhalten willst oder ob diese einfach verworfen werden sollen."
 
-#: src/Module/Settings/Account.php:645
+#: src/Module/Settings/Account.php:650
 msgid "Advanced Account/Page Type Settings"
 msgstr "Erweiterte Konto-/Seitentyp-Einstellungen"
 
-#: src/Module/Settings/Account.php:646
+#: src/Module/Settings/Account.php:651
 msgid "Change the behaviour of this account for special situations"
 msgstr "Verhalten dieses Kontos in bestimmten Situationen:"
 
-#: src/Module/Settings/Account.php:649
+#: src/Module/Settings/Account.php:654
 msgid "Import Contacts"
 msgstr "Kontakte Importieren"
 
-#: src/Module/Settings/Account.php:650
+#: src/Module/Settings/Account.php:655
 msgid ""
 "Upload a CSV file that contains the handle of your followed accounts in the "
 "first column you exported from the old account."
 msgstr "Lade eine CSV Datei hoch, die das Handle der Kontakte deines alten Nutzerkontos in der ersten Spalte enthält."
 
-#: src/Module/Settings/Account.php:651
+#: src/Module/Settings/Account.php:656
 msgid "Upload File"
 msgstr "Datei hochladen"
 
-#: src/Module/Settings/Account.php:654
+#: src/Module/Settings/Account.php:659
 msgid "Relocate"
 msgstr "Umziehen"
 
-#: src/Module/Settings/Account.php:655
+#: src/Module/Settings/Account.php:660
 msgid ""
 "If you have moved this profile from another server, and some of your "
 "contacts don't receive your updates, try pushing this button."
 msgstr "Wenn du dein Profil von einem anderen Server umgezogen hast und einige deiner Kontakte deine Beiträge nicht erhalten, verwende diesen Button."
 
-#: src/Module/Settings/Account.php:656
+#: src/Module/Settings/Account.php:661
 msgid "Resend relocate message to contacts"
 msgstr "Umzugsbenachrichtigung erneut an Kontakte senden"
 
@@ -10902,81 +10907,81 @@ msgstr "Autorisierung entziehen"
 msgid "Display Name is required."
 msgstr "Der Anzeigename ist erforderlich."
 
-#: src/Module/Settings/Profile/Index.php:167
+#: src/Module/Settings/Profile/Index.php:170
 msgid "Profile couldn't be updated."
 msgstr "Das Profil konnte nicht aktualisiert werden."
 
-#: src/Module/Settings/Profile/Index.php:205
-#: src/Module/Settings/Profile/Index.php:226
+#: src/Module/Settings/Profile/Index.php:210
+#: src/Module/Settings/Profile/Index.php:231
 msgid "Label:"
 msgstr "Bezeichnung:"
 
-#: src/Module/Settings/Profile/Index.php:206
-#: src/Module/Settings/Profile/Index.php:227
+#: src/Module/Settings/Profile/Index.php:211
+#: src/Module/Settings/Profile/Index.php:232
 msgid "Value:"
 msgstr "Wert:"
 
-#: src/Module/Settings/Profile/Index.php:217
-#: src/Module/Settings/Profile/Index.php:238
+#: src/Module/Settings/Profile/Index.php:222
+#: src/Module/Settings/Profile/Index.php:243
 msgid "Field Permissions"
 msgstr "Berechtigungen des Felds"
 
-#: src/Module/Settings/Profile/Index.php:218
-#: src/Module/Settings/Profile/Index.php:239
+#: src/Module/Settings/Profile/Index.php:223
+#: src/Module/Settings/Profile/Index.php:244
 msgid "(click to open/close)"
 msgstr "(klicke zum Öffnen/Schließen)"
 
-#: src/Module/Settings/Profile/Index.php:224
+#: src/Module/Settings/Profile/Index.php:229
 msgid "Add a new profile field"
 msgstr "Neues Profilfeld hinzufügen"
 
-#: src/Module/Settings/Profile/Index.php:247
+#: src/Module/Settings/Profile/Index.php:252
 msgid ""
 "The homepage is verified. A rel=\"me\" link back to your Friendica profile "
 "page was found on the homepage."
 msgstr "Die Homepage ist verifiziert. Ein rel=\"me\" Link zurück auf dein Friendica Profil wurde gefunden."
 
-#: src/Module/Settings/Profile/Index.php:249
+#: src/Module/Settings/Profile/Index.php:254
 #, php-format
 msgid ""
 "To verify your homepage, add a rel=\"me\" link to it, pointing to your "
 "profile URL (%s)."
 msgstr "Um deine Homepage zu verifizieren, füge einen rel=\"me\" Link auf der Seite hinzu, der auf dein Profil mit der URL (%s) verweist."
 
-#: src/Module/Settings/Profile/Index.php:255
+#: src/Module/Settings/Profile/Index.php:260
 msgid "Profile Actions"
 msgstr "Profilaktionen"
 
-#: src/Module/Settings/Profile/Index.php:256
+#: src/Module/Settings/Profile/Index.php:261
 msgid "Edit Profile Details"
 msgstr "Profil bearbeiten"
 
-#: src/Module/Settings/Profile/Index.php:258
+#: src/Module/Settings/Profile/Index.php:263
 msgid "Change Profile Photo"
 msgstr "Profilbild ändern"
 
-#: src/Module/Settings/Profile/Index.php:261
+#: src/Module/Settings/Profile/Index.php:266
 msgid "Profile picture"
 msgstr "Profilbild"
 
-#: src/Module/Settings/Profile/Index.php:262
+#: src/Module/Settings/Profile/Index.php:267
 msgid "Location"
 msgstr "Wohnort"
 
-#: src/Module/Settings/Profile/Index.php:263 src/Util/Temporal.php:97
+#: src/Module/Settings/Profile/Index.php:268 src/Util/Temporal.php:97
 #: src/Util/Temporal.php:99
 msgid "Miscellaneous"
 msgstr "Verschiedenes"
 
-#: src/Module/Settings/Profile/Index.php:264
+#: src/Module/Settings/Profile/Index.php:269
 msgid "Custom Profile Fields"
 msgstr "Benutzerdefinierte Profilfelder"
 
-#: src/Module/Settings/Profile/Index.php:265 src/Module/Welcome.php:58
+#: src/Module/Settings/Profile/Index.php:270 src/Module/Welcome.php:58
 msgid "Upload Profile Photo"
 msgstr "Profilbild hochladen"
 
-#: src/Module/Settings/Profile/Index.php:266
+#: src/Module/Settings/Profile/Index.php:271
 #, php-format
 msgid ""
 "<p>Custom fields appear on <a href=\"%s\">your profile page</a>.</p>\n"
@@ -10986,61 +10991,61 @@ msgid ""
 "\t\t\t\t<p>Non-public fields can only be seen by the selected Friendica contacts or the Friendica contacts in the selected circles.</p>"
 msgstr "<p>Die benutzerdefinierten Felder erscheinen auf <a href=\"%s\">deiner Profil-Seite</a></p>.\n\n<p>BBCode kann verwendet werden</p>\n<p>Die Reihenfolge der Felder kann durch Ziehen des Feld-Titels mit der Maus angepasst werden.</p>\n<p>Wird die Bezeichnung des Felds geleert, wird das Feld beim Speichern aus dem Profil entfernt.</p>\n<p>Nicht öffentliche Felder können nur von den ausgewählten Friendica Circles gesehen werden.</p>"
 
-#: src/Module/Settings/Profile/Index.php:286
+#: src/Module/Settings/Profile/Index.php:291
 msgid "Street Address:"
 msgstr "Adresse:"
 
-#: src/Module/Settings/Profile/Index.php:287
+#: src/Module/Settings/Profile/Index.php:292
 msgid "Locality/City:"
 msgstr "Wohnort:"
 
-#: src/Module/Settings/Profile/Index.php:288
+#: src/Module/Settings/Profile/Index.php:293
 msgid "Region/State:"
 msgstr "Region/Bundesstaat:"
 
-#: src/Module/Settings/Profile/Index.php:289
+#: src/Module/Settings/Profile/Index.php:294
 msgid "Postal/Zip Code:"
 msgstr "Postleitzahl:"
 
-#: src/Module/Settings/Profile/Index.php:290
+#: src/Module/Settings/Profile/Index.php:295
 msgid "Country:"
 msgstr "Land:"
 
-#: src/Module/Settings/Profile/Index.php:292
+#: src/Module/Settings/Profile/Index.php:297
 msgid "XMPP (Jabber) address:"
 msgstr "XMPP (Jabber) Adresse"
 
-#: src/Module/Settings/Profile/Index.php:292
+#: src/Module/Settings/Profile/Index.php:297
 msgid ""
 "The XMPP address will be published so that people can follow you there."
 msgstr "Die XMPP Adresse wird veröffentlicht, damit man dort mit dir kommunizieren kann."
 
-#: src/Module/Settings/Profile/Index.php:293
+#: src/Module/Settings/Profile/Index.php:298
 msgid "Matrix (Element) address:"
 msgstr "Matrix (Element) Adresse:"
 
-#: src/Module/Settings/Profile/Index.php:293
+#: src/Module/Settings/Profile/Index.php:298
 msgid ""
 "The Matrix address will be published so that people can follow you there."
 msgstr "Die Matrix Adresse wird veröffentlicht, damit man dort mit dir kommunizieren kann."
 
-#: src/Module/Settings/Profile/Index.php:294
+#: src/Module/Settings/Profile/Index.php:299
 msgid "Homepage URL:"
 msgstr "Adresse der Homepage:"
 
-#: src/Module/Settings/Profile/Index.php:295
+#: src/Module/Settings/Profile/Index.php:300
 msgid "Public Keywords:"
 msgstr "Öffentliche Schlüsselwörter:"
 
-#: src/Module/Settings/Profile/Index.php:295
+#: src/Module/Settings/Profile/Index.php:300
 msgid "(Used for suggesting potential friends, can be seen by others)"
 msgstr "(Wird verwendet, um potentielle Kontakte zu finden, kann von Kontakten eingesehen werden)"
 
-#: src/Module/Settings/Profile/Index.php:296
+#: src/Module/Settings/Profile/Index.php:301
 msgid "Private Keywords:"
 msgstr "Private Schlüsselwörter:"
 
-#: src/Module/Settings/Profile/Index.php:296
+#: src/Module/Settings/Profile/Index.php:301
 msgid "(Used for searching profiles, never shown to others)"
 msgstr "(Wird für die Suche nach Profilen verwendet und niemals veröffentlicht)"
 
@@ -12629,7 +12634,7 @@ msgstr "Reagierte mit %s von: %s"
 msgid "Quote shared by: %s"
 msgstr "Zitat geteilt von: %s"
 
-#: src/Protocol/ActivityPub/Receiver.php:568
+#: src/Protocol/ActivityPub/Receiver.php:571
 msgid "Chat"
 msgstr "Chat"
 
