@@ -954,6 +954,7 @@ $a->strings['Love/romance'] = 'Amour / Romance';
 $a->strings['Work/employment'] = 'Activité professionnelle / Occupation';
 $a->strings['School/education'] = 'Études / Formation';
 $a->strings['Contact information and Social Networks'] = 'Coordonnées / Réseaux sociaux';
+$a->strings['Responsible account: %s'] = 'Compte responsable : %s';
 $a->strings['SERIOUS ERROR: Generation of security keys failed.'] = 'ERREUR FATALE : La génération des clés de sécurité a échoué.';
 $a->strings['Login failed'] = 'Échec de l\'identification';
 $a->strings['Not enough information to authenticate'] = 'Pas assez d\'informations pour s\'identifier';
