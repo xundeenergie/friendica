@@ -56,7 +56,7 @@ use Friendica\Database\DBA;
 
 // This file is required several times during the test in DbaDefinition which justifies this condition
 if (!defined('DB_UPDATE_VERSION')) {
-	define('DB_UPDATE_VERSION', 1566);
+	define('DB_UPDATE_VERSION', 1567);
 }
 
 return [
@@ -875,6 +875,7 @@ return [
 			"push" => ["type" => "boolean", "comment" => "Is the entry pushed or have pulled it?"],
 			"trust" => ["type" => "boolean", "comment" => "Do we trust this entry?"],
 			"wid" => ["type" => "int unsigned", "foreign" => ["workerqueue" => "id"], "comment" => "Workerqueue id"],
+			"retrial" => ["type" => "tinyint unsigned", "default" => "0", "comment" => "Retrial counter"],
 		],
 		"indexes" => [
 			"PRIMARY" => ["id"],

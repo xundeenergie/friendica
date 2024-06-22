@@ -92,9 +92,6 @@ class Cron
 			Tag::setLocalTrendingHashtags(24, 20);
 			Tag::setGlobalTrendingHashtags(24, 20);
 
-			// Remove old pending posts from the queue
-			Queue::clear();
-
 			// Process all unprocessed entries
 			Queue::processAll();
 
