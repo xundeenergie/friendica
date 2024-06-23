@@ -1032,7 +1032,7 @@ class Item
 			}
 
 			$this->emailer->send(new ItemCCEMail(
-				$this->app,
+				$this->userSession,
 				$this->l10n,
 				$this->baseURL,
 				$post,

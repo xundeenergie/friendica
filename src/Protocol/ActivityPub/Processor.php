@@ -873,6 +873,9 @@ class Processor
 			} elseif ($uri_id = ItemURI::getIdByURI($activity['quote-url'], false)) {
 				Logger::info('Quote was not fetched but the uri-id existed', ['guid' => $item['guid'], 'uri-id' => $item['uri-id'], 'quote' => $activity['quote-url'], 'uri-id' => $uri_id]);
 				$item['quote-uri-id'] = $uri_id;
+			} elseif (Queue::exists($activity['quote-url'], 'as:Create')) {
+				Logger::info('Quote is queued but not processed yet', ['guid' => $item['guid'], 'uri-id' => $item['uri-id'], 'quote' => $activity['quote-url'], 'uri-id' => $uri_id]);
+				$item['quote-uri-id'] = ItemURI::getIdByURI($activity['quote-url']);
 			} else {
 				Logger::info('Quote was not fetched', ['guid' => $item['guid'], 'uri-id' => $item['uri-id'], 'quote' => $activity['quote-url']]);
 			}
