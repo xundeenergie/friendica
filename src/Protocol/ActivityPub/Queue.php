@@ -250,15 +250,34 @@ class Queue
 	 */
 	public static function processAll()
 	{
-		$entries = DBA::select('inbox-entry', ['id', 'type', 'object-type', 'object-id', 'in-reply-to-id'], ["`trust` AND `wid` IS NULL"], ['order' => ['id' => true]]);
+		$expired_days = max(1, DI::config()->get('system', 'queue_expired_days'));
+		$max_retrial  = max(3, DI::config()->get('system', 'queue_retrial'));
+
+		$entries = DBA::select('inbox-entry', ['id', 'type', 'object-type', 'object-id', 'in-reply-to-id', 'received', 'trust', 'retrial'], ["`wid` IS NULL"], ['order' => ['retrial', 'id' => true]]);
 		while ($entry = DBA::fetch($entries)) {
-			if (!self::isProcessable($entry['id'])) {
+			// We delete all entries that aren't associated with a worker entry after a given amount of days or retrials
+			if (($entry['retrial'] > $max_retrial) || ($entry['received'] < DateTimeFormat::utc('now - ' . $expired_days . ' days'))) {
+				self::deleteById($entry['id']);
+			}
+			if (!$entry['trust'] || !self::isProcessable($entry['id'])) {
 				continue;
 			}
 			Logger::debug('Process leftover entry', $entry);
 			self::process($entry['id'], false);
 		}
 		DBA::close($entries);
+
+		// Optimizing this table only last seconds
+		if (DI::config()->get('system', 'optimize_tables')) {
+			Logger::info('Optimize start');
+			DBA::optimizeTable('inbox-entry');
+			Logger::info('Optimize end');
+		}
+	}
+
+	private static function retrial(int $id)
+	{
+		DBA::update('inbox-entry', ["`retrial` = `retrial` + 1"], ['id' => $id]);
 	}
 
 	public static function isProcessable(int $id): bool
@@ -286,14 +305,16 @@ class Queue
 		}
 
 		if (!empty($entry['object-id']) && !empty($entry['in-reply-to-id']) && ($entry['object-id'] != $entry['in-reply-to-id'])) {
-		 	if (DBA::exists('inbox-entry', ['object-id' => $entry['in-reply-to-id']])) {
+			if (DBA::exists('inbox-entry', ['object-id' => $entry['in-reply-to-id']])) {
 				// This entry belongs to some other entry that should be processed first
+				self::retrial($id);
 				return false;
 			}
 			if (!Post::exists(['uri' => $entry['in-reply-to-id']])) {
 				// This entry belongs to some other entry that need to be fetched first
 				if (Fetch::hasWorker($entry['in-reply-to-id'])) {
 					Logger::debug('Fetching of the activity is already queued', ['id' => $entry['activity-id'], 'reply-to-id' => $entry['in-reply-to-id']]);
+					self::retrial($id);
 					return false;
 				}
 				Fetch::add($entry['in-reply-to-id']);
@@ -302,34 +323,12 @@ class Queue
 				$wid = Worker::add(Worker::PRIORITY_HIGH, 'FetchMissingActivity', $entry['in-reply-to-id'], $activity, '', Receiver::COMPLETION_ASYNC);
 				Fetch::setWorkerId($entry['in-reply-to-id'], $wid);
 				Logger::debug('Fetch missing activity', ['wid' => $wid, 'id' => $entry['activity-id'], 'reply-to-id' => $entry['in-reply-to-id']]);
+				self::retrial($id);
 				return false;
 			}
 		}
 
 		return true;
-	}
-
-	/**
-	 * Clear old activities
-	 *
-	 * @return void
-	 */
-	public static function clear()
-	{
-		// We delete all entries that aren't associated with a worker entry after seven days.
-		// The other entries are deleted when the worker deferred for too long.
-		$entries = DBA::select('inbox-entry', ['id'], ["`wid` IS NULL AND `received` < ?", DateTimeFormat::utc('now - 7 days')]);
-		while ($entry = DBA::fetch($entries)) {
-			self::deleteById($entry['id']);
-		}
-		DBA::close($entries);
-
-		// Optimizing this table only last seconds
-		if (DI::config()->get('system', 'optimize_tables')) {
-			Logger::info('Optimize start');
-			DBA::optimizeTable('inbox-entry');
-			Logger::info('Optimize end');
-		}
 	}
 
 	/**

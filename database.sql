@@ -1,6 +1,6 @@
 -- ------------------------------------------
 -- Friendica 2024.06-rc (Yellow Archangel)
--- DB_UPDATE_VERSION 1566
+-- DB_UPDATE_VERSION 1567
 -- ------------------------------------------
 
 
@@ -825,6 +825,7 @@ CREATE TABLE IF NOT EXISTS `inbox-entry` (
 	`push` boolean COMMENT 'Is the entry pushed or have pulled it?',
 	`trust` boolean COMMENT 'Do we trust this entry?',
 	`wid` int unsigned COMMENT 'Workerqueue id',
+	`retrial` tinyint unsigned DEFAULT 0 COMMENT 'Retrial counter',
 	 PRIMARY KEY(`id`),
 	 UNIQUE INDEX `activity-id` (`activity-id`),
 	 INDEX `object-id` (`object-id`),

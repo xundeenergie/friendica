@@ -478,6 +478,14 @@ return [
 		// Enable internal timings to help optimize code. Needed for "rendertime" addon.
 		'profiler' => false,
 
+		// queue_expired_days (Integer)
+		// Number of days after unprocessed inbox items are removed from the queue. Minimum is 1.
+		'queue_expired_days' => 7,
+
+		// queue_retrial (Integer)
+		// Number of retrial after unprocessed inbox items are removed from the queue. Minimum is 3.
+		'queue_retrial' => 10,
+
 		// redis_host (String)
 		// Host name or the path to the Unix domain socket of the Redis daemon.
 		'redis_host' => '127.0.0.1',
