@@ -88,8 +88,8 @@ class Media
 		// "document" has got the lowest priority. So when the same file is both attached as document
 		// and embedded as picture then we only store the picture or replace the document
 		$found = DBA::selectFirst('post-media', ['type'], ['uri-id' => $media['uri-id'], 'url' => $media['url']]);
-		if (!$force && !empty($found) && (($found['type'] != self::DOCUMENT) || ($media['type'] == self::DOCUMENT))) {
-			Logger::info('Media already exists', ['uri-id' => $media['uri-id'], 'url' => $media['url']]);
+		if (!$force && !empty($found) && (!in_array($found['type'], [self::UNKNOWN, self::DOCUMENT]) || ($media['type'] == self::DOCUMENT))) {
+			Logger::info('Media already exists', ['uri-id' => $media['uri-id'], 'url' => $media['url'], 'found' => $found['type'], 'new' => $media['type']]);
 			return false;
 		}
 
