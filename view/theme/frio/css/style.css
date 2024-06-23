@@ -2804,14 +2804,15 @@ ul li:hover .contact-wrapper .contact-action-link:hover {
 }
 .event-wrapper .event-owner {
 	margin-bottom: 15px;
+	word-break: break-all;
 }
 .event-wrapper .event-owner img {
 	display: block;
 }
 .event-owner img {
-	margin-right: 5px;
 	height: 48px;
-	width: 48;
+	width: 48px;
+	max-width: 48px;
 	border-radius: 3px;
 }
 .event-wrapper .vevent {
