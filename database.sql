@@ -1,6 +1,6 @@
 -- ------------------------------------------
 -- Friendica 2024.06-rc (Yellow Archangel)
--- DB_UPDATE_VERSION 1567
+-- DB_UPDATE_VERSION 1568
 -- ------------------------------------------
 
 
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `gserver` (
 	`id` int unsigned NOT NULL auto_increment COMMENT 'sequential ID',
 	`url` varbinary(383) NOT NULL DEFAULT '' COMMENT '',
 	`nurl` varbinary(383) NOT NULL DEFAULT '' COMMENT '',
-	`version` varchar(255) NOT NULL DEFAULT '' COMMENT '',
+	`version` varchar(255) NOT NULL DEFAULT '' COMMENT 'The version of this server software.',
 	`site_name` varchar(255) NOT NULL DEFAULT '' COMMENT '',
 	`info` text COMMENT '',
 	`register_policy` tinyint NOT NULL DEFAULT 0 COMMENT '',
@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS `gserver` (
 	`noscrape` varbinary(383) NOT NULL DEFAULT '' COMMENT '',
 	`network` char(4) NOT NULL DEFAULT '' COMMENT '',
 	`protocol` tinyint unsigned COMMENT 'The protocol of the server',
-	`platform` varchar(255) NOT NULL DEFAULT '' COMMENT '',
+	`platform` varchar(255) NOT NULL DEFAULT '' COMMENT 'The canonical name of this server software.',
+	`repository` varbinary(383) COMMENT 'The url of the source code repository of this server software.',
+	`homepage` varbinary(383) COMMENT 'The url of the homepage of this server software.',
 	`relay-subscribe` boolean NOT NULL DEFAULT '0' COMMENT 'Has the server subscribed to the relay system',
 	`relay-scope` varchar(10) NOT NULL DEFAULT '' COMMENT 'The scope of messages that the server wants to get',
 	`detection-method` tinyint unsigned COMMENT 'Method that had been used to detect that server',
