@@ -56,7 +56,7 @@ use Friendica\Database\DBA;
 
 // This file is required several times during the test in DbaDefinition which justifies this condition
 if (!defined('DB_UPDATE_VERSION')) {
-	define('DB_UPDATE_VERSION', 1567);
+	define('DB_UPDATE_VERSION', 1568);
 }
 
 return [
@@ -67,7 +67,7 @@ return [
 			"id" => ["type" => "int unsigned", "not null" => "1", "extra" => "auto_increment", "primary" => "1", "comment" => "sequential ID"],
 			"url" => ["type" => "varbinary(383)", "not null" => "1", "default" => "", "comment" => ""],
 			"nurl" => ["type" => "varbinary(383)", "not null" => "1", "default" => "", "comment" => ""],
-			"version" => ["type" => "varchar(255)", "not null" => "1", "default" => "", "comment" => ""],
+			"version" => ["type" => "varchar(255)", "not null" => "1", "default" => "", "comment" => "The version of this server software."],
 			"site_name" => ["type" => "varchar(255)", "not null" => "1", "default" => "", "comment" => ""],
 			"info" => ["type" => "text", "comment" => ""],
 			"register_policy" => ["type" => "tinyint", "not null" => "1", "default" => "0", "comment" => ""],
@@ -84,7 +84,9 @@ return [
 			"noscrape" => ["type" => "varbinary(383)", "not null" => "1", "default" => "", "comment" => ""],
 			"network" => ["type" => "char(4)", "not null" => "1", "default" => "", "comment" => ""],
 			"protocol" => ["type" => "tinyint unsigned", "comment" => "The protocol of the server"],
-			"platform" => ["type" => "varchar(255)", "not null" => "1", "default" => "", "comment" => ""],
+			"platform" => ["type" => "varchar(255)", "not null" => "1", "default" => "", "comment" => "The canonical name of this server software."],
+			"repository" => ["type" => "varbinary(383)", "comment" => "The url of the source code repository of this server software."],
+			"homepage" => ["type" => "varbinary(383)", "comment" => "The url of the homepage of this server software."],
 			"relay-subscribe" => ["type" => "boolean", "not null" => "1", "default" => "0", "comment" => "Has the server subscribed to the relay system"],
 			"relay-scope" => ["type" => "varchar(10)", "not null" => "1", "default" => "", "comment" => "The scope of messages that the server wants to get"],
 			"detection-method" => ["type" => "tinyint unsigned", "comment" => "Method that had been used to detect that server"],
