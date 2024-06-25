@@ -56,7 +56,7 @@ use Friendica\Database\DBA;
 
 // This file is required several times during the test in DbaDefinition which justifies this condition
 if (!defined('DB_UPDATE_VERSION')) {
-	define('DB_UPDATE_VERSION', 1568);
+	define('DB_UPDATE_VERSION', 1569);
 }
 
 return [
@@ -1222,6 +1222,7 @@ return [
 			"parent-uri-id" => ["type" => "int unsigned", "foreign" => ["item-uri" => "id"], "comment" => "Id of the item-uri table that contains the parent uri"],
 			"thr-parent-id" => ["type" => "int unsigned", "foreign" => ["item-uri" => "id"], "comment" => "Id of the item-uri table that contains the thread parent uri"],
 			"external-id" => ["type" => "int unsigned", "foreign" => ["item-uri" => "id"], "comment" => "Id of the item-uri table entry that contains the external uri"],
+			"replies-id" => ["type" => "int unsigned", "foreign" => ["item-uri" => "id"], "comment" => "Id of the item-uri table entry that contains the endpoint for the replies collection"],
 			"created" => ["type" => "datetime", "not null" => "1", "default" => DBA::NULL_DATETIME, "comment" => "Creation timestamp."],
 			"edited" => ["type" => "datetime", "not null" => "1", "default" => DBA::NULL_DATETIME, "comment" => "Date of last edit (default is created)"],
 			"received" => ["type" => "datetime", "not null" => "1", "default" => DBA::NULL_DATETIME, "comment" => "datetime"],
@@ -1242,6 +1243,7 @@ return [
 			"parent-uri-id" => ["parent-uri-id"],
 			"thr-parent-id" => ["thr-parent-id"],
 			"external-id" => ["external-id"],
+			"replies-id" => ["replies-id"],
 			"owner-id" => ["owner-id"],
 			"author-id" => ["author-id"],
 			"causer-id" => ["causer-id"],
@@ -1581,6 +1583,7 @@ return [
 			"parent-uri-id" => ["type" => "int unsigned", "foreign" => ["item-uri" => "id"], "comment" => "Id of the item-uri table that contains the parent uri"],
 			"thr-parent-id" => ["type" => "int unsigned", "foreign" => ["item-uri" => "id"], "comment" => "Id of the item-uri table that contains the thread parent uri"],
 			"external-id" => ["type" => "int unsigned", "foreign" => ["item-uri" => "id"], "comment" => "Id of the item-uri table entry that contains the external uri"],
+			"replies-id" => ["type" => "int unsigned", "foreign" => ["item-uri" => "id"], "comment" => "Id of the item-uri table entry that contains the endpoint for the replies collection"],
 			"created" => ["type" => "datetime", "not null" => "1", "default" => DBA::NULL_DATETIME, "comment" => "Creation timestamp."],
 			"edited" => ["type" => "datetime", "not null" => "1", "default" => DBA::NULL_DATETIME, "comment" => "Date of last edit (default is created)"],
 			"received" => ["type" => "datetime", "not null" => "1", "default" => DBA::NULL_DATETIME, "comment" => "datetime"],
@@ -1615,6 +1618,7 @@ return [
 			"parent-uri-id" => ["parent-uri-id"],
 			"thr-parent-id" => ["thr-parent-id"],
 			"external-id" => ["external-id"],
+			"replies-id" => ["replies-id"],
 			"owner-id" => ["owner-id"],
 			"author-id" => ["author-id"],
 			"causer-id" => ["causer-id"],

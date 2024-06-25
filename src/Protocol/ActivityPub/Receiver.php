@@ -2070,6 +2070,7 @@ class Receiver
 		$object_data['generator'] = JsonLD::fetchElement($object, 'as:generator', 'as:name', '@type', 'as:Application');
 		$object_data['generator'] = JsonLD::fetchElement($object_data, 'generator', '@value');
 		$object_data['alternate-url'] = JsonLD::fetchElement($object, 'as:url', '@id');
+		$object_data['replies'] = JsonLD::fetchElement($object, 'as:replies', '@id');
 
 		// Special treatment for Hubzilla links
 		if (is_array($object_data['alternate-url'])) {

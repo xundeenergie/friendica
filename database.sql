@@ -1,6 +1,6 @@
 -- ------------------------------------------
 -- Friendica 2024.06-rc (Yellow Archangel)
--- DB_UPDATE_VERSION 1568
+-- DB_UPDATE_VERSION 1569
 -- ------------------------------------------
 
 
@@ -1186,6 +1186,7 @@ CREATE TABLE IF NOT EXISTS `post` (
 	`parent-uri-id` int unsigned COMMENT 'Id of the item-uri table that contains the parent uri',
 	`thr-parent-id` int unsigned COMMENT 'Id of the item-uri table that contains the thread parent uri',
 	`external-id` int unsigned COMMENT 'Id of the item-uri table entry that contains the external uri',
+	`replies-id` int unsigned COMMENT 'Id of the item-uri table entry that contains the endpoint for the replies collection',
 	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00' COMMENT 'Creation timestamp.',
 	`edited` datetime NOT NULL DEFAULT '0001-01-01 00:00:00' COMMENT 'Date of last edit (default is created)',
 	`received` datetime NOT NULL DEFAULT '0001-01-01 00:00:00' COMMENT 'datetime',
@@ -1204,6 +1205,7 @@ CREATE TABLE IF NOT EXISTS `post` (
 	 INDEX `parent-uri-id` (`parent-uri-id`),
 	 INDEX `thr-parent-id` (`thr-parent-id`),
 	 INDEX `external-id` (`external-id`),
+	 INDEX `replies-id` (`replies-id`),
 	 INDEX `owner-id` (`owner-id`),
 	 INDEX `author-id` (`author-id`),
 	 INDEX `causer-id` (`causer-id`),
@@ -1212,6 +1214,7 @@ CREATE TABLE IF NOT EXISTS `post` (
 	FOREIGN KEY (`parent-uri-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
 	FOREIGN KEY (`thr-parent-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
 	FOREIGN KEY (`external-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
+	FOREIGN KEY (`replies-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
 	FOREIGN KEY (`owner-id`) REFERENCES `contact` (`id`) ON UPDATE RESTRICT ON DELETE RESTRICT,
 	FOREIGN KEY (`author-id`) REFERENCES `contact` (`id`) ON UPDATE RESTRICT ON DELETE RESTRICT,
 	FOREIGN KEY (`causer-id`) REFERENCES `contact` (`id`) ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -1573,6 +1576,7 @@ CREATE TABLE IF NOT EXISTS `post-user` (
 	`parent-uri-id` int unsigned COMMENT 'Id of the item-uri table that contains the parent uri',
 	`thr-parent-id` int unsigned COMMENT 'Id of the item-uri table that contains the thread parent uri',
 	`external-id` int unsigned COMMENT 'Id of the item-uri table entry that contains the external uri',
+	`replies-id` int unsigned COMMENT 'Id of the item-uri table entry that contains the endpoint for the replies collection',
 	`created` datetime NOT NULL DEFAULT '0001-01-01 00:00:00' COMMENT 'Creation timestamp.',
 	`edited` datetime NOT NULL DEFAULT '0001-01-01 00:00:00' COMMENT 'Date of last edit (default is created)',
 	`received` datetime NOT NULL DEFAULT '0001-01-01 00:00:00' COMMENT 'datetime',
@@ -1605,6 +1609,7 @@ CREATE TABLE IF NOT EXISTS `post-user` (
 	 INDEX `parent-uri-id` (`parent-uri-id`),
 	 INDEX `thr-parent-id` (`thr-parent-id`),
 	 INDEX `external-id` (`external-id`),
+	 INDEX `replies-id` (`replies-id`),
 	 INDEX `owner-id` (`owner-id`),
 	 INDEX `author-id` (`author-id`),
 	 INDEX `causer-id` (`causer-id`),
@@ -1625,6 +1630,7 @@ CREATE TABLE IF NOT EXISTS `post-user` (
 	FOREIGN KEY (`parent-uri-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
 	FOREIGN KEY (`thr-parent-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
 	FOREIGN KEY (`external-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
+	FOREIGN KEY (`replies-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
 	FOREIGN KEY (`owner-id`) REFERENCES `contact` (`id`) ON UPDATE RESTRICT ON DELETE RESTRICT,
 	FOREIGN KEY (`author-id`) REFERENCES `contact` (`id`) ON UPDATE RESTRICT ON DELETE RESTRICT,
 	FOREIGN KEY (`causer-id`) REFERENCES `contact` (`id`) ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -2281,6 +2287,8 @@ CREATE VIEW `post-origin-view` AS SELECT
 	`post-origin`.`gravity` AS `gravity`,
 	`external-item-uri`.`uri` AS `extid`,
 	`post-user`.`external-id` AS `external-id`,
+	`replies-item-uri`.`uri` AS `replies`,
+	`post-user`.`replies-id` AS `replies-id`,
 	`post-origin`.`created` AS `created`,
 	`post-user`.`edited` AS `edited`,
 	`post-thread-user`.`commented` AS `commented`,
@@ -2435,6 +2443,7 @@ CREATE VIEW `post-origin-view` AS SELECT
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post-origin`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread-user`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post-user`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post-user`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post-origin`.`vid`
 			LEFT JOIN `event` ON `event`.`id` = `post-user`.`event-id`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post-origin`.`uri-id`
@@ -2469,6 +2478,8 @@ CREATE VIEW `post-thread-origin-view` AS SELECT
 	`post-origin`.`gravity` AS `gravity`,
 	`external-item-uri`.`uri` AS `extid`,
 	`post-user`.`external-id` AS `external-id`,
+	`replies-item-uri`.`uri` AS `replies`,
+	`post-user`.`replies-id` AS `replies-id`,
 	`post-origin`.`created` AS `created`,
 	`post-user`.`edited` AS `edited`,
 	`post-thread-user`.`commented` AS `commented`,
@@ -2622,6 +2633,7 @@ CREATE VIEW `post-thread-origin-view` AS SELECT
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post-origin`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread-user`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post-user`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post-user`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post-origin`.`vid`
 			LEFT JOIN `event` ON `event`.`id` = `post-user`.`event-id`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post-origin`.`uri-id`
@@ -2655,6 +2667,8 @@ CREATE VIEW `post-user-view` AS SELECT
 	`post-user`.`gravity` AS `gravity`,
 	`external-item-uri`.`uri` AS `extid`,
 	`post-user`.`external-id` AS `external-id`,
+	`replies-item-uri`.`uri` AS `replies`,
+	`post-user`.`replies-id` AS `replies-id`,
 	`post-user`.`created` AS `created`,
 	`post-user`.`edited` AS `edited`,
 	`post-thread-user`.`commented` AS `commented`,
@@ -2808,6 +2822,7 @@ CREATE VIEW `post-user-view` AS SELECT
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post-user`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread-user`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post-user`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post-user`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post-user`.`vid`
 			LEFT JOIN `event` ON `event`.`id` = `post-user`.`event-id`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post-user`.`uri-id`
@@ -2842,6 +2857,8 @@ CREATE VIEW `post-thread-user-view` AS SELECT
 	`post-user`.`gravity` AS `gravity`,
 	`external-item-uri`.`uri` AS `extid`,
 	`post-user`.`external-id` AS `external-id`,
+	`replies-item-uri`.`uri` AS `replies`,
+	`post-user`.`replies-id` AS `replies-id`,
 	`post-thread-user`.`created` AS `created`,
 	`post-user`.`edited` AS `edited`,
 	`post-thread-user`.`commented` AS `commented`,
@@ -2994,6 +3011,7 @@ CREATE VIEW `post-thread-user-view` AS SELECT
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post-user`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread-user`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post-user`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post-user`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post-user`.`vid`
 			LEFT JOIN `event` ON `event`.`id` = `post-user`.`event-id`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post-thread-user`.`uri-id`
@@ -3022,6 +3040,8 @@ CREATE VIEW `post-view` AS SELECT
 	`post`.`gravity` AS `gravity`,
 	`external-item-uri`.`uri` AS `extid`,
 	`post`.`external-id` AS `external-id`,
+	`replies-item-uri`.`uri` AS `replies`,
+	`post`.`replies-id` AS `replies-id`,
 	`post`.`created` AS `created`,
 	`post`.`edited` AS `edited`,
 	`post-thread`.`commented` AS `commented`,
@@ -3143,6 +3163,7 @@ CREATE VIEW `post-view` AS SELECT
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post`.`vid`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post`.`uri-id`
 			LEFT JOIN `post-content` ON `post-content`.`uri-id` = `post`.`uri-id`
@@ -3169,6 +3190,8 @@ CREATE VIEW `post-thread-view` AS SELECT
 	`post`.`gravity` AS `gravity`,
 	`external-item-uri`.`uri` AS `extid`,
 	`post`.`external-id` AS `external-id`,
+	`replies-item-uri`.`uri` AS `replies`,
+	`post`.`replies-id` AS `replies-id`,
 	`post-thread`.`created` AS `created`,
 	`post`.`edited` AS `edited`,
 	`post-thread`.`commented` AS `commented`,
@@ -3292,6 +3315,7 @@ CREATE VIEW `post-thread-view` AS SELECT
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post`.`vid`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post-thread`.`uri-id`
 			LEFT JOIN `post-content` ON `post-content`.`uri-id` = `post-thread`.`uri-id`

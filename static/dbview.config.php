@@ -268,6 +268,8 @@
 			"gravity" => ["post-origin", "gravity"],
 			"extid" => ["external-item-uri", "uri"],
 			"external-id" => ["post-user", "external-id"],
+			"replies" => ["replies-item-uri", "uri"],
+			"replies-id" => ["post-user", "replies-id"],
 			"created" => ["post-origin", "created"],
 			"edited" => ["post-user", "edited"],
 			"commented" => ["post-thread-user", "commented"],
@@ -423,6 +425,7 @@
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post-origin`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread-user`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post-user`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post-user`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post-origin`.`vid`
 			LEFT JOIN `event` ON `event`.`id` = `post-user`.`event-id`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post-origin`.`uri-id`
@@ -454,6 +457,8 @@
 			"gravity" => ["post-origin", "gravity"],
 			"extid" => ["external-item-uri", "uri"],
 			"external-id" => ["post-user", "external-id"],
+			"replies" => ["replies-item-uri", "uri"],
+			"replies-id" => ["post-user", "replies-id"],
 			"created" => ["post-origin", "created"],
 			"edited" => ["post-user", "edited"],
 			"commented" => ["post-thread-user", "commented"],
@@ -608,6 +613,7 @@
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post-origin`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread-user`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post-user`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post-user`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post-origin`.`vid`
 			LEFT JOIN `event` ON `event`.`id` = `post-user`.`event-id`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post-origin`.`uri-id`
@@ -638,6 +644,8 @@
 			"gravity" => ["post-user", "gravity"],
 			"extid" => ["external-item-uri", "uri"],
 			"external-id" => ["post-user", "external-id"],
+			"replies" => ["replies-item-uri", "uri"],
+			"replies-id" => ["post-user", "replies-id"],
 			"created" => ["post-user", "created"],
 			"edited" => ["post-user", "edited"],
 			"commented" => ["post-thread-user", "commented"],
@@ -792,6 +800,7 @@
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post-user`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread-user`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post-user`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post-user`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post-user`.`vid`
 			LEFT JOIN `event` ON `event`.`id` = `post-user`.`event-id`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post-user`.`uri-id`
@@ -823,6 +832,8 @@
 			"gravity" => ["post-user", "gravity"],
 			"extid" => ["external-item-uri", "uri"],
 			"external-id" => ["post-user", "external-id"],
+			"replies" => ["replies-item-uri", "uri"],
+			"replies-id" => ["post-user", "replies-id"],
 			"created" => ["post-thread-user", "created"],
 			"edited" => ["post-user", "edited"],
 			"commented" => ["post-thread-user", "commented"],
@@ -976,6 +987,7 @@
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post-user`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread-user`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post-user`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post-user`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post-user`.`vid`
 			LEFT JOIN `event` ON `event`.`id` = `post-user`.`event-id`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post-thread-user`.`uri-id`
@@ -1001,6 +1013,8 @@
 			"gravity" => ["post", "gravity"],
 			"extid" => ["external-item-uri", "uri"],
 			"external-id" => ["post", "external-id"],
+			"replies" => ["replies-item-uri", "uri"],
+			"replies-id" => ["post", "replies-id"],
 			"created" => ["post", "created"],
 			"edited" => ["post", "edited"],
 			"commented" => ["post-thread", "commented"],
@@ -1123,6 +1137,7 @@
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post`.`vid`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post`.`uri-id`
 			LEFT JOIN `post-content` ON `post-content`.`uri-id` = `post`.`uri-id`
@@ -1146,6 +1161,8 @@
 			"gravity" => ["post", "gravity"],
 			"extid" => ["external-item-uri", "uri"],
 			"external-id" => ["post", "external-id"],
+			"replies" => ["replies-item-uri", "uri"],
+			"replies-id" => ["post", "replies-id"],
 			"created" => ["post-thread", "created"],
 			"edited" => ["post", "edited"],
 			"commented" => ["post-thread", "commented"],
@@ -1270,6 +1287,7 @@
 			LEFT JOIN `item-uri` AS `parent-item-uri` ON `parent-item-uri`.`id` = `post`.`parent-uri-id`
 			LEFT JOIN `item-uri` AS `conversation-item-uri` ON `conversation-item-uri`.`id` = `post-thread`.`conversation-id`
 			LEFT JOIN `item-uri` AS `external-item-uri` ON `external-item-uri`.`id` = `post`.`external-id`
+			LEFT JOIN `item-uri` AS `replies-item-uri` ON `replies-item-uri`.`id` = `post`.`replies-id`
 			LEFT JOIN `verb` ON `verb`.`id` = `post`.`vid`
 			LEFT JOIN `diaspora-interaction` ON `diaspora-interaction`.`uri-id` = `post-thread`.`uri-id`
 			LEFT JOIN `post-content` ON `post-content`.`uri-id` = `post-thread`.`uri-id`
