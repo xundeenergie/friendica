@@ -198,6 +198,10 @@ class Item
 			$fields['external-id'] = ItemURI::getIdByURI($fields['extid']);
 		}
 
+		if (!empty($fields['replies'])) {
+			$fields['replies-id'] = ItemURI::getIdByURI($fields['replies']);
+		}
+
 		if (!empty($fields['verb'])) {
 			$fields['vid'] = Verb::getID($fields['verb']);
 		}
@@ -1163,6 +1167,10 @@ class Item
 
 		if (!empty($item['extid'])) {
 			$item['external-id'] = ItemURI::getIdByURI($item['extid']);
+		}
+
+		if (!empty($item['replies'])) {
+			$item['replies-id'] = ItemURI::getIdByURI($item['replies']);
 		}
 
 		if ($item['verb'] == Activity::ANNOUNCE) {

@@ -130,7 +130,8 @@ class Processor
 	 */
 	private static function replaceEmojis(int $uri_id, string $body, array $emojis): string
 	{
-		$body = strtr($body,
+		$body = strtr(
+			$body,
 			array_combine(
 				array_column($emojis, 'name'),
 				array_map(function ($emoji) {
@@ -494,6 +495,10 @@ class Processor
 
 		$item['plink'] = $activity['alternate-url'] ?? $item['uri'];
 
+		if (!empty($activity['replies'])) {
+			$item['replies'] = $activity['replies'];
+		}
+
 		self::storeAttachments($activity, $item);
 		self::storeQuestion($activity, $item);
 
@@ -507,6 +512,27 @@ class Processor
 			$contact = Contact::getById($item['owner-id'], ['gsid']);
 			if (!empty($contact['gsid'])) {
 				GServer::setProtocol($contact['gsid'], Post\DeliveryData::ACTIVITYPUB);
+			}
+		}
+
+		if (DI::config()->get('system', 'decoupled_receiver')) {
+			$replies = [$item['thr-parent']];
+			if (!empty($item['parent-uri'])) {
+				$replies[] = $item['parent-uri'];
+			}
+			$condition = DBA::mergeConditions(['uri' => $replies], ["`replies-id` IS NOT NULL"]);
+			$posts = Post::select(['replies', 'replies-id'], $condition);
+			while ($post = Post::fetch($posts)) {
+				$cachekey = 'Processor-CreateItem-Replies-' . $post['replies-id'];
+				if (!DI::cache()->get($cachekey)) {
+					self::fetchReplies($post['replies'], $activity);
+					DI::cache()->set($cachekey, true);
+				}
+			}
+			DBA::close($replies);
+
+			if (!empty($activity['completion-mode']) && !empty($item['replies'])) {
+				self::fetchReplies($item['replies'], $activity);
 			}
 		}
 
@@ -870,14 +896,15 @@ class Processor
 			if ($id) {
 				$shared_item = Post::selectFirst(['uri-id'], ['id' => $id]);
 				$item['quote-uri-id'] = $shared_item['uri-id'];
+				Logger::debug('Quote is found', ['guid' => $item['guid'], 'uri-id' => $item['uri-id'], 'quote' => $activity['quote-url'], 'quote-uri-id' => $item['quote-uri-id']]);
 			} elseif ($uri_id = ItemURI::getIdByURI($activity['quote-url'], false)) {
-				Logger::info('Quote was not fetched but the uri-id existed', ['guid' => $item['guid'], 'uri-id' => $item['uri-id'], 'quote' => $activity['quote-url'], 'uri-id' => $uri_id]);
+				Logger::info('Quote was not fetched but the uri-id existed', ['guid' => $item['guid'], 'uri-id' => $item['uri-id'], 'quote' => $activity['quote-url'], 'quote-uri-id' => $uri_id]);
 				$item['quote-uri-id'] = $uri_id;
 			} elseif (Queue::exists($activity['quote-url'], 'as:Create')) {
-				Logger::info('Quote is queued but not processed yet', ['guid' => $item['guid'], 'uri-id' => $item['uri-id'], 'quote' => $activity['quote-url'], 'uri-id' => $uri_id]);
 				$item['quote-uri-id'] = ItemURI::getIdByURI($activity['quote-url']);
+				Logger::info('Quote is queued but not processed yet', ['guid' => $item['guid'], 'uri-id' => $item['uri-id'], 'quote' => $activity['quote-url'], 'quote-uri-id' => $item['quote-uri-id']]);
 			} else {
-				Logger::info('Quote was not fetched', ['guid' => $item['guid'], 'uri-id' => $item['uri-id'], 'quote' => $activity['quote-url']]);
+				Logger::notice('Quote was not fetched', ['guid' => $item['guid'], 'uri-id' => $item['uri-id'], 'quote' => $activity['quote-url']]);
 			}
 		}
 
@@ -931,14 +958,14 @@ class Processor
 		}
 
 		$item['restrictions'] = null;
- 		foreach ($restrictions as $restriction) {
+		foreach ($restrictions as $restriction) {
 			if ($restriction == Tag::CAN_REPLY) {
 				$item['restrictions'] = $item['restrictions'] | Item::CANT_REPLY;
 			} elseif ($restriction == Tag::CAN_LIKE) {
 				$item['restrictions'] = $item['restrictions'] | Item::CANT_LIKE;
 			} elseif ($restriction == Tag::CAN_ANNOUNCE) {
 				$item['restrictions'] = $item['restrictions'] | Item::CANT_ANNOUNCE;
-			} 
+			}
 		}
 
 		$item['location'] = $activity['location'];
@@ -982,7 +1009,7 @@ class Processor
 
 		$path = implode("/", $parsed);
 
-		return $host_hash . '-'. hash('fnv164', $path) . '-'. hash('joaat', $path);
+		return $host_hash . '-' . hash('fnv164', $path) . '-' . hash('joaat', $path);
 	}
 
 	/**
@@ -1077,7 +1104,7 @@ class Processor
 			$item['uid'] = $receiver;
 
 			$type = $activity['reception_type'][$receiver] ?? Receiver::TARGET_UNKNOWN;
-			switch($type) {
+			switch ($type) {
 				case Receiver::TARGET_TO:
 					$item['post-reason'] = Item::PR_TO;
 					break;
@@ -1380,7 +1407,7 @@ class Processor
 					$name = $host;
 				} else {
 					Logger::warning('Unable to coerce name from capability', ['element' => $element, 'type' => $type, 'capability' => $capability]);
- 					$name = '';
+					$name = '';
 				}
 				$restricted = false;
 				Tag::store($uriid, $type, $name, $capability);
@@ -1634,6 +1661,11 @@ class Processor
 			return null;
 		}
 
+		return self::processActivity($object, $url, $child, $relay_actor, $completion, $uid);
+	}
+
+	private static function processActivity(array $object, string $url, array $child, string $relay_actor, int $completion, int $uid = 0): ?string
+	{
 		$ldobject = JsonLD::compact($object);
 
 		$signer = [];
@@ -1721,6 +1753,53 @@ class Processor
 		}
 
 		return $activity['id'];
+	}
+
+	private static function fetchReplies(string $url, array $child)
+	{
+		$replies = ActivityPub::fetchItems($url);
+		if (empty($replies)) {
+			Logger::notice('No replies', ['replies' => $url]);
+			return;
+		}
+		Logger::notice('Fetch replies - start', ['replies' => $url]);
+		$fetched = 0;
+		foreach ($replies as $reply) {
+			if (is_array($reply)) {
+				$ldobject = JsonLD::compact($reply);
+				$id = JsonLD::fetchElement($ldobject, '@id');
+				if ($id == $child['id']) {
+					Logger::debug('Incluced activity is currently processed', ['replies' => $url, 'id' => $id]);
+					continue;
+				} elseif (Item::searchByLink($id)) {
+					Logger::debug('Incluced activity already exists', ['replies' => $url, 'id' => $id]);
+					continue;
+				} elseif (Queue::exists($id, 'as:Create')) {
+					Logger::debug('Incluced activity is already queued', ['replies' => $url, 'id' => $id]);
+					continue;
+				}
+				if (parse_url($id, PHP_URL_HOST) == parse_url($url, PHP_URL_HOST)) {
+					Logger::debug('Incluced activity will be processed', ['replies' => $url, 'id' => $id]);
+					self::processActivity($reply, $id, $child, '', Receiver::COMPLETION_AUTO);
+					++$fetched;
+					continue;
+				}
+			} elseif (is_string($reply)) {
+				$id = $reply;
+			}
+			if ($id == $child['id']) {
+				Logger::debug('Activity is currently processed', ['replies' => $url, 'id' => $id]);
+			} elseif (Item::searchByLink($id)) {
+				Logger::debug('Activity already exists', ['replies' => $url, 'id' => $id]);
+			} elseif (Queue::exists($id, 'as:Create')) {
+				Logger::debug('Activity is already queued', ['replies' => $url, 'id' => $id]);
+			} else {
+				Logger::debug('Missing Activity will be fetched and processed', ['replies' => $url, 'id' => $id]);
+				self::fetchMissingActivity($id, $child, '', Receiver::COMPLETION_AUTO);
+				++$fetched;
+			}
+		}
+		Logger::notice('Fetch replies - done', ['fetched' => $fetched, 'total' => count($replies), 'replies' => $url]);
 	}
 
 	private static function refetchObjectOnHostDifference(array $object, string $url): array
@@ -1914,7 +1993,7 @@ class Processor
 		foreach ($languages as $language) {
 			if ($language == $content) {
 				continue;
-  			}
+			}
 			$language = DI::l10n()->toISO6391($language);
 			if (!in_array($language, array_column($iso639->allLanguages(), 0))) {
 				continue;
@@ -2407,7 +2486,7 @@ class Processor
 		$kept_mentions = [];
 
 		// Extract one prepended mention at a time from the body
-		while(preg_match('#^(@\[url=([^\]]+)].*?\[\/url]\s)(.*)#is', $body, $matches)) {
+		while (preg_match('#^(@\[url=([^\]]+)].*?\[\/url]\s)(.*)#is', $body, $matches)) {
 			if (!in_array($matches[2], $potential_mentions)) {
 				$kept_mentions[] = $matches[1];
 			}
