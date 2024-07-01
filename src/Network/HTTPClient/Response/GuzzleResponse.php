@@ -89,7 +89,7 @@ class GuzzleResponse extends Response implements ICanHandleHttpResponses, Respon
 		$headersRedirect = $response->getHeader(RedirectMiddleware::HISTORY_HEADER) ?? [];
 
 		if (count($headersRedirect) > 0) {
-			$this->redirectUrl   = $headersRedirect[0];
+			$this->redirectUrl   = end($headersRedirect);
 			$this->isRedirectUrl = true;
 		}
 	}
