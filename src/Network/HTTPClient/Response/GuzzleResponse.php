@@ -52,6 +52,8 @@ class GuzzleResponse extends Response implements ICanHandleHttpResponses, Respon
 	private $redirectUrl = '';
 	/** @var bool */
 	private $isRedirectUrl = false;
+	/** @var bool */
+	private $redirectIsPermanent = false;
 
 	public function __construct(ResponseInterface $response, string $url, $errorNumber = 0, $error = '')
 	{
@@ -91,6 +93,13 @@ class GuzzleResponse extends Response implements ICanHandleHttpResponses, Respon
 		if (count($headersRedirect) > 0) {
 			$this->redirectUrl   = $headersRedirect[0];
 			$this->isRedirectUrl = true;
+
+			$this->redirectIsPermanent = true;
+			foreach (($response->getHeader(RedirectMiddleware::STATUS_HISTORY_HEADER) ?? []) as $history) {
+				if (preg_match('/30(2|3|4|7)/', $history)) {
+					$this->redirectIsPermanent = false;
+				}
+			}
 		}
 	}
 
@@ -143,6 +152,12 @@ class GuzzleResponse extends Response implements ICanHandleHttpResponses, Respon
 	public function isRedirectUrl(): bool
 	{
 		return $this->isRedirectUrl;
+	}
+
+	/** {@inheritDoc} */
+	public function redirectIsPermanent(): bool
+	{
+		return $this->redirectIsPermanent;
 	}
 
 	/** {@inheritDoc} */

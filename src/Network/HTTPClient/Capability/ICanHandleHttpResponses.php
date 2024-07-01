@@ -90,9 +90,19 @@ interface ICanHandleHttpResponses
 	public function getUrl(): string;
 
 	/**
+	 * If the request was redirected to another URL, gets the final URL requested
 	 * @return string
 	 */
 	public function getRedirectUrl(): string;
+
+	/**
+	 * If the request was redirected to another URL, indicates if the redirect is permanent.
+	 * If the request was not redirected, returns false.
+	 * If the request was redirected multiple times, returns true only if all of the redirects were permanent.
+	 *
+	 * @return bool True if the redirect is permanent
+	 */
+	public function redirectIsPermanent(): bool;
 
 	/**
 	 * Getter for body
