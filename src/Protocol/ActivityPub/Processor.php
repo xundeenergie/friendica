@@ -515,7 +515,7 @@ class Processor
 			}
 		}
 
-		if (DI::config()->get('system', 'decoupled_receiver')) {
+		if (DI::config()->get('system', 'decoupled_receiver') && ($activity['completion-mode'] ?? Receiver::COMPLETION_NONE != Receiver::COMPLETION_REPLIES)) {
 			$replies = [$item['thr-parent']];
 			if (!empty($item['parent-uri'])) {
 				$replies[] = $item['parent-uri'];
@@ -1780,7 +1780,7 @@ class Processor
 				}
 				if (parse_url($id, PHP_URL_HOST) == parse_url($url, PHP_URL_HOST)) {
 					Logger::debug('Incluced activity will be processed', ['replies' => $url, 'id' => $id]);
-					self::processActivity($reply, $id, $child, '', Receiver::COMPLETION_AUTO);
+					self::processActivity($reply, $id, $child, '', Receiver::COMPLETION_REPLIES);
 					++$fetched;
 					continue;
 				}
@@ -1795,7 +1795,7 @@ class Processor
 				Logger::debug('Activity is already queued', ['replies' => $url, 'id' => $id]);
 			} else {
 				Logger::debug('Missing Activity will be fetched and processed', ['replies' => $url, 'id' => $id]);
-				self::fetchMissingActivity($id, $child, '', Receiver::COMPLETION_AUTO);
+				self::fetchMissingActivity($id, $child, '', Receiver::COMPLETION_REPLIES);
 				++$fetched;
 			}
 		}
