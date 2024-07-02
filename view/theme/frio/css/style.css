@@ -3324,10 +3324,18 @@ li.addon {
 #adminpage .addon .desc {
 	padding-left: 10px;
 }
+#adminpage td.log-message,
+#logdetail td.log-message {
+	width: 80%;
+	word-break: break-all;
+}
+#logdetail td.log-message {
+	width: 80%;
+}
 #admin-users #users tr.blocked {
 	background-color: #f8efc0;
 }
-.adminpage .table-hover > tbody > tr:hover + tr.details {
+#adminpage .table-hover > tbody > tr:hover + tr.details {
 	background-color: #f5f5f5;
 }
 .offset-anchor::before {
