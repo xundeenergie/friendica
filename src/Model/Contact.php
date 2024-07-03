@@ -2446,7 +2446,7 @@ class Contact
 	}
 
 	/**
-	 * Updates the poll URL of a contact.  This is the right function to call if there is a redirect.
+	 * Updates the poll URL of a contact. This is the right function to call if there is a redirect.
 	 *
 	 * @param integer $id  contact id
 	 * @param string  $url The new URL to use for polling
