@@ -81,6 +81,7 @@ class Receiver
 	const COMPLETION_MANUAL   = 3;
 	const COMPLETION_AUTO     = 4;
 	const COMPLETION_ASYNC    = 5;
+	const COMPLETION_REPLIES  = 6;
 
 	/**
 	 * Checks incoming message from the inbox
