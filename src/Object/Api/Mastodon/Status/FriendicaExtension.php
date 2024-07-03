@@ -57,6 +57,15 @@ class FriendicaExtension extends BaseDataTransferObject
 	/** @var string|null */
 	protected $network;
 
+	/** @var string|null */
+	protected $platform;
+
+	/** @var string|null */
+	protected $version;
+
+	/** @var string|null */
+	protected $sitename;
+
 	/**
 	 * @var FriendicaVisibility|null
 	 */
@@ -72,6 +81,9 @@ class FriendicaExtension extends BaseDataTransferObject
 	 * @param int                    $dislikes_count
 	 * @param bool                   $disliked
 	 * @param ?string                $network
+	 * @param ?string                $platform
+	 * @param ?string                $version
+	 * @param ?string                $sitename
 	 * @param ?FriendicaDeliveryData $delivery_data
 	 * @param ?FriendicaVisibility   $visibility
 	 * @throws \Exception
@@ -84,6 +96,9 @@ class FriendicaExtension extends BaseDataTransferObject
 		int $dislikes_count,
 		bool $disliked,
 		?string $network,
+		?string $platform,
+		?string $version,
+		?string $sitename,
 		?FriendicaDeliveryData $delivery_data,
 		?FriendicaVisibility $visibility
 	) {
@@ -95,6 +110,9 @@ class FriendicaExtension extends BaseDataTransferObject
 		$this->dislikes_count = $dislikes_count;
 		$this->disliked       = $disliked;
 		$this->network        = $network;
+		$this->platform       = $platform;
+		$this->version        = $version;
+		$this->sitename       = $sitename;
 		$this->visibility     = $visibility;
 	}
 
