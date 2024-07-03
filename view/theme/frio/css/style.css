@@ -3324,6 +3324,11 @@ li.addon {
 #adminpage .addon .desc {
 	padding-left: 10px;
 }
+#adminpage td.log-message,
+#logdetail td.log-message {
+	width: 80%;
+	word-break: break-all;
+}
 #admin-users #users tr.blocked {
 	background-color: #f8efc0;
 }
