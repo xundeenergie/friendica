@@ -3324,10 +3324,25 @@ li.addon {
 #adminpage .addon .desc {
 	padding-left: 10px;
 }
+#adminpage h2 {
+	word-break: break-all;
+}
+#adminpage .table-logs-grid thead tr {
+	display: grid;
+	grid-auto-flow: row;
+}
+@media (min-width: 600px) {
+	#adminpage .table-logs-grid thead tr {
+		grid-auto-flow: column;
+	}
+}
+#adminpage .table-logs-grid tbody {
+	display: grid;
+}
 #adminpage td.log-message,
 #logdetail td.log-message {
 	width: 80%;
-	word-break: break-all;
+	word-break: break-word;
 }
 #admin-users #users tr.blocked {
 	background-color: #f8efc0;

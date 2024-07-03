@@ -22,7 +22,7 @@
 			</div>
 		</form>
 
-		<table class="table table-hover">
+		<table class="table table-hover table-logs-grid">
 			<thead>
 				<tr>
 					<th>{{$l10n.Date}}</th>
