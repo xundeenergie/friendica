@@ -3327,22 +3327,31 @@ li.addon {
 #adminpage h2 {
 	word-break: break-all;
 }
-#adminpage .table-logs-grid thead tr {
+#adminpage .table-logs thead tr {
 	display: grid;
 	grid-auto-flow: row;
 }
-@media (min-width: 600px) {
-	#adminpage .table-logs-grid thead tr {
-		grid-auto-flow: column;
-	}
+#adminpage .table-logs tbody {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
 }
-#adminpage .table-logs-grid tbody {
-	display: grid;
+#adminpage .table-logs td {
+	word-break: break-word;
 }
-#adminpage td.log-message,
+#adminpage .table-logs td.log-message {
+	width: 40%;
+}
 #logdetail td.log-message {
 	width: 80%;
-	word-break: break-word;
+}
+@media (min-width: 600px) {
+	#adminpage .table-logs thead tr {
+		grid-auto-flow: column;
+	}
+	#adminpage .table-logs td.log-message {
+		width: 60%;
+	}
 }
 #admin-users #users tr.blocked {
 	background-color: #f8efc0;
