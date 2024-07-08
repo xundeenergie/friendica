@@ -69,7 +69,7 @@ class Xrd extends BaseModule
 		if (substr($uri, 0, 4) === 'http') {
 			$name = ltrim(basename($uri), '~');
 			$host = parse_url($uri, PHP_URL_HOST);
-		} else if (substr($uri, 0, 4) === 'acct') {
+		} else if (preg_match('/^[[:alpha:]][[:alnum:]+-.]+:/', $uri)) {
 			$local = str_replace('acct:', '', $uri);
 			if (substr($local, 0, 2) == '//') {
 				$local = substr($local, 2);
