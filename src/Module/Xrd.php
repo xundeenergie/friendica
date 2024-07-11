@@ -44,7 +44,7 @@ class Xrd extends BaseModule
 		// @TODO: Replace with parameter from router
 		if (DI::args()->getArgv()[0] == 'xrd') {
 			if (empty($_GET['uri'])) {
-				return;
+				throw new BadRequestException();
 			}
 
 			$uri = urldecode(trim($_GET['uri']));
@@ -55,7 +55,7 @@ class Xrd extends BaseModule
 			}
 		} else {
 			if (empty($_GET['resource'])) {
-				return;
+				throw new BadRequestException();
 			}
 
 			$uri = urldecode(trim($_GET['resource']));
