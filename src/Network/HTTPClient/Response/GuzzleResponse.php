@@ -38,6 +38,8 @@ class GuzzleResponse extends Response implements ICanHandleHttpResponses, Respon
 	private $isTimeout;
 	/** @var boolean */
 	private $isSuccess;
+	/** @var boolean */
+	private $isGone;
 	/**
 	 * @var int the error number or 0 (zero) if no error
 	 */
@@ -63,6 +65,7 @@ class GuzzleResponse extends Response implements ICanHandleHttpResponses, Respon
 		$this->errorNumber = $errorNumber;
 
 		$this->checkSuccess();
+		$this->checkGone();
 		$this->checkRedirect($response);
 	}
 
@@ -84,6 +87,11 @@ class GuzzleResponse extends Response implements ICanHandleHttpResponses, Respon
 		} else {
 			$this->isTimeout = false;
 		}
+	}
+
+	private function checkGone()
+	{
+		$this->isGone = $this->getStatusCode() == 410;
 	}
 
 	private function checkRedirect(ResponseInterface $response)
@@ -133,6 +141,12 @@ class GuzzleResponse extends Response implements ICanHandleHttpResponses, Respon
 	public function isSuccess(): bool
 	{
 		return $this->isSuccess;
+	}
+
+	/** {@inheritDoc} */
+	public function isGone(): bool
+	{
+		return $this->isGone;
 	}
 
 	/** {@inheritDoc} */

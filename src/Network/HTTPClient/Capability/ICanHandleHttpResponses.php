@@ -85,6 +85,13 @@ interface ICanHandleHttpResponses
 	public function isSuccess(): bool;
 
 	/**
+	 * Returns if the URL is permanently gone (return code 410)
+	 *
+	 * @return bool
+	 */
+	public function isGone(): bool;
+
+	/**
 	 * @return string
 	 */
 	public function getUrl(): string;
