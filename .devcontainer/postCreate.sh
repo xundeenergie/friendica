@@ -3,10 +3,12 @@
 
 # Prepare the workspace files with the values from the devcontainer.env file
 set -a
-source $workspaceFolder/.devcontainer/devcontainer.env
+source $workspaceFolder/.devcontainer/.env
 
 echo ">>> Development Setup"
 sudo apt-get update
+
+envsubst < $workspaceFolder/.devcontainer/include/my.cnf > /home/vscode/.my.cnf
 
 #Make the workspace directory the docroot
 echo ">>> Symlink $DocumentRoot to $workspaceFolder"
