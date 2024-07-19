@@ -174,6 +174,12 @@ class OnePoll
 			return false;
 		}
 
+		if ($curlResult->isGone()) {
+			Logger::notice('URL is permanently gone', ['id' => $contact['id'], 'url' => $contact['poll']]);
+			Contact::remove($contact['id']);
+			return false;
+		}
+
 		if ($curlResult->redirectIsPermanent()) {
 			Logger::notice('Poll address permanently changed', [
 				'id' => $contact['id'],

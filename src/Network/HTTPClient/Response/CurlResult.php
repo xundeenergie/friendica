@@ -57,6 +57,11 @@ class CurlResult implements ICanHandleHttpResponses
 	private $isSuccess;
 
 	/**
+	 * @var boolean true (if HTTP 410 result) or false
+	 */
+	private $isGone;
+
+	/**
 	 * @var string the URL which was called
 	 */
 	private $url;
@@ -148,6 +153,7 @@ class CurlResult implements ICanHandleHttpResponses
 
 		$this->parseBodyHeader($result);
 		$this->checkSuccess();
+		$this->checkGone();
 		$this->checkRedirect();
 		$this->checkInfo();
 	}
@@ -192,6 +198,11 @@ class CurlResult implements ICanHandleHttpResponses
 		} else {
 			$this->isTimeout = false;
 		}
+	}
+
+	private function checkGone()
+	{
+		$this->isGone = $this->returnCode == 410;
 	}
 
 	private function checkRedirect()
@@ -318,6 +329,12 @@ class CurlResult implements ICanHandleHttpResponses
 
 	/** {@inheritDoc} */
 	public function isSuccess(): bool
+	{
+		return $this->isSuccess;
+	}
+
+	/** {@inheritDoc} */
+	public function isGone(): bool
 	{
 		return $this->isSuccess;
 	}
