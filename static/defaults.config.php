@@ -259,6 +259,10 @@ return [
 		// Display the first resharer as icon and text on a reshared item.
 		'display_resharer' => false,
 
+		// display_link_length (integer)
+		// Maximum length of displayed links. Default value is 30, 0 deactivates the functionality.
+		'display_link_length' => 30,
+
 		// dlogfile (Path)
 		// location of the developer log file.
 		'dlogfile' => '',
