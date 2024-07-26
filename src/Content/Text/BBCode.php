@@ -2090,7 +2090,7 @@ class BBCode
 		$text = preg_replace("/\[zrl\=(.*?)\](.*?)\[\/zrl\]/ism", '[url=$1]$2[/url]', $text);
 
 		if (in_array($simple_html, [self::INTERNAL, self::EXTERNAL, self::DIASPORA, self::OSTATUS, self::MASTODON_API, self::TWITTER_API, self::ACTIVITYPUB])) {
-			$text = self::shortenLinkDescription($text);
+			$text = self::shortenLinkDescription($text, $simple_html);
 		} else {
 			$text = self::unifyLinks($text);
 		}
@@ -2143,20 +2143,26 @@ class BBCode
 		);
 	}
 
-	private static function shortenLinkDescription(string $text): string
+	private static function shortenLinkDescription(string $text, int $simple_html): string
 	{
+		if ($simple_html == self::INTERNAL) {
+			$max_length = DI::config()->get('system', 'display_link_length');
+		} else {
+			$max_length = 30;
+		}
+
 		$text = preg_replace_callback(
 			"/\[url\](.*?)\[\/url\]/ism",
-			function ($match) {
-				return "[url=" . self::escapeUrl($match[1]) . "]" . Strings::getStyledURL($match[1]) . "[/url]";
+			function ($match) use ($max_length) {
+				return "[url=" . self::escapeUrl($match[1]) . "]" . Strings::getStyledURL($match[1], $max_length) . "[/url]";
 			},
 			$text
 		);
 		$text = preg_replace_callback(
 			"/\[url\=(.*?)\](.*?)\[\/url\]/ism",
-			function ($match) {
+			function ($match) use ($max_length) {
 				if ($match[1] == $match[2]) {
-					return "[url=" . self::escapeUrl($match[1]) . "]" . Strings::getStyledURL($match[2]) . "[/url]";
+					return "[url=" . self::escapeUrl($match[1]) . "]" . Strings::getStyledURL($match[2], $max_length) . "[/url]";
 				} else {
 					return "[url=" . self::escapeUrl($match[1]) . "]" . $match[2] . "[/url]";
 				}
