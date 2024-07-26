@@ -29,6 +29,7 @@ use Friendica\DI;
 use Friendica\Model\APContact;
 use Friendica\Model\Contact;
 use Friendica\Model\GServer;
+use Friendica\Model\Item;
 use Friendica\Model\ItemURI;
 use Friendica\Model\User;
 use Friendica\Network\HTTPClient\Capability\ICanHandleHttpResponses;
@@ -308,6 +309,8 @@ class HTTPSignature
 		Logger::info('Transmit to ' . $target . ' returned ' . $return_code);
 
 		self::setInboxStatus($target, ($return_code >= 200) && ($return_code <= 299));
+
+		Item::incrementOutbound(Protocol::ACTIVITYPUB);
 
 		return $postResult;
 	}

@@ -4265,4 +4265,22 @@ class Item
 		Logger::warning('Post does not exist although it was supposed to had been fetched.', ['id' => $id, 'url' => $url, 'uid' => $uid]);
 		return 0;
 	}
+
+	public static function incrementInbound(string $network)
+	{
+		$packets = DI::keyValue()->get('stats_packets_inbound_' . $network) ?? 0;
+		if ($packets >= PHP_INT_MAX) {
+			$packets = 0;
+		}
+		DI::keyValue()->set('stats_packets_inbound_' . $network, $packets + 1);
+	}
+
+	public static function incrementOutbound(string $network)
+	{
+		$packets = DI::keyValue()->get('stats_packets_outbound_' . $network) ?? 0;
+		if ($packets >= PHP_INT_MAX) {
+			$packets = 0;
+		}
+		DI::keyValue()->set('stats_packets_outbound_' . $network, $packets + 1);
+	}
 }

@@ -26,6 +26,7 @@ use Friendica\BaseModule;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
 use Friendica\Core\L10n;
+use Friendica\Core\Protocol;
 use Friendica\Core\Worker;
 use Friendica\Database\Database;
 use Friendica\Model\Register;
@@ -115,6 +116,20 @@ class Stats extends BaseModule
 					'posts'    => intval($this->keyValue->get('nodeinfo_local_posts')),
 					'comments' => intval($this->keyValue->get('nodeinfo_local_comments')),
 				],
+			],
+			'packets' => [
+				'inbound' => [
+					Protocol::ACTIVITYPUB => intval($this->keyValue->get('stats_packets_inbound_' . Protocol::ACTIVITYPUB) ?? 0),
+					Protocol::DFRN        => intval($this->keyValue->get('stats_packets_inbound_' . Protocol::DFRN) ?? 0),
+					Protocol::DIASPORA    => intval($this->keyValue->get('stats_packets_inbound_' . Protocol::DIASPORA) ?? 0),
+					Protocol::OSTATUS     => intval($this->keyValue->get('stats_packets_inbound_' . Protocol::OSTATUS) ?? 0),
+				],
+				'outbound' => [
+					Protocol::ACTIVITYPUB => intval($this->keyValue->get('stats_packets_outbound_' . Protocol::ACTIVITYPUB) ?? 0),
+					Protocol::DFRN        => intval($this->keyValue->get('stats_packets_outbound_' . Protocol::DFRN) ?? 0),
+					Protocol::DIASPORA    => intval($this->keyValue->get('stats_packets_outbound_' . Protocol::DIASPORA) ?? 0),
+					Protocol::OSTATUS     => intval($this->keyValue->get('stats_packets_outbound_' . Protocol::OSTATUS) ?? 0),
+				]
 			],
 			'reports' => [
 				'newest' => [
