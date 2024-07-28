@@ -1487,3 +1487,30 @@ function update_1566()
 	}
 	DBA::close($users);
 }
+
+function update_1571()
+{
+	$profiles = DBA::select('profile', ['uid', 'homepage', 'xmpp', 'matrix']);
+	while ($profile = DBA::fetch($profiles)) {
+		$homepage = str_replace(['<', '>', '"', ' '], '', $profile['homepage']);
+		$xmpp     = str_replace(['<', '>', '"', ' '], '', $profile['xmpp']);
+		$matrix   = str_replace(['<', '>', '"', ' '], '', $profile['matrix']);
+
+		$fields = [];
+		if ($homepage != $profile['homepage']) {
+			$fields['homepage'] = $homepage;
+		}
+		if ($xmpp != $profile['xmpp']) {
+			$fields['xmpp'] = $xmpp;
+		}
+		if ($matrix != $profile['matrix']) {
+			$fields['matrix'] = $matrix;
+		}
+		if (!empty($fields)) {
+			Profile::update($fields, $profile['uid']);
+		}
+	}
+	DBA::close($profiles);
+
+	return Update::SUCCESS;
+}
