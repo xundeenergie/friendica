@@ -47,7 +47,7 @@ $apiRoutes = [
 	'/account' => [
 		'/verify_credentials[.{extension:json|xml|rss|atom}]'      => [Module\Api\Twitter\Account\VerifyCredentials::class,  [R::GET         ]],
 		'/rate_limit_status[.{extension:json|xml|rss|atom}]'       => [Module\Api\Twitter\Account\RateLimitStatus::class,    [R::GET         ]],
-		'/update_profile[.{extension:json|xml|rss|atom}]'          => [Module\Api\Twitter\Account\UpdateProfile ::class,     [        R::POST]],
+		'/update_profile[.{extension:json|xml|rss|atom}]'          => [Module\Api\Twitter\Account\UpdateProfile::class,      [        R::POST]],
 		'/update_profile_image[.{extension:json|xml|rss|atom}]'    => [Module\Api\Twitter\Account\UpdateProfileImage::class, [        R::POST]],
 	],
 
