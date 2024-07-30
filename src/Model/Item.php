@@ -1367,10 +1367,10 @@ class Item
 		}
 
 		if ($posted_item['origin'] && $posted_item['gravity'] == self::GRAVITY_PARENT) {
-			$posts = DI::keyValue()->get('nodeinfo_local_posts') ?? 0;
+			$posts = (int)(DI::keyValue()->get('nodeinfo_local_posts') ?? 0);
 			DI::keyValue()->set('nodeinfo_local_posts', $posts + 1);
 		} elseif ($posted_item['origin'] && $posted_item['gravity'] == self::GRAVITY_COMMENT) {
-			$comments = DI::keyValue()->get('nodeinfo_local_comments') ?? 0;
+			$comments = (int)(DI::keyValue()->get('nodeinfo_local_comments') ?? 0);
 			DI::keyValue()->set('nodeinfo_local_comments', $comments + 1);
 		}
 
@@ -1464,10 +1464,10 @@ class Item
 
 		if ($inserted) {
 			if ($posted_item['gravity'] == self::GRAVITY_PARENT) {
-				$posts = DI::keyValue()->get('nodeinfo_total_posts') ?? 0;
+				$posts = (int)(DI::keyValue()->get('nodeinfo_total_posts') ?? 0);
 				DI::keyValue()->set('nodeinfo_total_posts', $posts + 1);
 			} elseif ($posted_item['gravity'] == self::GRAVITY_COMMENT) {
-				$comments = DI::keyValue()->get('nodeinfo_total_comments') ?? 0;
+				$comments = (int)(DI::keyValue()->get('nodeinfo_total_comments') ?? 0);
 				DI::keyValue()->set('nodeinfo_total_comments', $comments + 1);
 			}
 
@@ -4268,7 +4268,7 @@ class Item
 
 	public static function incrementInbound(string $network)
 	{
-		$packets = DI::keyValue()->get('stats_packets_inbound_' . $network) ?? 0;
+		$packets = (int)(DI::keyValue()->get('stats_packets_inbound_' . $network) ?? 0);
 		if ($packets >= PHP_INT_MAX) {
 			$packets = 0;
 		}
@@ -4277,7 +4277,7 @@ class Item
 
 	public static function incrementOutbound(string $network)
 	{
-		$packets = DI::keyValue()->get('stats_packets_outbound_' . $network) ?? 0;
+		$packets = (int)(DI::keyValue()->get('stats_packets_outbound_' . $network) ?? 0);
 		if ($packets >= PHP_INT_MAX) {
 			$packets = 0;
 		}
