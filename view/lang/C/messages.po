@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.06-rc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-16 20:38+0000\n"
+"POT-Creation-Date: 2024-07-30 22:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -755,6 +755,7 @@ msgid "Method not allowed for this module. Allowed method(s): %s"
 msgstr ""
 
 #: src/App/Router.php:311 src/Module/HTTPException/PageNotFound.php:49
+#: src/Module/Stats.php:62
 msgid "Page not found."
 msgstr ""
 
@@ -1829,7 +1830,7 @@ msgstr ""
 msgid "Create new group"
 msgstr ""
 
-#: src/Content/Item.php:331 src/Model/Item.php:3264
+#: src/Content/Item.php:331 src/Model/Item.php:3304
 msgid "event"
 msgstr ""
 
@@ -1837,7 +1838,7 @@ msgstr ""
 msgid "status"
 msgstr ""
 
-#: src/Content/Item.php:340 src/Model/Item.php:3266
+#: src/Content/Item.php:340 src/Model/Item.php:3306
 #: src/Module/Post/Tag/Add.php:123
 msgid "photo"
 msgstr ""
@@ -2244,8 +2245,8 @@ msgstr ""
 msgid "<a href=\"%1$s\" target=\"_blank\" rel=\"noopener noreferrer\">%2$s</a> %3$s"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:947 src/Model/Item.php:4020
-#: src/Model/Item.php:4026 src/Model/Item.php:4027
+#: src/Content/Text/BBCode.php:947 src/Model/Item.php:4060
+#: src/Model/Item.php:4066 src/Model/Item.php:4067
 msgid "Link to source"
 msgstr ""
 
@@ -2261,11 +2262,11 @@ msgstr ""
 msgid "Encrypted content"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:2217
+#: src/Content/Text/BBCode.php:2223
 msgid "Invalid source protocol"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:2236
+#: src/Content/Text/BBCode.php:2242
 msgid "Invalid link protocol"
 msgstr ""
 
@@ -2833,7 +2834,7 @@ msgstr ""
 msgid "Could not connect to database."
 msgstr ""
 
-#: src/Core/L10n.php:444 src/Model/Item.php:2308
+#: src/Core/L10n.php:444 src/Model/Item.php:2348
 msgid "Undetermined"
 msgstr ""
 
@@ -3373,90 +3374,90 @@ msgstr ""
 msgid "Happy Birthday %s"
 msgstr ""
 
-#: src/Model/Item.php:2315
+#: src/Model/Item.php:2355
 #, php-format
 msgid "%s (%s - %s): %s"
 msgstr ""
 
-#: src/Model/Item.php:2317
+#: src/Model/Item.php:2357
 #, php-format
 msgid "%s (%s): %s"
 msgstr ""
 
-#: src/Model/Item.php:2320
+#: src/Model/Item.php:2360
 #, php-format
 msgid "Detected languages in this post:\\n%s"
 msgstr ""
 
-#: src/Model/Item.php:3268
+#: src/Model/Item.php:3308
 msgid "activity"
 msgstr ""
 
-#: src/Model/Item.php:3270
+#: src/Model/Item.php:3310
 msgid "comment"
 msgstr ""
 
-#: src/Model/Item.php:3273 src/Module/Post/Tag/Add.php:123
+#: src/Model/Item.php:3313 src/Module/Post/Tag/Add.php:123
 msgid "post"
 msgstr ""
 
-#: src/Model/Item.php:3443
+#: src/Model/Item.php:3483
 #, php-format
 msgid "%s is blocked"
 msgstr ""
 
-#: src/Model/Item.php:3445
+#: src/Model/Item.php:3485
 #, php-format
 msgid "%s is ignored"
 msgstr ""
 
-#: src/Model/Item.php:3447
+#: src/Model/Item.php:3487
 #, php-format
 msgid "Content from %s is collapsed"
 msgstr ""
 
-#: src/Model/Item.php:3451
+#: src/Model/Item.php:3491
 msgid "Sensitive content"
 msgstr ""
 
-#: src/Model/Item.php:3920
+#: src/Model/Item.php:3960
 msgid "bytes"
 msgstr ""
 
-#: src/Model/Item.php:3951
+#: src/Model/Item.php:3991
 #, php-format
 msgid "%2$s (%3$d%%, %1$d vote)"
 msgid_plural "%2$s (%3$d%%, %1$d votes)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3953
+#: src/Model/Item.php:3993
 #, php-format
 msgid "%2$s (%1$d vote)"
 msgid_plural "%2$s (%1$d votes)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3958
+#: src/Model/Item.php:3998
 #, php-format
 msgid "%d voter. Poll end: %s"
 msgid_plural "%d voters. Poll end: %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3960
+#: src/Model/Item.php:4000
 #, php-format
 msgid "%d voter."
 msgid_plural "%d voters."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3962
+#: src/Model/Item.php:4002
 #, php-format
 msgid "Poll end: %s"
 msgstr ""
 
-#: src/Model/Item.php:4003 src/Model/Item.php:4004
+#: src/Model/Item.php:4043 src/Model/Item.php:4044
 msgid "View on separate page"
 msgstr ""
 
@@ -6238,7 +6239,7 @@ msgstr[1] ""
 
 #: src/Module/Contact/Follow.php:70 src/Module/Contact/Redir.php:59
 #: src/Module/Contact/Redir.php:220 src/Module/Conversation/Community.php:166
-#: src/Module/Debug/ItemBody.php:38 src/Module/Diaspora/Receive.php:57
+#: src/Module/Debug/ItemBody.php:38 src/Module/Diaspora/Receive.php:59
 #: src/Module/Item/Display.php:96 src/Module/Item/Feed.php:59
 #: src/Module/Item/Follow.php:41 src/Module/Item/Ignore.php:41
 #: src/Module/Item/Language.php:53 src/Module/Item/Pin.php:41
@@ -8871,7 +8872,7 @@ msgstr ""
 msgid "Your registration is pending approval by the site owner."
 msgstr ""
 
-#: src/Module/Search/Acl.php:73
+#: src/Module/Search/Acl.php:78
 msgid "You must be logged in to use this module."
 msgstr ""
 
