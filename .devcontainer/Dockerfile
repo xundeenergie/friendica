@@ -7,7 +7,6 @@ RUN apt-get update -y;
 
 # Install MariaDB client
 RUN apt-get install -y mariadb-client
-COPY include/my.cnf /home/vscode/.my.cnf
 
 # Base packages
 RUN apt install -y vim software-properties-common sudo nano gnupg2

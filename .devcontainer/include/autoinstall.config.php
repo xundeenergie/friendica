@@ -1,19 +1,22 @@
 <?php
-
-// Local configuration
-
-/* If automatic system installation fails:
+/**
+ * @copyright Copyright (C) 2010-2024, the Friendica project
  *
- * Copy this file to local.config.php
+ * @license GNU AGPL version 3 or any later version
  *
- * Why local.config.php? Because it contains sensitive information which could
- * give somebody complete control of your database. Apache's default
- * configuration will interpret any .php file as a script and won't show the values
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * Then set the following for your MySQL installation
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
- * If you're unsure about what any of the config keys below do, please check the static/defaults.config.php file for
- * detailed documentation of their data type and behavior.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
  */
 
 return [
@@ -32,15 +35,16 @@ return [
 	// ****************************************************************
 
 	'config' => [
-		'admin_email' => 'admin@friendica.local',
+		'admin_email' => 'admin@${ServerAlias}',
 		'sitename' => 'Friendica Social Network',
 		'register_policy' => \Friendica\Module\Register::OPEN,
 		'register_text' => '',
+		'php' => '${FRIENDICA_PHP_PATH}',
 	],
 	'system' => [
 		'default_timezone' => 'UTC',
 		'language' => 'en',
 		'basepath' => '${workspaceFolder}',
-		'url' => 'http://localhost:8080',
+		'url' => 'http://${ServerName}:${ServerPort}',
 	],
 ];
