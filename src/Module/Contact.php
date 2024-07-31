@@ -253,7 +253,7 @@ class Contact extends BaseModule
 				$sql_extra = " AND `archive` AND NOT `blocked` AND NOT `pending`";
 				break;
 			case 'pending':
-				$sql_extra = " AND `pending` AND NOT `archive` AND NOT `failed` AND ((`rel` = ?)
+				$sql_extra = " AND `pending` AND NOT `archive` AND ((`rel` = ?)
 					OR `id` IN (SELECT `contact-id` FROM `intro` WHERE `intro`.`uid` = ? AND NOT `ignore`))";
 				$sql_values[] = Model\Contact::SHARING;
 				$sql_values[] = DI::userSession()->getLocalUserId();

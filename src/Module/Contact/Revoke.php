@@ -30,6 +30,7 @@ use Friendica\Core\Renderer;
 use Friendica\Database\Database;
 use Friendica\DI;
 use Friendica\Model;
+use Friendica\Model\Contact as ModelContact;
 use Friendica\Module\Contact;
 use Friendica\Module\Response;
 use Friendica\Module\Security\Login;
@@ -90,7 +91,7 @@ class Revoke extends BaseModule
 
 		DI::sysmsg()->addNotice($this->t('Follow was successfully revoked.'));
 
-		$this->baseUrl->redirect('contact/' . $this->parameters['id']);
+		$this->baseUrl->redirect('contact/' . ModelContact::getPublicContactId($this->parameters['id'], DI::userSession()->getLocalUserId()));
 	}
 
 	protected function content(array $request = []): string
