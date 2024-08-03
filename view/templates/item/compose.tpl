@@ -103,13 +103,17 @@
 </div>
 <script>
 	dzFactory.setupDropzone('#dropzone-{{$id}}', 'comment-edit-text-{{$id}}');
-		document.addEventListener("DOMContentLoaded", function() {
-			var textareas = document.querySelectorAll(".expandable-textarea");
-			textareas.forEach(function(textarea) {
-			textarea.addEventListener("input", function() {
-				this.style.height = "auto";
-				this.style.height = (this.scrollHeight) + "px";
+
+	document.addEventListener("DOMContentLoaded", function() {
+		var textareas = document.querySelectorAll(".expandable-textarea");
+
+	textareas.forEach(function(textarea) {
+		textarea.addEventListener("input", function() {
+			this.style.height = "auto";
+			this.style.height = (this.scrollHeight) + "px";
 		});
+
+		// Set initial height
 		textarea.style.height = "auto";
 		textarea.style.height = (textarea.scrollHeight) + "px";
 	});
