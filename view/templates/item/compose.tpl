@@ -107,15 +107,15 @@
 	document.addEventListener("DOMContentLoaded", function() {
 		var textareas = document.querySelectorAll(".expandable-textarea");
 
-	textareas.forEach(function(textarea) {
-		textarea.addEventListener("input", function() {
-			this.style.height = "auto";
-			this.style.height = (this.scrollHeight) + "px";
-		});
+		textareas.forEach(function(textarea) {
+			textarea.addEventListener("input", function() {
+				this.style.height = "auto";
+				this.style.height = (this.scrollHeight) + "px";
+			});
 
-		// Set initial height
-		textarea.style.height = "auto";
-		textarea.style.height = (textarea.scrollHeight) + "px";
+			// Set initial height
+			textarea.style.height = "auto";
+			textarea.style.height = (textarea.scrollHeight) + "px";
+		});
 	});
-});
 </script>
