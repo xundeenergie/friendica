@@ -91,8 +91,8 @@ class Profile extends BaseModule
 
 		// Backward compatibility: The update still needs a user-specific contact ID
 		// Change to user-contact table check by version 2022.03
-		$cdata = Contact::getPublicAndUserContactID($contact_id, $this->session->getLocalUserId());
-		if (empty($cdata['user']) || !$this->db->exists('contact', ['id' => $cdata['user'], 'deleted' => false])) {
+		$ucid = Contact::getUserContactId($contact_id, $this->session->getLocalUserId());
+		if (!$ucid || !$this->db->exists('contact', ['id' => $ucid, 'deleted' => false])) {
 			return;
 		}
 
@@ -134,14 +134,14 @@ class Profile extends BaseModule
 		}
 
 		if (isset($request['channel_frequency'])) {
-			Contact\User::setChannelFrequency($cdata['user'], $this->session->getLocalUserId(), $request['channel_frequency']);
+			Contact\User::setChannelFrequency($ucid, $this->session->getLocalUserId(), $request['channel_frequency']);
 		}
 
 		if (isset($request['channel_only'])) {
-			Contact\User::setChannelOnly($cdata['user'], $this->session->getLocalUserId(), $request['channel_only']);
+			Contact\User::setChannelOnly($ucid, $this->session->getLocalUserId(), $request['channel_only']);
 		}
 
-		if (!Contact::update($fields, ['id' => $cdata['user'], 'uid' => $this->session->getLocalUserId()])) {
+		if (!Contact::update($fields, ['id' => $ucid, 'uid' => $this->session->getLocalUserId()])) {
 			$this->systemMessages->addNotice($this->t('Failed to update contact record.'));
 		}
 	}
@@ -162,6 +162,18 @@ class Profile extends BaseModule
 		$contact = Contact::getById($data['public']);
 		if (!$this->db->isResult($contact)) {
 			throw new HTTPException\NotFoundException($this->t('Contact not found.'));
+		}
+
+		// Fetch the protocol from the user's contact.
+		$usercontact = Contact::getById($data['user'], ['network', 'protocol']);
+		if ($this->db->isResult($usercontact)) {
+			$contact['network']  = $usercontact['network'];
+			$contact['protocol'] = $usercontact['protocol'];
+		}
+
+		if (empty($contact['network']) && Contact::isLocal($contact['url']) ) {
+			$contact['network']  = Protocol::DFRN;
+			$contact['protocol'] = Protocol::ACTIVITYPUB;
 		}
 
 		// Don't display contacts that are about to be deleted
