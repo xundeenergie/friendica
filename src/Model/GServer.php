@@ -2611,6 +2611,10 @@ class GServer
 			return;
 		}
 
+		if ($data['openwebauth'] == $gserver['openwebauth']) {
+			return;
+		}
+
 		$serverdata = self::getZotData($gserver['url'], []);
 		if (empty($serverdata)) {
 			$serverdata = ['openwebauth' => $data['openwebauth']];
