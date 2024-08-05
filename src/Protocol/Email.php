@@ -25,6 +25,7 @@ use Friendica\Core\Hook;
 use Friendica\Core\Logger;
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Text\HTML;
+use Friendica\Core\Protocol;
 use Friendica\Model\Item;
 use Friendica\Util\Strings;
 use \IMAP\Connection;
@@ -47,6 +48,7 @@ class Email
 			return false;
 		}
 
+		Item::incrementInbound(Protocol::MAIL);
 		$mbox = @imap_open($mailbox, $username, $password);
 
 		$errors = imap_errors();
@@ -74,6 +76,7 @@ class Email
 			return [];
 		}
 
+		Item::incrementInbound(Protocol::MAIL);
 		$search1 = @imap_search($mbox, 'UNDELETED FROM "' . $email_addr . '"', SE_UID);
 		if (!$search1) {
 			$search1 = [];
@@ -81,6 +84,7 @@ class Email
 			Logger::debug("Found mails from ".$email_addr);
 		}
 
+		Item::incrementInbound(Protocol::MAIL);
 		$search2 = @imap_search($mbox, 'UNDELETED TO "' . $email_addr . '"', SE_UID);
 		if (!$search2) {
 			$search2 = [];
@@ -88,6 +92,7 @@ class Email
 			Logger::debug("Found mails to ".$email_addr);
 		}
 
+		Item::incrementInbound(Protocol::MAIL);
 		$search3 = @imap_search($mbox, 'UNDELETED CC "' . $email_addr . '"', SE_UID);
 		if (!$search3) {
 			$search3 = [];
@@ -136,7 +141,7 @@ class Email
 	public static function getMessage($mbox, int $uid, string $reply, array $item): array
 	{
 		$ret = $item;
-
+		Item::incrementInbound(Protocol::MAIL);
 		$struc = (($mbox && $uid) ? @imap_fetchstructure($mbox, $uid, FT_UID) : null);
 
 		if (!$struc) {
@@ -403,6 +408,7 @@ class Email
 		//$message = '<html><body>' . $html . '</body></html>';
 		//$message = html2plain($html);
 		Logger::notice('notifier: email delivery to ' . $addr);
+		Item::incrementOutbound(Protocol::MAIL);
 		return mail($addr, $subject, $body, $headers);
 	}
 

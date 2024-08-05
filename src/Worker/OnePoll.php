@@ -165,6 +165,7 @@ class OnePoll
 		}
 
 		$cookiejar = tempnam(System::getTempPath(), 'cookiejar-onepoll-');
+		Item::incrementInbound(Protocol::FEED);
 		$curlResult = DI::httpClient()->get($contact['poll'], HttpClientAccept::FEED_XML, [HttpClientOptions::COOKIEJAR => $cookiejar, HttpClientOptions::REQUEST => HttpClientRequest::FEEDFETCHER]);
 		unlink($cookiejar);
 
