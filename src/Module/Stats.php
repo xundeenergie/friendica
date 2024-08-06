@@ -83,7 +83,7 @@ class Stats extends BaseModule
 		$statistics = [
 			'cron' => [
 				'lastExecution' => [
-					'datetime'  => DateTimeFormat::utc($this->keyValue->get('last_cron'), DateTimeFormat::JSON),
+					'datetime'  => date(DateTimeFormat::JSON, (int)$this->keyValue->get('last_cron')),
 					'timestamp' => (int)$this->keyValue->get('last_cron'),
 				],
 			],
