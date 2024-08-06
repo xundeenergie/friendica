@@ -32,5 +32,6 @@ return [
 		'language' => 'en',
 		'basepath' => '${workspaceFolder}',
 		'url' => 'http://${ServerName}:${ServerPort}',
+		'pidfile' => '/tmp/daemon.pid',
 	],
 ];

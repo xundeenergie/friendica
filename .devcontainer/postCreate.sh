@@ -8,6 +8,9 @@ source $workspaceFolder/.devcontainer/.env
 echo ">>> Development Setup"
 sudo apt-get update
 
+# VSCode debugger profile
+mkdir -p .vscode && cp .devcontainer/launch.json .vscode/launch.json
+
 envsubst < $workspaceFolder/.devcontainer/include/my.cnf > /home/vscode/.my.cnf
 
 #Make the workspace directory the docroot
@@ -16,5 +19,11 @@ sudo rm -rf $DocumentRoot
 sudo ln -fs $workspaceFolder $DocumentRoot
 
 echo 'error_reporting=0' | sudo tee /usr/local/etc/php/conf.d/no-warn.ini
+
+# create log file
+mkdir -p log
+touch log/friendica.log
+chmod 666 log/friendica.log
+
 
 exit 0
