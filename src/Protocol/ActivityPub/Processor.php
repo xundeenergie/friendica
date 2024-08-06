@@ -540,7 +540,7 @@ class Processor
 			}
 			DBA::close($replies);
 
-			if (!empty($activity['completion-mode']) && !empty($item['replies'])) {
+			if (!empty($item['replies'])) {
 				self::fetchReplies($item['replies'], $activity);
 			}
 		}
@@ -558,6 +558,8 @@ class Processor
 	 */
 	private static function fetchParent(array $activity, bool $in_background = false): string
 	{
+		$activity['callstack'] = self::addToCallstack($activity['callstack'] ?? []);
+
 		if (self::isFetched($activity['reply-to-id'])) {
 			Logger::info('Id is already fetched', ['id' => $activity['reply-to-id']]);
 			return '';
@@ -757,6 +759,8 @@ class Processor
 	 */
 	private static function getUriIdForFeaturedCollection(array $activity)
 	{
+		$activity['callstack'] = self::addToCallstack($activity['callstack'] ?? []);
+
 		$actor = APContact::getByURL($activity['actor']);
 		if (empty($actor)) {
 			return null;
@@ -1722,6 +1726,7 @@ class Processor
 				Logger::debug('Fetch announced activity', ['type' => $type, 'id' => $object_id, 'actor' => $relay_actor, 'signer' => $signer]);
 
 				if (!self::alreadyKnown($object_id, $child['id'] ?? '')) {
+					$child['callstack'] = self::addToCallstack($child['callstack'] ?? []);
 					return self::fetchMissingActivity($object_id, $child, $relay_actor, $completion, $uid);
 				}
 			}
@@ -1736,7 +1741,8 @@ class Processor
 
 		$ldactivity['recursion-depth'] = !empty($child['recursion-depth']) ? $child['recursion-depth'] + 1 : 0;
 		$ldactivity['children']        = $child['children'] ?? [];
-		// This check ist mostly superflous, since there are similar checks before. This covers the case, when the fetched id doesn't match the url
+		$ldactivity['callstack']       = $child['callstack'] ?? [];
+		// This check is mostly superfluous, since there are similar checks before. This covers the case, when the fetched id doesn't match the url
 		if (in_array($activity['id'], $ldactivity['children'])) {			
 			Logger::notice('Fetched id is already in the list of children. It will not be processed.', ['id' => $activity['id'], 'children' => $ldactivity['children'], 'depth' => count($ldactivity['children'])]);
 			return null;
@@ -1788,6 +1794,12 @@ class Processor
 
 	private static function fetchReplies(string $url, array $child)
 	{
+		if (in_array(__FUNCTION__, $child['callstack'] ?? [])) {
+			Logger::notice('Callstack already contains "' . __FUNCTION__ . '"', ['callstack' => $child['callstack']]);
+			return;
+		}
+		$child['callstack'] = self::addToCallstack($child['callstack'] ?? []);
+
 		$replies = ActivityPub::fetchItems($url);
 		if (empty($replies)) {
 			Logger::notice('No replies', ['replies' => $url]);
@@ -2571,5 +2583,26 @@ class Processor
 		});
 
 		return $body;
+	}
+
+	/**
+	 * Add the current function to the callstack
+	 *
+	 * @param array $callstack
+	 * @return array
+	 */
+	public static function addToCallstack(array $callstack): array
+	{
+		$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		$functions = array_slice(array_column($trace, 'function'), 1);
+		$function = array_shift($functions);
+
+		if (in_array($function, $callstack)) {
+			Logger::notice('Callstack already contains "' . $function . '"', ['callstack' => $callstack]);
+		}
+
+		$callstack[] = $function;
+
+		return $callstack;
 	}
 }

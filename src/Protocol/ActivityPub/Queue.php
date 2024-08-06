@@ -333,6 +333,7 @@ class Queue
 					return false;
 				}
 				$activity['recursion-depth'] = 0;
+				$activity['callstack'] = Processor::addToCallstack($activity['callstack'] ?? []);
 				$wid = Worker::add(Worker::PRIORITY_HIGH, 'FetchMissingActivity', $entry['in-reply-to-id'], $activity, '', Receiver::COMPLETION_ASYNC);
 				Fetch::setWorkerId($entry['in-reply-to-id'], $wid);
 				Logger::debug('Fetch missing activity', ['wid' => $wid, 'id' => $entry['activity-id'], 'reply-to-id' => $entry['in-reply-to-id']]);
