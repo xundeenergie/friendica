@@ -556,9 +556,9 @@ class Item
 		}
 
 		if (!empty($item['causer-id']) && Contact::isSharing($item['causer-id'], $item['uid'], true)) {
-			$cdata = Contact::getPublicAndUserContactID($item['causer-id'], $item['uid']);
-			if (!empty($cdata['user'])) {
-				return $cdata['user'];
+			$ucid = Contact::getUserContactId($item['causer-id'], $item['uid']);
+			if ($ucid) {
+				return $ucid;
 			}
 		}
 
@@ -2632,12 +2632,12 @@ class Item
 			return;
 		}
 
-		$cdata = Contact::getPublicAndUserContactID($item['author-id'], $item['uid']);
-		if (empty($cdata['user']) || ($cdata['user'] != $item['contact-id'])) {
+		$ucid = Contact::getUserContactId($item['author-id'], $item['uid']);
+		if (!$ucid || ($ucid != $item['contact-id'])) {
 			return;
 		}
 
-		if (!DBA::exists('contact', ['id' => $cdata['user'], 'remote_self' => LocalRelationship::MIRROR_NATIVE_RESHARE])) {
+		if (!DBA::exists('contact', ['id' => $ucid, 'remote_self' => LocalRelationship::MIRROR_NATIVE_RESHARE])) {
 			return;
 		}
 

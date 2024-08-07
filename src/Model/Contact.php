@@ -444,12 +444,12 @@ class Contact
 			return false;
 		}
 
-		$cdata = self::getPublicAndUserContactID($cid, $uid);
-		if (empty($cdata['user'])) {
+		$ucid = self::getUserContactId($cid, $uid);
+		if (!$ucid) {
 			return false;
 		}
 
-		$condition = ['id' => $cdata['user'], 'rel' => [self::FOLLOWER, self::FRIEND]];
+		$condition = ['id' => $ucid, 'rel' => [self::FOLLOWER, self::FRIEND]];
 		if ($strict) {
 			$condition = array_merge($condition, ['pending' => false, 'readonly' => false, 'blocked' => false]);
 		}
@@ -495,12 +495,12 @@ class Contact
 			return false;
 		}
 
-		$cdata = self::getPublicAndUserContactID($cid, $uid);
-		if (empty($cdata['user'])) {
+		$ucid = self::getUserContactId($cid, $uid);
+		if (!$ucid) {
 			return false;
 		}
 
-		$condition = ['id' => $cdata['user'], 'rel' => [self::SHARING, self::FRIEND]];
+		$condition = ['id' => $ucid, 'rel' => [self::SHARING, self::FRIEND]];
 		if ($strict) {
 			$condition = array_merge($condition, ['pending' => false, 'readonly' => false, 'blocked' => false]);
 		}
@@ -669,6 +669,32 @@ class Contact
 		}
 
 		return ['public' => $pcid, 'user' => $ucid];
+	}
+
+	/**
+	 * Returns the public contact id of a provided contact id
+	 *
+	 * @param integer $cid
+	 * @param integer $uid
+	 * @return integer
+	 */
+	public static function getPublicContactId(int $cid, int $uid): int
+	{
+		$contact = DBA::selectFirst('account-user-view', ['pid'], ['id' => $cid, 'uid' => [0, $uid]]);
+		return $contact['pid'] ?? 0;
+	}
+
+	/**
+	 * Returns the user contact id of a provided contact id
+	 *
+	 * @param integer $cid
+	 * @param integer $uid
+	 * @return integer
+	 */
+	public static function getUserContactId(int $cid, int $uid): int
+	{
+		$data = self::getPublicAndUserContactID($cid, $uid);
+		return $data['user'] ?? 0;
 	}
 
 	/**
@@ -968,13 +994,13 @@ class Contact
 		}
 
 		if (in_array($contact['rel'], [self::SHARING, self::FRIEND])) {
-			$cdata = self::getPublicAndUserContactID($contact['id'], $contact['uid']);
-			if (!empty($cdata['public'])) {
-				Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unfollow', $cdata['public'], $contact['uid']);
+			$pcid = self::getPublicContactId($contact['id'], $contact['uid']);
+			if ($pcid) {
+				Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unfollow', $pcid, $contact['uid']);
 			}
 		}
 
-		self::removeSharer($contact);
+		self::removeSharer($contact, false);
 	}
 
 	/**
@@ -998,13 +1024,13 @@ class Contact
 		}
 
 		if (in_array($contact['rel'], [self::FOLLOWER, self::FRIEND])) {
-			$cdata = self::getPublicAndUserContactID($contact['id'], $contact['uid']);
-			if (!empty($cdata['public'])) {
-				Worker::add(Worker::PRIORITY_HIGH, 'Contact\RevokeFollow', $cdata['public'], $contact['uid']);
+			$pcid = self::getPublicContactId($contact['id'], $contact['uid']);
+			if ($pcid) {
+				Worker::add(Worker::PRIORITY_HIGH, 'Contact\RevokeFollow', $pcid, $contact['uid']);
 			}
 		}
 
-		self::removeFollower($contact);
+		self::removeFollower($contact, false);
 	}
 
 	/**
@@ -1025,14 +1051,14 @@ class Contact
 			throw new \InvalidArgumentException('Unexpected public contact record');
 		}
 
-		$cdata = self::getPublicAndUserContactID($contact['id'], $contact['uid']);
+		$pcid = self::getPublicContactId($contact['id'], $contact['uid']);
 
-		if (in_array($contact['rel'], [self::SHARING, self::FRIEND]) && !empty($cdata['public'])) {
-			Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unfollow', $cdata['public'], $contact['uid']);
+		if (in_array($contact['rel'], [self::SHARING, self::FRIEND]) && $pcid) {
+			Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unfollow', $pcid, $contact['uid']);
 		}
 
-		if (in_array($contact['rel'], [self::FOLLOWER, self::FRIEND]) && !empty($cdata['public'])) {
-			Worker::add(Worker::PRIORITY_HIGH, 'Contact\RevokeFollow', $cdata['public'], $contact['uid']);
+		if (in_array($contact['rel'], [self::FOLLOWER, self::FRIEND]) && $pcid) {
+			Worker::add(Worker::PRIORITY_HIGH, 'Contact\RevokeFollow', $pcid, $contact['uid']);
 		}
 
 		self::remove($contact['id']);
@@ -3009,6 +3035,10 @@ class Contact
 	 */
 	public static function getProtocol(string $url, string $network): string
 	{
+		if (self::isLocal($url)) {
+			return Protocol::ACTIVITYPUB;
+		}
+
 		if ($network != Protocol::DFRN) {
 			return $network;
 		}
@@ -3400,16 +3430,21 @@ class Contact
 	 * Update the local relationship when a local user loses a follower
 	 *
 	 * @param array $contact User-specific contact (uid != 0) array
+	 * @param bool  $delete  Delete if set, otherwise set relation to "nothing" when contact had been a follower
 	 * @return void
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public static function removeFollower(array $contact)
+	public static function removeFollower(array $contact, bool $delete = true)
 	{
 		if (in_array($contact['rel'] ?? [], [self::FRIEND, self::SHARING])) {
 			self::update(['rel' => self::SHARING], ['id' => $contact['id']]);
 		} elseif (!empty($contact['id'])) {
-			self::remove($contact['id']);
+			if ($delete) {
+				self::remove($contact['id']);
+			} else {
+				self::update(['rel' => self::NOTHING, 'pending' => false], ['id' => $contact['id']]);
+			}
 		} else {
 			DI::logger()->info('Couldn\'t remove follower because of invalid contact array', ['contact' => $contact]);
 			return;
@@ -3419,9 +3454,9 @@ class Contact
 
 		self::clearFollowerFollowingEndpointCache($contact['uid']);
 
-		$cdata = self::getPublicAndUserContactID($contact['id'], $contact['uid']);
-		if (!empty($cdata['public'])) {
-			DI::notification()->deleteForUserByVerb($contact['uid'], Activity::FOLLOW, ['actor-id' => $cdata['public']]);
+		$pcid = self::getPublicContactId($contact['id'], $contact['uid']);
+		if ($pcid) {
+			DI::notification()->deleteForUserByVerb($contact['uid'], Activity::FOLLOW, ['actor-id' => $pcid]);
 		}
 	}
 
@@ -3430,14 +3465,19 @@ class Contact
 	 * Removes the contact for sharing-only protocols (feed and mail).
 	 *
 	 * @param array $contact User-specific contact (uid != 0) array
+	 * @param bool  $delete  Delete if set, otherwise set relation to "nothing" when contact had been a sharer
 	 * @throws HTTPException\InternalServerErrorException
 	 */
-	public static function removeSharer(array $contact)
+	public static function removeSharer(array $contact, bool $delete = true)
 	{
 		self::clearFollowerFollowingEndpointCache($contact['uid']);
 
-		if ($contact['rel'] == self::SHARING || in_array($contact['network'], [Protocol::FEED, Protocol::MAIL])) {
-			self::remove($contact['id']);
+		if (in_array($contact['rel'], [self::SHARING, self::NOTHING]) || in_array($contact['network'], [Protocol::FEED, Protocol::MAIL])) {
+			if ($delete) {
+				self::remove($contact['id']);
+			} else {
+				self::update(['rel' => self::NOTHING, 'pending' => false], ['id' => $contact['id']]);
+			}
 		} else {
 			self::update(['rel' => self::FOLLOWER, 'pending' => false], ['id' => $contact['id']]);
 		}
