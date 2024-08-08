@@ -40,7 +40,7 @@
 
 <script>
 function toggleTags(event) {
-	event.preventDefault(); // Prevents the link from reloading the page
+	event.preventDefault();
 	var moreTags = document.getElementById('more-tags');
 	var link = event.target.closest('a');
 	var caretIcon = document.getElementById('caret-icon');
@@ -50,12 +50,12 @@ function toggleTags(event) {
 		moreTags.style.display = 'block';
 		linkText.textContent = 'Show Less';
 		link.setAttribute('aria-expanded', 'true');
-		caretIcon.className = 'fa fa-caret-down'; // Changes the icon to "Caret Down"
+		caretIcon.className = 'fa fa-caret-down';
 	} else {
 		moreTags.style.display = 'none';
 		linkText.textContent = 'Show More';
 		link.setAttribute('aria-expanded', 'false');
-		caretIcon.className = 'fa fa-caret-right'; // Changes the icon to "Caret Down"
+		caretIcon.className = 'fa fa-caret-right';
 	}
 }
 
