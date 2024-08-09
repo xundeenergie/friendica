@@ -23,6 +23,7 @@ namespace Friendica\Module;
 
 use Friendica\App;
 use Friendica\BaseModule;
+use Friendica\Core\Addon;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
 use Friendica\Core\L10n;
@@ -82,7 +83,7 @@ class Stats extends BaseModule
 		$statistics = [
 			'cron' => [
 				'lastExecution' => [
-					'datetime'  => DateTimeFormat::utc($this->keyValue->get('last_cron'), DateTimeFormat::JSON),
+					'datetime'  => date(DateTimeFormat::JSON, (int)$this->keyValue->get('last_cron')),
 					'timestamp' => (int)$this->keyValue->get('last_cron'),
 				],
 			],
@@ -123,12 +124,16 @@ class Stats extends BaseModule
 					Protocol::DFRN        => intval($this->keyValue->get('stats_packets_inbound_' . Protocol::DFRN) ?? 0),
 					Protocol::DIASPORA    => intval($this->keyValue->get('stats_packets_inbound_' . Protocol::DIASPORA) ?? 0),
 					Protocol::OSTATUS     => intval($this->keyValue->get('stats_packets_inbound_' . Protocol::OSTATUS) ?? 0),
+					Protocol::FEED        => intval($this->keyValue->get('stats_packets_inbound_' . Protocol::FEED) ?? 0),
+					Protocol::MAIL        => intval($this->keyValue->get('stats_packets_inbound_' . Protocol::MAIL) ?? 0),
 				],
 				'outbound' => [
 					Protocol::ACTIVITYPUB => intval($this->keyValue->get('stats_packets_outbound_' . Protocol::ACTIVITYPUB) ?? 0),
 					Protocol::DFRN        => intval($this->keyValue->get('stats_packets_outbound_' . Protocol::DFRN) ?? 0),
 					Protocol::DIASPORA    => intval($this->keyValue->get('stats_packets_outbound_' . Protocol::DIASPORA) ?? 0),
 					Protocol::OSTATUS     => intval($this->keyValue->get('stats_packets_outbound_' . Protocol::OSTATUS) ?? 0),
+					Protocol::FEED        => intval($this->keyValue->get('stats_packets_outbound_' . Protocol::FEED) ?? 0),
+					Protocol::MAIL        => intval($this->keyValue->get('stats_packets_outbound_' . Protocol::MAIL) ?? 0),
 				]
 			],
 			'reports' => [
@@ -140,6 +145,15 @@ class Stats extends BaseModule
 				'closed' => $this->dba->count('report', ['status' => Report::STATUS_CLOSED]),
 			]
 		];
+
+		if (Addon::isEnabled('bluesky')) {
+			$statistics['packets']['inbound'][Protocol::BLUESKY] = intval($this->keyValue->get('stats_packets_inbound_' . Protocol::BLUESKY) ?? 0);
+			$statistics['packets']['outbound'][Protocol::BLUESKY] = intval($this->keyValue->get('stats_packets_outbound_' . Protocol::BLUESKY) ?? 0);
+		}
+		if (Addon::isEnabled('tumblr')) {
+			$statistics['packets']['inbound'][Protocol::TUMBLR] = intval($this->keyValue->get('stats_packets_inbound_' . Protocol::TUMBLR) ?? 0);
+			$statistics['packets']['outbound'][Protocol::TUMBLR] = intval($this->keyValue->get('stats_packets_outbound_' . Protocol::TUMBLR) ?? 0);
+		}
 
 		$statistics = $this->getJobsPerPriority($statistics);
 
