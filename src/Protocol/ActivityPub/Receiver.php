@@ -250,7 +250,6 @@ class Receiver
 		} elseif (!Fetch::hasWorker($object_id)) {
 			Logger::notice('Fetching is done by worker.', ['id' => $object_id]);
 			Fetch::add($object_id);
-			$activity['recursion-depth'] = 0;
 			$wid = Worker::add(Worker::PRIORITY_HIGH, 'FetchMissingActivity', $object_id, [], $actor, self::COMPLETION_RELAY);
 			Fetch::setWorkerId($object_id, $wid);
 		} else {
@@ -757,7 +756,8 @@ class Receiver
 			$object_data['recursion-depth'] = $activity['recursion-depth'];
 		}
 
-		$object_data['children'] = $activity['children'] ?? [];
+		$object_data['children']  = $activity['children'] ?? [];
+		$object_data['callstack'] = $activity['callstack'] ?? [];
 
 		if (!self::routeActivities($object_data, $type, $push, true, $uid)) {
 			self::storeUnhandledActivity(true, $type, $object_data, $activity, $body, $uid, $trust_source, $push, $signer);
