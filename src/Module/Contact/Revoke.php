@@ -59,16 +59,12 @@ class Revoke extends BaseModule
 			return;
 		}
 
-		$data = Model\Contact::getPublicAndUserContactID($this->parameters['id'], DI::userSession()->getLocalUserId());
-		if (!$this->dba->isResult($data)) {
-			throw new HTTPException\NotFoundException($this->t('Unknown contact.'));
-		}
-
-		if (empty($data['user'])) {
+		$ucid = Model\Contact::getUserContactId($this->parameters['id'], DI::userSession()->getLocalUserId());
+		if (!$ucid) {
 			throw new HTTPException\ForbiddenException();
 		}
 
-		$this->contact = Model\Contact::getById($data['user']);
+		$this->contact = Model\Contact::getById($ucid);
 
 		if ($this->contact['deleted']) {
 			throw new HTTPException\NotFoundException($this->t('Contact is deleted.'));

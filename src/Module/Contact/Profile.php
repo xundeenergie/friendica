@@ -165,10 +165,12 @@ class Profile extends BaseModule
 		}
 
 		// Fetch the protocol from the user's contact.
-		$usercontact = Contact::getById($data['user'], ['network', 'protocol']);
-		if ($this->db->isResult($usercontact)) {
-			$contact['network']  = $usercontact['network'];
-			$contact['protocol'] = $usercontact['protocol'];
+		if ($data['user']) {
+			$usercontact = Contact::getById($data['user'], ['network', 'protocol']);
+			if ($this->db->isResult($usercontact)) {
+				$contact['network']  = $usercontact['network'];
+				$contact['protocol'] = $usercontact['protocol'];
+			}
 		}
 
 		if (empty($contact['network']) && Contact::isLocal($contact['url']) ) {
@@ -177,7 +179,7 @@ class Profile extends BaseModule
 		}
 
 		// Don't display contacts that are about to be deleted
-		if ($this->db->isResult($contact) && (!empty($contact['deleted']) || !empty($contact['network']) && $contact['network'] == Protocol::PHANTOM)) {
+		if ($contact['deleted'] || $contact['network'] == Protocol::PHANTOM) {
 			throw new HTTPException\NotFoundException($this->t('Contact not found.'));
 		}
 
