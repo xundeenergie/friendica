@@ -930,7 +930,7 @@ class Transmitter
 	 * @param boolean $blindcopy
 	 * @return void
 	 */
-	public static function getReceiversForUriId(int $uri_id, bool $blindcopy)
+	public static function getReceiversForUriId(int $uri_id, bool $blindcopy): array
 	{
 		$tags = Tag::getByURIId($uri_id, [Tag::TO, Tag::CC, Tag::BTO, Tag::BCC, Tag::AUDIENCE]);
 		if (empty($tags)) {
@@ -1029,8 +1029,8 @@ class Transmitter
 		$inboxes = [];
 
 		$isGroup = false;
-		if (!empty($item['uid'])) {
-			$profile = User::getOwnerDataById($item['uid']);
+		if (!empty($uid)) {
+			$profile = User::getOwnerDataById($uid);
 			if (!empty($profile)) {
 				$isGroup = $profile['account-type'] == User::ACCOUNT_TYPE_COMMUNITY;
 			}

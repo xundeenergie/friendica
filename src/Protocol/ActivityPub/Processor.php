@@ -1928,8 +1928,6 @@ class Processor
 	{
 		if (!empty($object['published'])) {
 			$published = $object['published'];
-		} elseif (!empty($child['published'])) {
-			$published = $child['published'];
 		} else {
 			$published = DateTimeFormat::utcNow();
 		}
