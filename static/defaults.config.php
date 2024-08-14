@@ -388,6 +388,10 @@ return [
 		// Maximum number of feed items that are fetched and processed. For unlimited items set to 0.
 		'max_feed_items' => 20,
 
+		// max_fetchreplies_depth (Integer)
+		// Maximum number of "fetchreplies" activities in the callstack. The higher, the more complete a thread will be.
+		'max_fetchreplies_depth' => 2,
+
 		// max_image_length (Integer)
 		// An alternate way of limiting picture upload sizes.
 		// Specify the maximum pixel length that pictures are allowed to be (for non-square pictures, it will apply to the longest side).
