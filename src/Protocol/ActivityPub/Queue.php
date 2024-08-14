@@ -189,10 +189,11 @@ class Queue
 	 *
 	 * @param integer $id
 	 * @param bool    $fetch_parents
+	 * @param array   $parent
 	 *
 	 * @return bool
 	 */
-	public static function process(int $id, bool $fetch_parents = true): bool
+	public static function process(int $id, bool $fetch_parents = true, array $parent = []): bool
 	{
 		$entry = DBA::selectFirst('inbox-entry', [], ['id' => $id]);
 		if (empty($entry)) {
@@ -225,6 +226,14 @@ class Queue
 		$activity['entry-id']        = $entry['id'];
 		$activity['worker-id']       = $entry['wid'];
 		$activity['recursion-depth'] = 0;
+
+		if (!empty($parent['children'])) {
+			$activity['children'] = array_merge($activity['children'] ?? [], $parent['children']);
+		}
+
+		if (!empty($parent['callstack'])) {
+			$activity['callstack'] = array_merge($activity['callstack'] ?? [], $parent['callstack']);
+		}
 
 		if (empty($activity['thread-children-type'])) {
 			$activity['thread-children-type'] = $type;
@@ -349,15 +358,16 @@ class Queue
 	 * Process all activities that are children of a given post url
 	 *
 	 * @param string $uri
+	 * @param array  $parent
 	 * @return int
 	 */
-	public static function processReplyByUri(string $uri): int
+	public static function processReplyByUri(string $uri, array $parent = []): int
 	{
 		$count = 0;
 		$entries = DBA::select('inbox-entry', ['id'], ["`in-reply-to-id` = ? AND `object-id` != ?", $uri, $uri]);
 		while ($entry = DBA::fetch($entries)) {
 			$count += 1;
-			self::process($entry['id'], false);
+			self::process($entry['id'], false, $parent);
 		}
 		DBA::close($entries);
 		return $count;
