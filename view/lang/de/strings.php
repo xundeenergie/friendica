@@ -1806,7 +1806,6 @@ $a->strings['Toggle Collapsed status'] = 'Status auf "Zusammengeklappt" umschalt
 $a->strings['Revoke Follow'] = 'Folgen widerrufen';
 $a->strings['Revoke the follow from this contact'] = 'Widerruft das Folgen dieses Kontaktes';
 $a->strings['Bad Request.'] = 'Ungültige Anfrage.';
-$a->strings['Unknown contact.'] = 'Unbekannter Kontakt.';
 $a->strings['Contact is being deleted.'] = 'Kontakt wurde gelöscht.';
 $a->strings['Follow was successfully revoked.'] = 'Folgen wurde erfolgreich widerrufen.';
 $a->strings['Do you really want to revoke this contact\'s follow? This cannot be undone and they will have to manually follow you back again.'] = 'Willst du das Folgen dieses Kontakt wirklich widerrufen? Dies kann nicht rückgängig gemacht werden und der Kontakt muss Ihnen manuell wieder folgen.';
