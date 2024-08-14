@@ -31,7 +31,7 @@ Version 2024.08 (unreleased)
     Fixed the uimport POST endpoint [annando]
     Fixed problem with 0Auth logins [annando]
     Fixed problem with @mentions in comments [annando]
-    Fixed XSS in profile fields [annando, MrPetovan]
+    Fixed XSS in profile fields [annando, apexrabbit, Devilx86, MrPetovan, ponlayookm]
     Fixed bug in deleting unused cached avatar pictures [annando]
     Fixed paging bug on the media tab of remote profiles [annando]
     Fixed display of attached links [annando]
