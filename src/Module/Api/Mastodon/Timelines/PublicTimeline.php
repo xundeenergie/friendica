@@ -141,11 +141,11 @@ class PublicTimeline extends BaseApi
 
 	private function localAllowed(): bool
 	{
-		return in_array($this->config->get('system', 'community_page_style'), [Community::LOCAL, Community::LOCAL_AND_GLOBAL]);
+		return in_array($this->config->get('system', 'community_page_style'), [Community::LOCAL, Community::LOCAL_AND_GLOBAL, Community::DISABLED_VISITOR]);
 	}
 
 	private function globalAllowed(): bool
 	{
-		return in_array($this->config->get('system', 'community_page_style'), [Community::GLOBAL, Community::LOCAL_AND_GLOBAL]);
+		return in_array($this->config->get('system', 'community_page_style'), [Community::GLOBAL, Community::LOCAL_AND_GLOBAL, Community::DISABLED_VISITOR]);
 	}
 }
