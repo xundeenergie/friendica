@@ -27,6 +27,6 @@
 
 ## Additional documentation
 
-- Documentation is available at every Friendica node at `/help` and on
+- Documentation is available at every Friendica node at `/help` and in the project repository [friendica/doc](https://git.friendi.ca/friendica/friendica/src/branch/develop/doc) (links work on the nodes documentation).
 
 <!-- Add links to documentation pages. -->
