@@ -368,7 +368,7 @@ Version 2023.04 (2023-04-23)
     twitter
       Improve remote-self handling [annando]
     impressum
-      Avoide obfuscation on un-set email addresses [MrPettovan]
+      Avoide obfuscation on un-set email addresses [MrPetovan]
     notifyall
       Fixed a bug selecting the email addresses [nupplaphil]
     tumblr
