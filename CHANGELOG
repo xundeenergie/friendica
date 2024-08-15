@@ -23,6 +23,7 @@ Version 2024.08 (unreleased)
     Improved performance while displaying local postings [annando]
     Improved federation with pixelfed, threads [annando]
     Improved integration with Bluesky [annando]
+    Improved automatic cleanup of the database [annando]
     Fixed access to restricted timeline via API [annando]
     Fixed problem fetching from INBOXes [annando]
     Fixed display of contacts from unavailable networks [annando]
