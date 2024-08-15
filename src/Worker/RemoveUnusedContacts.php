@@ -89,5 +89,13 @@ class RemoveUnusedContacts
 		}
 		DBA::close($contacts);
 		Logger::notice('Removal done', ['count' => $count, 'total' => $total]);
+		
+		Logger::notice('Remove apcontact entries with no related contact');
+		DBA::delete('apcontact', ["`uri-id` NOT IN (SELECT `uri-id` FROM `contact`) AND `updated` < ?", DateTimeFormat::utc('now - 30 days')]);
+		Logger::notice('Removed apcontact entries with no related contact', ['count' => DBA::affectedRows()]);
+
+		Logger::notice('Remove diaspora-contact entries with no related contact');
+		DBA::delete('diaspora-contact', ["`uri-id` NOT IN (SELECT `uri-id` FROM `contact`) AND `updated` < ?", DateTimeFormat::utc('now - 30 days')]);
+		Logger::notice('Removed diaspora-contact entries with no related contact', ['count' => DBA::affectedRows()]);
 	}
 }
