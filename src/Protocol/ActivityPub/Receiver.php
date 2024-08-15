@@ -728,6 +728,9 @@ class Receiver
 			self::addArrivedId($object_data['object_id']);
 		}
 
+		$object_data['children']  = $activity['children'] ?? [];
+		$object_data['callstack'] = $activity['callstack'] ?? [];
+
 		$decouple = DI::config()->get('system', 'decoupled_receiver') && !in_array($completion, [self::COMPLETION_MANUAL, self::COMPLETION_ANNOUNCE]) && empty($object_data['directmessage']);
 
 		if ($decouple && ($trust_source || DI::config()->get('debug', 'ap_inbox_store_untrusted'))) {
@@ -755,9 +758,6 @@ class Receiver
 		if (!empty($activity['recursion-depth'])) {
 			$object_data['recursion-depth'] = $activity['recursion-depth'];
 		}
-
-		$object_data['children']  = $activity['children'] ?? [];
-		$object_data['callstack'] = $activity['callstack'] ?? [];
 
 		if (!self::routeActivities($object_data, $type, $push, true, $uid)) {
 			self::storeUnhandledActivity(true, $type, $object_data, $activity, $body, $uid, $trust_source, $push, $signer);
