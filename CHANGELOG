@@ -55,6 +55,23 @@ Version 2024.08 (unreleased)
     Added channel only option for contacts [annando]
 
   Friendica Addons
+    Updates to the translations AR, CS, DE, FR, IT, PL, SV
+    Blockbot
+      Added Relatica to good client list [hankg]
+      Improved agent identifier list [annando]
+    Bluesky
+      Added monitoring statistics [annando]
+      Added support of sensitive postings [annando]
+      Improved API handling [annando]
+      Improved fetching of user DID [annando]
+      Fixed conversion BS/Friendica handles [annando]
+	jsuploader
+	  Improved detection of supported file types [annando]
+	mailstream
+	  Improved image handling [mexon]
+	tumblr
+	  Added monitoring statistics [annando]
+	  Improved quoted postings [annando]
 
   Closed Issues
     11963, 13714, 13787, 13812, 13821, 13910, 14012, 14030, 14059,
