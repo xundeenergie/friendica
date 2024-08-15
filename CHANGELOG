@@ -66,13 +66,13 @@ Version 2024.08 (unreleased)
       Improved API handling [annando]
       Improved fetching of user DID [annando]
       Fixed conversion BS/Friendica handles [annando]
-	jsuploader
-	  Improved detection of supported file types [annando]
-	mailstream
-	  Improved image handling [mexon]
-	tumblr
-	  Added monitoring statistics [annando]
-	  Improved quoted postings [annando]
+    jsuploader
+      Improved detection of supported file types [annando]
+    mailstream
+      Improved image handling [mexon]
+    tumblr
+      Added monitoring statistics [annando]
+      Improved quoted postings [annando]
 
   Closed Issues
     11963, 13714, 13787, 13812, 13821, 13910, 14012, 14030, 14059,
