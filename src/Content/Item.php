@@ -547,9 +547,9 @@ class Item
 			$item['private'] = $private_group ? ItemModel::PRIVATE : ItemModel::UNLISTED;
 
 			if ($only_to_group) {
-				$pcid = Contact::getPublicContactId($group_contact['id'], $item['uid']);
-				if ($pcid) {
-					$item['owner-id'] = $pcid;
+				$ucid = Contact::getUserContactId($group_contact['id'], $item['uid']);
+				if ($ucid) {
+					$item['owner-id'] = $ucid;
 					unset($item['owner-link']);
 					unset($item['owner-name']);
 					unset($item['owner-avatar']);
