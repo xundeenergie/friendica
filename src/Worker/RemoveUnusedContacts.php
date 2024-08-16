@@ -46,6 +46,10 @@ class RemoveUnusedContacts
 			AND NOT `id` IN (SELECT `contact-id` FROM `post-user` WHERE `contact-id` = `contact`.`id`)
 			AND NOT `id` IN (SELECT `cid` FROM `user-contact` WHERE `cid` = `contact`.`id`)
 			AND NOT `id` IN (SELECT `cid` FROM `event` WHERE `cid` = `contact`.`id`)
+			AND NOT `id` IN (SELECT `cid` FROM `group` WHERE `cid` = `contact`.`id`)
+			AND NOT `id` IN (SELECT `cid` FROM `delivery-queue` WHERE `cid` = `contact`.`id`)
+			AND NOT `id` IN (SELECT `author-id` FROM `mail` WHERE `author-id` = `contact`.`id`)
+			AND NOT `id` IN (SELECT `contact-id` FROM `mail` WHERE `contact-id` = `contact`.`id`)
 			AND NOT `id` IN (SELECT `contact-id` FROM `group_member` WHERE `contact-id` = `contact`.`id`)
 			AND `created` < ?",
 			0, 0, 0, Protocol::DFRN, Protocol::DIASPORA, Protocol::OSTATUS, Protocol::FEED, Protocol::MAIL, Protocol::ACTIVITYPUB, DateTimeFormat::utc('now - 365 days'), DateTimeFormat::utc('now - 30 days')];
