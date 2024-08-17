@@ -1478,3 +1478,39 @@ function update_1564()
 
 	return Update::SUCCESS;
 }
+
+function update_1566()
+{
+	$users = DBA::select('user', ['uid'], ["`account-type` = ? AND `verified` AND NOT `blocked` AND NOT `account_removed` AND NOT `account_expired` AND `uid` > ?", User::ACCOUNT_TYPE_RELAY, 0]);
+	while ($user = DBA::fetch($users)) {
+		Profile::setResponsibleRelayContact($user['uid']);
+	}
+	DBA::close($users);
+}
+
+function update_1571()
+{
+	$profiles = DBA::select('profile', ['uid', 'homepage', 'xmpp', 'matrix']);
+	while ($profile = DBA::fetch($profiles)) {
+		$homepage = str_replace(['<', '>', '"', ' '], '', $profile['homepage']);
+		$xmpp     = str_replace(['<', '>', '"', ' '], '', $profile['xmpp']);
+		$matrix   = str_replace(['<', '>', '"', ' '], '', $profile['matrix']);
+
+		$fields = [];
+		if ($homepage != $profile['homepage']) {
+			$fields['homepage'] = $homepage;
+		}
+		if ($xmpp != $profile['xmpp']) {
+			$fields['xmpp'] = $xmpp;
+		}
+		if ($matrix != $profile['matrix']) {
+			$fields['matrix'] = $matrix;
+		}
+		if (!empty($fields)) {
+			Profile::update($fields, $profile['uid']);
+		}
+	}
+	DBA::close($profiles);
+
+	return Update::SUCCESS;
+}
