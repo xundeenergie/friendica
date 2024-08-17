@@ -514,6 +514,12 @@ return [
 		// Redistribute incoming activities via ActivityPub
 		'redistribute_activities' => true,
 
+		// remove_all_unused_contacts (Boolean)
+		// Remove all unused contacts.
+		// Per default only archived contacts are removed from federated services.
+		// Unused contacts from connector networks will be removed in any case.
+		'remove_all_unused_contacts' => false,
+
 		// session_handler (database|cache|native)
 		// Whether to use Cache to store session data or to use PHP native session storage.
 		'session_handler' => 'database',
