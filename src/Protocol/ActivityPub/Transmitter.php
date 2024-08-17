@@ -1028,14 +1028,6 @@ class Transmitter
 	{
 		$inboxes = [];
 
-		$isGroup = false;
-		if (!empty($uid)) {
-			$profile = User::getOwnerDataById($uid);
-			if (!empty($profile)) {
-				$isGroup = $profile['account-type'] == User::ACCOUNT_TYPE_COMMUNITY;
-			}
-		}
-
 		if ($all_ap) {
 			// Will be activated in a later step
 			$networks = Protocol::FEDERATED;
@@ -1061,10 +1053,6 @@ class Transmitter
 		$contacts = DBA::select('contact', ['id', 'url', 'network', 'protocol', 'gsid'], $condition);
 		while ($contact = DBA::fetch($contacts)) {
 			if (!self::isAPContact($contact, $networks)) {
-				continue;
-			}
-
-			if ($isGroup && ($contact['network'] == Protocol::DFRN)) {
 				continue;
 			}
 
