@@ -38,6 +38,7 @@ Version 2024.08 (unreleased)
     Fixed display of attached links [annando]
     Fixed a bug in circle only contacts [annando]
     Fixed display of moderation reports [MrPetovan, TheTomcat14]
+    Fixed delivery problems to group postings [annando]
     Added monitoring service endpoint [annando]
     Added admin option display_link_length to set the length of displayed links [annando]
     Added the possibility to upload media files via API [annando]
@@ -79,7 +80,7 @@ Version 2024.08 (unreleased)
     14077, 14079, 14045, 14052, 14055, 14081, 14084, 14102, 14110,
     14118, 14121, 14125, 14132, 14134, 14153, 14160, 14170, 14175,
     14186, 14197, 14220, 14228, 14231, 14240, 14249, 14250, 14285,
-    14295, 14303, 14312, 14324, 14329, 14349
+    14295, 14303, 14312, 14324, 14329, 14349, 14364
 
 Version 2024.03 (2024-03-21)
   Friendica Core
