@@ -86,7 +86,7 @@ class Browser extends BaseModule
 			'$folders'  => $albums,
 			'$files'    => $photosArray,
 			'$cancel'   => $this->t('Cancel'),
-			'$nickname' => $this->app->getLoggedInUserNickname(),
+			'$nickname' => $this->session->getLocalUserNickname(),
 			'$upload'   => $this->t('Upload'),
 		]);
 
@@ -115,7 +115,7 @@ class Browser extends BaseModule
 		$scale = $photo['scale'] ?? $record['loq'];
 
 		return [
-			sprintf('%s/photos/%s/image/%s', $this->baseUrl, $this->app->getLoggedInUserNickname(), $record['resource-id']),
+			sprintf('%s/photos/%s/image/%s', $this->baseUrl, $this->session->getLocalUserNickname(), $record['resource-id']),
 			$filename_e,
 			sprintf('%s/photo/%s-%s%s', $this->baseUrl, $record['resource-id'], $scale, $ext),
 			$record['desc'],

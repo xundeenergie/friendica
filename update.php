@@ -40,6 +40,7 @@
  * If you need to run a script before the database update, name the function "pre_update_4712()"
  */
 
+use Friendica\Contact\LocalRelationship\Entity\LocalRelationship;
 use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Core\Logger;
 use Friendica\Core\Protocol;
@@ -1133,7 +1134,7 @@ function update_1481()
 
 function update_1491()
 {
-	DBA::update('contact', ['remote_self' => Contact::MIRROR_OWN_POST], ['remote_self' => Contact::MIRROR_FORWARDED]);
+	DBA::update('contact', ['remote_self' => LocalRelationship::MIRROR_OWN_POST], ['remote_self' => 1]);
 	return Update::SUCCESS;
 }
 
@@ -1456,5 +1457,60 @@ function update_1557()
 		UpdateContact::add(Worker::PRIORITY_LOW, $contact['id']);
 	}
 	DBA::close($contacts);
+	return Update::SUCCESS;
+}
+
+function update_1560()
+{
+	if (!DBA::e("INSERT IGNORE INTO `post-origin`(`id`, `uri-id`, `uid`, `parent-uri-id`, `thr-parent-id`, `created`, `received`, `gravity`, `vid`, `private`, `wall`)
+		SELECT `id`, `uri-id`, `uid`, `parent-uri-id`, `thr-parent-id`, `created`, `received`, `gravity`, `vid`, `private`, `wall` FROM `post-user` WHERE `post-user`.`origin` AND `post-user`.`uid` != ?", 0)) {
+		return Update::FAILED;
+	}
+}
+
+function update_1564()
+{
+	$users = DBA::select('user', ['uid'], ['blocked' => true]);
+	while ($user = DBA::fetch($users)) {
+		User::block($user['uid']);
+	}
+	DBA::close($users);
+
+	return Update::SUCCESS;
+}
+
+function update_1566()
+{
+	$users = DBA::select('user', ['uid'], ["`account-type` = ? AND `verified` AND NOT `blocked` AND NOT `account_removed` AND NOT `account_expired` AND `uid` > ?", User::ACCOUNT_TYPE_RELAY, 0]);
+	while ($user = DBA::fetch($users)) {
+		Profile::setResponsibleRelayContact($user['uid']);
+	}
+	DBA::close($users);
+}
+
+function update_1571()
+{
+	$profiles = DBA::select('profile', ['uid', 'homepage', 'xmpp', 'matrix']);
+	while ($profile = DBA::fetch($profiles)) {
+		$homepage = str_replace(['<', '>', '"', ' '], '', $profile['homepage']);
+		$xmpp     = str_replace(['<', '>', '"', ' '], '', $profile['xmpp']);
+		$matrix   = str_replace(['<', '>', '"', ' '], '', $profile['matrix']);
+
+		$fields = [];
+		if ($homepage != $profile['homepage']) {
+			$fields['homepage'] = $homepage;
+		}
+		if ($xmpp != $profile['xmpp']) {
+			$fields['xmpp'] = $xmpp;
+		}
+		if ($matrix != $profile['matrix']) {
+			$fields['matrix'] = $matrix;
+		}
+		if (!empty($fields)) {
+			Profile::update($fields, $profile['uid']);
+		}
+	}
+	DBA::close($profiles);
+
 	return Update::SUCCESS;
 }

@@ -118,7 +118,7 @@ class RemoteFollow extends BaseModule
 
 	protected function content(array $request = []): string
 	{
-		$this->page['aside'] = Widget\VCard::getHTML($this->owner);
+		$this->page['aside'] = Widget\VCard::getHTML($this->owner, false, true);
 
 		$target_addr = $this->owner['addr'];
 		$target_url  = $this->owner['url'];

@@ -24,7 +24,6 @@ namespace Friendica\Module;
 use Friendica\App;
 use Friendica\BaseModule;
 use Friendica\Capabilities\ICanCreateResponses;
-use Friendica\Core\Addon;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
 use Friendica\Model\Nodeinfo;
@@ -57,10 +56,11 @@ class NodeInfo120 extends BaseModule
 			],
 			'protocols'         => ['dfrn', 'activitypub'],
 			'services'          => Nodeinfo::getServices(),
+			'openRegistrations' => Register::getPolicy() !== Register::CLOSED,
 			'usage'             => Nodeinfo::getUsage(),
-			'openRegistrations' => intval($this->config->get('config', 'register_policy')) !== Register::CLOSED,
 			'metadata'          => [
-				'nodeName' => $this->config->get('config', 'sitename'),
+				'nodeName'        => $this->config->get('config', 'sitename'),
+				'nodeDescription' => $this->config->get('config', 'info'),
 			],
 		];
 

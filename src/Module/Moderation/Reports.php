@@ -48,6 +48,12 @@ class Reports extends BaseModeration
 		$this->database = $database;
 	}
 
+	protected function post(array $request = [])
+	{
+		// @todo check if POST is really used here
+		$this->content($request);
+	}
+
 	protected function content(array $request = []): string
 	{
 		parent::content();
@@ -56,9 +62,24 @@ class Reports extends BaseModeration
 
 		$pager = new Pager($this->l10n, $this->args->getQueryString(), 10);
 
-		$query = $this->database->p("SELECT `report`.`id`, `report`.`cid`, `report`.`comment`, `report`.`forward`, `report`.`created`, `report`.`reporter-id`,
-			`report`.`category`, `report`.`rules`, `contact`.`micro`, `contact`.`name`, `contact`.`nick`, `contact`.`url`, `contact`.`addr` FROM report
-			INNER JOIN `contact` ON `contact`.`id` = `report`.`cid` ORDER BY `report`.`created` DESC LIMIT ?, ?", $pager->getStart(), $pager->getItemsPerPage());
+		$query = $this->database->p(
+			"SELECT
+	`report`.`id`, `report`.`cid`, `report`.`comment`, `report`.`forward`, `report`.`created`, `report`.`reporter-id`,
+	`report`.`category-id`,
+	(
+		SELECT GROUP_CONCAT(`report-rule`.`text` ORDER BY `report-rule`.`line-id` SEPARATOR \"\n\")
+		FROM `report-rule`
+		WHERE `report-rule`.`rid` = `report`.`id`
+		GROUP BY `report-rule`.`rid`
+	) AS `rules`,
+	`contact`.`micro`, `contact`.`name`, `contact`.`nick`, `contact`.`url`, `contact`.`addr`
+FROM report
+INNER JOIN `contact` ON `contact`.`id` = `report`.`cid`
+ORDER BY `report`.`created` DESC
+LIMIT ?, ?",
+			$pager->getStart(),
+			$pager->getItemsPerPage(),
+		);
 
 		$reports = [];
 		while ($report = $this->database->fetch($query)) {
@@ -95,8 +116,6 @@ class Reports extends BaseModeration
 			'$th_reports' => [$this->t('Created'), $this->t('Photo'), $this->t('Name'), $this->t('Comment'), $this->t('Category')],
 
 			// values //
-			'$baseurl' => $this->baseUrl,
-
 			'$reports'       => $reports,
 			'$total_reports' => $this->tt('%s total report', '%s total reports', $total),
 			'$paginate'      => $pager->renderFull($total),

@@ -107,5 +107,7 @@ They think they are a friend.
 You can also "block" a person.
 This completely blocks communications with that person.
 They may still be able to see your public posts, as can anybody in the world, but they cannot communicate with you directly.
+Friendica will notify their server that you have blocked them, although normally that server should not notify them individually.
+However, there are various simple ways they can deduce that they have been blocked if they investigate.
 
 You can also delete a friend no matter what the friendship status - which completely removes everything relating to that person from your website.

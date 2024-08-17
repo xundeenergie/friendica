@@ -47,10 +47,12 @@ use Friendica\Core\L10n;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
+use Friendica\Core\Worker;
 use Friendica\Database\DBA;
 use Friendica\Database\Database;
 use Friendica\Model\Contact;
 use Friendica\Model\Circle;
+use Friendica\Model\Post;
 use Friendica\Model\Profile;
 use Friendica\Module\Response;
 use Friendica\Module\Security\Login;
@@ -130,21 +132,35 @@ class Network extends Timeline
 
 		$o = '';
 
-		$this->page['aside'] .= Circle::sidebarWidget($module, $module . '/circle', 'standard', $this->circleId);
-		$this->page['aside'] .= GroupManager::widget($this->session->getLocalUserId());
-		$this->page['aside'] .= Widget::postedByYear($module . '/archive', $this->session->getLocalUserId(), false);
-		$this->page['aside'] .= Widget::networks($module, $this->network);
-		$this->page['aside'] .= Widget::accountTypes($module, $this->accountTypeString);
-		$this->page['aside'] .= Widget::channels($module, $this->selectedTab, $this->session->getLocalUserId());
-		$this->page['aside'] .= Widget\SavedSearches::getHTML($this->args->getQueryString());
-		$this->page['aside'] .= Widget::fileAs('filed', '');
-
+		if (Feature::isEnabled($this->session->getLocalUserId(), Feature::CIRCLES)) {
+			$this->page['aside'] .= Circle::sidebarWidget($module, $module . '/circle', 'standard', $this->circleId);
+		}
+		if (Feature::isEnabled($this->session->getLocalUserId(), Feature::GROUPS)) {
+			$this->page['aside'] .= GroupManager::widget($this->session->getLocalUserId());
+		}
+		if (Feature::isEnabled($this->session->getLocalUserId(), Feature::ARCHIVE)) {
+			$this->page['aside'] .= Widget::postedByYear($module . '/archive', $this->session->getLocalUserId(), false);
+		}
+		if (Feature::isEnabled($this->session->getLocalUserId(), Feature::NETWORKS)) {
+			$this->page['aside'] .= Widget::networks($module, $this->network);
+		}
+		if (Feature::isEnabled($this->session->getLocalUserId(), Feature::ACCOUNTS)) {
+			$this->page['aside'] .= Widget::accountTypes($module, $this->accountTypeString);
+		}
+		if (Feature::isEnabled($this->session->getLocalUserId(), Feature::CHANNELS)) {
+			$this->page['aside'] .= Widget::channels($module, $this->selectedTab, $this->session->getLocalUserId());
+		}
+		if (Feature::isEnabled($this->session->getLocalUserId(), Feature::SEARCHES)) {
+			$this->page['aside'] .= Widget\SavedSearches::getHTML($this->args->getQueryString());
+		}
+		if (Feature::isEnabled($this->session->getLocalUserId(), Feature::FOLDERS)) {
+			$this->page['aside'] .= Widget::fileAs('filed', '');
+		}
 		if (($this->channel->isTimeline($this->selectedTab) || $this->userDefinedChannel->isTimeline($this->selectedTab, $this->session->getLocalUserId())) &&
-			!in_array($this->selectedTab, [Channel::FOLLOWERS, Channel::FORYOU, Channel::DISCOVER])) {
+			!in_array($this->selectedTab, [Channel::FOLLOWERS, Channel::FORYOU, Channel::DISCOVER]) && Feature::isEnabled($this->session->getLocalUserId(), Feature::NOSHARER)) {
 			$this->page['aside'] .= $this->getNoSharerWidget('network');
 		}
-
-		if (Feature::isEnabled($this->session->getLocalUserId(), 'trending_tags')) {
+		if (Feature::isEnabled($this->session->getLocalUserId(), Feature::TRENDING_TAGS)) {
 			$this->page['aside'] .= TrendingTags::getHTML($this->selectedTab);
 		}
 
@@ -211,13 +227,13 @@ class Network extends Timeline
 
 		try {
 			if ($this->channel->isTimeline($this->selectedTab) || $this->userDefinedChannel->isTimeline($this->selectedTab, $this->session->getLocalUserId())) {
-				$items = $this->getChannelItems($request);
+				$items = $this->getChannelItems($request, $this->session->getLocalUserId());
 			} elseif ($this->community->isTimeline($this->selectedTab)) {
 				$items = $this->getCommunityItems();
 			} else {
 				$items = $this->getItems();
 			}
-	
+
 			$o .= $this->conversation->render($items, Conversation::MODE_NETWORK, false, false, $this->getOrder(), $this->session->getLocalUserId());
 		} catch (\Exception $e) {
 			$o .= $this->l10n->t('Error %d (%s) while fetching the timeline.', $e->getCode(), $e->getMessage());
@@ -295,7 +311,7 @@ class Network extends Timeline
 		$this->circleId = (int)($this->parameters['circle_id'] ?? 0);
 
 		if (!$this->selectedTab) {
-			$this->selectedTab = self::getTimelineOrderBySession($this->session, $this->pConfig);
+			$this->selectedTab = $this->getTimelineOrderBySession();
 		} elseif (!$this->networkFactory->isTimeline($this->selectedTab) && !$this->channel->isTimeline($this->selectedTab) && !$this->userDefinedChannel->isTimeline($this->selectedTab, $this->session->getLocalUserId()) && !$this->community->isTimeline($this->selectedTab)) {
 			throw new HTTPException\BadRequestException($this->l10n->t('Network feed not available.'));
 		}
@@ -357,6 +373,16 @@ class Network extends Timeline
 		$this->dateTo = $this->parameters['to'] ?? '';
 
 		$this->setMaxMinByOrder($request);
+
+		if (is_null($this->maxId) && !is_null($this->minId)) {
+			$this->session->set('network-request', $request);
+			$this->pConfig->set($this->session->getLocalUserId(), 'network.view', 'request', $request);
+		}
+	}
+
+	protected function setPing(bool $ping)
+	{
+		$this->ping = $ping;
 	}
 
 	protected function getItems()
@@ -439,44 +465,51 @@ class Network extends Timeline
 			$params['order'] = [$this->order => true];
 		}
 
-		$items = $this->database->selectToArray('network-thread-view', [], DBA::mergeConditions($conditionFields, $conditionStrings), $params);
+		$items = $this->database->selectToArray($this->circleId ? 'network-thread-circle-view' : 'network-thread-view', [], DBA::mergeConditions($conditionFields, $conditionStrings), $params);
 
 		// min_id quirk, continued
 		if (isset($this->minId) && !isset($this->maxId)) {
 			$items = array_reverse($items);
 		}
 
-		if ($this->database->isResult($items)) {
-			$parents = array_column($items, 'uri-id');
-		} else {
-			$parents = [];
+		if ($this->ping || !$this->database->isResult($items)) {
+			return $items;
 		}
 
-		// We aren't going to try and figure out at the item, circle, and page
-		// level which items you've seen and which you haven't. If you're looking
-		// at the top level network page just mark everything seen.
-		if (!$this->circleId && !$this->star && !$this->mention) {
-			$condition = ['unseen' => true, 'uid' => $this->session->getLocalUserId()];
-			$this->setItemsSeenByCondition($condition);
-		} elseif (!empty($parents)) {
-			$condition = ['unseen' => true, 'uid' => $this->session->getLocalUserId(), 'parent-uri-id' => $parents];
-			$this->setItemsSeenByCondition($condition);
+		$this->setItemsSeenByCondition(['unseen' => true, 'uid' => $this->session->getLocalUserId(), 'parent-uri-id' => array_column($items, 'uri-id')]);
+
+		$posts = Post::selectToArray(['uri-id'], ['unseen' => true, 'uid' => $this->session->getLocalUserId()], ['limit' => 100]);
+		if (!empty($posts)) {
+			$this->setItemsSeenByCondition(['unseen' => true, 'uid' => $this->session->getLocalUserId(), 'uri-id' => array_column($posts, 'uri-id')]);
 		}
 
+		if (count($posts) == 100) {
+			Worker::add(Worker::PRIORITY_MEDIUM, 'SetSeen', $this->session->getLocalUserId());
+		}
 		return $items;
 	}
 
 	/**
 	 * Returns the selected network tab of the currently logged-in user
 	 *
-	 * @param IHandleUserSessions         $session
-	 * @param IManagePersonalConfigValues $pconfig
 	 * @return string
 	 */
-	public static function getTimelineOrderBySession(IHandleUserSessions $session, IManagePersonalConfigValues $pconfig): string
+	private function getTimelineOrderBySession(): string
 	{
-		return $session->get('network-tab')
-			?? $pconfig->get($session->getLocalUserId(), 'network.view', 'selected_tab')
+		return $this->session->get('network-tab')
+			?? $this->pConfig->get($this->session->getLocalUserId(), 'network.view', 'selected_tab')
 			?? '';
+	}
+
+	/**
+	 * Returns the lst request parameters of the currently logged-in user
+	 *
+	 * @return array
+	 */
+	protected function getTimelineRequestBySession(): array
+	{
+		return $this->session->get('network-request')
+			?? $this->pConfig->get($this->session->getLocalUserId(), 'network.view', 'request')
+			?? [];
 	}
 }

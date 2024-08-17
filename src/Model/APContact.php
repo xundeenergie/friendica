@@ -84,13 +84,9 @@ class APContact
 
 			if (!empty($link['template']) && ($link['rel'] == ActivityNamespace::OSTATUSSUB)) {
 				$data['subscribe'] = $link['template'];
-			}
-
-			if (!empty($link['href']) && !empty($link['type']) && ($link['rel'] == 'self') && ($link['type'] == 'application/activity+json')) {
+			} elseif (!empty($link['href']) && !empty($link['type']) && ($link['rel'] == 'self') && ($link['type'] == 'application/activity+json')) {
 				$data['url'] = $link['href'];
-			}
-
-			if (!empty($link['href']) && !empty($link['type']) && ($link['rel'] == 'http://webfinger.net/rel/profile-page') && ($link['type'] == 'text/html')) {
+			} elseif (!empty($link['href']) && !empty($link['type']) && ($link['rel'] == ActivityNamespace::WEBFINGERPROFILE) && ($link['type'] == 'text/html')) {
 				$data['alias'] = $link['href'];
 			}
 		}
@@ -105,14 +101,12 @@ class APContact
 	/**
 	 * Fetches a profile from a given url
 	 *
-	 * @param string  $url    profile url
-	 * @param boolean $update true = always update, false = never update, null = update when not found or outdated
+	 * @param string   $url    profile url
+	 * @param ?boolean $update true = always update, false = never update, null = update when not found or outdated
 	 * @return array profile array
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
-	 * @throws \ImagickException
-	 * @todo Rewrite parameter $update to avoid true|false|null (boolean is binary, null adds a third case)
 	 */
-	public static function getByURL(string $url, $update = null): array
+	public static function getByURL(string $url, bool $update = null): array
 	{
 		if (empty($url) || Network::isUrlBlocked($url)) {
 			Logger::info('Domain is blocked', ['url' => $url]);
@@ -184,7 +178,7 @@ class APContact
 			DI::cache()->set($cachekey, System::callstack(20), Duration::FIVE_MINUTES);
 		}
 
-		if (Network::isLocalLink($url) && ($local_uid = User::getIdForURL($url))) {
+		if (DI::baseUrl()->isLocalUrl($url) && ($local_uid = User::getIdForURL($url))) {
 			try {
 				$data = Transmitter::getProfile($local_uid);
 				$local_owner = User::getOwnerDataById($local_uid);
@@ -201,7 +195,7 @@ class APContact
 				$failed = empty($curlResult) || empty($curlResult->getBodyString()) ||
 					(!$curlResult->isSuccess() && ($curlResult->getReturnCode() != 410));
 
-				if (!$failed) {
+					if (!$failed) {
 					$data = json_decode($curlResult->getBodyString(), true);
 					$failed = empty($data) || !is_array($data);
 				}
@@ -293,6 +287,7 @@ class APContact
 		} elseif ($apcontact['type'] == 'Tombstone') {
 			// The "inbox" field must have a content
 			$apcontact['inbox'] = '';
+			$apcontact['addr']  = '';
 		}
 
 		// Quit if this doesn't seem to be an account at all
@@ -300,7 +295,7 @@ class APContact
 			return $fetched_contact;
 		}
 
-		if (empty($apcontact['addr'])) {
+		if (empty($apcontact['addr']) && ($apcontact['type'] != 'Tombstone')) {
 			try {
 				$apcontact['addr'] = $apcontact['nick'] . '@' . (new Uri($apcontact['url']))->getAuthority();
 			} catch (\Throwable $e) {

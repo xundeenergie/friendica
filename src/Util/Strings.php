@@ -498,7 +498,8 @@ class Strings
 
 		$blocks = [];
 
-		$return = preg_replace_callback($regex,
+		$return = preg_replace_callback(
+			$regex,
 			function ($matches) use ($executionId, &$blocks) {
 				$return = '«block-' . $executionId . '-' . count($blocks) . '»';
 
@@ -516,7 +517,8 @@ class Strings
 		$text = $callback($return ?? $text) ?? '';
 
 		// Restore code blocks
-		$text = preg_replace_callback('/«block-' . $executionId . '-([0-9]+)»/iU',
+		$text = preg_replace_callback(
+			'/«block-' . $executionId . '-([0-9]+)»/iU',
 			function ($matches) use ($blocks) {
 				$return = $matches[0];
 				if (isset($blocks[intval($matches[1])])) {
@@ -545,10 +547,10 @@ class Strings
 			return $shorthand;
 		}
 
-		$last      = strtolower($shorthand[strlen($shorthand)-1]);
+		$last      = strtolower($shorthand[strlen($shorthand) - 1]);
 		$shorthand = substr($shorthand, 0, -1);
 
-		switch($last) {
+		switch ($last) {
 			case 'g':
 				$shorthand *= 1024;
 			case 'm':
@@ -563,17 +565,22 @@ class Strings
 	/**
 	 * Converts an URL in a nicer format (without the scheme and possibly shortened)
 	 *
-	 * @param string $url URL that is about to be reformatted
+	 * @param string $url        URL that is about to be reformatted
+	 * @param int    $max_length Maximum length of an url before it is shortened
 	 * @return string reformatted link
 	 */
-	public static function getStyledURL(string $url): string
+	public static function getStyledURL(string $url, int $max_length = 30): string
 	{
 		$parts = parse_url($url);
+		if (empty($parts['scheme'])) {
+			return $url;
+		}
+
 		$scheme = [$parts['scheme'] . '://www.', $parts['scheme'] . '://'];
 		$styled_url = str_replace($scheme, '', $url);
 
-		if (strlen($styled_url) > 30) {
-			$styled_url = substr($styled_url, 0, 30) . "…";
+		if (!empty($max_length) && strlen($styled_url) > $max_length) {
+			$styled_url = substr($styled_url, 0, $max_length) . "…";
 		}
 
 		return $styled_url;

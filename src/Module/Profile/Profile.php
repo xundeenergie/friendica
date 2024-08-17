@@ -26,13 +26,13 @@ use Friendica\Content\Feature;
 use Friendica\Content\GroupManager;
 use Friendica\Content\Nav;
 use Friendica\Content\Text\BBCode;
+use Friendica\Content\Text\HTML;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Hook;
 use Friendica\Core\L10n;
 use Friendica\Core\Protocol;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
-use Friendica\Core\System;
 use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\Model\Contact;
@@ -43,12 +43,14 @@ use Friendica\Module\BaseProfile;
 use Friendica\Module\Response;
 use Friendica\Module\Security\Login;
 use Friendica\Network\HTTPException;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Profile\ProfileField\Repository\ProfileField;
 use Friendica\Protocol\ActivityPub;
 use Friendica\Util\DateTimeFormat;
+use Friendica\Util\Network;
 use Friendica\Util\Profiler;
-use Friendica\Util\Strings;
 use Friendica\Util\Temporal;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Log\LoggerInterface;
 
 class Profile extends BaseProfile
@@ -122,7 +124,7 @@ class Profile extends BaseProfile
 			$this->baseUrl->redirect('profile/' . $profile['nickname'] . '/restricted');
 		}
 
-		if (!empty($profile['page-flags']) && $profile['page-flags'] == User::PAGE_FLAGS_COMMUNITY) {
+		if (!empty($profile['page-flags']) && in_array($profile['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN])) {
 			$this->page['htmlhead'] .= '<meta name="friendica.community" content="true" />' . "\n";
 		}
 
@@ -164,9 +166,9 @@ class Profile extends BaseProfile
 
 		$basic_fields = [];
 
-		$basic_fields += self::buildField('fullname', $this->t('Full Name:'), $profile['name']);
+		$basic_fields += self::buildField('fullname', $this->t('Full Name:'), $this->cleanInput($profile['uri-id'], $profile['name']));
 
-		if (Feature::isEnabled($profile['uid'], 'profile_membersince')) {
+		if (Feature::isEnabled($profile['uid'], Feature::MEMBER_SINCE)) {
 			$basic_fields += self::buildField(
 				'membersince',
 				$this->t('Member since:'),
@@ -196,18 +198,18 @@ class Profile extends BaseProfile
 		}
 
 		if ($profile['xmpp']) {
-			$basic_fields += self::buildField('xmpp', $this->t('XMPP:'), $profile['xmpp']);
+			$basic_fields += self::buildField('xmpp', $this->t('XMPP:'), $this->cleanInput($profile['uri-id'], $profile['xmpp']));
 		}
 
 		if ($profile['matrix']) {
-			$basic_fields += self::buildField('matrix', $this->t('Matrix:'), $profile['matrix']);
+			$basic_fields += self::buildField('matrix', $this->t('Matrix:'), $this->cleanInput($profile['uri-id'], $profile['matrix']));
 		}
 
 		if ($profile['homepage']) {
 			$basic_fields += self::buildField(
 				'homepage',
 				$this->t('Homepage:'),
-				$this->tryRelMe($profile['homepage']) ?: $profile['homepage']
+				$this->tryRelMe($profile['homepage']) ?: $this->cleanInput($profile['uri-id'], $profile['homepage'])
 			);
 		}
 
@@ -218,7 +220,7 @@ class Profile extends BaseProfile
 			|| $profile['region']
 			|| $profile['country-name']
 		) {
-			$basic_fields += self::buildField('location', $this->t('Location:'), ProfileModel::formatLocation($profile));
+			$basic_fields += self::buildField('location', $this->t('Location:'), $this->cleanInput($profile['uri-id'], ProfileModel::formatLocation($profile)));
 		}
 
 		if ($profile['pub_keywords']) {
@@ -255,7 +257,7 @@ class Profile extends BaseProfile
 		}
 
 		//show subscribed group if it is enabled in the usersettings
-		if (Feature::isEnabled($profile['uid'], 'forumlist_profile')) {
+		if (Feature::isEnabled($profile['uid'], Feature::GROUPS)) {
 			$custom_fields += self::buildField(
 				'group_list',
 				$this->t('Groups:'),
@@ -319,7 +321,7 @@ class Profile extends BaseProfile
 	{
 		$htmlhead = "\n";
 
-		if (!empty($profile['page-flags']) && $profile['page-flags'] == User::PAGE_FLAGS_COMMUNITY) {
+		if (!empty($profile['page-flags']) && in_array($profile['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN])) {
 			$htmlhead .= '<meta name="friendica.community" content="true" />' . "\n";
 		}
 
@@ -372,10 +374,28 @@ class Profile extends BaseProfile
 	 */
 	private function tryRelMe(string $input): string
 	{
-		if (preg_match(Strings::onlyLinkRegEx(), trim($input))) {
-			return '<a href="' . trim($input) . '" target="_blank" rel="noopener noreferrer me">' . trim($input) . '</a>';
+		$input = trim($input);
+		if (Network::isValidHttpUrl($input)) {
+			try {
+				$input = (string)Uri::fromParts(parse_url($input));
+				return '<a href="' . $input . '" target="_blank" rel="noopener noreferrer me">' . $input . '</a>';
+			} catch (\Throwable $th) {
+				return '';
+			}
 		}
 
 		return '';
+	}
+
+	/**
+	 * Clean the provided input to prevent XSS problems
+	 * @param int $uri_id 
+	 * @param string $input 
+	 * @return string 
+	 * @throws InternalServerErrorException 
+	 */
+	private function cleanInput(int $uri_id, string $input): string
+	{
+		return BBCode::convertForUriId($uri_id, HTML::toBBCode($input));
 	}
 }

@@ -29,9 +29,9 @@ use Friendica\Core\Renderer;
 use Friendica\Core\Search;
 use Friendica\DI;
 use Friendica\Model\Contact;
-use Friendica\Util\Network;
 use Friendica\Util\Strings;
 use Friendica\Util\XML;
+use GuzzleHttp\Psr7\Uri;
 use League\HTMLToMarkdown\HtmlConverter;
 use Psr\Http\Message\UriInterface;
 
@@ -253,13 +253,14 @@ class HTML
 			self::tagToBBCode($doc, 'span', ['class' => 'type-link'], '[class=type-link]', '[/class]');
 			self::tagToBBCode($doc, 'span', ['class' => 'type-video'], '[class=type-video]', '[/class]');
 
-			self::tagToBBCode($doc, 'strong', [], '[b]', '[/b]');
-			self::tagToBBCode($doc, 'em', [], '[i]', '[/i]');
-			self::tagToBBCode($doc, 'b', [], '[b]', '[/b]');
-			self::tagToBBCode($doc, 'i', [], '[i]', '[/i]');
-			self::tagToBBCode($doc, 'u', [], '[u]', '[/u]');
-			self::tagToBBCode($doc, 's', [], '[s]', '[/s]');
-			self::tagToBBCode($doc, 'del', [], '[s]', '[/s]');
+			$elements = [
+				'b', 'del', 'em', 'i', 'ins', 'kbd', 'mark',
+				's', 'samp', 'strong', 'sub', 'sup', 'u', 'var'
+			];
+			foreach ($elements as $element) {
+				self::tagToBBCode($doc, $element, [], '[' . $element . ']', '[/' . $element . ']');
+			}
+
 			self::tagToBBCode($doc, 'strike', [], '[s]', '[/s]');
 
 			self::tagToBBCode($doc, 'big', [], "[size=large]", "[/size]");
@@ -406,7 +407,7 @@ class HTML
 		}
 
 		$parts = array_merge($base, parse_url($url));
-		$url2 = Network::unparseURL($parts);
+		$url2 = (string)Uri::fromParts((array)$parts);
 
 		return str_replace($url, $url2, $link);
 	}
@@ -867,7 +868,7 @@ class HTML
 			'$save_label'   => $save_label,
 			'$search_hint'  => DI::l10n()->t('@name, !group, #tags, content'),
 			'$mode'         => $mode,
-			'$return_url'   => urlencode(Search::getSearchPath($s)),
+			'$return_url'   => bin2hex(Search::getSearchPath($s)),
 		];
 
 		if (!$aside) {
@@ -1059,5 +1060,16 @@ class HTML
 		}
 
 		return null;
+	}
+
+	/**
+	 * Check if a document contains HTML or entities
+	 *
+	 * @param string $text
+	 * @return boolean
+	 */
+	public static function isHTML(string $text): bool
+	{
+		return ($text != html_entity_decode($text)) || ($text != strip_tags($text));
 	}
 }

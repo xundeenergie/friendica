@@ -56,6 +56,11 @@ class Logout extends BaseModule
 		$this->session = $session;
 	}
 
+	protected function post(array $request = [])
+	{
+		// @todo check if POST is really used here
+		$this->rawContent($request);
+	}
 
 	/**
 	 * Process logout requests
@@ -64,7 +69,7 @@ class Logout extends BaseModule
 	{
 		$visitor_home = null;
 		if ($this->session->getRemoteUserId()) {
-			$visitor_home = Profile::getMyURL();
+			$visitor_home = $this->session->getMyUrl();
 			$this->cache->delete('zrlInit:' . $visitor_home);
 		}
 

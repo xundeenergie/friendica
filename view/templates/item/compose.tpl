@@ -54,7 +54,7 @@
 			</p>
 			<div id="dropzone-{{$id}}" class="dropzone" style="overflow:scroll">
 				<p>
-					<textarea id="comment-edit-text-{{$id}}" class="comment-edit-text form-control text-autosize" name="body" placeholder="{{$l10n.default}}" rows="7" tabindex="3" dir="auto" dir="auto" onkeydown="sendOnCtrlEnter(event, 'comment-edit-submit-{{$id}}')">{{$body}}</textarea>
+					<textarea id="comment-edit-text-{{$id}}" class="comment-edit-text form-control text-autosize expandable-textarea" name="body" placeholder="{{$l10n.default}}" rows="7" tabindex="3" dir="auto" dir="auto" onkeydown="sendOnCtrlEnter(event, 'comment-edit-submit-{{$id}}')">{{$body}}</textarea>
 				</p>
 			</div>
 			<p class="comment-edit-submit-wrapper">
@@ -103,4 +103,19 @@
 </div>
 <script>
 	dzFactory.setupDropzone('#dropzone-{{$id}}', 'comment-edit-text-{{$id}}');
+
+	document.addEventListener("DOMContentLoaded", function() {
+		var textareas = document.querySelectorAll(".expandable-textarea");
+
+		textareas.forEach(function(textarea) {
+			textarea.addEventListener("input", function() {
+				this.style.height = "auto";
+				this.style.height = (this.scrollHeight) + "px";
+			});
+
+			// Set initial height
+			textarea.style.height = "auto";
+			textarea.style.height = (textarea.scrollHeight) + "px";
+		});
+	});
 </script>

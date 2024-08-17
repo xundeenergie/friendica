@@ -44,6 +44,7 @@ use Friendica\Model\Post;
 use Friendica\Model\Profile;
 use Friendica\Model\Tag;
 use Friendica\Model\User;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException;
 use Friendica\Network\Probe;
 use Friendica\Util\Crypto;
@@ -392,7 +393,7 @@ class DFRN
 		}
 
 		// For backward compatibility we keep this element
-		if ($owner['page-flags'] == User::PAGE_FLAGS_COMMUNITY) {
+		if (in_array($owner['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN])) {
 			XML::addElement($doc, $root, 'dfrn:community', 1);
 		}
 
@@ -1009,7 +1010,8 @@ class DFRN
 
 		$content_type = ($public_batch ? 'application/magic-envelope+xml' : 'application/json');
 
-		$postResult = DI::httpClient()->post($dest_url, $envelope, ['Content-Type' => $content_type]);
+		$postResult = DI::httpClient()->post($dest_url, $envelope, ['Content-Type' => $content_type], 0, HttpClientRequest::DFRN);
+		Item::incrementOutbound(Protocol::DFRN);
 		$xml = $postResult->getBodyString();
 
 		$curl_stat = $postResult->getReturnCode();

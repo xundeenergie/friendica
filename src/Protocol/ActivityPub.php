@@ -87,6 +87,11 @@ class ActivityPub
 		]
 	];
 	const ACCOUNT_TYPES = ['Person', 'Organization', 'Service', 'Group', 'Application', 'Tombstone'];
+
+	const ARTICLE_DEFAULT     = 0;
+	const ARTICLE_USE_SUMMARY = 1;
+	const ARTICLE_EMBED_TITLE = 2;
+
 	/**
 	 * Checks if the web request is done for the AP protocol
 	 *
@@ -95,16 +100,17 @@ class ActivityPub
 	public static function isRequest(): bool
 	{
 		header('Vary: Accept', false);
-
-		$isrequest = stristr($_SERVER['HTTP_ACCEPT'] ?? '', 'application/activity+json') ||
-			stristr($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json') ||
-			stristr($_SERVER['HTTP_ACCEPT'] ?? '', 'application/ld+json');
-
-		if ($isrequest) {
+		if (stristr($_SERVER['HTTP_ACCEPT'] ?? '', 'application/activity+json') || stristr($_SERVER['HTTP_ACCEPT'] ?? '', 'application/ld+json')) {
 			Logger::debug('Is AP request', ['accept' => $_SERVER['HTTP_ACCEPT'], 'agent' => $_SERVER['HTTP_USER_AGENT'] ?? '']);
+			return true;
 		}
 
-		return $isrequest;
+		if (stristr($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json')) {
+			Logger::debug('Is JSON request', ['accept' => $_SERVER['HTTP_ACCEPT'], 'agent' => $_SERVER['HTTP_USER_AGENT'] ?? '']);
+			return true;
+		}
+
+		return false;
 	}
 
 	private static function getAccountType(array $apcontact): int
@@ -253,13 +259,19 @@ class ActivityPub
 			$items = $data['orderedItems'];
 		} elseif (!empty($data['first']['orderedItems'])) {
 			$items = $data['first']['orderedItems'];
+		} elseif (!empty($data['items'])) {
+			$items = $data['items'];
+		} elseif (!empty($data['first']['items'])) {
+			$items = $data['first']['items'];
 		} elseif (!empty($data['first']) && is_string($data['first']) && ($data['first'] != $url)) {
 			return self::fetchItems($data['first'], $uid, $start_timestamp);
 		} else {
 			return [];
 		}
 
-		if (!empty($data['next']) && is_string($data['next'])) {
+		if (!empty($data['first']['next']) && is_string($data['first']['next'])) {
+			$items = array_merge($items, self::fetchItems($data['first']['next'], $uid, $start_timestamp));
+		} elseif (!empty($data['next']) && is_string($data['next'])) {
 			$items = array_merge($items, self::fetchItems($data['next'], $uid, $start_timestamp));
 		}
 

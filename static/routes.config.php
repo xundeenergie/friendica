@@ -47,7 +47,7 @@ $apiRoutes = [
 	'/account' => [
 		'/verify_credentials[.{extension:json|xml|rss|atom}]'      => [Module\Api\Twitter\Account\VerifyCredentials::class,  [R::GET         ]],
 		'/rate_limit_status[.{extension:json|xml|rss|atom}]'       => [Module\Api\Twitter\Account\RateLimitStatus::class,    [R::GET         ]],
-		'/update_profile[.{extension:json|xml|rss|atom}]'          => [Module\Api\Twitter\Account\UpdateProfile ::class,     [        R::POST]],
+		'/update_profile[.{extension:json|xml|rss|atom}]'          => [Module\Api\Twitter\Account\UpdateProfile::class,      [        R::POST]],
 		'/update_profile_image[.{extension:json|xml|rss|atom}]'    => [Module\Api\Twitter\Account\UpdateProfileImage::class, [        R::POST]],
 	],
 
@@ -261,7 +261,7 @@ return [
 			'/lists/{id:\d+}'                    => [Module\Api\Mastodon\Lists::class,                    [R::GET, R::PUT, R::DELETE]],
 			'/lists/{id:\d+}/accounts'           => [Module\Api\Mastodon\Lists\Accounts::class,           [R::GET, R::POST, R::DELETE]],
 			'/markers'                           => [Module\Api\Mastodon\Markers::class,                  [R::GET, R::POST]],
-			'/media/{id:\d+}'                    => [Module\Api\Mastodon\Media::class,                    [R::GET, R::PUT ]],
+			'/media/{id}'                        => [Module\Api\Mastodon\Media::class,                    [R::GET, R::PUT ]],
 			'/mutes'                             => [Module\Api\Mastodon\Mutes::class,                    [R::GET         ]],
 			'/notifications'                     => [Module\Api\Mastodon\Notifications::class,            [R::GET         ]],
 			'/notifications/{id:\d+}'            => [Module\Api\Mastodon\Notifications::class,            [R::GET         ]],
@@ -308,7 +308,7 @@ return [
 			'/tags/{hashtag}/unfollow'           => [Module\Api\Mastodon\Tags\Unfollow::class,            [        R::POST]],
 			'/timelines/direct'                  => [Module\Api\Mastodon\Timelines\Direct::class,         [R::GET         ]],
 			'/timelines/home'                    => [Module\Api\Mastodon\Timelines\Home::class,           [R::GET         ]],
-			'/timelines/list/{id:\d+}'           => [Module\Api\Mastodon\Timelines\ListTimeline::class,   [R::GET         ]],
+			'/timelines/list/{id}'               => [Module\Api\Mastodon\Timelines\ListTimeline::class,   [R::GET         ]],
 			'/timelines/public'                  => [Module\Api\Mastodon\Timelines\PublicTimeline::class, [R::GET         ]],
 			'/timelines/tag/{hashtag}'           => [Module\Api\Mastodon\Timelines\Tag::class,            [R::GET         ]],
 			'/trends'                            => [Module\Api\Mastodon\Trends\Tags::class,              [R::GET         ]],
@@ -446,7 +446,7 @@ return [
 	'/filed'                => [Module\Search\Filed::class,          [R::GET]],
 	'/filer[/{id:\d+}]'     => [Module\Filer\SaveTag::class,         [R::GET]],
 	'/filerm/{id:\d+}'      => [Module\Filer\RemoveTag::class,       [R::GET, R::POST]],
-	'/follow_confirm'       => [Module\FollowConfirm::class,         [R::GET, R::POST]],
+	'/follow_confirm'       => [Module\FollowConfirm::class,         [R::POST]],
 	'/followers/{nickname}' => [Module\ActivityPub\Followers::class, [R::GET]],
 	'/following/{nickname}' => [Module\ActivityPub\Following::class, [R::GET]],
 	'/friendica[/{format:json}]' => [Module\Friendica::class,        [R::GET]],
@@ -480,7 +480,9 @@ return [
 		'/activity/{verb}' => [Module\Item\Activity::class,    [        R::POST]],
 		'/follow'          => [Module\Item\Follow::class,      [        R::POST]],
 		'/ignore'          => [Module\Item\Ignore::class,      [        R::POST]],
+		'/language'        => [Module\Item\Language::class,    [R::GET]],
 		'/pin'             => [Module\Item\Pin::class,         [        R::POST]],
+		'/searchtext'      => [Module\Item\Searchtext::class,  [R::GET]],
 		'/star'            => [Module\Item\Star::class,        [        R::POST]],
 	],
 
@@ -489,7 +491,8 @@ return [
 	'/logout'             => [Module\Security\Logout::class, [R::GET, R::POST]],
 	'/magic'              => [Module\Magic::class,           [R::GET]],
 	'/manifest'           => [Module\Manifest::class,        [R::GET]],
-	'/friendica.webmanifest'  => [Module\Manifest::class,    [R::GET]],
+	'/manifest.json'      => [Module\Manifest::class,        [R::GET]],
+	'/friendica.webmanifest' => [Module\Manifest::class,     [R::GET]],
 
 	'/media' => [
 		'/attachment/browser'      => [Module\Media\Attachment\Browser::class, [R::GET]],
@@ -523,6 +526,9 @@ return [
 	'/newmember'          => [Module\Welcome::class,         [R::GET]],
 	'/nodeinfo/1.0'       => [Module\NodeInfo110::class,     [R::GET]],
 	'/nodeinfo/2.0'       => [Module\NodeInfo120::class,     [R::GET]],
+	'/nodeinfo/2.0.json'  => [Module\NodeInfo120::class,     [R::GET]],
+	'/nodeinfo/2.1'       => [Module\NodeInfo121::class,     [R::GET]],
+	'/nodeinfo/2.2'       => [Module\NodeInfo122::class,     [R::GET]],
 	'/nocircle'           => [Module\Circle::class,          [R::GET]],
 
 	'/noscrape' => [
@@ -563,7 +569,7 @@ return [
 	'/opensearch'        => [Module\OpenSearch::class,         [R::GET]],
 
 	'/parseurl'                           => [Module\ParseUrl::class,          [R::GET]],
-	'/permission/tooltip/{type}/{id:\d+}' => [Module\PermissionTooltip::class, [R::GET]],
+	'/permission/tooltip/{type}/{id:\d+}' => [Module\Privacy\PermissionTooltip::class, [R::GET]],
 
 	'/photo' => [
 		'/{size:thumb_small|scaled_full}_{name}'                   => [Module\Photo::class, [R::GET]],
@@ -592,13 +598,6 @@ return [
 	'/profile/{nickname}' => $profileRoutes,
 	'/u/{nickname}'       => $profileRoutes,
 	'/~{nickname}'        => $profileRoutes,
-
-	'/proxy' => [
-		'[/]'                  => [Module\Proxy::class, [R::GET]],
-		'/{url}'               => [Module\Proxy::class, [R::GET]],
-		'/{sub1}/{url}'        => [Module\Proxy::class, [R::GET]],
-		'/{sub1}/{sub2}/{url}' => [Module\Proxy::class, [R::GET]],
-	],
 
 	// OStatus stack modules
 	'/ostatus/repair'                => [Module\OStatus\Repair::class,           [R::GET         ]],
@@ -659,6 +658,8 @@ return [
 		],
 	],
 
+	'/stats' => [Module\Stats::class, [R::GET]],
+
 	'/network' => [
 		'[/{content}]'                => [Module\Conversation\Network::class, [R::GET]],
 		'/archive/{from:\d\d\d\d-\d\d-\d\d}[/{to:\d\d\d\d-\d\d-\d\d}]' => [Module\Conversation\Network::class, [R::GET]],
@@ -673,6 +674,13 @@ return [
 	'/statistics.json'               => [Module\Statistics::class,            [R::GET]],
 	'/toggle_mobile'                 => [Module\ToggleMobile::class,          [R::GET]],
 	'/tos'                           => [Module\Tos::class,                   [R::GET]],
+
+	'/ping_network' => [
+		'[/]'                        => [Module\Ping\Network::class, [R::GET]],
+		'/archive/{from:\d\d\d\d-\d\d-\d\d}[/{to:\d\d\d\d-\d\d-\d\d}]' => [Module\Ping\Network::class, [R::GET]],
+		'/group/{contact_id:\d+}'    => [Module\Ping\Network::class, [R::GET]],
+		'/circle/{circle_id:\d+}'    => [Module\Ping\Network::class, [R::GET]],
+	],
 
 	'/update_channel[/{content}]'    => [Module\Update\Channel::class,        [R::GET]],
 	'/update_community[/{content}]'  => [Module\Update\Community::class,      [R::GET]],

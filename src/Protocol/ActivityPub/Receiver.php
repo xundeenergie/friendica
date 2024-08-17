@@ -81,6 +81,7 @@ class Receiver
 	const COMPLETION_MANUAL   = 3;
 	const COMPLETION_AUTO     = 4;
 	const COMPLETION_ASYNC    = 5;
+	const COMPLETION_REPLIES  = 6;
 
 	/**
 	 * Checks incoming message from the inbox
@@ -249,7 +250,6 @@ class Receiver
 		} elseif (!Fetch::hasWorker($object_id)) {
 			Logger::notice('Fetching is done by worker.', ['id' => $object_id]);
 			Fetch::add($object_id);
-			$activity['recursion-depth'] = 0;
 			$wid = Worker::add(Worker::PRIORITY_HIGH, 'FetchMissingActivity', $object_id, [], $actor, self::COMPLETION_RELAY);
 			Fetch::setWorkerId($object_id, $wid);
 		} else {
@@ -277,12 +277,15 @@ class Receiver
 			}
 		}
 
-		if (Post::exists(['uri' => $object_id, 'gravity' => [Item::GRAVITY_PARENT, Item::GRAVITY_COMMENT]])) {
+		$type = JsonLD::fetchElement($activity, '@type');
+
+		// Several activities are only done on content types, so we can assume "Note" here.
+		if (Post::exists(['uri' => $object_id, 'gravity' => [Item::GRAVITY_PARENT, Item::GRAVITY_COMMENT]]) || (in_array($type, ['as:Like', 'as:Dislike', 'litepub:EmojiReact', 'as:Announce', 'as:View']))) {
 			// We just assume "note" since it doesn't make a difference for the further processing
 			return 'as:Note';
 		}
 
-		$profile = APContact::getByURL($object_id);
+		$profile = APContact::getByURL($object_id, false);
 		if (!empty($profile['type'])) {
 			APContact::unmarkForArchival($profile);
 			return 'as:' . $profile['type'];
@@ -725,6 +728,9 @@ class Receiver
 			self::addArrivedId($object_data['object_id']);
 		}
 
+		$object_data['children']  = $activity['children'] ?? [];
+		$object_data['callstack'] = $activity['callstack'] ?? [];
+
 		$decouple = DI::config()->get('system', 'decoupled_receiver') && !in_array($completion, [self::COMPLETION_MANUAL, self::COMPLETION_ANNOUNCE]) && empty($object_data['directmessage']);
 
 		if ($decouple && ($trust_source || DI::config()->get('debug', 'ap_inbox_store_untrusted'))) {
@@ -824,7 +830,7 @@ class Receiver
 
 			case 'as:Announce':
 				if (in_array($object_data['object_type'], self::CONTENT_TYPES)) {
-					if (!Item::searchByLink($object_data['object_id'], $uid)) {
+					if (!Processor::alreadyKnown($object_data['object_id'], '')) {
 						if (ActivityPub\Processor::fetchMissingActivity($object_data['object_id'], [], $object_data['actor'], self::COMPLETION_ANNOUNCE, $uid)) {
 							Logger::debug('Created announced id', ['uid' => $uid, 'id' => $object_data['object_id']]);
 							Queue::remove($object_data);
@@ -1183,9 +1189,6 @@ class Receiver
 			$profile   = APContact::getByURL($actor);
 			$followers = $profile['followers'] ?? '';
 			$isGroup  = ($profile['type'] ?? '') == 'Group';
-			if ($push) {
-				Contact::updateByUrlIfNeeded($actor);
-			}
 			Logger::info('Got actor and followers', ['actor' => $actor, 'followers' => $followers]);
 		} else {
 			Logger::info('Empty actor', ['activity' => $activity]);
@@ -1577,7 +1580,8 @@ class Receiver
 			$element = [
 				'type' => str_replace('as:', '', JsonLD::fetchElement($tag, '@type') ?? ''),
 				'href' => JsonLD::fetchElement($tag, 'as:href', '@id'),
-				'name' => JsonLD::fetchElement($tag, 'as:name', '@value')
+				'name' => JsonLD::fetchElement($tag, 'as:name', '@value'),
+				'mediaType' => JsonLD::fetchElement($tag, 'as:mediaType', '@value')
 			];
 
 			if (empty($element['type'])) {
@@ -2069,6 +2073,7 @@ class Receiver
 		$object_data['generator'] = JsonLD::fetchElement($object, 'as:generator', 'as:name', '@type', 'as:Application');
 		$object_data['generator'] = JsonLD::fetchElement($object_data, 'generator', '@value');
 		$object_data['alternate-url'] = JsonLD::fetchElement($object, 'as:url', '@id');
+		$object_data['replies'] = JsonLD::fetchElement($object, 'as:replies', '@id');
 
 		// Special treatment for Hubzilla links
 		if (is_array($object_data['alternate-url'])) {
@@ -2094,12 +2099,18 @@ class Receiver
 		}
 
 		// Support for quoted posts (Pleroma, Fedibird and Misskey)
-		$object_data['quote-url'] = JsonLD::fetchElement($object, 'as:quoteUrl', '@value');
+		$object_data['quote-url'] = JsonLD::fetchElement($object, 'as:quoteUrl', '@id');
 		if (empty($object_data['quote-url'])) {
-			$object_data['quote-url'] = JsonLD::fetchElement($object, 'fedibird:quoteUri', '@value');
+			$object_data['quote-url'] = JsonLD::fetchElement($object, 'fedibird:quoteUri', '@id');
 		}
 		if (empty($object_data['quote-url'])) {
-			$object_data['quote-url'] = JsonLD::fetchElement($object, 'misskey:_misskey_quote', '@value');
+			$object_data['quote-url'] = JsonLD::fetchElement($object, 'misskey:_misskey_quote', '@id');
+		}
+
+		foreach ($object_data['tags'] as $tag) {
+			if (HTTPSignature::isValidContentType($tag['mediaType'] ?? '', $tag['href'])) {
+				$object_data['quote-url'] = $tag['href'];
+			}
 		}
 
 		// Misskey adds some data to the standard "content" value for quoted posts for backwards compatibility.

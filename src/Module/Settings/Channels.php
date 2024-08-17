@@ -26,6 +26,7 @@ use Friendica\Content\Conversation\Factory;
 use Friendica\Content\Conversation\Repository\UserDefinedChannel;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
+use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Model\Circle;
@@ -41,18 +42,21 @@ class Channels extends BaseSettings
 {
 	/** @var UserDefinedChannel */
 	private $channel;
+	/** @var IManagePersonalConfigValues */
+	private $pConfig;
 	/** @var Factory\UserDefinedChannel */
 	private $userDefinedChannel;
 	/** @var IManageConfigValues */
 	private $config;
 
-	public function __construct(Factory\UserDefinedChannel $userDefinedChannel, UserDefinedChannel $channel, App\Page $page, IHandleUserSessions $session, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IManageConfigValues $config, array $server, array $parameters = [])
+	public function __construct(Factory\UserDefinedChannel $userDefinedChannel, UserDefinedChannel $channel, App\Page $page, IHandleUserSessions $session, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IManagePersonalConfigValues $pConfig, IManageConfigValues $config, array $server, array $parameters = [])
 	{
 		parent::__construct($session, $page, $l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
 		$this->userDefinedChannel = $userDefinedChannel;
 		$this->channel            = $channel;
 		$this->config             = $config;
+		$this->pConfig            = $pConfig;
 	}
 
 	protected function post(array $request = [])
@@ -91,6 +95,7 @@ class Channels extends BaseSettings
 			]);
 			$saved = $this->channel->save($channel);
 			$this->logger->debug('New channel added', ['saved' => $saved]);
+			$this->enableTimeline($uid, $saved->code);
 			return;
 		}
 
@@ -123,6 +128,7 @@ class Channels extends BaseSettings
 			]);
 			$saved = $this->channel->save($channel);
 			$this->logger->debug('Save channel', ['id' => $id, 'saved' => $saved]);
+			$this->enableTimeline($uid, $id);
 		}
 	}
 
@@ -228,9 +234,25 @@ class Channels extends BaseSettings
 				'confirm_delete' => $this->t('Delete entry from the channel list?'),
 			],
 			'$entries' => $channels,
-			'$baseurl' => $this->baseUrl,
 
 			'$form_security_token' => self::getFormSecurityToken('settings_channels'),
 		]);
+	}
+
+	private function enableTimeline(int $uid, int $id)
+	{
+		$bookmarked_timelines = $this->pConfig->get($uid, 'system', 'network_timelines');
+		$enabled_timelines    = $this->pConfig->get($uid, 'system', 'enabled_timelines');
+
+		if (empty($enabled_timelines) || empty($bookmarked_timelines)) {
+			return;
+		}
+
+		if (in_array($id, $enabled_timelines) || in_array($id, $bookmarked_timelines)) {
+			return;
+		}
+
+		$enabled_timelines[] = $id;
+		$this->pConfig->set($uid, 'system', 'enabled_timelines', $enabled_timelines);
 	}
 }

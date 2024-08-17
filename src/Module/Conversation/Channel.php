@@ -119,7 +119,7 @@ class Channel extends Timeline
 				$this->page['aside'] .= $this->getNoSharerWidget('channel');
 			}
 
-			if (Feature::isEnabled($this->session->getLocalUserId(), 'trending_tags')) {
+			if (Feature::isEnabled($this->session->getLocalUserId(), Feature::TRENDING_TAGS)) {
 				$this->page['aside'] .= TrendingTags::getHTML($this->selectedTab);
 			}
 
@@ -128,7 +128,7 @@ class Channel extends Timeline
 		}
 
 		if ($this->channel->isTimeline($this->selectedTab) || $this->userDefinedChannel->isTimeline($this->selectedTab, $this->session->getLocalUserId())) {
-			$items = $this->getChannelItems($request);
+			$items = $this->getChannelItems($request, $this->session->getLocalUserId());
 			$order = 'created';
 		} else {
 			$items = $this->getCommunityItems();

@@ -224,17 +224,17 @@ abstract class BaseModule implements ICanHandleRequests
 		switch ($this->args->getMethod()) {
 			case Router::DELETE:
 				$this->delete($request);
-				break;
+				return $this->response->generate();
 			case Router::PATCH:
 				$this->patch($request);
-				break;
+				return $this->response->generate();
 			case Router::POST:
 				Core\Hook::callAll($this->args->getModuleName() . '_mod_post', $request);
 				$this->post($request);
-				break;
+				return $this->response->generate();
 			case Router::PUT:
 				$this->put($request);
-				break;
+				return $this->response->generate();
 		}
 
 		$timestamp = microtime(true);
@@ -356,7 +356,7 @@ abstract class BaseModule implements ICanHandleRequests
 	 */
 	public static function getFormSecurityToken(string $typename = ''): string
 	{
-		$user      = User::getById(DI::app()->getLoggedInUserId(), ['guid', 'prvkey']);
+		$user      = User::getById(DI::userSession()->getLocalUserId(), ['guid', 'prvkey']);
 		$timestamp = time();
 		$sec_hash  = hash('whirlpool', ($user['guid'] ?? '') . ($user['prvkey'] ?? '') . session_id() . $timestamp . $typename);
 
@@ -390,7 +390,7 @@ abstract class BaseModule implements ICanHandleRequests
 
 		$max_livetime = 10800; // 3 hours
 
-		$user = User::getById(DI::app()->getLoggedInUserId(), ['guid', 'prvkey']);
+		$user = User::getById(DI::userSession()->getLocalUserId(), ['guid', 'prvkey']);
 
 		$x = explode('.', $hash);
 		if (time() > (intval($x[0]) + $max_livetime)) {
@@ -410,7 +410,7 @@ abstract class BaseModule implements ICanHandleRequests
 	public static function checkFormSecurityTokenRedirectOnError(string $err_redirect, string $typename = '', string $formname = 'form_security_token')
 	{
 		if (!self::checkFormSecurityToken($typename, $formname)) {
-			Logger::notice('checkFormSecurityToken failed: user ' . DI::app()->getLoggedInUserNickname() . ' - form element ' . $typename);
+			Logger::notice('checkFormSecurityToken failed: user ' . DI::userSession()->getLocalUserNickname() . ' - form element ' . $typename);
 			Logger::debug('checkFormSecurityToken failed', ['request' => $_REQUEST]);
 			DI::sysmsg()->addNotice(self::getFormSecurityStandardErrorMessage());
 			DI::baseUrl()->redirect($err_redirect);
@@ -420,7 +420,7 @@ abstract class BaseModule implements ICanHandleRequests
 	public static function checkFormSecurityTokenForbiddenOnError(string $typename = '', string $formname = 'form_security_token')
 	{
 		if (!self::checkFormSecurityToken($typename, $formname)) {
-			Logger::notice('checkFormSecurityToken failed: user ' . DI::app()->getLoggedInUserNickname() . ' - form element ' . $typename);
+			Logger::notice('checkFormSecurityToken failed: user ' . DI::userSession()->getLocalUserNickname() . ' - form element ' . $typename);
 			Logger::debug('checkFormSecurityToken failed', ['request' => $_REQUEST]);
 
 			throw new \Friendica\Network\HTTPException\ForbiddenException();

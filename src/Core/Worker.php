@@ -21,6 +21,7 @@
 
 namespace Friendica\Core;
 
+use Friendica\Core\Cache\Enum\Duration;
 use Friendica\Core\Worker\Entity\Process;
 use Friendica\Database\DBA;
 use Friendica\DI;
@@ -54,7 +55,8 @@ class Worker
 	const FAST_COMMANDS = ['APDelivery', 'Delivery'];
 
 	const LOCK_PROCESS = 'worker_process';
-	const LOCK_WORKER = 'worker';
+	const LOCK_WORKER  = 'worker';
+	const LAST_CHECK   = 'worker::check';
 
 	private static $up_start;
 	private static $db_duration = 0;
@@ -233,7 +235,7 @@ class Worker
 	 * @return integer Number of deferred entries in the worker queue
 	 * @throws \Exception
 	 */
-	private static function deferredEntries(): int
+	public static function deferredEntries(): int
 	{
 		$stamp = (float)microtime(true);
 		$count = DBA::count('workerqueue', ["NOT `done` AND `pid` = 0 AND `retrial` > ?", 0]);
@@ -248,7 +250,7 @@ class Worker
 	 * @return integer Number of non executed entries in the worker queue
 	 * @throws \Exception
 	 */
-	private static function totalEntries(): int
+	public static function totalEntries(): int
 	{
 		$stamp = (float)microtime(true);
 		$count = DBA::count('workerqueue', ['done' => false, 'pid' => 0]);
@@ -832,6 +834,17 @@ class Worker
 				} else {
 					self::spawnWorker();
 				}
+			} elseif (($active > $queues) && ($active < $maxqueues) && ($load < $maxsysload)) {
+				$max_idletime = DI::config()->get('system', 'worker_max_idletime');
+				$last_check   = DI::cache()->get(self::LAST_CHECK);
+				$last_date    = $last_check ? date('c', $last_check) : '';
+				if (($max_idletime > 0) && (time() > $last_check + $max_idletime) && !DBA::exists('workerqueue', ["`done` AND `executed` > ?", DateTimeFormat::utc('now - ' . $max_idletime . ' second')])) {
+					DI::cache()->set(self::LAST_CHECK, time(), Duration::HOUR);
+					Logger::info('The last worker execution had been too long ago.', ['last' => $last_check, 'last-check' => $last_date, 'seconds' => $max_idletime, 'load' => $load, 'max_load' => $maxsysload, 'active_worker' => $active, 'max_worker' => $maxqueues]);
+					return false;
+				} elseif ($max_idletime > 0) {
+					Logger::debug('Maximum idletime not reached.', ['last' => $last_check, 'last-check' => $last_date, 'seconds' => $max_idletime, 'load' => $load, 'max_load' => $maxsysload, 'active_worker' => $active, 'max_worker' => $maxqueues]);
+				}	
 			}
 		}
 
@@ -849,7 +862,7 @@ class Worker
 	 * @return integer Number of active worker processes
 	 * @throws \Exception
 	 */
-	private static function activeWorkers(): int
+	public static function activeWorkers(): int
 	{
 		$stamp = (float)microtime(true);
 		$count = DI::process()->countCommand('Worker.php');

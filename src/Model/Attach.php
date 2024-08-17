@@ -30,6 +30,7 @@ use Friendica\Object\Image;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Mimetype;
 use Friendica\Security\Security;
+use Friendica\Util\Network;
 
 /**
  * Class to handle attach database table
@@ -109,16 +110,17 @@ class Attach
 	/**
 	 * Retrieve a single record given the ID
 	 *
-	 * @param int $id Row id of the record
+	 * @param int $id  Row id of the record
+	 * @param int $uid User-Id
 	 *
 	 * @return bool|array
 	 *
 	 * @throws \Exception
 	 * @see   \Friendica\Database\DBA::select
 	 */
-	public static function getById(int $id)
+	public static function getById(int $id, int $uid)
 	{
-		return self::selectFirst([], ['id' => $id]);
+		return self::selectFirst([], ['id' => $id, 'uid' => $uid]);
 	}
 
 	/**
@@ -197,7 +199,7 @@ class Attach
 	 * @return boolean|integer Row id on success, False on errors
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
-	public static function store(string $data, int $uid, string $filename, string $filetype = '' , int $filesize = null, string $allow_cid = '', string $allow_gid = '', string $deny_cid = '', string $deny_gid = '')
+	public static function store(string $data, int $uid, string $filename, string $filetype = '', int $filesize = null, string $allow_cid = '', string $allow_gid = '', string $deny_cid = '', string $deny_gid = '')
 	{
 		if ($filetype === '') {
 			$filetype = Mimetype::getContentType($filename);
@@ -243,6 +245,7 @@ class Attach
 	 * @param string $src Source file name
 	 * @param int    $uid User id
 	 * @param string $filename Optional file name
+	 * @param string $filetype Optional file type
 	 * @param string $allow_cid
 	 * @param string $allow_gid
 	 * @param string $deny_cid
@@ -250,7 +253,7 @@ class Attach
 	 * @return boolean|int Insert id or false on failure
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
-	public static function storeFile(string $src, int $uid, string $filename = '', string $allow_cid = '', string $allow_gid = '', string $deny_cid = '', string $deny_gid = '')
+	public static function storeFile(string $src, int $uid, string $filename = '', string $filetype = '', string $allow_cid = '', string $allow_gid = '', string $deny_cid = '', string $deny_gid = '')
 	{
 		if ($filename === '') {
 			$filename = basename($src);
@@ -258,7 +261,7 @@ class Attach
 
 		$data = @file_get_contents($src);
 
-		return self::store($data, $uid, $filename, '', null, $allow_cid, $allow_gid,  $deny_cid, $deny_gid);
+		return self::store($data, $uid, $filename, $filetype, null, $allow_cid, $allow_gid,  $deny_cid, $deny_gid);
 	}
 
 
@@ -279,9 +282,9 @@ class Attach
 	{
 		if (!is_null($img)) {
 			// get items to update
-			$items = self::selectToArray(['backend-class','backend-ref'], $conditions);
+			$items = self::selectToArray(['backend-class', 'backend-ref'], $conditions);
 
-			foreach($items as $item) {
+			foreach ($items as $item) {
 				try {
 					$backend_class         = DI::storageManager()->getWritableStorageByName($item['backend-class'] ?? '');
 					$fields['backend-ref'] = $backend_class->put($img->asString(), $item['backend-ref'] ?? '');
@@ -313,9 +316,9 @@ class Attach
 	public static function delete(array $conditions, array $options = []): bool
 	{
 		// get items to delete data info
-		$items = self::selectToArray(['backend-class','backend-ref'], $conditions);
+		$items = self::selectToArray(['backend-class', 'backend-ref'], $conditions);
 
-		foreach($items as $item) {
+		foreach ($items as $item) {
 			try {
 				$backend_class = DI::storageManager()->getWritableStorageByName($item['backend-class'] ?? '');
 				$backend_class->delete($item['backend-ref'] ?? '');
@@ -327,5 +330,52 @@ class Attach
 		}
 
 		return DBA::delete('attach', $conditions, $options);
+	}
+
+	public static function setPermissionFromBody(array $post)
+	{
+		preg_match_all("/\[attachment\](.*?)\[\/attachment\]/ism", $post['body'], $matches, PREG_SET_ORDER);
+		foreach ($matches as $attachment) {
+			if (DI::baseUrl()->isLocalUrl($attachment[1]) && preg_match('|.*?/attach/(\d+)|', $attachment[1], $match)) {
+				$fields = [
+					'allow_cid' => $post['allow_cid'], 'allow_gid' => $post['allow_gid'],
+					'deny_cid' => $post['deny_cid'], 'deny_gid' => $post['deny_gid']
+				];
+				self::update($fields, ['id' => $match[1], 'uid' => $post['uid']]);
+			}
+		}
+	}
+
+	public static function setPermissionForId(int $id, int $uid, string $str_contact_allow, string $str_circle_allow, string $str_contact_deny, string $str_circle_deny)
+	{
+		$fields = [
+			'allow_cid' => $str_contact_allow, 'allow_gid' => $str_circle_allow,
+			'deny_cid' => $str_contact_deny, 'deny_gid' => $str_circle_deny,
+		];
+
+		self::update($fields, ['id' => $id, 'uid' => $uid]);
+	}
+
+	public static function addAttachmentToBody(string $body, int $uid): string
+	{
+		preg_match_all("/\[attachment\](.*?)\[\/attachment\]/ism", $body, $matches, PREG_SET_ORDER);
+		foreach ($matches as $attachment) {
+			if (DI::baseUrl()->isLocalUrl($attachment[1]) && preg_match('|.*?/attach/(\d+)|', $attachment[1], $match)) {
+				$attach = self::getById($match[1], $uid);
+				if (empty($attach)) {
+					return $body;
+				}
+				$media = [
+					'type'        => Post\Media::DOCUMENT,
+					'url'         => $attachment[1],
+					'size'        => $attach['filesize'],
+					'mimetype'    => $attach['filetype'],
+					'description' => $attach['filename']
+				];
+				$media = Post\Media::addType($media);
+				$body = str_replace($attachment[0], Post\Media::addAttachmentToBody($media, ''), $body);
+			}
+		}
+		return $body;
 	}
 }

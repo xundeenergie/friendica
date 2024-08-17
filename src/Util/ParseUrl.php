@@ -33,6 +33,7 @@ use Friendica\DI;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPException;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 
 /**
  * Get information about a given URL
@@ -64,9 +65,9 @@ class ParseUrl
 	public static function getContentType(string $url, string $accept = HttpClientAccept::DEFAULT, int $timeout = 0): array
 	{
 		if (!empty($timeout)) {
-			$options = [HttpClientOptions::TIMEOUT => $timeout];
+			$options = [HttpClientOptions::TIMEOUT => $timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE];
 		} else {
-			$options = [];
+			$options = [HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE];
 		}
 
 		try {
@@ -233,7 +234,7 @@ class ParseUrl
 		}
 
 		try {
-			$curlResult = DI::httpClient()->get($url, HttpClientAccept::HTML, [HttpClientOptions::CONTENT_LENGTH => 1000000]);
+			$curlResult = DI::httpClient()->get($url, HttpClientAccept::HTML, [HttpClientOptions::CONTENT_LENGTH => 1000000, HttpClientOptions::REQUEST => HttpClientRequest::SITEINFO]);
 		} catch (\Throwable $th) {
 			Logger::info('Exception when fetching', ['url' => $url, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
 			return $siteinfo;

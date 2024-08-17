@@ -41,6 +41,8 @@ use Friendica\Model\Post;
 use Friendica\Model\Tag;
 use Friendica\Model\User;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\Probe;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Images;
@@ -734,7 +736,7 @@ class OStatus
 	private static function fetchRelated(string $related, string $related_uri, array $importer)
 	{
 		$stored = false;
-		$curlResult = DI::httpClient()->get($related, HttpClientAccept::ATOM_XML);
+		$curlResult = DI::httpClient()->get($related, HttpClientAccept::ATOM_XML, [HttpClientOptions::REQUEST => HttpClientRequest::OSTATUS]);
 
 		if (!$curlResult->isSuccess() || empty($curlResult->getBodyString())) {
 			return;
@@ -766,7 +768,7 @@ class OStatus
 					}
 				}
 				if ($atom_file != '') {
-					$curlResult = DI::httpClient()->get($atom_file, HttpClientAccept::ATOM_XML);
+					$curlResult = DI::httpClient()->get($atom_file, HttpClientAccept::ATOM_XML, [HttpClientOptions::REQUEST => HttpClientRequest::OSTATUS]);
 
 					if ($curlResult->isSuccess()) {
 						Logger::info('Fetched XML for URI ' . $related_uri);
@@ -778,7 +780,7 @@ class OStatus
 
 		// Workaround for older GNU Social servers
 		if (($xml == '') && strstr($related, '/notice/')) {
-			$curlResult = DI::httpClient()->get(str_replace('/notice/', '/api/statuses/show/', $related) . '.atom', HttpClientAccept::ATOM_XML);
+			$curlResult = DI::httpClient()->get(str_replace('/notice/', '/api/statuses/show/', $related) . '.atom', HttpClientAccept::ATOM_XML, [HttpClientOptions::REQUEST => HttpClientRequest::OSTATUS]);
 
 			if ($curlResult->isSuccess()) {
 				Logger::info('GNU Social workaround to fetch XML for URI ' . $related_uri);
@@ -789,7 +791,7 @@ class OStatus
 		// Even more worse workaround for GNU Social ;-)
 		if ($xml == '') {
 			$related_guess = self::convertHref($related_uri);
-			$curlResult = DI::httpClient()->get(str_replace('/notice/', '/api/statuses/show/', $related_guess) . '.atom', HttpClientAccept::ATOM_XML);
+			$curlResult = DI::httpClient()->get(str_replace('/notice/', '/api/statuses/show/', $related_guess) . '.atom', HttpClientAccept::ATOM_XML, [HttpClientOptions::REQUEST => HttpClientRequest::OSTATUS]);
 
 			if ($curlResult->isSuccess()) {
 				Logger::info('GNU Social workaround 2 to fetch XML for URI ' . $related_uri);

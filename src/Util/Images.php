@@ -26,6 +26,7 @@ use Friendica\Core\Logger;
 use Friendica\DI;
 use Friendica\Model\Photo;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Object\Image;
 
 /**
@@ -346,7 +347,7 @@ class Images
 			return $data;
 		}
 
-		if (Network::isLocalLink($url) && ($data = Photo::getResourceData($url))) {
+		if (DI::baseUrl()->isLocalUrl($url) && ($data = Photo::getResourceData($url))) {
 			$photo = Photo::selectFirst([], ['resource-id' => $data['guid'], 'scale' => $data['scale']]);
 			if (!empty($photo)) {
 				$img_str = Photo::getImageDataForPhoto($photo);
@@ -356,7 +357,7 @@ class Images
 
 		if (empty($img_str)) {
 			try {
-				$img_str = DI::httpClient()->fetch($url, HttpClientAccept::IMAGE, 4);
+				$img_str = DI::httpClient()->fetch($url, HttpClientAccept::IMAGE, 4, '', HttpClientRequest::MEDIAVERIFIER);
 			} catch (\Exception $exception) {
 				Logger::notice('Image is invalid', ['url' => $url, 'exception' => $exception]);
 				return [];
@@ -418,19 +419,19 @@ class Images
 
 			if ((($height * 9) / 16) > $width) {
 				$dest_width = $max;
-				$dest_height = intval(($height * $max) / $width);
+				$dest_height = intval(ceil(($height * $max) / $width));
 			} elseif ($width > $height) {
 				// else constrain both dimensions
 				$dest_width = $max;
-				$dest_height = intval(($height * $max) / $width);
+				$dest_height = intval(ceil(($height * $max) / $width));
 			} else {
-				$dest_width = intval(($width * $max) / $height);
+				$dest_width = intval(ceil(($width * $max) / $height));
 				$dest_height = $max;
 			}
 		} else {
 			if ($width > $max) {
 				$dest_width = $max;
-				$dest_height = intval(($height * $max) / $width);
+				$dest_height = intval(ceil(($height * $max) / $width));
 			} else {
 				if ($height > $max) {
 					// very tall image (greater than 16:9)
@@ -440,7 +441,7 @@ class Images
 						$dest_width = $width;
 						$dest_height = $height;
 					} else {
-						$dest_width = intval(($width * $max) / $height);
+						$dest_width = intval(ceil(($width * $max) / $height));
 						$dest_height = $max;
 					}
 				} else {

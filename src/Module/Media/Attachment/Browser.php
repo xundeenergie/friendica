@@ -75,7 +75,7 @@ class Browser extends BaseModule
 			'$folders'  => false,
 			'$files'    => $fileArray,
 			'$cancel'   => $this->t('Cancel'),
-			'$nickname' => $this->app->getLoggedInUserNickname(),
+			'$nickname' => $this->session->getLocalUserNickname(),
 			'$upload'   => $this->t('Upload'),
 		]);
 

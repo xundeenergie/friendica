@@ -66,7 +66,7 @@ class GroupManager
 			'archive' => false,
 		];
 
-		$condition = DBA::mergeConditions($condition, ["`platform` != ?", 'peertube']);
+		$condition = DBA::mergeConditions($condition, ["`platform` NOT IN (?, ?)", 'peertube', 'wordpress']);
 
 		if (!$showprivate) {
 			$condition = DBA::mergeConditions($condition, ['manually-approve' => false]);
@@ -172,8 +172,7 @@ class GroupManager
 	 */
 	public static function profileAdvanced($uid)
 	{
-		$profile = intval(Feature::isEnabled($uid, 'forumlist_profile'));
-		if (!$profile) {
+		if (!Feature::isEnabled($uid, Feature::GROUPS)) {
 			return '';
 		}
 

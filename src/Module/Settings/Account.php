@@ -46,7 +46,7 @@ class Account extends BaseSettings
 {
 	protected function post(array $request = [])
 	{
-		if (!DI::app()->isLoggedIn()) {
+		if (!DI::userSession()->isAuthenticated()) {
 			throw new HTTPException\ForbiddenException(DI::l10n()->t('Permission denied.'));
 		}
 
@@ -56,7 +56,7 @@ class Account extends BaseSettings
 
 		$a = DI::app();
 
-		$user = User::getById($a->getLoggedInUserId());
+		$user = User::getById($this->session->getLocalUserId());
 
 		if (!empty($request['password-submit'])) {
 			$newpass = $request['password'];
@@ -314,7 +314,7 @@ class Account extends BaseSettings
 				$page_flags = User::PAGE_FLAGS_SOAPBOX;
 			} elseif ($account_type == User::ACCOUNT_TYPE_NEWS && $page_flags != User::PAGE_FLAGS_SOAPBOX) {
 				$page_flags = User::PAGE_FLAGS_SOAPBOX;
-			} elseif ($account_type == User::ACCOUNT_TYPE_COMMUNITY && !in_array($page_flags, [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_PRVGROUP])) {
+			} elseif ($account_type == User::ACCOUNT_TYPE_COMMUNITY && !in_array($page_flags, [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_PRVGROUP, User::PAGE_FLAGS_COMM_MAN])) {
 				$page_flags = User::PAGE_FLAGS_COMMUNITY;
 			} elseif ($account_type == User::ACCOUNT_TYPE_RELAY && $page_flags != User::PAGE_FLAGS_SOAPBOX) {
 				$page_flags = User::PAGE_FLAGS_SOAPBOX;
@@ -330,6 +330,11 @@ class Account extends BaseSettings
 			}
 
 			User::setCommunityUserSettings(DI::userSession()->getLocalUserId());
+
+			if ($account_type == User::ACCOUNT_TYPE_RELAY) {
+				Profile::setResponsibleRelayContact(DI::userSession()->getLocalUserId());
+			}
+
 			DI::baseUrl()->redirect($redirectUrl);
 		}
 
@@ -394,11 +399,11 @@ class Account extends BaseSettings
 
 		$a = DI::app();
 
-		$user = User::getById($a->getLoggedInUserId());
+		$user = User::getById($this->session->getLocalUserId());
 
 		$username         = $user['username'];
 		$email            = $user['email'];
-		$nickname         = $a->getLoggedInUserNickname();
+		$nickname         = DI::userSession()->getLocalUserNickname();
 		$timezone         = $user['timezone'];
 		$language         = $user['language'];
 		$notify           = $user['notify-flags'];
@@ -419,13 +424,13 @@ class Account extends BaseSettings
 		// Set the account type to "Community" when the page is a community page but the account type doesn't fit
 		// This is only happening on the first visit after the update
 		if (
-			in_array($user['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_PRVGROUP])
+			in_array($user['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_PRVGROUP, User::PAGE_FLAGS_COMM_MAN])
 			&& $user['account-type'] != User::ACCOUNT_TYPE_COMMUNITY
 		) {
 			$user['account-type'] = User::ACCOUNT_TYPE_COMMUNITY;
 		}
 
-		if (DI::config()->get('system', 'allow_relay_channels')) {
+		if (!empty($user['parent-uid']) && DI::config()->get('system', 'allow_relay_channels')) {
 			$account_relay = [
 				'account-type',
 				DI::l10n()->t('Channel Relay'),
@@ -497,6 +502,13 @@ class Account extends BaseSettings
 				User::PAGE_FLAGS_COMMUNITY,
 				DI::l10n()->t('Automatically approves all contact requests.'),
 				$user['page-flags'] == User::PAGE_FLAGS_COMMUNITY
+			],
+			'$page_community_manually' => [
+				'page-flags',
+				DI::l10n()->t('Public Group - Restricted'),
+				User::PAGE_FLAGS_COMM_MAN,
+				DI::l10n()->t('Contact requests have to be manually approved.'),
+				$user['page-flags'] == User::PAGE_FLAGS_COMM_MAN
 			],
 			'$page_freelove' => [
 				'page-flags',
@@ -584,7 +596,7 @@ class Account extends BaseSettings
 			'$circle_select'      => Circle::getSelectorHTML(DI::userSession()->getLocalUserId(), $user['def_gid'], 'circle-selection', DI::l10n()->t('Default privacy circle for new contacts')),
 			'$circle_select_group' => Circle::getSelectorHTML(DI::userSession()->getLocalUserId(), DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'default-group-gid', $user['def_gid']), 'circle-selection-group', DI::l10n()->t('Default privacy circle for new group contacts')),
 			'$permissions'        => DI::l10n()->t('Default Post Permissions'),
-			'$aclselect'          => ACL::getFullSelectorHTML(DI::page(), $a->getLoggedInUserId()),
+			'$aclselect'          => ACL::getFullSelectorHTML(DI::page(), $this->session->getLocalUserId()),
 
 			'$expire' => [
 				'label'        => DI::l10n()->t('Expiration settings'),

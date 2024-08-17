@@ -50,80 +50,10 @@ class Proxy
 	const PIXEL_LARGE  = 1024;
 
 	/**
-	 * Accepted extensions
-	 *
-	 * @var array
-	 * @todo Make this configurable?
-	 */
-	private static $extensions = [
-		'jpg',
-		'jpeg',
-		'gif',
-		'png',
-	];
-
-	/**
 	 * Private constructor
 	 */
 	private function __construct () {
 		// No instances from utilities classes
-	}
-
-	/**
-	 * Transform a remote URL into a local one.
-	 *
-	 * This function only performs the URL replacement on http URL and if the
-	 * provided URL isn't local
-	 *
-	 * @param string $url       The URL to proxify
-	 * @param string $size      One of the Proxy::SIZE_* constants
-	 * @return string The proxified URL or relative path
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
-	 */
-	public static function proxifyUrl(string $url, string $size = ''): string
-	{
-		if (!DI::config()->get('system', 'proxify_content')) {
-			return $url;
-		}
-
-		// Trim URL first
-		$url = trim($url);
-
-		// Quit if not an HTTP/HTTPS link or if local
-		if (!in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https']) || self::isLocalImage($url)) {
-			return $url;
-		}
-
-		// Image URL may have encoded ampersands for display which aren't desirable for proxy
-		$url = html_entity_decode($url, ENT_NOQUOTES, 'utf-8');
-
-		$shortpath = hash('md5', $url);
-		$longpath = substr($shortpath, 0, 2);
-
-		$longpath .= '/' . strtr(base64_encode($url), '+/', '-_');
-
-		// Extract the URL extension
-		$extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
-
-		if (in_array($extension, self::$extensions)) {
-			$shortpath .= '.' . $extension;
-			$longpath .= '.' . $extension;
-		}
-
-		$proxypath = DI::baseUrl() . '/proxy/' . $longpath;
-
-		if ($size != '') {
-			$size = ':' . $size;
-		}
-
-		Logger::info('Created proxy link', ['url' => $url]);
-
-		// Too long files aren't supported by Apache
-		if (strlen($proxypath) > 250) {
-			return DI::baseUrl() . '/proxy/' . $shortpath . '?url=' . urlencode($url);
-		} else {
-			return $proxypath . $size;
-		}
 	}
 
 	/**
@@ -171,7 +101,7 @@ class Proxy
 			return true;
 		}
 
-		return Network::isLocalLink($url);
+		return DI::baseUrl()->isLocalUrl($url);
 	}
 
 	/**

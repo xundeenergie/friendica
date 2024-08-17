@@ -17,7 +17,7 @@
 		});
 	});
 </script>
-<link rel="stylesheet" href="view/theme/frio/css/mod_admin.css?v={{constant('\Friendica\App::VERSION')}}" type="text/css" media="screen"/>
+<link rel="stylesheet" href="view/theme/frio/css/mod_admin.css?v={{$VERSION}}" type="text/css" media="screen"/>
 
 <div id="adminpage" class="adminpage generic-page-wrapper">
 	<h1>{{$title}} - {{$page}}</h1>
@@ -168,7 +168,6 @@
 						{{include file="field_checkbox.tpl" field=$allow_relay_channels}}
 						{{include file="field_checkbox.tpl" field=$adjust_poll_frequency}}
 						{{include file="field_checkbox.tpl" field=$explicit_content}}
-						{{include file="field_checkbox.tpl" field=$proxify_content}}
 						{{include file="field_checkbox.tpl" field=$local_search}}
 						{{include file="field_input.tpl" field=$blocked_tags}}
 						</div>
@@ -251,6 +250,7 @@
 					<div class="panel-body">
 						{{include file="field_checkbox.tpl" field=$compute_circle_counts}}
 						{{include file="field_checkbox.tpl" field=$only_tag_search}}
+						{{include file="field_checkbox.tpl" field=$limited_search_scope}}
 						{{include file="field_input.tpl" field=$search_age_days}}
 						{{include file="field_input.tpl" field=$max_comments}}
 						{{include file="field_input.tpl" field=$max_display_comments}}

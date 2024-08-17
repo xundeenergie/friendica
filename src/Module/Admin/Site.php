@@ -97,7 +97,6 @@ class Site extends BaseAdmin
 		$adjust_poll_frequency  = !empty($_POST['adjust_poll_frequency']);
 		$min_poll_interval      = (!empty($_POST['min_poll_interval']) ? intval(trim($_POST['min_poll_interval']))                : 0);
 		$explicit_content       = !empty($_POST['explicit_content']);
-		$proxify_content        = !empty($_POST['proxify_content']);
 		$local_search           = !empty($_POST['local_search']);
 		$blocked_tags           = (!empty($_POST['blocked_tags']) ? trim($_POST['blocked_tags'])  : '');
 		$cache_contact_avatar   = !empty($_POST['cache_contact_avatar']);
@@ -141,6 +140,7 @@ class Site extends BaseAdmin
 		$temppath               = (!empty($_POST['temppath'])               ? trim($_POST['temppath'])   : '');
 		$singleuser             = (!empty($_POST['singleuser'])             ? trim($_POST['singleuser']) : '');
 		$only_tag_search        = !empty($_POST['only_tag_search']);
+		$limited_search_scope   = !empty($_POST['limited_search_scope']);
 		$search_age_days        = (!empty($_POST['search_age_days'])        ? intval($_POST['search_age_days'])               : 0);
 		$compute_circle_counts  = !empty($_POST['compute_circle_counts']);
 		$process_view           = !empty($_POST['process_view']);
@@ -271,7 +271,6 @@ class Site extends BaseAdmin
 		$transactionConfig->set('system', 'adjust_poll_frequency'  , $adjust_poll_frequency);
 		$transactionConfig->set('system', 'min_poll_interval'      , $min_poll_interval);
 		$transactionConfig->set('system', 'explicit_content'       , $explicit_content);
-		$transactionConfig->set('system', 'proxify_content'        , $proxify_content);
 		$transactionConfig->set('system', 'local_search'           , $local_search);
 		$transactionConfig->set('system', 'blocked_tags'           , Strings::cleanTags($blocked_tags));
 		$transactionConfig->set('system', 'cache_contact_avatar'   , $cache_contact_avatar);
@@ -319,6 +318,7 @@ class Site extends BaseAdmin
 		$transactionConfig->set('system', 'temppath', $temppath);
 
 		$transactionConfig->set('system', 'only_tag_search', $only_tag_search);
+		$transactionConfig->set('system', 'limited_search_scope', $limited_search_scope);
 		$transactionConfig->set('system', 'search_age_days', $search_age_days);
 		$transactionConfig->set('system', 'compute_circle_counts', $compute_circle_counts);
 		$transactionConfig->set('system', 'process_view', $process_view);
@@ -518,7 +518,6 @@ class Site extends BaseAdmin
 			'$private_addons'         => ['private_addons', DI::l10n()->t('Disallow public access to addons listed in the apps menu.'), DI::config()->get('config', 'private_addons'), DI::l10n()->t('Checking this box will restrict addons listed in the apps menu to members only.')],
 			'$disable_embedded'       => ['disable_embedded', DI::l10n()->t('Don\'t embed private images in posts'), DI::config()->get('system', 'disable_embedded'), DI::l10n()->t('Don\'t replace locally-hosted private photos in posts with an embedded copy of the image. This means that contacts who receive posts containing private photos will have to authenticate and load each image, which may take a while.')],
 			'$explicit_content'       => ['explicit_content', DI::l10n()->t('Explicit Content'), DI::config()->get('system', 'explicit_content'), DI::l10n()->t('Set this to announce that your node is used mostly for explicit content that might not be suited for minors. This information will be published in the node information and might be used, e.g. by the global directory, to filter your node from listings of nodes to join. Additionally a note about this will be shown at the user registration page.')],
-			'$proxify_content'        => ['proxify_content', DI::l10n()->t('Proxify external content'), DI::config()->get('system', 'proxify_content'), DI::l10n()->t('Route external content via the proxy functionality. This is used for example for some OEmbed accesses and in some other rare cases.')],
 			'$local_search'           => ['local_search', DI::l10n()->t('Only local search'), DI::config()->get('system', 'local_search'), DI::l10n()->t('Blocks search for users who are not logged in to prevent crawlers from blocking your system.')],
 			'$blocked_tags'           => ['blocked_tags', DI::l10n()->t('Blocked tags for trending tags'), DI::config()->get('system', 'blocked_tags'), DI::l10n()->t("Comma separated list of hashtags that shouldn't be displayed in the trending tags.")],
 			'$cache_contact_avatar'   => ['cache_contact_avatar', DI::l10n()->t('Cache contact avatars'), DI::config()->get('system', 'cache_contact_avatar'), DI::l10n()->t('Locally store the avatar pictures of the contacts. This uses a lot of storage space but it increases the performance.')],
@@ -574,6 +573,7 @@ class Site extends BaseAdmin
 			'$itemspage_network_mobile' => ['itemspage_network_mobile', DI::l10n()->t('Items per page for mobile devices'), DI::config()->get('system', 'itemspage_network_mobile'), DI::l10n()->t('Number of items per page in stream pages (network, community, profile/contact statuses, search) for mobile devices.')],
 			'$temppath'               => ['temppath', DI::l10n()->t('Temp path'), DI::config()->get('system', 'temppath'), DI::l10n()->t('If you have a restricted system where the webserver can\'t access the system temp path, enter another path here.')],
 			'$only_tag_search'        => ['only_tag_search', DI::l10n()->t('Only search in tags'), DI::config()->get('system', 'only_tag_search'), DI::l10n()->t('On large systems the text search can slow down the system extremely.')],
+			'$limited_search_scope'   => ['limited_search_scope', DI::l10n()->t('Limited search scope'), DI::config()->get('system', 'limited_search_scope'), DI::l10n()->t('If enabled, searches will only be performed in the data used for the channels and not in all posts.')],
 			'$search_age_days'        => ['search_age_days', DI::l10n()->t('Maximum age of items in the search table'), DI::config()->get('system', 'search_age_days'), DI::l10n()->t('Maximum age of items in the search table in days. Lower values will increase the performance and reduce disk usage. 0 means no age restriction.')],
 			'$compute_circle_counts'  => ['compute_circle_counts', DI::l10n()->t('Generate counts per contact circle when calculating network count'), DI::config()->get('system', 'compute_circle_counts'), DI::l10n()->t('On systems with users that heavily use contact circles the query can be very expensive.')],
 			'$process_view'           => ['process_view', DI::l10n()->t('Process "view" activities'), DI::config()->get('system', 'process_view'), DI::l10n()->t('"view" activities are mostly geberated by Peertube systems. Per default they are not processed for performance reasons. Only activate this option on performant system.')],

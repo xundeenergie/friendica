@@ -58,7 +58,7 @@ class Unreblog extends BaseApi
 			if (!Item::markForDeletionById($item['id'])) {
 				$this->logAndJsonError(404, $this->errorFactory->RecordNotFound());
 			}
-		} elseif (!in_array($item['network'], [Protocol::DFRN, Protocol::ACTIVITYPUB, Protocol::TWITTER])) {
+		} elseif (!in_array($item['network'], [Protocol::DFRN, Protocol::ACTIVITYPUB, Protocol::BLUESKY, Protocol::TUMBLR, Protocol::TWITTER])) {
 			$this->logAndJsonError(
 				422,
 				$this->errorFactory->UnprocessableEntity($this->t("Posts from %s can't be unshared", ContactSelector::networkToName($item['network'])))

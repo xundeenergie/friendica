@@ -23,7 +23,7 @@ Predefined Channels
 
 * For you: Posts from contacts you interact with and who interact with you. In detail, it consists of:
     * Posts from people you interact with on a more than average level.
-    * Posts from the accounts that you follow with a more than average number of interactions-
+    * Posts from the accounts that you follow with a more than average number of interactions.
     * Posts from accounts where you activated "notify on new posts" or where you have set the channel frequency accordingly.
 * Discover: Posts from contacts you don't follow, but that might be of interest for you to follow. In detail, it consists of:
     * Posts from people you don't follow but you interact with on a more than average level.
@@ -48,11 +48,11 @@ Each channel is defined by these values:
 * Label: This value is mandatory and is used for the menu label.
 * Description: A short description of the content. This can help to keep the overview, when you have got a lot of channels.
 * Access Key: When you want to access this channel via an access key, you can define it here. Pay attention to not use an already used one.
-* Circle: This defines the data source for this channel. By default it is set to the public timeline. There are some predefined values, like the accounts that you follow or the accounts that follow you. Also all of your circles can be selected. 
+* Circle: This defines the data source for this channel. By default it is set to the public timeline. There are some predefined values, like the accounts that you follow or the accounts that follow you. Also all of your circles can be selected.
 * Include Tags: Comma separated list of tags. A post will be used when it contains any of the listed tags.
-* Exclude Tags: Comma separated list of tags. If a post contain any of these tags, then it will not be part of nthis channel.
+* Exclude Tags: Comma separated list of tags. If a post contain any of these tags, then it will not be part of this channel.
 * Full Text Search: This can be used to include or exclude content, based on the content and some additional keywords. It uses the "boolean mode" operators from MariaDB: https://mariadb.com/kb/en/full-text-index-overview/#in-boolean-mode
-* Images, Videos, Audio: When selected, you will see content with the selected media type. This can be combined. If none of these fields are checked, you will see any content, with or without attacked media.
+* Images, Videos, Audio: When selected, you will see content with the selected media type. This can be combined. If none of these fields are checked, you will see any content, with or without attached media.
 
 Additional keywords for the full text search
 ---
@@ -61,8 +61,8 @@ Additionally to the search for content, there are keywords that can be used in t
 Alternatives are presented with "|".
 
 * from - Use "from:nickname" or "from:nickname@domain.tld" to search for posts from a specific author.
-* to - Use "from:nickname" or "from:nickname@domain.tld" to search for posts with the given contact as receiver.
-* group - Use "group:nickname" or "group:nickname@domain.tld" to search for group post of the given group.
+* to - Use "to:nickname" or "to:nickname@domain.tld" to search for posts with the given contact as receiver.
+* group - Use "group:nickname" or "group:nickname@domain.tld" to search for posts of the given group.
 * application | relay - Use "application:nickname" or "application:nickname@domain.tld" to search for posts that had been reshared by the given relay application.
 * server - Use "server:hostname" to search for posts from a specific server. In the case of group postings, the search text contains both the hostname of the group server and the author's hostname.
 * source - The ActivityPub type of the post source. Use this for example to include or exclude group posts or posts from services (aka bots).
@@ -93,7 +93,7 @@ Alternatives are presented with "|".
     * visibility:public
     * visibility:unlisted
     * visibility:private
-* language | lang - Use "language:code" to search for posts with the given language in the [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1) format. 
+* language | lang - Use "language:code" to search for posts with the given language in the [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1) format.
 
-Remember that you can combine these kerywords.
+Remember that you can combine these keywords.
 So for example you can create a channel with all posts that talk about the Fediverse - that aren't posted in the Fediverse with the search terms: "fediverse -network:apub -network:dfrn"

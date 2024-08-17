@@ -45,7 +45,8 @@ use Friendica\Model\Post;
 use Friendica\Network\HTTPException;
 use Friendica\Util\DateTimeFormat;
 
-function item_post(App $a) {
+function item_post()
+{
 	$uid = DI::userSession()->getLocalUserId();
 
 	if (!$uid) {
@@ -233,13 +234,15 @@ function item_insert(int $uid, array $request, bool $preview, string $return_pat
 
 function item_process(array $post, array $request, bool $preview, string $return_path): array
 {
-	$post['self']       = true;
-	$post['api_source'] = false;
-	$post['attach']     = '';
-	$post['title']      = trim($request['title'] ?? '');
-	$post['body']       = $request['body'] ?? '';
-	$post['location']   = trim($request['location'] ?? '');
-	$post['coord']      = trim($request['coord'] ?? '');
+	$post['self']            = true;
+	$post['api_source']      = false;
+	$post['attach']          = '';
+	$post['title']           = trim($request['title'] ?? '');
+	$post['content-warning'] = trim($request['summary'] ?? '');
+	$post['sensitive']       = !empty($request['sensitive'] ?? false);
+	$post['body']            = $request['body'] ?? '';
+	$post['location']        = trim($request['location'] ?? '');
+	$post['coord']           = trim($request['coord'] ?? '');
 
 	$post = DI::contentItem()->addCategories($post, $request['category'] ?? '');
 
@@ -248,7 +251,7 @@ function item_process(array $post, array $request, bool $preview, string $return
 		$post['body'] .= DI::contentItem()->storeAttachmentFromRequest($request);
 	}
 
-	$post = DI::contentItem()->finalizePost($post);
+	$post = DI::contentItem()->finalizePost($post, $preview);
 
 	if (!strlen($post['body'])) {
 		if ($preview) {
@@ -279,13 +282,14 @@ function item_process(array $post, array $request, bool $preview, string $return
 		$post['body']           = BBCode::removeSharedData(Item::setHashtags($post['body']));
 		$post['writable']       = true;
 		$post['sensitive']      = false;
+		$post['post-reason']    = Item::PR_LOCAL;
 
 		$o = DI::conversation()->render([$post], Conversation::MODE_SEARCH, false, true);
 
 		System::jsonExit(['preview' => $o]);
 	}
 
-	Hook::callAll('post_local',$post);
+	Hook::callAll('post_local', $post);
 
 	unset($post['edit']);
 	unset($post['self']);

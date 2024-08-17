@@ -21,6 +21,7 @@
 
 namespace Friendica\Network\HTTPClient\Client;
 
+use Friendica\App;
 use Friendica\Core\System;
 use Friendica\Network\HTTPClient\Response\CurlResult;
 use Friendica\Network\HTTPClient\Response\GuzzleResponse;
@@ -32,6 +33,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\RequestOptions;
 use mattwright\URLResolver;
 use Psr\Http\Message\ResponseInterface;
@@ -51,13 +53,16 @@ class HttpClient implements ICanSendHttpRequests
 	private $client;
 	/** @var URLResolver */
 	private $resolver;
+	/** @var App\BaseURL */
+	private $baseUrl;
 
-	public function __construct(LoggerInterface $logger, Profiler $profiler, Client $client, URLResolver $resolver)
+	public function __construct(LoggerInterface $logger, Profiler $profiler, Client $client, URLResolver $resolver, App\BaseURL $baseUrl)
 	{
 		$this->logger   = $logger;
 		$this->profiler = $profiler;
 		$this->client   = $client;
 		$this->resolver = $resolver;
+		$this->baseUrl  = $baseUrl;
 	}
 
 	/**
@@ -73,13 +78,13 @@ class HttpClient implements ICanSendHttpRequests
 			throw new \InvalidArgumentException('Unable to retrieve the host in URL: ' . $url);
 		}
 
-		if(!filter_var($host, FILTER_VALIDATE_IP) && !@dns_get_record($host . '.', DNS_A) && !@dns_get_record($host . '.', DNS_AAAA)) {
+		if (!filter_var($host, FILTER_VALIDATE_IP) && !@dns_get_record($host . '.', DNS_A) && !@dns_get_record($host . '.', DNS_AAAA)) {
 			$this->logger->debug('URL cannot be resolved.', ['url' => $url]);
 			$this->profiler->stopRecording();
 			return CurlResult::createErrorCurl($this->logger, $url);
 		}
 
-		if (Network::isLocalLink($url)) {
+		if ($this->baseUrl->isLocalUrl($url)) {
 			$this->logger->info('Local link', ['url' => $url]);
 		}
 
@@ -100,7 +105,7 @@ class HttpClient implements ICanSendHttpRequests
 			}
 		}
 		$parts['path'] = implode('/', $parts2);
-		$url           = Network::unparseURL($parts);
+		$url           = (string)Uri::fromParts((array)$parts);
 
 		if (Network::isUrlBlocked($url)) {
 			$this->logger->info('Domain is blocked.', ['url' => $url]);
@@ -115,7 +120,7 @@ class HttpClient implements ICanSendHttpRequests
 			$conf[RequestOptions::COOKIES] = $jar;
 		}
 
-		$headers = [];
+		$headers = ['User-Agent' => $this->getUserAgent($opts[HttpClientOptions::REQUEST] ?? '')];
 
 		if (!empty($opts[HttpClientOptions::ACCEPT_CONTENT])) {
 			$headers['Accept'] = $opts[HttpClientOptions::ACCEPT_CONTENT];
@@ -153,8 +158,10 @@ class HttpClient implements ICanSendHttpRequests
 		}
 
 		$conf[RequestOptions::ON_HEADERS] = function (ResponseInterface $response) use ($opts) {
-			if (!empty($opts[HttpClientOptions::CONTENT_LENGTH]) &&
-				(int)$response->getHeaderLine('Content-Length') > $opts[HttpClientOptions::CONTENT_LENGTH]) {
+			if (
+				!empty($opts[HttpClientOptions::CONTENT_LENGTH]) &&
+				(int)$response->getHeaderLine('Content-Length') > $opts[HttpClientOptions::CONTENT_LENGTH]
+			) {
 				throw new TransferException('The file is too big!');
 			}
 		};
@@ -172,8 +179,10 @@ class HttpClient implements ICanSendHttpRequests
 			$response = $this->client->request($method, $url, $conf);
 			return new GuzzleResponse($response, $url);
 		} catch (TransferException $exception) {
-			if ($exception instanceof RequestException &&
-				$exception->hasResponse()) {
+			if (
+				$exception instanceof RequestException &&
+				$exception->hasResponse()
+			) {
 				return new GuzzleResponse($exception->getResponse(), $url, $exception->getCode(), '');
 			} else {
 				return new CurlResult($this->logger, $url, '', ['http_code' => 500], $exception->getCode(), '');
@@ -209,7 +218,7 @@ class HttpClient implements ICanSendHttpRequests
 	/**
 	 * {@inheritDoc}
 	 */
-	public function post(string $url, $params, array $headers = [], int $timeout = 0): ICanHandleHttpResponses
+	public function post(string $url, $params, array $headers = [], int $timeout = 0, string $request = ''): ICanHandleHttpResponses
 	{
 		$opts = [];
 
@@ -227,6 +236,10 @@ class HttpClient implements ICanSendHttpRequests
 			$opts[HttpClientOptions::TIMEOUT] = $timeout;
 		}
 
+		if (!empty($request)) {
+			$opts[HttpClientOptions::REQUEST] = $request;
+		}
+
 		return $this->request('post', $url, $opts);
 	}
 
@@ -237,7 +250,7 @@ class HttpClient implements ICanSendHttpRequests
 	{
 		$this->profiler->startRecording('network');
 
-		if (Network::isLocalLink($url)) {
+		if ($this->baseUrl->isLocalUrl($url)) {
 			$this->logger->debug('Local link', ['url' => $url]);
 		}
 
@@ -255,6 +268,7 @@ class HttpClient implements ICanSendHttpRequests
 
 		$url = trim($url, "'");
 
+		$this->resolver->setUserAgent($this->getUserAgent(HttpClientRequest::URLRESOLVER));
 		$urlResult = $this->resolver->resolveURL($url);
 
 		if ($urlResult->didErrorOccur()) {
@@ -267,9 +281,9 @@ class HttpClient implements ICanSendHttpRequests
 	/**
 	 * {@inheritDoc}
 	 */
-	public function fetch(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = ''): string
+	public function fetch(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = '', string $request = ''): string
 	{
-		$ret = $this->fetchFull($url, $accept_content, $timeout, $cookiejar);
+		$ret = $this->fetchFull($url, $accept_content, $timeout, $cookiejar, $request);
 
 		return $ret->getBodyString();
 	}
@@ -277,15 +291,27 @@ class HttpClient implements ICanSendHttpRequests
 	/**
 	 * {@inheritDoc}
 	 */
-	public function fetchFull(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = ''): ICanHandleHttpResponses
+	public function fetchFull(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = '', string $request = ''): ICanHandleHttpResponses
 	{
 		return $this->get(
 			$url,
 			$accept_content,
 			[
 				HttpClientOptions::TIMEOUT   => $timeout,
-				HttpClientOptions::COOKIEJAR => $cookiejar
+				HttpClientOptions::COOKIEJAR => $cookiejar,
+				HttpClientOptions::REQUEST   => $request,
 			]
 		);
+	}
+
+	private function getUserAgent(string $type = ''): string
+	{
+		// @see https://developers.whatismybrowser.com/learn/browser-detection/user-agents/user-agent-best-practices
+		$userAgent = App::PLATFORM . '/' . App::VERSION  . ' DatabaseVersion/' . DB_UPDATE_VERSION;
+		if ($type != '') {
+			$userAgent .= ' Request/' . $type;
+		}
+		$userAgent .= ' +' . $this->baseUrl;
+		return $userAgent;
 	}
 }

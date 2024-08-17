@@ -24,7 +24,6 @@ namespace Friendica\Module;
 use Friendica\App;
 use Friendica\BaseModule;
 use Friendica\Capabilities\ICanCreateResponses;
-use Friendica\Core\Addon;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
 use Friendica\Model\Nodeinfo;
@@ -33,7 +32,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Version 1.0 of Nodeinfo 2, a sStandardized way of exposing metadata about a server running one of the distributed social networks.
- * @see https://github.com/jhass/nodeinfo/blob/master/PROTOCOL.md
+ * @see https://github.com/jaywink/nodeinfo2/blob/master/PROTOCOL.md
  */
 class NodeInfo210 extends BaseModule
 {
@@ -59,7 +58,7 @@ class NodeInfo210 extends BaseModule
 			'organization'      => Nodeinfo::getOrganization($this->config),
 			'protocols'         => ['dfrn', 'activitypub'],
 			'services'          => Nodeinfo::getServices(),
-			'openRegistrations' => intval($this->config->get('config', 'register_policy')) !== Register::CLOSED,
+			'openRegistrations' => Register::getPolicy() !== Register::CLOSED,
 			'usage'             => Nodeinfo::getUsage(true),
 		];
 

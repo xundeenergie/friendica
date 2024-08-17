@@ -27,7 +27,9 @@ use Friendica\DI;
 use Friendica\Model\Contact;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException\NotModifiedException;
+use GuzzleHttp\Psr7\Exception\MalformedUriException;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
@@ -78,7 +80,8 @@ class Network
 		}
 
 		if (in_array(parse_url($url, PHP_URL_SCHEME), ['https', 'http'])) {
-			$options = [HttpClientOptions::VERIFY => true, HttpClientOptions::TIMEOUT => $xrd_timeout];
+			$options = [HttpClientOptions::VERIFY => true, HttpClientOptions::TIMEOUT => $xrd_timeout,
+				HttpClientOptions::REQUEST => HttpClientRequest::URLVERIFIER];
 			try {
 				$curlResult = DI::httpClient()->head($url, $options);
 			} catch (\Exception $e) {
@@ -398,7 +401,7 @@ class Network
 		];
 
 		$parts = array_merge($base, parse_url('/' . ltrim($url, '/')));
-		return self::unparseURL($parts);
+		return (string)Uri::fromParts((array)$parts);
 	}
 
 	/**
@@ -491,38 +494,6 @@ class Network
 	}
 
 	/**
-	 * Glue url parts together
-	 *
-	 * @param array $parsed URL parts
-	 *
-	 * @return string|null The glued URL or null on error
-	 * @deprecated since version 2021.12, use GuzzleHttp\Psr7\Uri::fromParts($parts) instead
-	 */
-	public static function unparseURL(array $parsed): string
-	{
-		$get = function ($key) use ($parsed) {
-			return isset($parsed[$key]) ? $parsed[$key] : null;
-		};
-
-		$pass      = $get('pass');
-		$user      = $get('user');
-		$userinfo  = $pass !== null ? "$user:$pass" : $user;
-		$port      = $get('port');
-		$scheme    = $get('scheme');
-		$query     = $get('query');
-		$fragment  = $get('fragment');
-		$authority = ($userinfo !== null ? $userinfo . '@' : '') .
-						$get('host') .
-						($port ? ":$port" : '');
-
-		return	(!empty($scheme) ? $scheme . ':' : '') .
-			(!empty($authority) ? '//' . $authority : '') .
-			$get('path') .
-			(!empty($query) ? '?' . $query : '') .
-			(!empty($fragment) ? '#' . $fragment : '');
-	}
-
-	/**
 	 * Convert an URI to an IDN compatible URI
 	 *
 	 * @param string $uri
@@ -533,18 +504,27 @@ class Network
 	{
 		$parts = parse_url($uri);
 		if (!empty($parts['scheme']) && !empty($parts['host'])) {
-			$parts['host'] = idn_to_ascii($parts['host']);
+			$parts['host'] = self::idnToAscii($parts['host']);
 			$uri = (string)Uri::fromParts($parts);
 		} else {
 			$parts = explode('@', $uri);
 			if (count($parts) == 2) {
-				$uri = $parts[0] . '@' . idn_to_ascii($parts[1]);
+				$uri = $parts[0] . '@' . self::idnToAscii($parts[1]);
 			} else {
-				$uri = idn_to_ascii($uri);
+				$uri = self::idnToAscii($uri);
 			}
 		}
 
 		return $uri;
+	}
+
+	private static function idnToAscii(string $uri): string
+	{
+		if (!function_exists('idn_to_ascii')) {
+			Logger::error('IDN functions are missing.');
+			return $uri;
+		}
+		return idn_to_ascii($uri);
 	}
 
 	/**
@@ -591,7 +571,7 @@ class Network
 
 		$parsed['query'] = http_build_query($params);
 
-		return self::unparseURL($parsed);
+		return (string)Uri::fromParts((array)$parsed);
 	}
 
 	/**
@@ -635,19 +615,6 @@ class Network
 		if ($flag_not_modified) {
 			throw new NotModifiedException();
 		}
-	}
-
-	/**
-	 * Check if the given URL is a local link
-	 *
-	 * @param string $url
-	 *
-	 * @return bool
-	 * @deprecated since 2023.09, please use BaseUrl->isLocalUrl or BaseUrl->isLocalUri instead.
-	 */
-	public static function isLocalLink(string $url): bool
-	{
-		return DI::baseUrl()->isLocalUrl($url);
 	}
 
 	/**
@@ -703,5 +670,29 @@ class Network
 			Logger::debug('Invalid URI', ['code' => $e->getCode(), 'message' => $e->getMessage(), 'uri' => $uri]);
 			return null;
 		}
+	}
+
+	/**
+	 * Remove an Url parameter
+	 *
+	 * @param string $url 
+	 * @param string $parameter 
+	 * @return string 
+	 * @throws MalformedUriException 
+	 */
+	public static function removeUrlParameter(string $url, string $parameter): string
+	{
+		$parts = parse_url($url);
+		if (empty($parts['query'])) {
+			return $url;
+		}
+
+		parse_str($parts['query'], $data);
+
+		unset($data[$parameter]);
+
+		$parts['query'] = http_build_query($data);
+
+		return (string)Uri::fromParts($parts);
 	}
 }

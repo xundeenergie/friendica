@@ -140,7 +140,8 @@ class Addon
 			$func();
 		}
 
-		Hook::delete(['file' => 'addon/' . $addon . '/' . $addon . '.php']);
+		// Handles both relative and absolute file paths
+		Hook::delete(['`file` LIKE ?', "%addon/$addon/$addon.php"]);
 
 		unset(self::$addons[array_search($addon, self::$addons)]);
 	}

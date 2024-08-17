@@ -212,9 +212,22 @@ class Post
 		$shareable    = in_array($conv->getProfileOwner(), [0, DI::userSession()->getLocalUserId()]) && $item['private'] != Item::PRIVATE;
 		$announceable = $shareable && in_array($item['network'], [Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA, Protocol::TWITTER, Protocol::TUMBLR, Protocol::BLUESKY]);
 		$commentable  = ($item['network'] != Protocol::TUMBLR);
+		$likeable     = true;
 
 		// On Diaspora only toplevel posts can be reshared
 		if ($announceable && ($item['network'] == Protocol::DIASPORA) && ($item['gravity'] != Item::GRAVITY_PARENT)) {
+			$announceable = false;
+		}
+
+		if ($item['restrictions'] & Item::CANT_REPLY) {
+			$commentable = false;
+		}
+
+		if ($item['restrictions'] & Item::CANT_LIKE) {
+			$likeable = false;
+		}
+
+		if ($item['restrictions'] & Item::CANT_ANNOUNCE) {
 			$announceable = false;
 		}
 
@@ -423,8 +436,10 @@ class Post
 		}
 
 		if ($conv->isWritable()) {
-			$buttons['like']    = [DI::l10n()->t("I like this \x28toggle\x29"), DI::l10n()->t('Like')];
-			$buttons['dislike'] = [DI::l10n()->t("I don't like this \x28toggle\x29"), DI::l10n()->t('Dislike')];
+			if ($likeable) {
+				$buttons['like']    = [DI::l10n()->t("I like this \x28toggle\x29"), DI::l10n()->t('Like')];
+				$buttons['dislike'] = [DI::l10n()->t("I don't like this \x28toggle\x29"), DI::l10n()->t('Dislike')];
+			}
 			if ($shareable) {
 				$buttons['share'] = [DI::l10n()->t('Quote share this'), DI::l10n()->t('Quote Share')];
 			}
@@ -449,14 +464,6 @@ class Post
 		$body_html = Item::prepareBody($item, true);
 
 		list($categories, $folders) = DI::contentItem()->determineCategoriesTerms($item, DI::userSession()->getLocalUserId());
-
-		if (!empty($item['title'])) {
-			$title = $item['title'];
-		} elseif (!empty($item['content-warning']) && DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'disable_cw', false)) {
-			$title = ucfirst($item['content-warning']);
-		} else {
-			$title = '';
-		}
 
 		$hide_dislike = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'hide_dislike');
 		if ($hide_dislike) {
@@ -506,7 +513,7 @@ class Post
 
 		$languages = [];
 		if (!empty($item['language'])) {
-			$languages = [DI::l10n()->t('Languages'), Item::getLanguageMessage($item)];
+			$languages = DI::l10n()->t('Languages');
 		}
 
 		if (in_array($item['private'], [Item::PUBLIC, Item::UNLISTED]) && in_array($item['network'], Protocol::FEDERATED)) {
@@ -557,7 +564,8 @@ class Post
 			'thumb'           => DI::baseUrl()->remove(DI::contentItem()->getAuthorAvatar($item)),
 			'osparkle'        => $osparkle,
 			'sparkle'         => $sparkle,
-			'title'           => $title,
+			'title'           => $item['title'],
+			'summary'         => $item['content-warning'],
 			'localtime'       => DateTimeFormat::local($item['created'], 'r'),
 			'ago'             => $item['app'] ? DI::l10n()->t('%s from %s', $ago, $item['app']) : $ago,
 			'app'             => $item['app'],
@@ -585,6 +593,7 @@ class Post
 			'tagger'          => $tagger,
 			'filer'           => $filer,
 			'language'        => $languages,
+			'searchtext'      => DI::l10n()->t('Search Text'),
 			'drop'            => $drop,
 			'block'           => $block,
 			'ignore_author'   => $ignore,
@@ -1055,22 +1064,20 @@ class Post
 	 */
 	private function getDefaultText(): string
 	{
-		$a = DI::app();
-
 		if (!DI::userSession()->getLocalUserId()) {
 			return '';
 		}
 
-		$owner = User::getOwnerDataById($a->getLoggedInUserId());
+		$owner = User::getOwnerDataById(DI::userSession()->getLocalUserId());
 		$item = $this->getData();
 
-		if (!empty($item['content-warning']) && Feature::isEnabled(DI::userSession()->getLocalUserId(), 'add_abstract')) {
+		if (!empty($item['content-warning']) && Feature::isEnabled(DI::userSession()->getLocalUserId(), Feature::ADD_ABSTRACT)) {
 			$text = '[abstract=' . Protocol::ACTIVITYPUB . ']' . $item['content-warning'] . "[/abstract]\n";
 		} else {
 			$text = '';
 		}
 
-		if (!Feature::isEnabled(DI::userSession()->getLocalUserId(), 'explicit_mentions')) {
+		if (!Feature::isEnabled(DI::userSession()->getLocalUserId(), Feature::EXPLICIT_MENTIONS)) {
 			return $text;
 		}
 
@@ -1108,8 +1115,6 @@ class Post
 	 */
 	private function getCommentBox(string $indent)
 	{
-		$a = DI::app();
-
 		$comment_box = '';
 		$conv = $this->getThread();
 
@@ -1128,7 +1133,7 @@ class Post
 			$uid = $conv->getProfileOwner();
 			$parent_uid = $this->getDataValue('uid');
 
-			$owner = User::getOwnerDataById($a->getLoggedInUserId());
+			$owner = User::getOwnerDataById(DI::userSession()->getLocalUserId());
 
 			$default_text = $this->getDefaultText();
 

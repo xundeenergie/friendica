@@ -66,11 +66,14 @@ class Settings extends BaseAdmin
 		parent::content();
 
 		$log_choices = [
-			LogLevel::ERROR   => 'Error',
-			LogLevel::WARNING => 'Warning',
-			LogLevel::NOTICE  => 'Notice',
-			LogLevel::INFO    => 'Info',
-			LogLevel::DEBUG   => 'Debug',
+			LogLevel::EMERGENCY => 'Emergency',
+			LogLevel::ALERT     => 'Alert',
+			LogLevel::CRITICAL  => 'Critical',
+			LogLevel::ERROR     => 'Error',
+			LogLevel::WARNING   => 'Warning',
+			LogLevel::NOTICE    => 'Notice',
+			LogLevel::INFO      => 'Info',
+			LogLevel::DEBUG     => 'Debug',
 		];
 
 		if (ini_get('log_errors')) {

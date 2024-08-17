@@ -25,6 +25,7 @@ use DivineOmega\DOFileCachePSR6\CacheItemPool;
 use DivineOmega\PasswordExposed;
 use ErrorException;
 use Exception;
+use Friendica\App;
 use Friendica\Content\Pager;
 use Friendica\Core\Hook;
 use Friendica\Core\L10n;
@@ -37,6 +38,8 @@ use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Module;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException;
 use Friendica\Object\Image;
 use Friendica\Protocol\Delivery;
@@ -72,6 +75,7 @@ class User
 	const PAGE_FLAGS_FREELOVE  = 3;
 	const PAGE_FLAGS_BLOG      = 4;
 	const PAGE_FLAGS_PRVGROUP  = 5;
+	const PAGE_FLAGS_COMM_MAN  = 6;
 	/**
 	 * @}
 	 */
@@ -161,6 +165,7 @@ class User
 			}
 		}
 
+		$system['name'] = App::PLATFORM . " '" . App::CODENAME . "' " . App::VERSION . '-' . DB_UPDATE_VERSION;
 		$system['sprvkey'] = $system['uprvkey'] = $system['prvkey'];
 		$system['spubkey'] = $system['upubkey'] = $system['pubkey'];
 		$system['nickname'] = $system['nick'];
@@ -405,6 +410,29 @@ class User
 		}
 
 		return 0;
+	}
+
+	/**
+	 * Returns the user id of a given contact id
+	 *
+	 * @param int $cid
+	 *
+	 * @return integer user id
+	 * @throws Exception
+	 */
+	public static function getIdForContactId(int $cid): int
+	{
+		$account = Contact::selectFirstAccountUser(['pid', 'self', 'uid'], ['id' => $cid]);
+		if (empty($account['pid'])) {
+			return 0;
+		}
+
+		if ($account['self']) {
+			return $account['uid'];
+		}
+
+		$self = Contact::selectFirstAccountUser(['uid'], ['pid' => $cid, 'self' => true]);
+		return $self['uid'] ?? 0;
 	}
 
 	/**
@@ -1397,7 +1425,7 @@ class User
 			$photo_failure = false;
 
 			$filename = basename($photo);
-			$curlResult = DI::httpClient()->get($photo, HttpClientAccept::IMAGE);
+			$curlResult = DI::httpClient()->get($photo, HttpClientAccept::IMAGE, [HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
 			if ($curlResult->isSuccess()) {
 				Logger::debug('Got picture', ['Content-Type' => $curlResult->getHeader('Content-Type'), 'url' => $photo]);
 				$img_str = $curlResult->getBodyString();
@@ -1487,6 +1515,12 @@ class User
 	 */
 	public static function block(int $uid, bool $block = true): bool
 	{
+		$self = Contact::getPublicIdByUserId($uid);
+		if ($block) {
+			Contact::block($self);
+		} else {
+			Contact::unblock($self);
+		}
 		return DBA::update('user', ['blocked' => $block], ['uid' => $uid]);
 	}
 

@@ -22,9 +22,11 @@
 namespace Friendica\Module\ActivityPub;
 
 use Friendica\Core\Logger;
+use Friendica\Core\Protocol;
 use Friendica\Core\System;
 use Friendica\Database\DBA;
 use Friendica\DI;
+use Friendica\Model\Item;
 use Friendica\Model\User;
 use Friendica\Module\BaseApi;
 use Friendica\Module\Special\HTTPException;
@@ -77,6 +79,11 @@ class Inbox extends BaseApi
 			throw new \Friendica\Network\HTTPException\BadRequestException();
 		}
 
+		if (!HTTPSignature::isValidContentType($this->server['CONTENT_TYPE'] ?? '')) {
+			Logger::notice('Unexpected content type', ['content-type' => $this->server['CONTENT_TYPE'] ?? '', 'agent' => $this->server['HTTP_USER_AGENT'] ?? '']);
+			throw new \Friendica\Network\HTTPException\UnsupportedMediaTypeException();
+		}
+
 		if (DI::config()->get('debug', 'ap_inbox_log')) {
 			if (HTTPSignature::getSigner($postdata, $_SERVER)) {
 				$filename = 'signed-activitypub';
@@ -98,6 +105,7 @@ class Inbox extends BaseApi
 			$uid = 0;
 		}
 
+		Item::incrementInbound(Protocol::ACTIVITYPUB);
 		ActivityPub\Receiver::processInbox($postdata, $_SERVER, $uid);
 
 		throw new \Friendica\Network\HTTPException\AcceptedException();

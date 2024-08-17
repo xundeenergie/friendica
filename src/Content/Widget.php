@@ -32,7 +32,7 @@ use Friendica\Model\Contact;
 use Friendica\Model\Circle;
 use Friendica\Model\Item;
 use Friendica\Model\Post;
-use Friendica\Model\Profile;
+use Friendica\Security\OpenWebAuth;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Temporal;
 
@@ -67,7 +67,7 @@ class Widget
 
 		if (DI::config()->get('system', 'invitation_only')) {
 			$x = intval(DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'invites_remaining'));
-			if ($x || DI::app()->isSiteAdmin()) {
+			if ($x || DI::userSession()->isSiteAdmin()) {
 				DI::page()['aside'] .= '<div class="side-link widget" id="side-invite-remain">'
 					. DI::l10n()->tt('%d invitation available', '%d invitations available', $x)
 					. '</div>';
@@ -85,7 +85,7 @@ class Widget
 		$nv['random'] = DI::l10n()->t('Random Profile');
 		$nv['inv'] = DI::l10n()->t('Invite Friends');
 		$nv['directory'] = DI::l10n()->t('Global Directory');
-		$nv['global_dir'] = Profile::zrl($global_dir, true);
+		$nv['global_dir'] = OpenWebAuth::getZrlUrl($global_dir, true);
 		$nv['local_directory'] = DI::l10n()->t('Local Directory');
 
 		$aside = [];
@@ -336,7 +336,7 @@ class Widget
 	 */
 	public static function categories(int $uid, string $baseurl, string $selected = ''): string
 	{
-		if (!Feature::isEnabled($uid, 'categories')) {
+		if (!Feature::isEnabled($uid, Feature::CATEGORIES)) {
 			return '';
 		}
 
@@ -398,7 +398,7 @@ class Widget
 			$entries[] = [
 				'url'   => Contact::magicLinkByContact($contact),
 				'name'  => $contact['name'],
-				'photo' => Contact::getThumb($contact),
+				'photo' => Contact::getThumb($contact, true),
 			];
 		}
 
@@ -428,7 +428,7 @@ class Widget
 			return '';
 		}
 
-		if (Feature::isEnabled($uid, 'tagadelic')) {
+		if (Feature::isEnabled($uid, Feature::TAGCLOUD)) {
 			$owner_id = Contact::getPublicIdByUserId($uid);
 
 			if (!$owner_id) {

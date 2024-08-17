@@ -66,7 +66,7 @@ class Contact extends BaseModeration
 				$this->baseUrl->redirect('moderation/blocklist/contact');
 			}
 
-			if (Network::isLocalLink($contact['nurl'])) {
+			if ($this->baseUrl->isLocalUrl($contact['nurl'])) {
 				$this->systemMessages->addNotice($this->t('You can\'t block a local contact, please block the user instead'));
 				$this->baseUrl->redirect('moderation/blocklist/contact');
 			}
@@ -124,8 +124,6 @@ class Contact extends BaseModeration
 			'$form_security_token' => self::getFormSecurityToken('moderation_contactblock'),
 
 			// values //
-			'$baseurl' => $this->baseUrl,
-
 			'$contacts'       => $contacts,
 			'$total_contacts' => $this->tt('%s total blocked contact', '%s total blocked contacts', $total),
 			'$paginate'       => $pager->renderFull($total),

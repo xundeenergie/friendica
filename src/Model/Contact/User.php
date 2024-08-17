@@ -281,12 +281,12 @@ class User
 	 */
 	public static function setCollapsed(int $cid, int $uid, bool $collapsed)
 	{
-		$cdata = Contact::getPublicAndUserContactID($cid, $uid);
-		if (empty($cdata)) {
+		$pcid = Contact::getPublicContactId($cid, $uid);
+		if (!$pcid) {
 			return;
 		}
 
-		DBA::update('user-contact', ['collapsed' => $collapsed], ['cid' => $cdata['public'], 'uid' => $uid], true);
+		DBA::update('user-contact', ['collapsed' => $collapsed], ['cid' => $pcid, 'uid' => $uid], true);
 	}
 
 	/**
@@ -300,21 +300,13 @@ class User
 	 */
 	public static function isCollapsed(int $cid, int $uid): bool
 	{
-		$cdata = Contact::getPublicAndUserContactID($cid, $uid);
-		if (empty($cdata)) {
+		$pcid = Contact::getPublicContactId($cid, $uid);
+		if (!$pcid) {
 			return false;
 		}
 
-		$collapsed = false;
-
-		if (!empty($cdata['public'])) {
-			$public_contact = DBA::selectFirst('user-contact', ['collapsed'], ['cid' => $cdata['public'], 'uid' => $uid]);
-			if (DBA::isResult($public_contact)) {
-				$collapsed = (bool) $public_contact['collapsed'];
-			}
-		}
-
-		return $collapsed;
+		$public_contact = DBA::selectFirst('user-contact', ['collapsed'], ['cid' => $pcid, 'uid' => $uid]);
+		return $public_contact['collapsed'] ?? false;
 	}
 
 	/**
@@ -328,12 +320,12 @@ class User
 	 */
 	public static function setChannelFrequency(int $cid, int $uid, int $frequency)
 	{
-		$cdata = Contact::getPublicAndUserContactID($cid, $uid);
-		if (empty($cdata)) {
+		$pcid = Contact::getPublicContactId($cid, $uid);
+		if (!$pcid) {
 			return;
 		}
 
-		DBA::update('user-contact', ['channel-frequency' => $frequency], ['cid' => $cdata['public'], 'uid' => $uid], true);
+		DBA::update('user-contact', ['channel-frequency' => $frequency], ['cid' => $pcid, 'uid' => $uid], true);
 	}
 
 	/**
@@ -347,21 +339,52 @@ class User
 	 */
 	public static function getChannelFrequency(int $cid, int $uid): int
 	{
-		$cdata = Contact::getPublicAndUserContactID($cid, $uid);
-		if (empty($cdata)) {
+		$pcid = Contact::getPublicContactId($cid, $uid);
+		if (!$pcid) {
 			return false;
 		}
 
-		$frequency = self::FREQUENCY_DEFAULT;
+		$public_contact = DBA::selectFirst('user-contact', ['channel-frequency'], ['cid' => $pcid, 'uid' => $uid]);
+		return $public_contact['channel-frequency'] ?? self::FREQUENCY_DEFAULT;
+	}
 
-		if (!empty($cdata['public'])) {
-			$public_contact = DBA::selectFirst('user-contact', ['channel-frequency'], ['cid' => $cdata['public'], 'uid' => $uid]);
-			if (DBA::isResult($public_contact)) {
-				$frequency = $public_contact['channel-frequency'] ?? self::FREQUENCY_DEFAULT;
-			}
+	/**
+	 * Set the channel only value for contact id and user id
+	 *
+	 * @param int $cid           Either public contact id or user's contact id
+	 * @param int $uid           User ID
+	 * @param int $isChannelOnly Is channel only
+	 * @return void
+	 * @throws \Exception
+	 */
+	public static function setChannelOnly(int $cid, int $uid, bool $isChannelOnly)
+	{
+		$pcid = Contact::getPublicContactId($cid, $uid);
+		if (!$pcid) {
+			return;
 		}
 
-		return $frequency;
+		DBA::update('user-contact', ['channel-only' => $isChannelOnly], ['cid' => $pcid, 'uid' => $uid], true);
+	}
+
+	/**
+	 * Returns if the contact is channel only for contact id and user id
+	 *
+	 * @param int $cid Either public contact id or user's contact id
+	 * @param int $uid User ID
+	 * @return bool Contact is channel only
+	 * @throws HTTPException\InternalServerErrorException
+	 * @throws \ImagickException
+	 */
+	public static function getChannelOnly(int $cid, int $uid): bool
+	{
+		$pcid = Contact::getPublicContactId($cid, $uid);
+		if (!$pcid) {
+			return false;
+		}
+
+		$public_contact = DBA::selectFirst('user-contact', ['channel-only'], ['cid' => $pcid, 'uid' => $uid]);
+		return $public_contact['channel-only'] ?? false;
 	}
 
 	/**
@@ -375,12 +398,12 @@ class User
 	 */
 	public static function setIsBlocked(int $cid, int $uid, bool $blocked)
 	{
-		$cdata = Contact::getPublicAndUserContactID($cid, $uid);
-		if (empty($cdata)) {
+		$pcid = Contact::getPublicContactId($cid, $uid);
+		if (!$pcid) {
 			return;
 		}
 
-		DBA::update('user-contact', ['is-blocked' => $blocked], ['cid' => $cdata['public'], 'uid' => $uid], true);
+		DBA::update('user-contact', ['is-blocked' => $blocked], ['cid' => $pcid, 'uid' => $uid], true);
 	}
 
 	/**
@@ -393,18 +416,12 @@ class User
 	 */
 	public static function isIsBlocked(int $cid, int $uid): bool
 	{
-		$cdata = Contact::getPublicAndUserContactID($cid, $uid);
-		if (empty($cdata)) {
+		$pcid = Contact::getPublicContactId($cid, $uid);
+		if (!$pcid) {
 			return false;
 		}
 
-		if (!empty($cdata['public'])) {
-			$public_contact = DBA::selectFirst('user-contact', ['is-blocked'], ['cid' => $cdata['public'], 'uid' => $uid]);
-			if (DBA::isResult($public_contact)) {
-				return $public_contact['is-blocked'];
-			}
-		}
-
-		return false;
+		$public_contact = DBA::selectFirst('user-contact', ['is-blocked'], ['cid' => $pcid, 'uid' => $uid]);
+		return $public_contact['is-blocked'] ?? false;
 	}
 }

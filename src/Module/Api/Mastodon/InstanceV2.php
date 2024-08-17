@@ -131,10 +131,17 @@ class InstanceV2 extends BaseApi
 
 		return new InstanceEntity\Configuration(
 			$statuses_config,
-			new InstanceEntity\MediaAttachmentsConfig(Images::supportedMimeTypes(), $image_size_limit, $image_matrix_limit),
+			new InstanceEntity\MediaAttachmentsConfig($this->supportedMimeTypes(), $image_size_limit, $image_matrix_limit),
 			new InstanceEntity\Polls(),
 			new InstanceEntity\Accounts(),
 		);
+	}
+
+	private function supportedMimeTypes(): array
+	{
+		$mimetypes = ['audio/aac', 'audio/flac', 'audio/mpeg', 'audio/mp4', 'audio/ogg', 'audio/wav',
+			'audio/webm', 'video/mp4', 'video/ogg', 'video/webm'];
+		return array_merge(Images::supportedMimeTypes(), $mimetypes);
 	}
 
 	private function buildContactInfo(): InstanceEntity\Contact
@@ -166,9 +173,9 @@ class InstanceV2 extends BaseApi
 
 	private function buildRegistrationsInfo(): InstanceEntity\Registrations
 	{
-		$register_policy   = intval($this->config->get('config', 'register_policy'));
-		$enabled           = ($register_policy != Register::CLOSED);
-		$approval_required = ($register_policy == Register::APPROVE);
+		$register_policy   = Register::getPolicy();
+		$enabled           = $register_policy !== Register::CLOSED;
+		$approval_required = $register_policy === Register::APPROVE;
 
 		return new InstanceEntity\Registrations($enabled, $approval_required);
 	}

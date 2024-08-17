@@ -41,6 +41,7 @@ use Friendica\Model\Post;
 use Friendica\Model\Tag;
 use Friendica\Model\User;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException;
 use Friendica\Network\Probe;
 use Friendica\Protocol\Delivery;
@@ -1081,7 +1082,7 @@ class Diaspora
 
 		Logger::info('Fetch post from ' . $source_url);
 
-		$envelope = DI::httpClient()->fetch($source_url, HttpClientAccept::MAGIC);
+		$envelope = DI::httpClient()->fetch($source_url, HttpClientAccept::MAGIC, 0, '', HttpClientRequest::DIASPORA);
 		if ($envelope) {
 			Logger::info('Envelope was fetched.');
 			$x = self::verifyMagicEnvelope($envelope);
@@ -2937,7 +2938,7 @@ class Diaspora
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	private static function transmit(array $owner, array $contact, string $envelope, bool $public_batch, string $guid = ''): int
+	private static function transmit(array $contact, string $envelope, bool $public_batch, string $guid = ''): int
 	{
 		$enabled = intval(DI::config()->get('system', 'diaspora_enabled'));
 		if (!$enabled) {
@@ -2968,8 +2969,9 @@ class Diaspora
 		if (!intval(DI::config()->get('system', 'diaspora_test'))) {
 			$content_type = (($public_batch) ? 'application/magic-envelope+xml' : 'application/json');
 
-			$postResult = DI::httpClient()->post($dest_url . '/', $envelope, ['Content-Type' => $content_type]);
+			$postResult = DI::httpClient()->post($dest_url . '/', $envelope, ['Content-Type' => $content_type], 0, HttpClientRequest::DIASPORA);
 			$return_code = $postResult->getReturnCode();
+			Item::incrementOutbound(Protocol::DIASPORA);
 		} else {
 			Logger::notice('test_mode');
 			return 200;
@@ -3042,7 +3044,7 @@ class Diaspora
 
 		$envelope = self::buildMessage($msg, $owner, $contact, $owner['uprvkey'], $pubkey ?? '', $public_batch);
 
-		$return_code = self::transmit($owner, $contact, $envelope, $public_batch, $guid);
+		$return_code = self::transmit($contact, $envelope, $public_batch, $guid);
 
 		Logger::info('Transmitted message', ['owner' => $owner['uid'], 'target' => $contact['addr'], 'type' => $type, 'guid' => $guid, 'result' => $return_code]);
 
@@ -3618,7 +3620,7 @@ class Diaspora
 		if (
 			$item['author-id'] != $thread_parent_item['author-id']
 			&& ($thread_parent_item['gravity'] != Item::GRAVITY_PARENT)
-			&& (empty($item['uid']) || !Feature::isEnabled($item['uid'], 'explicit_mentions'))
+			&& (empty($item['uid']) || !Feature::isEnabled($item['uid'], Feature::EXPLICIT_MENTIONS))
 			&& !DI::config()->get('system', 'disable_implicit_mentions')
 		) {
 			$body = self::prependParentAuthorMention($body, $thread_parent_item['author-link']);

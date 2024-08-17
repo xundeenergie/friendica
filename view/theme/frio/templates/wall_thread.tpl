@@ -266,7 +266,9 @@ as the value of $top_child_total (this is done at the end of this file)
 			{{if $item.title}}
 			<span class="wall-item-title" id="wall-item-title-{{$item.id}}"><h4 class="media-heading" dir="auto"><a href="{{$item.plink.href}}" class="{{$item.sparkle}} p-name" target="_blank">{{$item.title}}</a></h4><br /></span>
 			{{/if}}
-
+			{{if $item.summary}}
+			<summary class="wall-item-summary" id="wall-item-summary-{{$item.id}}">{{$item.summary}}</summary>
+			{{/if}}
 			<div class="wall-item-body e-content {{if !$item.title}}p-name{{/if}}" id="wall-item-body-{{$item.id}}" dir="auto">{{$item.body_html nofilter}}</div>
 		</div>
 
@@ -433,9 +435,13 @@ as the value of $top_child_total (this is done at the end of this file)
 
 				{{if $item.language}}
 				<li role="menuitem">
-						<a id="language-{{$item.id}}" href="javascript:alert('{{$item.language.1}}');" class="btn-link filer-item language-icon" title="{{$item.language.0}}"><i class="fa fa-language" aria-hidden="true"></i>&ensp;{{$item.language.0}}</a>
+						<a id="language-{{$item.id}}" href="javascript:displayLanguage({{$item.uriid}});" class="btn-link filer-item language-icon" title="{{$item.language}}"><i class="fa fa-language" aria-hidden="true"></i>&ensp;{{$item.language}}</a>
 				</li>
 				{{/if}}
+
+				<li role="menuitem">
+						<a id="searchtext-{{$item.id}}" href="javascript:displaySearchText({{$item.uriid}});" class="btn-link filer-item search-icon" title="{{$item.searchtext}}"><i class="fa fa-search" aria-hidden="true"></i>&ensp;{{$item.searchtext}}</a>
+				</li>
 
 				{{if $item.browsershare}}
 				<li role="menuitem" class="button-browser-share">
@@ -616,10 +622,13 @@ as the value of $top_child_total (this is done at the end of this file)
 
 							{{if $item.language}}
 								<li role="menuitem">
-									<a id="language-{{$item.id}}" href="javascript:alert('{{$item.language.1}}');" class="btn-link filer-item language-icon" title="{{$item.language.0}}"><i class="fa fa-language" aria-hidden="true"></i>&ensp;{{$item.language.0}}</a>
+									<a id="language-{{$item.id}}" href="javascript:displayLanguage({{$item.uriid}});" class="btn-link filer-item language-icon" title="{{$item.language}}"><i class="fa fa-language" aria-hidden="true"></i>&ensp;{{$item.language}}</a>
 								</li>
 							{{/if}}
 
+							<li role="menuitem">
+								<a id="searchtext-{{$item.id}}" href="javascript:displaySearchText({{$item.uriid}});" class="btn-link filer-item search-icon" title="{{$item.searchtext}}"><i class="fa fa-search" aria-hidden="true"></i>&ensp;{{$item.searchtext}}</a>
+							</li>
 
 							{{if ($item.edpost || $item.tagger || $item.filer || $item.pin || $item.star || $item.follow_thread) && ($item.ignore || ($item.drop && $item.drop.dropping))}}
 								<li role="separator" class="divider"></li>

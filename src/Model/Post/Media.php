@@ -28,6 +28,7 @@ use Friendica\Core\Protocol;
 use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\DI;
+use Friendica\Model\Attach;
 use Friendica\Model\Contact;
 use Friendica\Model\Item;
 use Friendica\Model\ItemURI;
@@ -35,6 +36,7 @@ use Friendica\Model\Photo;
 use Friendica\Model\Post;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Protocol\ActivityPub;
 use Friendica\Util\Images;
 use Friendica\Util\Network;
@@ -86,8 +88,8 @@ class Media
 		// "document" has got the lowest priority. So when the same file is both attached as document
 		// and embedded as picture then we only store the picture or replace the document
 		$found = DBA::selectFirst('post-media', ['type'], ['uri-id' => $media['uri-id'], 'url' => $media['url']]);
-		if (!$force && !empty($found) && (($found['type'] != self::DOCUMENT) || ($media['type'] == self::DOCUMENT))) {
-			Logger::info('Media already exists', ['uri-id' => $media['uri-id'], 'url' => $media['url']]);
+		if (!$force && !empty($found) && (!in_array($found['type'], [self::UNKNOWN, self::DOCUMENT]) || ($media['type'] == self::DOCUMENT))) {
+			Logger::info('Media already exists', ['uri-id' => $media['uri-id'], 'url' => $media['url'], 'found' => $found['type'], 'new' => $media['type']]);
 			return false;
 		}
 
@@ -180,14 +182,20 @@ class Media
 	 */
 	public static function fetchAdditionalData(array $media): array
 	{
-		if (Network::isLocalLink($media['url'])) {
+		if (DI::baseUrl()->isLocalUrl($media['url'])) {
 			$media = self::fetchLocalData($media);
+			if (preg_match('|.*?/search\?(.+)|', $media['url'], $matches)) {
+				return $media;
+			}
+			if (empty($media['mimetype']) || empty($media['size'])) {
+				Logger::debug('Unknown local link', ['url' => $media['url']]);
+			}
 		}
 
 		// Fetch the mimetype or size if missing.
 		if (Network::isValidHttpUrl($media['url']) && (empty($media['mimetype']) || empty($media['size']))) {
 			$timeout = DI::config()->get('system', 'xrd_timeout');
-			$curlResult = DI::httpClient()->head($media['url'], [HttpClientOptions::TIMEOUT => $timeout]);
+			$curlResult = DI::httpClient()->head($media['url'], [HttpClientOptions::TIMEOUT => $timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
 
 			// Workaround for systems that can't handle a HEAD request
 			if (!$curlResult->isSuccess() && ($curlResult->getReturnCode() == 405)) {
@@ -389,7 +397,17 @@ class Media
 	 */
 	private static function fetchLocalData(array $media): array
 	{
-		if (!preg_match('|.*?/photo/(.*[a-fA-F0-9])\-(.*[0-9])\..*[\w]|', $media['url'] ?? '', $matches)) {
+		if (preg_match('|.*?/attach/(\d+)|', $media['url'], $matches)) {
+			$attachment = Attach::selectFirst(['filename', 'filetype', 'filesize'], ['id' => $matches[1]]);
+			if (!empty($attachment)) {
+				$media['name']     = $attachment['filename'];
+				$media['mimetype'] = $attachment['filetype'];
+				$media['size']     = $attachment['filesize'];
+			}
+			return $media;
+		}
+
+		if (!preg_match('|.*?/photo/(.*[a-fA-F0-9])\-(.*[0-9])\..*[\w]|', $media['url'], $matches)) {
 			return $media;
 		}
 		$photo = Photo::selectFirst([], ['resource-id' => $matches[1], 'scale' => $matches[2]]);
@@ -426,42 +444,46 @@ class Media
 			return $data;
 		}
 
-		$type = explode('/', current(explode(';', $data['mimetype'])));
+		$data['type'] = self::getType($data['mimetype']);
+		return $data;
+	}
+
+	public static function getType(string $mimeType): int
+	{
+		$type = explode('/', current(explode(';', $mimeType)));
 		if (count($type) < 2) {
-			Logger::info('Unknown MimeType', ['type' => $type, 'media' => $data]);
-			$data['type'] = self::UNKNOWN;
-			return $data;
+			Logger::info('Unknown MimeType', ['type' => $type, 'media' => $mimeType]);
+			return self::UNKNOWN;
 		}
 
 		$filetype = strtolower($type[0]);
 		$subtype = strtolower($type[1]);
 
 		if ($filetype == 'image') {
-			$data['type'] = self::IMAGE;
+			$type = self::IMAGE;
 		} elseif ($filetype == 'video') {
-			$data['type'] = self::VIDEO;
+			$type = self::VIDEO;
 		} elseif ($filetype == 'audio') {
-			$data['type'] = self::AUDIO;
+			$type = self::AUDIO;
 		} elseif (($filetype == 'text') && ($subtype == 'html')) {
-			$data['type'] = self::HTML;
+			$type = self::HTML;
 		} elseif (($filetype == 'text') && ($subtype == 'xml')) {
-			$data['type'] = self::XML;
+			$type = self::XML;
 		} elseif (($filetype == 'text') && ($subtype == 'plain')) {
-			$data['type'] = self::PLAIN;
+			$type = self::PLAIN;
 		} elseif ($filetype == 'text') {
-			$data['type'] = self::TEXT;
+			$type = self::TEXT;
 		} elseif (($filetype == 'application') && ($subtype == 'x-bittorrent')) {
-			$data['type'] = self::TORRENT;
+			$type = self::TORRENT;
 		} elseif ($filetype == 'application') {
-			$data['type'] = self::APPLICATION;
+			$type = self::APPLICATION;
 		} else {
-			$data['type'] = self::UNKNOWN;
-			Logger::info('Unknown type', ['filetype' => $filetype, 'subtype' => $subtype, 'media' => $data]);
-			return $data;
+			$type = self::UNKNOWN;
+			Logger::info('Unknown type', ['filetype' => $filetype, 'subtype' => $subtype, 'media' => $mimeType]);
 		}
 
-		Logger::debug('Detected type', ['filetype' => $filetype, 'subtype' => $subtype, 'media' => $data]);
-		return $data;
+		Logger::debug('Detected type', ['filetype' => $filetype, 'subtype' => $subtype, 'media' => $mimeType]);
+		return $type;		
 	}
 
 	/**
@@ -902,25 +924,31 @@ class Media
 		$body = BBCode::removeAttachment($body);
 
 		foreach (self::getByURIId($uriid, $types) as $media) {
-			if (Item::containsLink($body, $media['preview'] ?? $media['url'], $media['type'])) {
-				continue;
-			}
-
-			if ($media['type'] == self::IMAGE) {
-				$body .= "\n" . Images::getBBCodeByUrl($media['url'], $media['preview'], $media['description'] ?? '');
-			} elseif ($media['type'] == self::AUDIO) {
-				$body .= "\n[audio]" . $media['url'] . "[/audio]\n";
-			} elseif ($media['type'] == self::VIDEO) {
-				$body .= "\n[video]" . $media['url'] . "[/video]\n";
-			} else {
-				$body .= "\n[url]" . $media['url'] . "[/url]\n";
-			}
+			$body = self::addAttachmentToBody($media, $body);
 		}
 
 		if (preg_match("/.*(\[attachment.*?\].*?\[\/attachment\]).*/ism", $original_body, $match)) {
 			$body .= "\n" . $match[1];
 		}
 
+		return $body;
+	}
+
+	public static function addAttachmentToBody(array $media, string $body): string
+	{
+		if (Item::containsLink($body, $media['preview'] ?? $media['url'], $media['type'])) {
+			return $body;
+		}
+
+		if ($media['type'] == self::IMAGE) {
+			$body .= "\n" . Images::getBBCodeByUrl($media['url'], $media['preview'], $media['description'] ?? '');
+		} elseif ($media['type'] == self::AUDIO) {
+			$body .= "\n[audio]" . $media['url'] . "[/audio]\n";
+		} elseif ($media['type'] == self::VIDEO) {
+			$body .= "\n[video]" . $media['url'] . "[/video]\n";
+		} else {
+			$body .= "\n[url]" . $media['url'] . "[/url]\n";
+		}
 		return $body;
 	}
 

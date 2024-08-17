@@ -73,7 +73,7 @@ class Recovery extends BaseModule
 				$this->session->set('2fa', true);
 				DI::sysmsg()->addInfo($this->t('Remaining recovery codes: %d', RecoveryCode::countValidForUser($this->session->getLocalUserId())));
 
-				$this->auth->setForUser($this->app, User::getById($this->app->getLoggedInUserId()), true, true);
+				$this->auth->setForUser($this->app, User::getById($this->session->getLocalUserId()), true, true);
 
 				$this->baseUrl->redirect($this->session->pop('return_path', ''));
 			} else {

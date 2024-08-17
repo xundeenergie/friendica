@@ -25,8 +25,8 @@ use Friendica\Core\Hook;
 use Friendica\Core\Protocol;
 use Friendica\Database\DBA;
 use Friendica\DI;
-use Friendica\Util\Network;
 use Friendica\Util\Strings;
+use GuzzleHttp\Psr7\Uri;
 
 /**
  * ContactSelector class
@@ -102,7 +102,7 @@ class ContactSelector
 			// Create the server url out of the profile url
 			$parts = parse_url($profile);
 			unset($parts['path']);
-			$server_url = Strings::normaliseLink(Network::unparseURL($parts));
+			$server_url = Strings::normaliseLink((string)Uri::fromParts((array)$parts));
 		}
 
 		self::$server_url[$profile] = $server_url;

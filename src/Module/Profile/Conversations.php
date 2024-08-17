@@ -144,7 +144,7 @@ class Conversations extends BaseProfile
 
 		$o .= Widget::commonFriendsVisitor($profile['uid'], $profile['nickname']);
 
-		$commpage    = $profile['page-flags'] == User::PAGE_FLAGS_COMMUNITY;
+		$commpage    = in_array($profile['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN]);
 		$commvisitor = $commpage && $remote_contact;
 
 		$this->page['aside'] .= Widget::postedByYear($this->baseUrl . '/profile/' . $profile['nickname'] . '/conversations', $profile['profile_uid'] ?? 0, true);
@@ -157,7 +157,7 @@ class Conversations extends BaseProfile
 				'allow_location'   => ($is_owner || $commvisitor) && $profile['allow_location'],
 				'default_location' => $is_owner ? $profile['default-location'] : '',
 				'nickname'         => $profile['nickname'],
-				'acl'              => $is_owner ? ACL::getFullSelectorHTML($this->page, $this->app->getLoggedInUserId(), true) : '',
+				'acl'              => $is_owner ? ACL::getFullSelectorHTML($this->page, $this->session->getLocalUserId(), true) : '',
 				'visitor'          => $is_owner || $commvisitor ? 'block' : 'none',
 				'profile_uid'      => $profile['uid'],
 			];
@@ -204,7 +204,7 @@ class Conversations extends BaseProfile
 
 		$condition = DBA::mergeConditions($condition, ["((`gravity` = ? AND `wall`) OR
 			(`gravity` = ? AND `vid` = ? AND `origin`
-			AND EXISTS(SELECT `uri-id` FROM `post` WHERE `uri-id` = `post-user-view`.`thr-parent-id` AND `gravity` = ? AND `network` IN (?, ?))))",
+			AND EXISTS(SELECT `uri-id` FROM `post` WHERE `uri-id` = `post-origin-view`.`thr-parent-id` AND `gravity` = ? AND `network` IN (?, ?))))",
 		                                               Item::GRAVITY_PARENT, Item::GRAVITY_ACTIVITY, Verb::getID(Activity::ANNOUNCE), Item::GRAVITY_PARENT, Protocol::ACTIVITYPUB, Protocol::DFRN]);
 
 		$condition = DBA::mergeConditions($condition, ['uid'     => $profile['uid'], 'network' => Protocol::FEDERATED,
@@ -213,7 +213,7 @@ class Conversations extends BaseProfile
 		$pager  = new Pager($this->l10n, $this->args->getQueryString(), $itemspage_network);
 		$params = ['limit' => [$pager->getStart(), $pager->getItemsPerPage()], 'order' => ['received' => true]];
 
-		$items_stmt = Post::select(['uri-id', 'thr-parent-id', 'gravity', 'author-id', 'received'], $condition, $params);
+		$items_stmt = Post::selectOrigin(['uri-id', 'thr-parent-id', 'gravity', 'author-id', 'received'], $condition, $params);
 
 		// Set a time stamp for this page. We will make use of it when we
 		// search for new items (update routine)

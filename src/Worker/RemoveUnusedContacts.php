@@ -46,6 +46,10 @@ class RemoveUnusedContacts
 			AND NOT `id` IN (SELECT `contact-id` FROM `post-user` WHERE `contact-id` = `contact`.`id`)
 			AND NOT `id` IN (SELECT `cid` FROM `user-contact` WHERE `cid` = `contact`.`id`)
 			AND NOT `id` IN (SELECT `cid` FROM `event` WHERE `cid` = `contact`.`id`)
+			AND NOT `id` IN (SELECT `cid` FROM `group` WHERE `cid` = `contact`.`id`)
+			AND NOT `id` IN (SELECT `cid` FROM `delivery-queue` WHERE `cid` = `contact`.`id`)
+			AND NOT `id` IN (SELECT `author-id` FROM `mail` WHERE `author-id` = `contact`.`id`)
+			AND NOT `id` IN (SELECT `contact-id` FROM `mail` WHERE `contact-id` = `contact`.`id`)
 			AND NOT `id` IN (SELECT `contact-id` FROM `group_member` WHERE `contact-id` = `contact`.`id`)
 			AND `created` < ?",
 			0, 0, 0, Protocol::DFRN, Protocol::DIASPORA, Protocol::OSTATUS, Protocol::FEED, Protocol::MAIL, Protocol::ACTIVITYPUB, DateTimeFormat::utc('now - 365 days'), DateTimeFormat::utc('now - 30 days')];
@@ -89,5 +93,13 @@ class RemoveUnusedContacts
 		}
 		DBA::close($contacts);
 		Logger::notice('Removal done', ['count' => $count, 'total' => $total]);
+		
+		Logger::notice('Remove apcontact entries with no related contact');
+		DBA::delete('apcontact', ["`uri-id` NOT IN (SELECT `uri-id` FROM `contact`) AND `updated` < ?", DateTimeFormat::utc('now - 30 days')]);
+		Logger::notice('Removed apcontact entries with no related contact', ['count' => DBA::affectedRows()]);
+
+		Logger::notice('Remove diaspora-contact entries with no related contact');
+		DBA::delete('diaspora-contact', ["`uri-id` NOT IN (SELECT `uri-id` FROM `contact`) AND `updated` < ?", DateTimeFormat::utc('now - 30 days')]);
+		Logger::notice('Removed diaspora-contact entries with no related contact', ['count' => DBA::affectedRows()]);
 	}
 }

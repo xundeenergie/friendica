@@ -113,15 +113,6 @@ class Contact
 	 * @}
 	 */
 
-	/** @deprecated Use Entity\LocalRelationship::MIRROR_DEACTIVATED instead */
-	const MIRROR_DEACTIVATED = LocalRelationship::MIRROR_DEACTIVATED;
-	/** @deprecated Now does the same as MIRROR_OWN_POST */
-	const MIRROR_FORWARDED = 1;
-	/** @deprecated Use Entity\LocalRelationship::MIRROR_OWN_POST instead */
-	const MIRROR_OWN_POST = LocalRelationship::MIRROR_OWN_POST;
-	/** @deprecated Use Entity\LocalRelationship::MIRROR_NATIVE_RESHARE instead */
-	const MIRROR_NATIVE_RESHARE = LocalRelationship::MIRROR_NATIVE_RESHARE;
-
 	/**
 	 * @param array $fields    Array of selected fields, empty for all
 	 * @param array $condition Array of fields for condition
@@ -453,12 +444,12 @@ class Contact
 			return false;
 		}
 
-		$cdata = self::getPublicAndUserContactID($cid, $uid);
-		if (empty($cdata['user'])) {
+		$ucid = self::getUserContactId($cid, $uid);
+		if (!$ucid) {
 			return false;
 		}
 
-		$condition = ['id' => $cdata['user'], 'rel' => [self::FOLLOWER, self::FRIEND]];
+		$condition = ['id' => $ucid, 'rel' => [self::FOLLOWER, self::FRIEND]];
 		if ($strict) {
 			$condition = array_merge($condition, ['pending' => false, 'readonly' => false, 'blocked' => false]);
 		}
@@ -504,12 +495,12 @@ class Contact
 			return false;
 		}
 
-		$cdata = self::getPublicAndUserContactID($cid, $uid);
-		if (empty($cdata['user'])) {
+		$ucid = self::getUserContactId($cid, $uid);
+		if (!$ucid) {
 			return false;
 		}
 
-		$condition = ['id' => $cdata['user'], 'rel' => [self::SHARING, self::FRIEND]];
+		$condition = ['id' => $ucid, 'rel' => [self::SHARING, self::FRIEND]];
 		if ($strict) {
 			$condition = array_merge($condition, ['pending' => false, 'readonly' => false, 'blocked' => false]);
 		}
@@ -635,11 +626,8 @@ class Contact
 	 */
 	public static function getPublicIdByUserId(int $uid)
 	{
-		$self = DBA::selectFirst('contact', ['url'], ['self' => true, 'uid' => $uid]);
-		if (!DBA::isResult($self)) {
-			return false;
-		}
-		return self::getIdForURL($self['url']);
+		$self = self::selectFirstAccountUser(['pid'], ['self' => true, 'uid' => $uid]);
+		return $self['pid'] ?? false;
 	}
 
 	/**
@@ -681,6 +669,32 @@ class Contact
 		}
 
 		return ['public' => $pcid, 'user' => $ucid];
+	}
+
+	/**
+	 * Returns the public contact id of a provided contact id
+	 *
+	 * @param integer $cid
+	 * @param integer $uid
+	 * @return integer
+	 */
+	public static function getPublicContactId(int $cid, int $uid): int
+	{
+		$contact = DBA::selectFirst('account-user-view', ['pid'], ['id' => $cid, 'uid' => [0, $uid]]);
+		return $contact['pid'] ?? 0;
+	}
+
+	/**
+	 * Returns the user contact id of a provided contact id
+	 *
+	 * @param integer $cid
+	 * @param integer $uid
+	 * @return integer
+	 */
+	public static function getUserContactId(int $cid, int $uid): int
+	{
+		$data = self::getPublicAndUserContactID($cid, $uid);
+		return $data['user'] ?? 0;
 	}
 
 	/**
@@ -892,10 +906,10 @@ class Contact
 
 		$fields['avatar'] = User::getAvatarUrl($user);
 		$fields['header'] = User::getBannerUrl($user);
-		$fields['forum'] = $user['page-flags'] == User::PAGE_FLAGS_COMMUNITY;
+		$fields['forum'] = in_array($user['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN]);
 		$fields['prv'] = $user['page-flags'] == User::PAGE_FLAGS_PRVGROUP;
 		$fields['unsearchable'] = !$profile['net-publish'];
-		$fields['manually-approve'] = in_array($user['page-flags'], [User::PAGE_FLAGS_NORMAL, User::PAGE_FLAGS_PRVGROUP]);
+		$fields['manually-approve'] = in_array($user['page-flags'], [User::PAGE_FLAGS_NORMAL, User::PAGE_FLAGS_PRVGROUP, User::PAGE_FLAGS_COMM_MAN]);
 		$fields['baseurl'] = DI::baseUrl();
 		$fields['gsid'] = GServer::getID($fields['baseurl'], true);
 
@@ -980,13 +994,13 @@ class Contact
 		}
 
 		if (in_array($contact['rel'], [self::SHARING, self::FRIEND])) {
-			$cdata = self::getPublicAndUserContactID($contact['id'], $contact['uid']);
-			if (!empty($cdata['public'])) {
-				Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unfollow', $cdata['public'], $contact['uid']);
+			$pcid = self::getPublicContactId($contact['id'], $contact['uid']);
+			if ($pcid) {
+				Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unfollow', $pcid, $contact['uid']);
 			}
 		}
 
-		self::removeSharer($contact);
+		self::removeSharer($contact, false);
 	}
 
 	/**
@@ -1010,13 +1024,13 @@ class Contact
 		}
 
 		if (in_array($contact['rel'], [self::FOLLOWER, self::FRIEND])) {
-			$cdata = self::getPublicAndUserContactID($contact['id'], $contact['uid']);
-			if (!empty($cdata['public'])) {
-				Worker::add(Worker::PRIORITY_HIGH, 'Contact\RevokeFollow', $cdata['public'], $contact['uid']);
+			$pcid = self::getPublicContactId($contact['id'], $contact['uid']);
+			if ($pcid) {
+				Worker::add(Worker::PRIORITY_HIGH, 'Contact\RevokeFollow', $pcid, $contact['uid']);
 			}
 		}
 
-		self::removeFollower($contact);
+		self::removeFollower($contact, false);
 	}
 
 	/**
@@ -1037,14 +1051,14 @@ class Contact
 			throw new \InvalidArgumentException('Unexpected public contact record');
 		}
 
-		$cdata = self::getPublicAndUserContactID($contact['id'], $contact['uid']);
+		$pcid = self::getPublicContactId($contact['id'], $contact['uid']);
 
-		if (in_array($contact['rel'], [self::SHARING, self::FRIEND]) && !empty($cdata['public'])) {
-			Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unfollow', $cdata['public'], $contact['uid']);
+		if (in_array($contact['rel'], [self::SHARING, self::FRIEND]) && $pcid) {
+			Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unfollow', $pcid, $contact['uid']);
 		}
 
-		if (in_array($contact['rel'], [self::FOLLOWER, self::FRIEND]) && !empty($cdata['public'])) {
-			Worker::add(Worker::PRIORITY_HIGH, 'Contact\RevokeFollow', $cdata['public'], $contact['uid']);
+		if (in_array($contact['rel'], [self::FOLLOWER, self::FRIEND]) && $pcid) {
+			Worker::add(Worker::PRIORITY_HIGH, 'Contact\RevokeFollow', $pcid, $contact['uid']);
 		}
 
 		self::remove($contact['id']);
@@ -1455,6 +1469,7 @@ class Contact
 			}
 		}
 
+		GServer::updateFromProbeArray($data);
 		self::updateFromProbeArray($contact_id, $data);
 
 		// Don't return a number for a deleted account
@@ -1558,24 +1573,25 @@ class Contact
 	/**
 	 * Returns posts from a given contact url
 	 *
-	 * @param string $contact_url Contact URL
-	 * @param bool   $thread_mode
-	 * @param int    $update      Update mode
-	 * @param int    $parent      Item parent ID for the update mode
-	 * @param bool   $only_media  Only display media content
+	 * @param string $contact_url  Contact URL
+	 * @param int    $uid          User ID
+	 * @param bool   $only_media   Only display media content
+	 * @param string $last_created Newest creation date, used for paging
 	 * @return string posts in HTML
 	 * @throws \Exception
 	 */
-	public static function getPostsFromUrl(string $contact_url, int $uid, bool $only_media = false): string
+	public static function getPostsFromUrl(string $contact_url, int $uid, bool $only_media = false, string $last_created = null): string
 	{
-		return self::getPostsFromId(self::getIdForURL($contact_url), $uid, $only_media);
+		return self::getPostsFromId(self::getIdForURL($contact_url), $uid, $only_media, $last_created);
 	}
 
 	/**
 	 * Returns posts from a given contact id
 	 *
-	 * @param int  $cid         Contact ID
-	 * @param bool $only_media  Only display media content
+	 * @param int    $cid          Contact ID
+	 * @param int    $uid          User ID
+	 * @param bool   $only_media   Only display media content
+	 * @param string $last_created Newest creation date, used for paging
 	 * @return string posts in HTML
 	 * @throws \Exception
 	 */
@@ -1793,7 +1809,7 @@ class Contact
 			return;
 		}
 
-		if (Network::isLocalLink($contact['url'])) {
+		if (DI::baseUrl()->isLocalUrl($contact['url'])) {
 			return;
 		}
 
@@ -1910,7 +1926,7 @@ class Contact
 			return $contact;
 		}
 
-		$local = !empty($contact['url']) && Network::isLocalLink($contact['url']);
+		$local = !empty($contact['url']) && DI::baseUrl()->isLocalUrl($contact['url']);
 
 		if (!$local && !empty($contact['id']) && !empty($contact['avatar'])) {
 			self::updateAvatar($contact['id'], $contact['avatar'], true);
@@ -2300,7 +2316,7 @@ class Contact
 		if (($uid == 0) && !$force && empty($contact['thumb']) && empty($contact['micro']) && !$create_cache) {
 			if (($contact['avatar'] != $avatar) || empty($contact['blurhash'])) {
 				$update_fields = ['avatar' => $avatar];
-				if (!Network::isLocalLink($avatar)) {
+				if (!DI::baseUrl()->isLocalUrl($avatar)) {
 					try {
 						$fetchResult = HTTPSignature::fetchRaw($avatar, 0, [HttpClientOptions::ACCEPT_CONTENT => [HttpClientAccept::IMAGE]]);
 
@@ -2348,7 +2364,7 @@ class Contact
 		$cache_avatar = DI::config()->get('system', 'cache_contact_avatar');
 
 		// Local contact avatars don't need to be cached
-		if ($cache_avatar && Network::isLocalLink($contact['url'])) {
+		if ($cache_avatar && DI::baseUrl()->isLocalUrl($contact['url'])) {
 			$cache_avatar = !DBA::exists('contact', ['nurl' => $contact['nurl'], 'self' => true]);
 		}
 
@@ -2664,6 +2680,14 @@ class Contact
 
 		$data = Probe::uri($contact['url'], $network, $contact['uid']);
 
+		if (in_array($data['network'], Protocol::FEDERATED) && (parse_url($data['url'], PHP_URL_SCHEME) == 'http')) {
+			$ssl_url = str_replace('http://', 'https://', $contact['url']);
+			$ssl_data = Probe::uri($ssl_url, $network, $contact['uid']);
+			if (($ssl_data['network'] == $data['network']) && (parse_url($ssl_data['url'], PHP_URL_SCHEME) != 'http')) {
+				$data = $ssl_data;
+			}
+		}
+
 		if ($data['network'] == Protocol::DIASPORA) {
 			try {
 				DI::dsprContact()->updateFromProbeArray($data);
@@ -2682,6 +2706,7 @@ class Contact
 			}
 		}
 
+		GServer::updateFromProbeArray($data);
 		return self::updateFromProbeArray($id, $data);
 	}
 
@@ -2821,7 +2846,7 @@ class Contact
 		// We must not try to update relay contacts via probe. They are no real contacts.
 		// See Relay::updateContact() for more details.
 		// We check after the probing to be able to correct falsely detected contact types.
-		if (($contact['contact-type'] == self::TYPE_RELAY) && Strings::compareLink($contact['url'], $contact['baseurl']) &&
+		if (($contact['contact-type'] == self::TYPE_RELAY) && Strings::compareLink($contact['url'], $contact['baseurl'] ?? '') &&
 			(!Strings::compareLink($ret['url'], $contact['url']) || in_array($ret['network'], [Protocol::FEED, Protocol::PHANTOM]))
 		) {
 			if (GServer::reachable($contact)) {
@@ -3010,6 +3035,10 @@ class Contact
 	 */
 	public static function getProtocol(string $url, string $network): string
 	{
+		if (self::isLocal($url)) {
+			return Protocol::ACTIVITYPUB;
+		}
+
 		if ($network != Protocol::DFRN) {
 			return $network;
 		}
@@ -3224,6 +3253,7 @@ class Contact
 		}
 
 		if ($probed) {
+			GServer::updateFromProbeArray($ret);
 			self::updateFromProbeArray($contact_id, $ret);
 		} else {
 			try {
@@ -3400,16 +3430,21 @@ class Contact
 	 * Update the local relationship when a local user loses a follower
 	 *
 	 * @param array $contact User-specific contact (uid != 0) array
+	 * @param bool  $delete  Delete if set, otherwise set relation to "nothing" when contact had been a follower
 	 * @return void
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public static function removeFollower(array $contact)
+	public static function removeFollower(array $contact, bool $delete = true)
 	{
 		if (in_array($contact['rel'] ?? [], [self::FRIEND, self::SHARING])) {
 			self::update(['rel' => self::SHARING], ['id' => $contact['id']]);
 		} elseif (!empty($contact['id'])) {
-			self::remove($contact['id']);
+			if ($delete) {
+				self::remove($contact['id']);
+			} else {
+				self::update(['rel' => self::NOTHING, 'pending' => false], ['id' => $contact['id']]);
+			}
 		} else {
 			DI::logger()->info('Couldn\'t remove follower because of invalid contact array', ['contact' => $contact]);
 			return;
@@ -3419,9 +3454,9 @@ class Contact
 
 		self::clearFollowerFollowingEndpointCache($contact['uid']);
 
-		$cdata = self::getPublicAndUserContactID($contact['id'], $contact['uid']);
-		if (!empty($cdata['public'])) {
-			DI::notification()->deleteForUserByVerb($contact['uid'], Activity::FOLLOW, ['actor-id' => $cdata['public']]);
+		$pcid = self::getPublicContactId($contact['id'], $contact['uid']);
+		if ($pcid) {
+			DI::notification()->deleteForUserByVerb($contact['uid'], Activity::FOLLOW, ['actor-id' => $pcid]);
 		}
 	}
 
@@ -3430,14 +3465,19 @@ class Contact
 	 * Removes the contact for sharing-only protocols (feed and mail).
 	 *
 	 * @param array $contact User-specific contact (uid != 0) array
+	 * @param bool  $delete  Delete if set, otherwise set relation to "nothing" when contact had been a sharer
 	 * @throws HTTPException\InternalServerErrorException
 	 */
-	public static function removeSharer(array $contact)
+	public static function removeSharer(array $contact, bool $delete = true)
 	{
 		self::clearFollowerFollowingEndpointCache($contact['uid']);
 
-		if ($contact['rel'] == self::SHARING || in_array($contact['network'], [Protocol::FEED, Protocol::MAIL])) {
-			self::remove($contact['id']);
+		if (in_array($contact['rel'], [self::SHARING, self::NOTHING]) || in_array($contact['network'], [Protocol::FEED, Protocol::MAIL])) {
+			if ($delete) {
+				self::remove($contact['id']);
+			} else {
+				self::update(['rel' => self::NOTHING, 'pending' => false], ['id' => $contact['id']]);
+			}
 		} else {
 			self::update(['rel' => self::FOLLOWER, 'pending' => false], ['id' => $contact['id']]);
 		}
@@ -3563,7 +3603,14 @@ class Contact
 	 */
 	public static function magicLinkById(int $cid, string $url = ''): string
 	{
+		if (($url == '') && DI::userSession()->isAuthenticated() && DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'stay_local')) {
+			return 'contact/' . $cid . '/conversations';
+		}
+
 		$contact = DBA::selectFirst('contact', ['id', 'network', 'url', 'alias', 'uid'], ['id' => $cid]);
+		if (empty($contact)) {
+			return $url;
+		}
 
 		return self::magicLinkByContact($contact, $url);
 	}
@@ -3586,13 +3633,17 @@ class Contact
 			return $destination;
 		}
 
+		if (DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'stay_local') && ($url == '')) {
+			return 'contact/' . $contact['id'] . '/conversations';
+		}
+
+		if (Strings::compareLink($contact['url'], $url) || Strings::compareLink($contact['alias'] ?? '', $url)) {
+			$url = '';
+		}
+
 		// Only redirections to the same host do make sense
 		if (($url != '') && (parse_url($url, PHP_URL_HOST) != parse_url($contact['url'], PHP_URL_HOST))) {
 			return $url;
-		}
-
-		if (DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'stay_local') && ($url == '')) {
-			return 'contact/' . $contact['id'] . '/conversations';
 		}
 
 		if (!empty($contact['network']) && $contact['network'] != Protocol::DFRN) {
@@ -3605,7 +3656,7 @@ class Contact
 
 		$redirect = 'contact/redir/' . $contact['id'];
 
-		if (($url != '') && !Strings::compareLink($contact['url'], $url)) {
+		if ($url != '') {
 			$redirect .= '?url=' . $url;
 		}
 

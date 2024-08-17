@@ -88,7 +88,6 @@
 		{{include file="field_checkbox.tpl" field=$allow_relay_channels}}
 		{{include file="field_checkbox.tpl" field=$adjust_poll_frequency}}
 		{{include file="field_checkbox.tpl" field=$explicit_content}}
-		{{include file="field_checkbox.tpl" field=$proxify_content}}
 		{{include file="field_checkbox.tpl" field=$local_search}}
 		{{include file="field_input.tpl" field=$blocked_tags}}
 		<div class="submit"><input type="submit" name="page_site" value="{{$submit}}"/></div>
@@ -117,6 +116,7 @@
 		<h2>{{$performance}}</h2>
 		{{include file="field_checkbox.tpl" field=$compute_circle_counts}}
 		{{include file="field_checkbox.tpl" field=$only_tag_search}}
+		{{include file="field_checkbox.tpl" field=$limited_search_scope}}
 		{{include file="field_input.tpl" field=$search_age_days}}
 		{{include file="field_input.tpl" field=$max_comments}}
 		{{include file="field_input.tpl" field=$max_display_comments}}

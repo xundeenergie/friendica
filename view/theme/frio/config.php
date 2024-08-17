@@ -57,9 +57,9 @@ function theme_post(App $a)
 	}
 }
 
-function theme_admin_post(App $a)
+function theme_admin_post()
 {
-	if (!$a->isSiteAdmin()) {
+	if (!DI::userSession()->isSiteAdmin()) {
 		return;
 	}
 

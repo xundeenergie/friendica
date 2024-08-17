@@ -308,7 +308,7 @@ class Conversation
 
 	public function statusEditor(array $x = [], int $notes_cid = 0, bool $popup = false): string
 	{
-		$user = User::getById($this->app->getLoggedInUserId(), ['uid', 'nickname', 'allow_location', 'default-location']);
+		$user = User::getById($this->session->getLocalUserId(), ['uid', 'nickname', 'allow_location', 'default-location']);
 		if (empty($user['uid'])) {
 			return '';
 		}
@@ -332,7 +332,6 @@ class Conversation
 		$tpl = Renderer::getMarkupTemplate('jot-header.tpl');
 		$this->page['htmlhead'] .= Renderer::replaceMacros($tpl, [
 			'$newpost'   => 'true',
-			'$baseurl'   => $this->baseURL,
 			'$geotag'    => $geotag,
 			'$nickname'  => $x['nickname'],
 			'$ispublic'  => $this->l10n->t('Visible to <strong>everybody</strong>'),
@@ -389,7 +388,7 @@ class Conversation
 			'$title'               => $x['title'] ?? '',
 			'$placeholdertitle'    => $this->l10n->t('Set title'),
 			'$category'            => $x['category'] ?? '',
-			'$placeholdercategory' => Feature::isEnabled($this->session->getLocalUserId(), 'categories') ? $this->l10n->t("Categories \x28comma-separated list\x29") : '',
+			'$placeholdercategory' => Feature::isEnabled($this->session->getLocalUserId(), Feature::CATEGORIES) ? $this->l10n->t("Categories \x28comma-separated list\x29") : '',
 			'$scheduled_at'        => Temporal::getDateTimeField(
 				new \DateTime(),
 				new \DateTime('now + 6 months'),
@@ -405,7 +404,6 @@ class Conversation
 			'$posttype'     => $notes_cid ? ItemModel::PT_PERSONAL_NOTE : ItemModel::PT_ARTICLE,
 			'$content'      => $x['content'] ?? '',
 			'$post_id'      => $x['post_id'] ?? '',
-			'$baseurl'      => $this->baseURL,
 			'$defloc'       => $x['default_location'],
 			'$visitor'      => $x['visitor'],
 			'$pvisit'       => $notes_cid ? 'none' : $x['visitor'],
@@ -591,7 +589,6 @@ class Conversation
 		}
 
 		$o = Renderer::replaceMacros($page_template, [
-			'$baseurl'     => $this->baseURL,
 			'$return_path' => $this->args->getQueryString(),
 			'$live_update' => $live_update_div,
 			'$remove'      => $this->l10n->t('remove'),
@@ -1517,14 +1514,6 @@ class Conversation
 
 			[$categories, $folders] = $this->item->determineCategoriesTerms($item, $this->session->getLocalUserId());
 
-			if (!empty($item['title'])) {
-				$title = $item['title'];
-			} elseif (!empty($item['content-warning']) && $this->pConfig->get($this->session->getLocalUserId(), 'system', 'disable_cw', false)) {
-				$title = ucfirst($item['content-warning']);
-			} else {
-				$title = '';
-			}
-
 			if (!empty($item['featured'])) {
 				$pinned = $this->l10n->t('Pinned item');
 			} else {
@@ -1550,7 +1539,8 @@ class Conversation
 				'sparkle'              => $sparkle,
 				'lock'                 => false,
 				'thumb'                => $this->baseURL->remove($this->item->getAuthorAvatar($item)),
-				'title'                => $title,
+				'title'                => $item['title'],
+				'summary'              => $item['content-warning'],
 				'body_html'            => $body_html,
 				'tags'                 => $tags['tags'],
 				'hashtags'             => $tags['hashtags'],

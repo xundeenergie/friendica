@@ -19,11 +19,9 @@
  *
  */
 
-use Friendica\App;
 use Friendica\Content\Nav;
 use Friendica\Content\Pager;
 use Friendica\Content\Text\BBCode;
-use Friendica\Content\Widget;
 use Friendica\Core\ACL;
 use Friendica\Core\Addon;
 use Friendica\Core\Hook;
@@ -44,6 +42,7 @@ use Friendica\Module\BaseProfile;
 use Friendica\Network\HTTPException;
 use Friendica\Network\Probe;
 use Friendica\Protocol\Activity;
+use Friendica\Protocol\ActivityNamespace;
 use Friendica\Security\Security;
 use Friendica\Util\Crypto;
 use Friendica\Util\DateTimeFormat;
@@ -53,7 +52,7 @@ use Friendica\Util\Strings;
 use Friendica\Util\Temporal;
 use Friendica\Util\XML;
 
-function photos_init(App $a)
+function photos_init()
 {
 	if (DI::config()->get('system', 'block_public') && !DI::userSession()->isAuthenticated()) {
 		return;
@@ -66,8 +65,6 @@ function photos_init(App $a)
 		if (!isset($owner['account_removed']) || $owner['account_removed']) {
 			throw new HTTPException\NotFoundException(DI::l10n()->t('User not found.'));
 		}
-
-		$is_owner = (DI::userSession()->getLocalUserId() && (DI::userSession()->getLocalUserId() == $owner['uid']));
 
 		$albums = Photo::getAlbums($owner['uid']);
 
@@ -125,7 +122,7 @@ function photos_init(App $a)
 	return;
 }
 
-function photos_post(App $a)
+function photos_post()
 {
 	$user = User::getByNickname(DI::args()->getArgv()[1]);
 	if (!DBA::isResult($user)) {
@@ -136,7 +133,7 @@ function photos_post(App $a)
 	$visitor   = 0;
 
 	$page_owner_uid = intval($user['uid']);
-	$community_page = $user['page-flags'] == User::PAGE_FLAGS_COMMUNITY;
+	$community_page = in_array($user['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN]);
 
 	if (DI::userSession()->getLocalUserId() && (DI::userSession()->getLocalUserId() == $page_owner_uid)) {
 		$can_post = true;
@@ -200,7 +197,7 @@ function photos_post(App $a)
 			// Update the photo albums cache
 			Photo::clearAlbumCache($page_owner_uid);
 
-			DI::baseUrl()->redirect('photos/' . $a->getLoggedInUserNickname() . '/album/' . bin2hex($newalbum));
+			DI::baseUrl()->redirect('photos/' . DI::userSession()->getLocalUserNickname() . '/album/' . bin2hex($newalbum));
 			return; // NOTREACHED
 		}
 
@@ -412,7 +409,7 @@ function photos_post(App $a)
 
 							if (count($links)) {
 								foreach ($links as $link) {
-									if ($link['@attributes']['rel'] === 'http://webfinger.net/rel/profile-page') {
+									if ($link['@attributes']['rel'] === ActivityNamespace::WEBFINGERPROFILE) {
 										$profile = $link['@attributes']['href'];
 									}
 
@@ -559,7 +556,7 @@ function photos_post(App $a)
 	}
 }
 
-function photos_content(App $a)
+function photos_content()
 {
 	// URLs:
 	// photos/name/upload
@@ -618,7 +615,7 @@ function photos_content(App $a)
 
 	$owner_uid = $user['uid'];
 
-	$community_page = (($user['page-flags'] == User::PAGE_FLAGS_COMMUNITY) ? true : false);
+	$community_page = in_array($user['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN]);
 
 	if (DI::userSession()->getLocalUserId() && (DI::userSession()->getLocalUserId() == $owner_uid)) {
 		$can_post = true;
@@ -672,18 +669,14 @@ function photos_content(App $a)
 
 		$selname = (!is_null($datum) && Strings::isHex($datum)) ? hex2bin($datum) : '';
 
-		$albumselect = '';
+		$albumselect = ['' => '<current year>'];
 
-		$albumselect .= '<option value="" ' . (!$selname ? ' selected="selected" ' : '') . '>&lt;current year&gt;</option>';
-		$albums = Photo::getAlbums($owner_uid);
-		if (!empty($albums)) {
-			foreach ($albums as $album) {
-				if ($album['album'] === '') {
-					continue;
-				}
-				$selected = (($selname === $album['album']) ? ' selected="selected" ' : '');
-				$albumselect .= '<option value="' . $album['album'] . '"' . $selected . '>' . $album['album'] . '</option>';
+		foreach (Photo::getAlbums($owner_uid) as $album) {
+			if ($album['album'] === '') {
+				continue;
 			}
+
+			$albumselect[$album['album']] = $album['album'];
 		}
 
 		$uploader = '';
@@ -718,7 +711,7 @@ function photos_content(App $a)
 
 		$tpl = Renderer::getMarkupTemplate('photos_upload.tpl');
 
-		$aclselect_e = ($visitor ? '' : ACL::getFullSelectorHTML(DI::page(), $a->getLoggedInUserId()));
+		$aclselect_e = ($visitor ? '' : ACL::getFullSelectorHTML(DI::page(), DI::userSession()->getLocalUserId()));
 
 		$o .= Renderer::replaceMacros($tpl, [
 			'$pagename' => DI::l10n()->t('Upload Photos'),
@@ -729,9 +722,10 @@ function photos_content(App $a)
 			'$existalbumtext' => DI::l10n()->t('or select existing album:'),
 			'$nosharetext' => DI::l10n()->t('Do not show a status post for this upload'),
 			'$albumselect' => $albumselect,
+			'$selname' => $selname,
 			'$permissions' => DI::l10n()->t('Permissions'),
 			'$aclselect' => $aclselect_e,
-			'$lockstate' => ACL::getLockstateForUserId($a->getLoggedInUserId()) ? 'lock' : 'unlock',
+			'$lockstate' => ACL::getLockstateForUserId(DI::userSession()->getLocalUserId()) ? 'lock' : 'unlock',
 			'$alt_uploader' => $ret['addon_text'],
 			'$default_upload_box' => ($ret['default_upload'] ? $default_upload_box : ''),
 			'$default_upload_submit' => ($ret['default_upload'] ? $default_upload_submit : ''),
@@ -1077,7 +1071,7 @@ function photos_content(App $a)
 
 			$album_e = $ph[0]['album'];
 			$caption_e = $ph[0]['desc'];
-			$aclselect_e = ACL::getFullSelectorHTML(DI::page(), $a->getLoggedInUserId(), false, ACL::getDefaultUserPermissions($ph[0]));
+			$aclselect_e = ACL::getFullSelectorHTML(DI::page(), DI::userSession()->getLocalUserId(), false, ACL::getDefaultUserPermissions($ph[0]));
 
 			$edit = Renderer::replaceMacros($edit_tpl, [
 				'$id' => $ph[0]['id'],

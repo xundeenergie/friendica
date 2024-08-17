@@ -31,20 +31,14 @@ use Friendica\Core\Logger;
 use Friendica\Core\Protocol;
 use Friendica\Core\Renderer;
 use Friendica\Core\Search;
-use Friendica\Core\System;
 use Friendica\Core\Worker;
 use Friendica\Database\DBA;
 use Friendica\DI;
-use Friendica\Network\HTTPClient\Client\HttpClientAccept;
-use Friendica\Network\HTTPClient\Client\HttpClientOptions;
 use Friendica\Network\HTTPException;
-use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Protocol\Activity;
 use Friendica\Protocol\Diaspora;
 use Friendica\Security\PermissionSet\Entity\PermissionSet;
 use Friendica\Util\DateTimeFormat;
-use Friendica\Util\HTTPSignature;
-use Friendica\Util\Network;
 use Friendica\Util\Proxy;
 use Friendica\Util\Strings;
 
@@ -296,7 +290,7 @@ class Profile
 		if (DI::userSession()->getLocalUserId() && ($profile['uid'] ?? 0) != DI::userSession()->getLocalUserId()) {
 			$profile_contact = Contact::getByURL($profile['nurl'], null, [], DI::userSession()->getLocalUserId());
 		}
-		if (!empty($profile['cid']) && self::getMyURL()) {
+		if (!empty($profile['cid']) && DI::userSession()->getMyUrl()) {
 			$profile_contact = Contact::selectFirst([], ['id' => $profile['cid']]);
 		}
 
@@ -321,19 +315,19 @@ class Profile
 
 		// Who is the logged-in user to this profile?
 		$visitor_contact = [];
-		if (!empty($profile['uid']) && self::getMyURL()) {
-			$visitor_contact = Contact::selectFirst(['rel'], ['uid' => $profile['uid'], 'nurl' => Strings::normaliseLink(self::getMyURL())]);
+		if (!empty($profile['uid']) && DI::userSession()->getMyUrl()) {
+			$visitor_contact = Contact::selectFirst(['rel'], ['uid' => $profile['uid'], 'nurl' => Strings::normaliseLink(DI::userSession()->getMyUrl())]);
 		}
 
-		$local_user_is_self = self::getMyURL() && ($profile['url'] == self::getMyURL());
-		$visitor_is_authenticated = (bool)self::getMyURL();
+		$local_user_is_self = DI::userSession()->getMyUrl() && ($profile['url'] == DI::userSession()->getMyUrl());
+		$visitor_is_authenticated = (bool)DI::userSession()->getMyUrl();
 		$visitor_is_following =
 			in_array($visitor_contact['rel'] ?? 0, [Contact::FOLLOWER, Contact::FRIEND])
 			|| in_array($profile_contact['rel'] ?? 0, [Contact::SHARING, Contact::FRIEND]);
 		$visitor_is_followed =
 			in_array($visitor_contact['rel'] ?? 0, [Contact::SHARING, Contact::FRIEND])
 			|| in_array($profile_contact['rel'] ?? 0, [Contact::FOLLOWER, Contact::FRIEND]);
-		$visitor_base_path = self::getMyURL() ? preg_replace('=/profile/(.*)=ism', '', self::getMyURL()) : '';
+		$visitor_base_path = DI::userSession()->getMyUrl() ? preg_replace('=/profile/(.*)=ism', '', DI::userSession()->getMyUrl()) : '';
 
 		if (!$local_user_is_self) {
 			if (!$visitor_is_authenticated) {
@@ -628,8 +622,10 @@ class Profile
 		$bd_format = DI::l10n()->t('g A l F d'); // 8 AM Friday January 18
 		$classtoday = '';
 
-		$condition = ["`uid` = ? AND `type` != 'birthday' AND `start` < ? AND `start` >= ?",
-			$uid, DateTimeFormat::utc('now + 7 days'), DateTimeFormat::utc('now - 1 days')];
+		$condition = [
+			"`uid` = ? AND `type` != 'birthday' AND `start` < ? AND `start` >= ?",
+			$uid, DateTimeFormat::utc('now + 7 days'), DateTimeFormat::utc('now - 1 days')
+		];
 		$s = DBA::select('event', [], $condition, ['order' => ['start']]);
 
 		$r = [];
@@ -639,9 +635,11 @@ class Profile
 			$total = 0;
 
 			while ($rr = DBA::fetch($s)) {
-				$condition = ['parent-uri' => $rr['uri'], 'uid' => $rr['uid'], 'author-id' => $pcid,
+				$condition = [
+					'parent-uri' => $rr['uri'], 'uid' => $rr['uid'], 'author-id' => $pcid,
 					'vid' => [Verb::getID(Activity::ATTEND), Verb::getID(Activity::ATTENDMAYBE)],
-					'visible' => true, 'deleted' => false];
+					'visible' => true, 'deleted' => false
+				];
 				if (!Post::exists($condition)) {
 					continue;
 				}
@@ -696,235 +694,6 @@ class Profile
 	}
 
 	/**
-	 * Retrieves the my_url session variable
-	 *
-	 * @return string
-	 * @deprecated since version 2022.12, please use UserSession->getMyUrl instead
-	 */
-	public static function getMyURL(): string
-	{
-		return DI::userSession()->getMyUrl();
-	}
-
-	/**
-	 * Process the 'zrl' parameter and initiate the remote authentication.
-	 *
-	 * This method checks if the visitor has a public contact entry and
-	 * redirects the visitor to his/her instance to start the magic auth (Authentication)
-	 * process.
-	 *
-	 * Ported from Hubzilla: https://framagit.org/hubzilla/core/blob/master/include/channel.php
-	 *
-	 * The implementation for Friendica sadly differs in some points from the one for Hubzilla:
-	 * - Hubzilla uses the "zid" parameter, while for Friendica it had been replaced with "zrl"
-	 * - There seem to be some reverse authentication (rmagic) that isn't implemented in Friendica at all
-	 *
-	 * It would be favourable to harmonize the two implementations.
-	 *
-	 * @param App $a Application instance.
-	 *
-	 * @return void
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
-	 * @throws \ImagickException
-	 */
-	public static function zrlInit(App $a)
-	{
-		$my_url = self::getMyURL();
-		$my_url = Network::isUrlValid($my_url);
-
-		if (empty($my_url) || DI::userSession()->getLocalUserId()) {
-			return;
-		}
-
-		$addr = $_GET['addr'] ?? $my_url;
-
-		$arr = ['zrl' => $my_url, 'url' => DI::args()->getCommand()];
-		Hook::callAll('zrl_init', $arr);
-
-		// Try to find the public contact entry of the visitor.
-		$cid = Contact::getIdForURL($my_url);
-		if (!$cid) {
-			Logger::info('No contact record found for ' . $my_url);
-			return;
-		}
-
-		$contact = DBA::selectFirst('contact',['id', 'url'], ['id' => $cid]);
-
-		if (DBA::isResult($contact) && DI::userSession()->getRemoteUserId() && DI::userSession()->getRemoteUserId() == $contact['id']) {
-			Logger::info('The visitor ' . $my_url . ' is already authenticated');
-			return;
-		}
-
-		// Avoid endless loops
-		$cachekey = 'zrlInit:' . $my_url;
-		if (DI::cache()->get($cachekey)) {
-			Logger::info('URL ' . $my_url . ' already tried to authenticate.');
-			return;
-		} else {
-			DI::cache()->set($cachekey, true, Duration::MINUTE);
-		}
-
-		Logger::info('Not authenticated. Invoking reverse magic-auth for ' . $my_url);
-
-		// Remove the "addr" parameter from the destination. It is later added as separate parameter again.
-		$addr_request = 'addr=' . urlencode($addr);
-		$query = rtrim(str_replace($addr_request, '', DI::args()->getQueryString()), '?&');
-
-		// The other instance needs to know where to redirect.
-		$dest = urlencode(DI::baseUrl() . '/' . $query);
-
-		// We need to extract the basebath from the profile url
-		// to redirect the visitors '/magic' module.
-		$basepath = Contact::getBasepath($contact['url']);
-
-		if ($basepath != DI::baseUrl() && !strstr($dest, '/magic')) {
-			$magic_path = $basepath . '/magic' . '?owa=1&dest=' . $dest . '&' . $addr_request;
-
-			// We have to check if the remote server does understand /magic without invoking something
-			$serverret = DI::httpClient()->head($basepath . '/magic', [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::HTML]);
-			if ($serverret->isSuccess()) {
-				Logger::info('Doing magic auth for visitor ' . $my_url . ' to ' . $magic_path);
-				System::externalRedirect($magic_path);
-			}
-		}
-	}
-
-	/**
-	 * Set the visitor cookies (see remote_user()) for the given handle
-	 *
-	 * @param string $handle Visitor handle
-	 *
-	 * @return array Visitor contact array
-	 */
-	public static function addVisitorCookieForHandle(string $handle): array
-	{
-		$a = DI::app();
-
-		// Try to find the public contact entry of the visitor.
-		$cid = Contact::getIdForURL($handle);
-		if (!$cid) {
-			Logger::info('Handle not found', ['handle' => $handle]);
-			return [];
-		}
-
-		$visitor = Contact::getById($cid);
-
-		// Authenticate the visitor.
-		DI::userSession()->setMultiple([
-			'authenticated'  => 1,
-			'visitor_id'     => $visitor['id'],
-			'visitor_handle' => $visitor['addr'],
-			'visitor_home'   => $visitor['url'],
-			'my_url'         => $visitor['url'],
-			'remote_comment' => $visitor['subscribe'],
-		]);
-
-		DI::userSession()->setVisitorsContacts($visitor['url']);
-
-		$a->setContactId($visitor['id']);
-
-		Logger::info('Authenticated visitor', ['url' => $visitor['url']]);
-
-		return $visitor;
-	}
-
-	/**
-	 * Set the visitor cookies (see remote_user()) for signed HTTP requests
-	 *
-	 * @param array $server The content of the $_SERVER superglobal
-	 * @return array Visitor contact array
-	 * @throws InternalServerErrorException
-	 */
-	public static function addVisitorCookieForHTTPSigner(array $server): array
-	{
-		$requester = HTTPSignature::getSigner('', $server);
-		if (empty($requester)) {
-			return [];
-		}
-		return Profile::addVisitorCookieForHandle($requester);
-	}
-
-	/**
-	 * OpenWebAuth authentication.
-	 *
-	 * Ported from Hubzilla: https://framagit.org/hubzilla/core/blob/master/include/zid.php
-	 *
-	 * @param string $token
-	 *
-	 * @return void
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
-	 * @throws \ImagickException
-	 */
-	public static function openWebAuthInit(string $token)
-	{
-		$a = DI::app();
-
-		// Clean old OpenWebAuthToken entries.
-		OpenWebAuthToken::purge('owt', '3 MINUTE');
-
-		// Check if the token we got is the same one
-		// we have stored in the database.
-		$visitor_handle = OpenWebAuthToken::getMeta('owt', 0, $token);
-
-		if ($visitor_handle === false) {
-			return;
-		}
-
-		$visitor = self::addVisitorCookieForHandle($visitor_handle);
-		if (empty($visitor)) {
-			return;
-		}
-
-		$arr = [
-			'visitor' => $visitor,
-			'url' => DI::args()->getQueryString()
-		];
-		/**
-		 * @hooks magic_auth_success
-		 *   Called when a magic-auth was successful.
-		 *   * \e array \b visitor
-		 *   * \e string \b url
-		 */
-		Hook::callAll('magic_auth_success', $arr);
-
-		$a->setContactId($arr['visitor']['id']);
-
-		DI::sysmsg()->addInfo(DI::l10n()->t('OpenWebAuth: %1$s welcomes %2$s', DI::baseUrl()->getHost(), $visitor['name']));
-
-		Logger::info('OpenWebAuth: auth success from ' . $visitor['addr']);
-	}
-
-	/**
-	 * Returns URL with URL-encoded zrl parameter
-	 *
-	 * @param string $url   URL to enhance
-	 * @param bool   $force Either to force adding zrl parameter
-	 *
-	 * @return string URL with 'zrl' parameter or original URL in case of no Friendica profile URL
-	 */
-	public static function zrl(string $url, bool $force = false): string
-	{
-		if (!strlen($url)) {
-			return $url;
-		}
-		if (!strpos($url, '/profile/') && !$force) {
-			return $url;
-		}
-		if ($force && substr($url, -1, 1) !== '/') {
-			$url = $url . '/';
-		}
-
-		$achar = strpos($url, '?') ? '&' : '?';
-		$mine = self::getMyURL();
-
-		if ($mine && !Strings::compareLink($mine, $url)) {
-			return $url . $achar . 'zrl=' . urlencode($mine);
-		}
-
-		return $url;
-	}
-
-	/**
 	 * Get the user ID of the page owner.
 	 *
 	 * Used from within PCSS themes to set theme parameters. If there's a
@@ -959,7 +728,8 @@ class Profile
 		if (!empty($search)) {
 			$publish = (DI::config()->get('system', 'publish_all') ? '' : "AND `publish` ");
 			$searchTerm = '%' . $search . '%';
-			$condition = ["`verified` AND NOT `blocked` AND NOT `account_removed` AND NOT `account_expired`
+			$condition = [
+				"`verified` AND NOT `blocked` AND NOT `account_removed` AND NOT `account_expired`
 				$publish
 				AND ((`name` LIKE ?) OR
 				(`nickname` LIKE ?) OR
@@ -970,7 +740,8 @@ class Profile
 				(`pub_keywords` LIKE ?) OR
 				(`prv_keywords` LIKE ?))",
 				$searchTerm, $searchTerm, $searchTerm, $searchTerm,
-				$searchTerm, $searchTerm, $searchTerm, $searchTerm];
+				$searchTerm, $searchTerm, $searchTerm, $searchTerm
+			];
 		} else {
 			$condition = ['verified' => true, 'blocked' => false, 'account_removed' => false, 'account_expired' => false];
 			if (!DI::config()->get('system', 'publish_all')) {
@@ -1071,6 +842,46 @@ class Profile
 			DBA::update('profile', $profile, ['id' => $profile['id']]);
 		} else if (!empty($profile['id'])) {
 			DBA::delete('profile', ['id' => $profile['id']]);
+		}
+	}
+
+	/**
+	 * Get "about" field with the added responsible relay contact if appropriate.
+	 *
+	 * @param string $about
+	 * @param integer|null $parent_uid
+	 * @param integer $account_type
+	 * @param string $language
+	 * @return string
+	 */
+	public static function addResponsibleRelayContact(string $about = null, int $parent_uid = null, int $account_type, string $language): ?string
+	{
+		if (($account_type != User::ACCOUNT_TYPE_RELAY) || empty($parent_uid)) {
+			return $about;
+		}
+
+		$parent = User::getOwnerDataById($parent_uid);
+		if (strpos($about, $parent['addr']) || strpos($about, $parent['url'])) {
+			return $about;
+		}
+
+		$l10n = DI::l10n()->withLang($language);
+
+		return $about .= "\n" . $l10n->t('Responsible account: %s', $parent['addr']);
+	}
+
+	/**
+	 * Set "about" field with the added responsible relay contact if appropriate.
+	 *
+	 * @param integer $uid
+	 * @return void
+	 */
+	public static function setResponsibleRelayContact(int $uid)
+	{
+		$owner = User::getOwnerDataById($uid);
+		$about = self::addResponsibleRelayContact($owner['about'], $owner['parent-uid'], $owner['account-type'], $owner['language']);
+		if ($about != $owner['about']) {
+			self::update(['about' => $about], $uid);
 		}
 	}
 }

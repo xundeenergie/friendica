@@ -32,12 +32,12 @@ use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Model\Contact;
 use Friendica\Model\Item;
 use Friendica\Model\Post;
-use Friendica\Model\Profile;
 use Friendica\Model\User;
 use Friendica\Module\Response;
 use Friendica\Navigation\SystemMessages;
 use Friendica\Network\HTTPException\ForbiddenException;
 use Friendica\Network\Probe;
+use Friendica\Security\OpenWebAuth;
 use Friendica\Util\Profiler;
 use Friendica\Util\Strings;
 use GuzzleHttp\Psr7\Uri;
@@ -175,7 +175,7 @@ class Follow extends BaseModule
 			'$action'   => $requestUrl,
 			'$name'     => $contact['name'],
 			'$url'      => $contact['url'],
-			'$zrl'      => Profile::zrl($contact['url']),
+			'$zrl'      => OpenWebAuth::getZrlUrl($contact['url']),
 			'$myaddr'   => $myaddr,
 			'$keywords' => $contact['keywords'],
 
@@ -186,7 +186,7 @@ class Follow extends BaseModule
 		$this->page['aside'] = '';
 
 		if (!in_array($protocol, [Protocol::PHANTOM, Protocol::MAIL])) {
-			$this->page['aside'] = VCard::getHTML($contact);
+			$this->page['aside'] = VCard::getHTML($contact, false, true);
 
 			$output .= Renderer::replaceMacros(Renderer::getMarkupTemplate('section_title.tpl'),
 				['$title' => $this->t('Posts and Replies')]
@@ -215,7 +215,7 @@ class Follow extends BaseModule
 
 			$this->baseUrl->redirect($returnPath);
 		} elseif (!empty($result['cid'])) {
-			$this->baseUrl->redirect('contact/' . $result['cid']);
+			$this->baseUrl->redirect('contact/' . Contact::getPublicContactId($result['cid'], $this->session->getLocalUserId()));
 		}
 
 		$this->sysMessages->addNotice($this->t('The contact could not be added.'));

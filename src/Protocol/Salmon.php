@@ -22,8 +22,11 @@
 namespace Friendica\Protocol;
 
 use Friendica\Core\Logger;
+use Friendica\Core\Protocol;
 use Friendica\DI;
+use Friendica\Model\Item;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\Probe;
 use Friendica\Protocol\Salmon\Format\Magic;
 use Friendica\Util\Crypto;
@@ -49,7 +52,7 @@ class Salmon
 	{
 		$ret = [];
 
-		Logger::info('Fetching salmon key for '.$uri);
+		Logger::info('Fetching salmon key for ' . $uri);
 
 		$arr = Probe::lrdd($uri);
 
@@ -67,7 +70,7 @@ class Salmon
 		// If it's inline, parse it - otherwise get the key
 
 		if (count($ret) > 0) {
-			for ($x = 0; $x < count($ret); $x ++) {
+			for ($x = 0; $x < count($ret); $x++) {
 				if (substr($ret[$x], 0, 5) === 'data:') {
 					if (strstr($ret[$x], ',')) {
 						$ret[$x] = substr($ret[$x], strpos($ret[$x], ',') + 1);
@@ -75,7 +78,7 @@ class Salmon
 						$ret[$x] = substr($ret[$x], 5);
 					}
 				} elseif (Strings::normaliseLink($ret[$x]) == 'http://') {
-					$ret[$x] = DI::httpClient()->fetch($ret[$x], HttpClientAccept::MAGIC_KEY);
+					$ret[$x] = DI::httpClient()->fetch($ret[$x], HttpClientAccept::MAGIC_KEY, 0, '', HttpClientRequest::SALMON);
 					Logger::debug('Fetched public key', ['url' => $ret[$x]]);
 				}
 			}
@@ -120,12 +123,15 @@ class Salmon
 		}
 
 		if (!$owner['sprvkey']) {
-			Logger::notice(sprintf("user '%s' (%d) does not have a salmon private key. Send failed.",
-			$owner['name'], $owner['uid']));
+			Logger::notice(sprintf(
+				"user '%s' (%d) does not have a salmon private key. Send failed.",
+				$owner['name'],
+				$owner['uid']
+			));
 			return -1;
 		}
 
-		Logger::info('slapper called for '.$url.'. Data: ' . $slap);
+		Logger::info('slapper called for ' . $url . '. Data: ' . $slap);
 
 		// create a magic envelope
 
@@ -166,7 +172,7 @@ class Salmon
 		$postResult = DI::httpClient()->post($url, $salmon, [
 			'Content-type' => 'application/magic-envelope+xml',
 			'Content-length' => strlen($salmon),
-		]);
+		], 0, HttpClientRequest::SALMON);
 
 		$return_code = $postResult->getReturnCode();
 
@@ -193,7 +199,7 @@ class Salmon
 			$postResult = DI::httpClient()->post($url, $salmon, [
 				'Content-type' => 'application/magic-envelope+xml',
 				'Content-length' => strlen($salmon),
-			]);
+			], 0, HttpClientRequest::SALMON);
 			$return_code = $postResult->getReturnCode();
 		}
 
@@ -217,13 +223,15 @@ class Salmon
 			// slap them
 			$postResult = DI::httpClient()->post($url, $salmon, [
 				'Content-type' => 'application/magic-envelope+xml',
-				'Content-length' => strlen($salmon)]);
+				'Content-length' => strlen($salmon)
+			], 0, HttpClientRequest::SALMON);
 			$return_code = $postResult->getReturnCode();
 		}
 
-		Logger::info('slapper for '.$url.' returned ' . $return_code);
+		Item::incrementOutbound(Protocol::OSTATUS);
+		Logger::info('slapper for ' . $url . ' returned ' . $return_code);
 
-		if (! $return_code) {
+		if (!$return_code) {
 			return -1;
 		}
 

@@ -22,7 +22,7 @@
 			</div>
 		</form>
 
-		<table class="table table-hover">
+		<table class="table table-hover table-logs">
 			<thead>
 				<tr>
 					<th>{{$l10n.Date}}</th>
@@ -59,21 +59,24 @@
 			</thead>
 			<tbody>
 				{{foreach $data as $row}}
-				<tr id="ev-{{$row->id}}" class="log-event" 
+				<tr id="ev-{{$row->id}}" class="log-event"
 					role="button" tabIndex="0"
 					aria-label="{{$l10n.View_details}}" aria-haspopup="true" aria-expanded="false"
 					data-data="{{$row->data}}" data-source="{{$row->source}}">
 					<td>{{$row->date}}</td>
 					<td class="
-						{{if $row->level == "CRITICAL"}}bg-danger
+						{{if $row->level == "EMERGENCY"}}bg-danger
+						{{elseif $row->level == "ALERT"}}bg-danger
+						{{elseif $row->level == "CRITICAL"}}bg-danger
 						{{elseif $row->level == "ERROR"}}bg-danger
 						{{elseif $row->level == "WARNING"}}bg-warning
 						{{elseif $row->level == "NOTICE"}}bg-info
-						{{elseif $row->level == "DEBUG"}}text-muted
+						{{elseif $row->level == "INFO"}}bg-info
+						{{else}}text-muted
 						{{/if}}
 					">{{$row->level}}</td>
 					<td>{{$row->context}}</td>
-					<td style="width:80%">{{$row->message}}</td>
+					<td class="log-message">{{$row->message}}</td>
 				</tr>
 				{{/foreach}}
 			</tbody>

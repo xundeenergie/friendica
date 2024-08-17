@@ -48,7 +48,6 @@ use Friendica\Model\User;
 use Friendica\Network\HTTPException;
 use Friendica\Object\EMail\ItemCCEMail;
 use Friendica\Protocol\Activity;
-use Friendica\Protocol\ActivityPub;
 use Friendica\Util\ACLFormatter;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Emailer;
@@ -440,8 +439,10 @@ class Item
 			];
 
 			if (!empty($item['language'])) {
-				$menu[$this->l10n->t('Languages')] = 'javascript:alert(\'' . ItemModel::getLanguageMessage($item) . '\');';
+				$menu[$this->l10n->t('Languages')] = 'javascript:displayLanguage(' . $item['uri-id'] . ');';
 			}
+
+			$menu[$this->l10n->t('Search Text')] = 'javascript:displaySearchText(' . $item['uri-id'] . ');';
 
 			if ((($cid == 0) || ($rel == Contact::FOLLOWER)) &&
 				in_array($item['network'], Protocol::FEDERATED)
@@ -546,9 +547,9 @@ class Item
 			$item['private'] = $private_group ? ItemModel::PRIVATE : ItemModel::UNLISTED;
 
 			if ($only_to_group) {
-				$cdata = Contact::getPublicAndUserContactID($group_contact['id'], $item['uid']);
-				if (!empty($cdata['user'])) {
-					$item['owner-id'] = $cdata['user'];
+				$pcid = Contact::getPublicContactId($group_contact['id'], $item['uid']);
+				if ($pcid) {
+					$item['owner-id'] = $pcid;
 					unset($item['owner-link']);
 					unset($item['owner-name']);
 					unset($item['owner-avatar']);
@@ -800,14 +801,14 @@ class Item
 	 */
 	public function addShareLink(string $body, int $quote_uri_id): string
 	{
-		$post = Post::selectFirstPost(['uri', 'plink'], ['uri-id' => $quote_uri_id]);
+		$post = Post::selectFirstPost(['uri'], ['uri-id' => $quote_uri_id]);
 		if (empty($post)) {
 			return $body;
 		}
 
 		$body = BBCode::removeSharedData($body);
 
-		$body .= "\n♲ " . ($post['plink'] ?: $post['uri']);
+		$body .= "\nRE: " . $post['uri'];
 
 		return $body;
 	}
@@ -910,40 +911,6 @@ class Item
 		return $post;
 	}
 
-	public function moveAttachmentsFromBodyToAttach(array $post): array
-	{
-		if (!preg_match_all('/(\[attachment\]([0-9]+)\[\/attachment\])/', $post['body'], $match)) {
-			return $post;
-		}
-
-		foreach ($match[2] as $attachment_id) {
-			$attachment = Attach::selectFirst(['id', 'uid', 'filename', 'filesize', 'filetype'], ['id' => $attachment_id, 'uid' => $post['uid']]);
-			if (empty($attachment)) {
-				continue;
-			}
-			if ($post['attach']) {
-				$post['attach'] .= ',';
-			}
-			$post['attach'] .= Post\Media::getAttachElement(
-				$this->baseURL . '/attach/' . $attachment['id'],
-				$attachment['filesize'],
-				$attachment['filetype'],
-				$attachment['filename'] ?? ''
-			);
-
-			$fields = [
-				'allow_cid' => $post['allow_cid'], 'allow_gid' => $post['allow_gid'],
-				'deny_cid' => $post['deny_cid'], 'deny_gid' => $post['deny_gid']
-			];
-			$condition = ['id' => $attachment_id];
-			Attach::update($fields, $condition);
-		}
-
-		$post['body'] = str_replace($match[1], '', $post['body']);
-
-		return $post;
-	}
-
 	private function setObjectType(array $post): array
 	{
 		if (empty($post['post-type'])) {
@@ -1023,8 +990,13 @@ class Item
 		return $post;
 	}
 
-	public function finalizePost(array $post): array
+	public function finalizePost(array $post, bool $preview): array
 	{
+		if ($preview) {
+			$post['body'] = Attach::addAttachmentToBody($post['body'], $post['uid']);
+		} else {
+			Attach::setPermissionFromBody($post);
+		}
 		if (preg_match("/\[attachment\](.*?)\[\/attachment\]/ism", $post['body'], $matches)) {
 			$post['body'] = preg_replace("/\[attachment].*?\[\/attachment\]/ism", PageInfo::getFooterFromUrl($matches[1]), $post['body']);
 		}
@@ -1045,7 +1017,7 @@ class Item
 
 	public function postProcessPost(array $post, array $recipients = [])
 	{
-		if (!\Friendica\Content\Feature::isEnabled($post['uid'], 'explicit_mentions') && ($post['gravity'] == ItemModel::GRAVITY_COMMENT)) {
+		if (!Feature::isEnabled($post['uid'], Feature::EXPLICIT_MENTIONS) && ($post['gravity'] == ItemModel::GRAVITY_COMMENT)) {
 			Tag::createImplicitMentions($post['uri-id'], $post['thr-parent-id']);
 		}
 
@@ -1060,7 +1032,7 @@ class Item
 			}
 
 			$this->emailer->send(new ItemCCEMail(
-				$this->app,
+				$this->userSession,
 				$this->l10n,
 				$this->baseURL,
 				$post,
@@ -1078,7 +1050,7 @@ class Item
 		$to_author     = DBA::selectFirst('account-view', ['ap-followers'], ['id' => $to['author-id']]);
 		$parent        = Post::selectFirstPost(['author-id'], ['uri-id' => $parentUriId]);
 		$parent_author = DBA::selectFirst('account-view', ['ap-followers'], ['id' => $parent['author-id']]);
-		
+
 		$followers = '';
 		foreach (array_column(Tag::getByURIId($parentUriId, [Tag::TO, Tag::CC, Tag::BCC]), 'url') as $url) {
 			if ($url == $parent_author['ap-followers']) {

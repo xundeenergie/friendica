@@ -133,7 +133,7 @@ class Unfollow extends \Friendica\BaseModule
 			'$keywords_label' => ''
 		]);
 
-		$this->page['aside'] = Widget\VCard::getHTML(Contact::getByURL($contact['url'], false));
+		$this->page['aside'] = Widget\VCard::getHTML(Contact::getByURL($contact['url'], false), false, true);
 
 		$o .= Renderer::replaceMacros(Renderer::getMarkupTemplate('section_title.tpl'), ['$title' => $this->t('Posts and Replies')]);
 
@@ -168,7 +168,7 @@ class Unfollow extends \Friendica\BaseModule
 			$this->baseUrl->redirect($base_return_path);
 		}
 
-		$return_path = $base_return_path . '/' . $contact['id'];
+		$return_path = $base_return_path . '/' . Contact::getPublicContactId($contact['id'], $uid);
 
 		try {
 			Contact::unfollow($contact);
