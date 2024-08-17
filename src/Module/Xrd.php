@@ -273,56 +273,63 @@ class Xrd extends BaseModule
 				],
 				'4:link' => [
 					'@attributes' => [
+						'rel'  => 'self',
+						'type' => 'application/activity+json',
+						'href' => $owner['url']
+					]
+				],
+				'5:link' => [
+					'@attributes' => [
 						'rel'  => ActivityNamespace::HCARD,
 						'type' => 'text/html',
 						'href' => $baseURL . '/hcard/' . $owner['nickname']
 					]
 				],
-				'5:link' => [
+				'6:link' => [
 					'@attributes' => [
 						'rel'  => ActivityNamespace::WEBFINGERAVATAR,
 						'type' => $avatar['type'],
 						'href' => User::getAvatarUrl($owner)
 					]
 				],
-				'6:link' => [
+				'7:link' => [
 					'@attributes' => [
 						'rel'  => ActivityNamespace::DIASPORA_SEED,
 						'type' => 'text/html',
 						'href' => $baseURL
 					]
 				],
-				'7:link' => [
+				'8:link' => [
 					'@attributes' => [
 						'rel'  => 'salmon',
 						'href' => $baseURL . '/salmon/' . $owner['nickname']
 					]
 				],
-				'8:link' => [
+				'9:link' => [
 					'@attributes' => [
 						'rel'  => 'http://salmon-protocol.org/ns/salmon-replies',
 						'href' => $baseURL . '/salmon/' . $owner['nickname']
 					]
 				],
-				'9:link' => [
+				'10:link' => [
 					'@attributes' => [
 						'rel'  => 'http://salmon-protocol.org/ns/salmon-mention',
 						'href' => $baseURL . '/salmon/' . $owner['nickname'] . '/mention'
 					]
 				],
-				'10:link' => [
+				'11:link' => [
 					'@attributes' => [
 						'rel'      => ActivityNamespace::OSTATUSSUB,
 						'template' => $baseURL . '/contact/follow?url={uri}'
 					]
 				],
-				'11:link' => [
+				'12:link' => [
 					'@attributes' => [
 						'rel'  => 'magic-public-key',
 						'href' => 'data:application/magic-public-key,' . Salmon::salmonKey($owner['spubkey'])
 					]
 				],
-				'12:link' => [
+				'13:link' => [
 					'@attributes' => [
 						'rel'  => ActivityNamespace::OPENWEBAUTH,
 						'type' => 'application/x-zot+json',
