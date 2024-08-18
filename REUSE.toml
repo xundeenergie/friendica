@@ -1,0 +1,5 @@
+version = 1
+SPDX-PackageName = "Friendica"
+SPDX-PackageSupplier = "Friendica Project <info@friendi.ca>"
+SPDX-PackageDownloadLocation = "https://friendi.ca"
+annotations = []
