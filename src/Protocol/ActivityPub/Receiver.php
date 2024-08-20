@@ -605,6 +605,8 @@ class Receiver
 	 * @param boolean    $trust_source Do we trust the source?
 	 * @param boolean    $push         Message had been pushed to our system
 	 * @param array      $signer       The signer of the post
+	 * @param string     $http_signer
+	 * @param int        $completion
 	 *
 	 * @return bool
 	 *

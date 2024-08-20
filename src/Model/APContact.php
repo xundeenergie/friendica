@@ -295,6 +295,10 @@ class APContact
 			return $fetched_contact;
 		}
 
+		if (!empty($compacted['https://webfinger.net/#'])) {
+			$apcontact['addr'] = JsonLD::fetchElement($compacted, 'https://webfinger.net/#');
+		}
+
 		if (empty($apcontact['addr']) && ($apcontact['type'] != 'Tombstone')) {
 			try {
 				$apcontact['addr'] = $apcontact['nick'] . '@' . (new Uri($apcontact['url']))->getAuthority();
@@ -313,7 +317,7 @@ class APContact
 		}
 
 		$apcontact['manually-approve'] = (int)JsonLD::fetchElement($compacted, 'as:manuallyApprovesFollowers');
-
+		$apcontact['posting-restricted'] = (int)JsonLD::fetchElement($compacted, 'lemmy:postingRestrictedToMods');
 		$apcontact['suspended'] = (int)JsonLD::fetchElement($compacted, 'toot:suspended');
 
 		if (!empty($compacted['as:generator'])) {

@@ -993,6 +993,11 @@ class Processor
 			}
 		}
 
+		$author = Contact::selectFirstAccount(['ap-posting-restricted'], ['id' => $item['author-id']]);
+		if (!empty($author['ap-posting-restricted'])) {
+			$item['restrictions'] = $item['restrictions'] | Item::CANT_REPLY;
+		}
+
 		$item['location'] = $activity['location'];
 
 		if (!empty($activity['latitude']) && !empty($activity['longitude'])) {

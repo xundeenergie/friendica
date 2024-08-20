@@ -56,7 +56,7 @@ use Friendica\Database\DBA;
 
 // This file is required several times during the test in DbaDefinition which justifies this condition
 if (!defined('DB_UPDATE_VERSION')) {
-	define('DB_UPDATE_VERSION', 1571);
+	define('DB_UPDATE_VERSION', 1572);
 }
 
 return [
@@ -432,6 +432,7 @@ return [
 			"manually-approve" => ["type" => "boolean", "comment" => ""],
 			"discoverable" => ["type" => "boolean", "comment" => "Mastodon extension: true if profile is published in their directory"],
 			"suspended" => ["type" => "boolean", "comment" => "Mastodon extension: true if profile is suspended"],
+			"posting-restricted" => ["type" => "boolean", "comment" => "lemmy:postingRestrictedToMods"],
 			"nick" => ["type" => "varchar(255)", "not null" => "1", "default" => "", "comment" => ""],
 			"name" => ["type" => "varchar(255)", "comment" => ""],
 			"about" => ["type" => "text", "comment" => ""],
