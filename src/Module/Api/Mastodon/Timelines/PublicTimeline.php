@@ -58,12 +58,6 @@ class PublicTimeline extends BaseApi
 	 */
 	protected function rawContent(array $request = [])
 	{
-		if ($this->config->get('system', 'block_public') || $this->config->get('system', 'community_page_style') == Community::DISABLED_VISITOR) {
-			$this->checkAllowedScope(BaseApi::SCOPE_READ);
-		}
-
-		$uid = self::getCurrentUserID();
-
 		$request = $this->getRequest([
 			'max_id'          => null,  // Return results older than id
 			'since_id'        => null,  // Return results newer than id
@@ -77,9 +71,15 @@ class PublicTimeline extends BaseApi
 			'friendica_order' => TimelineOrderByTypes::ID, // Sort order options (defaults to ID)
 		], $request);
 
-		if (!$this->localAllowed() && !$this->globalAllowed()) {
+		if ($this->config->get('system', 'community_page_style') == Community::DISABLED) {
 			$this->jsonExit([]);
 		}
+
+		if ($this->authRequired($request)) {
+			$this->checkAllowedScope(BaseApi::SCOPE_READ);
+		}
+
+		$uid = self::getCurrentUserID();
 
 		$condition = [
 			'gravity' => [Item::GRAVITY_PARENT, Item::GRAVITY_COMMENT], 'private' => Item::PUBLIC,
@@ -89,13 +89,13 @@ class PublicTimeline extends BaseApi
 		$condition = $this->addPagingConditions($request, $condition);
 		$params = $this->buildOrderAndLimitParams($request);
 
-		if ($request['local'] && $this->localAllowed()) {
+		if ($request['local']) {
 			$condition = DBA::mergeConditions($condition, ['origin' => true]);
 		} else {
 			$condition = DBA::mergeConditions($condition, ['uid' => 0]);
 		}
 
-		if ($request['remote'] && $this->globalAllowed()) {
+		if ($request['remote']) {
 			$condition = DBA::mergeConditions($condition, ["NOT `uri-id` IN (SELECT `uri-id` FROM `post-user` WHERE `origin` AND `post-user`.`uri-id` = `post-timeline-view`.`uri-id`)"]);
 		}
 
@@ -139,13 +139,20 @@ class PublicTimeline extends BaseApi
 		$this->jsonExit($statuses);
 	}
 
-	private function localAllowed(): bool
+	private function authRequired(array $request): bool
 	{
-		return in_array($this->config->get('system', 'community_page_style'), [Community::LOCAL, Community::LOCAL_AND_GLOBAL, Community::DISABLED_VISITOR]);
-	}
+		if ($this->config->get('system', 'block_public') || $this->config->get('system', 'community_page_style') == Community::DISABLED_VISITOR) {
+			return true;
+		}
 
-	private function globalAllowed(): bool
-	{
-		return in_array($this->config->get('system', 'community_page_style'), [Community::GLOBAL, Community::LOCAL_AND_GLOBAL, Community::DISABLED_VISITOR]);
+		if ($request['local'] && $this->config->get('system', 'community_page_style') == Community::GLOBAL) {
+			return true;
+		}
+
+		if ($request['remote'] && $this->config->get('system', 'community_page_style') == Community::LOCAL) {
+			return true;
+		}
+
+		return false;
 	}
 }
