@@ -1,6 +1,6 @@
 -- ------------------------------------------
 -- Friendica 2024.09-dev (Yellow Archangel)
--- DB_UPDATE_VERSION 1571
+-- DB_UPDATE_VERSION 1572
 -- ------------------------------------------
 
 
@@ -373,6 +373,7 @@ CREATE TABLE IF NOT EXISTS `apcontact` (
 	`manually-approve` boolean COMMENT '',
 	`discoverable` boolean COMMENT 'Mastodon extension: true if profile is published in their directory',
 	`suspended` boolean COMMENT 'Mastodon extension: true if profile is suspended',
+	`posting-restricted` boolean COMMENT 'lemmy:postingRestrictedToMods',
 	`nick` varchar(255) NOT NULL DEFAULT '' COMMENT '',
 	`name` varchar(255) COMMENT '',
 	`about` text COMMENT '',
@@ -3673,6 +3674,7 @@ CREATE VIEW `account-view` AS SELECT
 	`apcontact`.`outbox` AS `ap-outbox`,
 	`apcontact`.`sharedinbox` AS `ap-sharedinbox`,
 	`apcontact`.`generator` AS `ap-generator`,
+	`apcontact`.`posting-restricted` AS `ap-posting-restricted`,
 	`apcontact`.`following_count` AS `ap-following_count`,
 	`apcontact`.`followers_count` AS `ap-followers_count`,
 	`apcontact`.`statuses_count` AS `ap-statuses_count`,
@@ -3779,6 +3781,7 @@ CREATE VIEW `account-user-view` AS SELECT
 	`apcontact`.`outbox` AS `ap-outbox`,
 	`apcontact`.`sharedinbox` AS `ap-sharedinbox`,
 	`apcontact`.`generator` AS `ap-generator`,
+	`apcontact`.`posting-restricted` AS `ap-posting-restricted`,
 	`apcontact`.`following_count` AS `ap-following_count`,
 	`apcontact`.`followers_count` AS `ap-followers_count`,
 	`apcontact`.`statuses_count` AS `ap-statuses_count`,
