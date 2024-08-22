@@ -142,7 +142,7 @@
 
     window.addEventListener("beforeunload", function (event) {
         if (!formSubmitting) {
-            var confirmationMessage = 'Sind Sie sicher, dass Sie die Seite neu laden möchten? Alle ungespeicherten Änderungen gehen verloren.';
+            var confirmationMessage = 'Are you sure you want to reload the page? All unsaved changes will be lost.';
             event.returnValue = confirmationMessage;
             return confirmationMessage;
         }
