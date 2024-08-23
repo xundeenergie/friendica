@@ -62,7 +62,7 @@ return $config
 		'lowercase_keywords'                 => true,
 		'no_closing_tag'                     => true,
 		'no_spaces_after_function_name'      => true,
-		'spaces_inside_parenthesis'          => false,
+		'spaces_inside_parentheses'          => false,
 		'no_trailing_whitespace'             => true,
 		'no_trailing_whitespace_in_comment'  => true,
 		'no_unused_imports'                  => true,
