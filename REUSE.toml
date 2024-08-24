@@ -4,12 +4,17 @@ SPDX-PackageSupplier = "Friendica Project <info@friendi.ca>"
 SPDX-PackageDownloadLocation = "https://friendi.ca"
 
 [[annotations]]
-path = "doc/**"
+path = [
+     "doc/**",
+     "spec/*",
+     "src/**/README.md",
+     "mods/**"
+]
 SPDX-FileCopyrightText = "2010-2024 The Friendica Project"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "view/lang/*/strings.php"
+path = "view/lang/**/strings.php"
 SPDX-FileCopyrightText = "2010-2024 The Friendica Project"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 
