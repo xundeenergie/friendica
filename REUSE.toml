@@ -9,6 +9,16 @@ SPDX-FileCopyrightText = "2010-2024 The Friendica Project"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
+path = "view/lang/*/strings.php"
+SPDX-FileCopyrightText = "2010-2024 The Friendica Project"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = "view/theme/frio/font/open_sans/**"
+SPDX-FileCopyrightText = "2010 Steve Matteson, Google LLC"
+SPDX-License-Identifier = "OFL-1.1"
+
+[[annotations]]
 path = "view/theme/frio/frameworks/bootstrap/**"
 SPDX-FileCopyrightText = "2011-2019 Twitter, Inc."
 SPDX-License-Identifier = "MIT"
@@ -27,3 +37,18 @@ SPDX-License-Identifier = "MIT"
 path = "view/theme/frio/frameworks/bootstrap-toggle/**"
 SPDX-FileCopyrightText = "2014 Min Hur, The New York Times Company"
 SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "view/theme/frio/frameworks/jasny/**"
+SPDX-FileCopyrightText = "2012-2014 Arnold Daniels"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = "view/theme/frio/frameworks/justifiedGallery/**"
+SPDX-FileCopyrightText = "2023 Miro Mannino, Hypolite Petovan"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "view/js/fancybox/**"
+SPDX-FileCopyrightText = "2019 fancyApps"
+SPDX-License-Identifier = "GPL-3.0-only"
