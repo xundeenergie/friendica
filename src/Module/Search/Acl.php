@@ -156,30 +156,30 @@ class Acl extends BaseModule
 		switch ($type) {
 			case self::TYPE_MENTION_CONTACT_CIRCLE:
 				$condition = DBA::mergeConditions($condition,
-					["NOT `self` AND NOT `blocked` AND `notify` != ? AND `network` != ?", '', Protocol::OSTATUS
+					["NOT `self` AND NOT `blocked` AND `network` != ?", Protocol::OSTATUS
 					]);
 				break;
 
 			case self::TYPE_MENTION_CONTACT:
 				$condition = DBA::mergeConditions($condition,
-					["NOT `self` AND NOT `blocked` AND `notify` != ?", ''
+					["NOT `self` AND NOT `blocked`",
 					]);
 				break;
 
 			case self::TYPE_MENTION_GROUP:
 				$condition = DBA::mergeConditions($condition,
-					["NOT `self` AND NOT `blocked` AND `notify` != ? AND `contact-type` = ?", '', Contact::TYPE_COMMUNITY
+					["NOT `self` AND NOT `blocked` AND (NOT `ap-posting-restricted` OR `ap-posting-restricted` IS NULL) AND `contact-type` = ?", Contact::TYPE_COMMUNITY
 					]);
 				break;
 
 			case self::TYPE_PRIVATE_MESSAGE:
 				$condition = DBA::mergeConditions($condition,
-					["NOT `self` AND NOT `blocked` AND `notify` != ? AND `network` IN (?, ?, ?)", '', Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA
+					["NOT `self` AND NOT `blocked` AND `network` IN (?, ?, ?)", Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA
 					]);
 				break;
 		}
 
-		$contact_count = $this->database->count('contact', $condition);
+		$contact_count = $this->database->count('account-user-view', $condition);
 
 		$resultTotal = $circle_count + $contact_count;
 
@@ -220,7 +220,7 @@ class Acl extends BaseModule
 
 		$contacts = [];
 		if ($type != self::TYPE_MENTION_CIRCLE) {
-			$contacts = Contact::selectToArray([], $condition, ['order' => ['name']]);
+			$contacts = Contact::selectAccountToArray([], $condition, ['order' => ['name']]);
 		}
 
 		$groups = [];
