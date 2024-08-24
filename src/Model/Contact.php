@@ -265,6 +265,17 @@ class Contact
 	 * @return array|boolean Contact record if it exists, false otherwise
 	 * @throws \Exception
 	 */
+	public static function getAccountById(int $id, array $fields = [])
+	{
+		return DBA::selectFirst('account-user-view', $fields, ['id' => $id]);
+	}
+
+	/**
+	 * @param integer $id     Contact ID
+	 * @param array   $fields Array of selected fields, empty for all
+	 * @return array|boolean Contact record if it exists, false otherwise
+	 * @throws \Exception
+	 */
 	public static function getById(int $id, array $fields = [])
 	{
 		return DBA::selectFirst('contact', $fields, ['id' => $id]);
@@ -2375,7 +2386,8 @@ class Contact
 
 			if ($default_avatar && Proxy::isLocalImage($avatar)) {
 				$fields = [
-					'avatar' => $avatar, 'avatar-date' => DateTimeFormat::utcNow(),
+					'avatar' => $avatar,
+					'avatar-date' => DateTimeFormat::utcNow(),
 					'photo' => $avatar,
 					'thumb' => self::getDefaultAvatar($contact, Proxy::SIZE_THUMB),
 					'micro' => self::getDefaultAvatar($contact, Proxy::SIZE_MICRO)
