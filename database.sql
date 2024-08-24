@@ -1,6 +1,6 @@
 -- ------------------------------------------
 -- Friendica 2024.09-dev (Yellow Archangel)
--- DB_UPDATE_VERSION 1572
+-- DB_UPDATE_VERSION 1573
 -- ------------------------------------------
 
 
@@ -1424,6 +1424,7 @@ CREATE TABLE IF NOT EXISTS `post-media` (
 	`uri-id` int unsigned NOT NULL COMMENT 'Id of the item-uri table entry that contains the item uri',
 	`url` varbinary(1024) NOT NULL COMMENT 'Media URL',
 	`media-uri-id` int unsigned COMMENT 'Id of the item-uri table entry that contains the activities uri-id',
+	`attach-id` int unsigned COMMENT 'In case of a local attachment, this field is filled with the id in the attach table',
 	`type` tinyint unsigned NOT NULL DEFAULT 0 COMMENT 'Media type',
 	`mimetype` varchar(60) COMMENT '',
 	`height` smallint unsigned COMMENT 'Height of the media',
@@ -1445,8 +1446,10 @@ CREATE TABLE IF NOT EXISTS `post-media` (
 	 UNIQUE INDEX `uri-id-url` (`uri-id`,`url`(512)),
 	 INDEX `uri-id-id` (`uri-id`,`id`),
 	 INDEX `media-uri-id` (`media-uri-id`),
+	 INDEX `attach-id` (`attach-id`),
 	FOREIGN KEY (`uri-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
-	FOREIGN KEY (`media-uri-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE
+	FOREIGN KEY (`media-uri-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
+	FOREIGN KEY (`attach-id`) REFERENCES `attach` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE
 ) DEFAULT COLLATE utf8mb4_general_ci COMMENT='Attached media';
 
 --

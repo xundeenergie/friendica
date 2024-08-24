@@ -32,12 +32,12 @@ class MediaAttachmentsConfig extends BaseDataTransferObject
 	/**
 	 * @param array $supported_mime_types
 	 */
-	public function __construct(array $supported_mime_types, int $image_size_limit, int $image_matrix_limit)
+	public function __construct(array $supported_mime_types, int $image_size_limit, int $image_matrix_limit, int $media_size_limit)
 	{
 		$this->supported_mime_types = $supported_mime_types;
 		$this->image_size_limit     = $image_size_limit;
 		$this->image_matrix_limit   = $image_matrix_limit;
-		$this->video_size_limit     = $image_size_limit;
+		$this->video_size_limit     = $media_size_limit;
 		$this->video_matrix_limit   = $image_matrix_limit;
 	}
 }

@@ -115,9 +115,14 @@ class InstanceV2 extends BaseApi
 			$image_matrix_limit = 33177600; // 5760^2
 		}
 
+		$media_size_limit = Strings::getBytesFromShorthand($this->config->get('system', 'maxfilesize'));
+		if (empty($media_size_limit)) {
+			$media_size_limit = Strings::getBytesFromShorthand(ini_get('upload_max_filesize'));
+		}
+
 		return new InstanceEntity\Configuration(
 			$statuses_config,
-			new InstanceEntity\MediaAttachmentsConfig($this->supportedMimeTypes(), $image_size_limit, $image_matrix_limit),
+			new InstanceEntity\MediaAttachmentsConfig($this->supportedMimeTypes(), $image_size_limit, $image_matrix_limit, $media_size_limit),
 			new InstanceEntity\Polls(),
 			new InstanceEntity\Accounts(),
 		);

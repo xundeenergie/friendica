@@ -13,6 +13,7 @@ use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\Database\DBStructure;
 use Friendica\DI;
+use Friendica\Model\Attach;
 use Friendica\Model\Item;
 use Friendica\Model\Post;
 use Friendica\Util\DateTimeFormat;
@@ -42,6 +43,8 @@ class ExpirePosts
 		if (DI::config()->get('system', 'add_missing_posts')) {
 			self::addMissingEntries();
 		}
+
+		self::deleteUnusedAttachments();
 
 		DBA::releaseOptimizeLock();
 
@@ -302,6 +305,19 @@ class ExpirePosts
 				DBA::commit();
 				Logger::notice('Deleted unclaimed public items', ['pass' => $pass, 'rows' => $affected_count]);
 			} while ($affected_count);
+		}
+	}
+
+	/**
+	 * Delete media attachments (excluding photos) that aren't linked to any post
+	 *
+	 * @return void
+	 */
+	private static function deleteUnusedAttachments()
+	{
+		$postmedia = DBA::select('attach', ['id'], ["`id` NOT IN (SELECT `attach-id` FROM `post-media`)"]);
+		while ($media = DBA::fetch($postmedia)) {
+			Attach::delete(['id' => $media['id']]);
 		}
 	}
 }

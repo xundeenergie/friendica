@@ -106,6 +106,7 @@
 						{{include file="field_input.tpl" field=$maximagesize}}
 						{{include file="field_input.tpl" field=$maximagelength}}
 						{{include file="field_input.tpl" field=$jpegimagequality}}
+						{{include file="field_input.tpl" field=$maxfilesize}}
 					</div>
 					<div class="panel-footer">
 						<input type="submit" name="page_site" class="btn btn-primary" value="{{$submit}}"/>

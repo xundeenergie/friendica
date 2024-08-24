@@ -71,7 +71,7 @@ class Upload extends \Friendica\BaseModule
 		$tempFileName = $_FILES['userfile']['tmp_name'];
 		$fileName     = basename($_FILES['userfile']['name']);
 		$fileSize     = intval($_FILES['userfile']['size']);
-		$maxFileSize  = $this->config->get('system', 'maxfilesize');
+		$maxFileSize  = Strings::getBytesFromShorthand($this->config->get('system', 'maxfilesize'));
 
 		/*
 		 * Found html code written in text field of form, when trying to upload a
