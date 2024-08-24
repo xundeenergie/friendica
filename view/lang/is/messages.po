@@ -1,7 +1,8 @@
 # FRIENDICA Distributed Social Network
-# Copyright (C) 2010-2024, the Friendica project
-# This file is distributed under the same license as the Friendica package.
-# 
+# SPDX-FileCopyrightText: Copyright (C) 2010-2024, the Friendica project
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # Translators:
 # 33b3403388a6619423bbfe91dc9e4663_ed82b2f, 2012
 # 33b3403388a6619423bbfe91dc9e4663_ed82b2f, 2012
