@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright (C) 2010-2024, the Friendica project
  * SPDX-FileCopyrightText: 2010-2024 the Friendica project
@@ -11,8 +10,8 @@
  * This template is used e.g for bs modals. So outputs
  * only the pure content
  */
+?>
 
-*>
 <!DOCTYPE html>
 <html>
 <head>
