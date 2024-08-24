@@ -2,4 +2,7 @@ version = 1
 SPDX-PackageName = "Friendica"
 SPDX-PackageSupplier = "Friendica Project <info@friendi.ca>"
 SPDX-PackageDownloadLocation = "https://friendi.ca"
-annotations = []
+[[annotations]]
+path = "doc/**"
+SPDX-FileCopyrightText = "2010-2024 The Friendica Project"
+SPDX-License-Identifier = "CC0-1.0"
