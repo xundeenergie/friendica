@@ -928,7 +928,7 @@ class Transmitter
 	 *
 	 * @param array $item
 	 * @param boolean $blindcopy
-	 * @return void
+	 * @return array
 	 */
 	public static function getReceiversForUriId(int $uri_id, bool $blindcopy): array
 	{
