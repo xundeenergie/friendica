@@ -1,9 +1,3 @@
-<!--
-SPDX-FileCopyrightText: 2010 - 2024 the Friendica project
-
-SPDX-License-Identifier: CC0-1.0
--->
-
 ---
 name: Bug report
 about: Create a report to help us improve
