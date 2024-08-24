@@ -8,10 +8,8 @@
 namespace Friendica\Module\WellKnown;
 
 use Friendica\BaseModule;
-use Friendica\Core\System;
 use Friendica\DI;
 use Friendica\Module\Response;
-use Friendica\Protocol\Salmon;
 use Friendica\Util\Crypto;
 use Friendica\Util\XML;
 
@@ -66,15 +64,8 @@ class HostMeta extends BaseModule
 						'href' => $domain . '/amcd'
 					]
 				],
-				'Property' => [
-					'@attributes' => [
-						'type'      => 'http://salmon-protocol.org/ns/magic-key',
-						'mk:key_id' => '1'
-					],
-					Salmon::salmonKey($config->get('system', 'site_pubkey'))
-				]
 			],
-		], $xml, false, ['hm' => 'http://host-meta.net/xrd/1.0', 'mk' => 'http://salmon-protocol.org/ns/magic-key']);
+		], $xml, false, ['hm' => 'http://host-meta.net/xrd/1.0']);
 
 		$this->httpExit($xml->saveXML(), Response::TYPE_XML, 'application/xrd+xml');
 	}

@@ -71,7 +71,7 @@ class MergeContact
 	 */
 	private static function mergePersonalContacts(int $first, int $duplicate)
 	{
-		$fields = ['self', 'remote_self', 'rel', 'prvkey', 'subhub', 'hub-verify', 'priority', 'writable', 'archive', 'pending',
+		$fields = ['self', 'remote_self', 'rel', 'prvkey', 'hub-verify', 'priority', 'writable', 'archive', 'pending',
 			'rating', 'notify_new_posts', 'fetch_further_information', 'ffi_keyword_denylist', 'block_reason'];
 		$c1 = Contact::getById($first, $fields);
 		$c2 = Contact::getById($duplicate, $fields);
@@ -87,7 +87,7 @@ class MergeContact
 			$ctarget[$field] = $c1[$field] ?: $c2[$field];
 		}
 
-		foreach (['remote_self', 'subhub', 'writable', 'notify_new_posts'] as $field) {
+		foreach (['remote_self', 'writable', 'notify_new_posts'] as $field) {
 			$ctarget[$field] = $c1[$field] || $c2[$field];
 		}
 

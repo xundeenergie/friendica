@@ -140,8 +140,8 @@ class Introduction extends BaseFactory
 					}
 
 					$formattedIntroductions[] = new ValueObject\Introduction([
-						'label'          => (($intro['network'] !== Protocol::OSTATUS) ? 'friend_request' : 'follower'),
-						'str_type'       => (($intro['network'] !== Protocol::OSTATUS) ? $this->l10n->t('Friend/Connect Request') : $this->l10n->t('New Follower')),
+						'label'          => 'friend_request',
+						'str_type'       => $this->l10n->t('Friend/Connect Request'),
 						'dfrn_id'        => $intro['issued-id'],
 						'uid'            => $this->session->getLocalUserId(),
 						'intro_id'       => $intro['intro_id'],

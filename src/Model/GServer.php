@@ -2617,11 +2617,6 @@ class GServer
 				return;
 			}
 
-			// We don't want to mark a server as OStatus when it had been marked with any other protocol before
-			if ($protocol == Post\DeliveryData::OSTATUS) {
-				return;
-			}
-
 			// If the server is marked as ActivityPub then we won't change it to anything different
 			if ($old == Post\DeliveryData::ACTIVITYPUB) {
 				return;

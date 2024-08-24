@@ -869,20 +869,6 @@ class Probe
 				$data['baseurl'] = trim($link['href'], '/');
 			} elseif (($link['rel'] == 'http://webfinger.net/rel/blog') && !empty($link['href'])) {
 				$data['url'] = $link['href'];
-			} elseif (($link['rel'] == 'magic-public-key') && !empty($link['href'])) {
-				$pubkey = $link['href'];
-
-				if (substr($pubkey, 0, 5) === 'data:') {
-					if (strstr($pubkey, ',')) {
-						$pubkey = substr($pubkey, strpos($pubkey, ',') + 1);
-					} else {
-						$pubkey = substr($pubkey, 5);
-					}
-					try {
-						$data['pubkey'] = Salmon::magicKeyToPem($pubkey);
-					} catch (\Throwable $e) {
-					}
-				}
 			}
 		}
 		

@@ -8,14 +8,10 @@
 namespace Friendica\Core;
 
 use Friendica\Database\DBA;
-use Friendica\Model\Item;
 use Friendica\Model\User;
 use Friendica\Network\HTTPException;
-use Friendica\Protocol\Activity;
 use Friendica\Protocol\ActivityPub;
 use Friendica\Protocol\Diaspora;
-use Friendica\Protocol\OStatus;
-use Friendica\Protocol\Salmon;
 
 /**
  * Manage compatibility with federated networks
@@ -28,24 +24,24 @@ class Protocol
 	const DIASPORA    = 'dspr';    // Diaspora, Hubzilla, Socialhome, Ganggo
 	const FEED        = 'feed';    // RSS/Atom feeds with no known "post/notify" protocol
 	const MAIL        = 'mail';    // IMAP/POP
-	const OSTATUS     = 'stat';    // GNU Social and other OStatus implementations
 
-	const NATIVE_SUPPORT = [self::DFRN, self::DIASPORA, self::OSTATUS, self::FEED, self::MAIL, self::ACTIVITYPUB];
+	const NATIVE_SUPPORT = [self::DFRN, self::DIASPORA, self::FEED, self::MAIL, self::ACTIVITYPUB];
 
-	const FEDERATED = [self::DFRN, self::DIASPORA, self::OSTATUS, self::ACTIVITYPUB];
+	const FEDERATED = [self::DFRN, self::DIASPORA, self::ACTIVITYPUB];
 
 	const SUPPORT_PRIVATE = [self::DFRN, self::DIASPORA, self::MAIL, self::ACTIVITYPUB, self::PUMPIO];
 
 	// Supported through a connector
 	const DIASPORA2 = 'dspc';    // Diaspora connector
 	const PUMPIO    = 'pump';    // pump.io
-	const STATUSNET = 'stac';    // Statusnet connector
 	const TWITTER   = 'twit';    // Twitter
 	const DISCOURSE = 'dscs';    // Discourse
 	const TUMBLR    = 'tmbl';    // Tumblr
 	const BLUESKY   = 'bsky';    // Bluesky
 
 	// Dead protocols
+	const OSTATUS   = 'stat';    // GNU Social and other OStatus implementations
+	const STATUSNET = 'stac';    // Statusnet connector
 	const APPNET    = 'apdn';    // app.net - Dead protocol
 	const FACEBOOK  = 'face';    // Facebook API - Not working anymore, API is closed
 	const GPLUS     = 'goog';    // Google+ - Dead in 2019
@@ -124,27 +120,10 @@ class Protocol
 
 		$protocol = $protocol ?? $contact['protocol'];
 
-		if (in_array($protocol, [Protocol::OSTATUS, Protocol::DFRN])) {
-			// create a follow slap
-			$item = [
-				'verb'    => Activity::FOLLOW,
-				'gravity' => Item::GRAVITY_ACTIVITY,
-				'follow'  => $contact['url'],
-				'body'    => '',
-				'title'   => '',
-				'guid'    => '',
-				'uri-id'  => 0,
-			];
-
-			$slap = OStatus::salmon($item, $owner);
-
-			if (!empty($contact['notify'])) {
-				Salmon::slapper($owner, $contact['notify'], $slap);
-			}
-		} elseif ($protocol == Protocol::DIASPORA) {
+		if ($protocol == self::DIASPORA) {
 			$contact = Diaspora::sendShare($owner, $contact);
 			Logger::notice('share returns: ' . $contact);
-		} elseif ($protocol == Protocol::ACTIVITYPUB) {
+		} elseif (in_array($protocol, [self::ACTIVITYPUB, self::DFRN])) {
 			$activity_id = ActivityPub\Transmitter::activityIDFromContact($contact['id']);
 			if (empty($activity_id)) {
 				// This really should never happen
@@ -175,33 +154,13 @@ class Protocol
 		}
 
 		$protocol = $contact['network'];
-		if (($protocol == Protocol::DFRN) && !empty($contact['protocol'])) {
+		if (($protocol == self::DFRN) && !empty($contact['protocol'])) {
 			$protocol = $contact['protocol'];
 		}
 
-		if (in_array($protocol, [Protocol::OSTATUS, Protocol::DFRN])) {
-			// create an unfollow slap
-			$item = [
-				'verb'    => Activity::O_UNFOLLOW,
-				'gravity' => Item::GRAVITY_ACTIVITY,
-				'follow'  => $contact['url'],
-				'body'    => '',
-				'title'   => '',
-				'guid'    => '',
-				'uri-id'  => 0,
-			];
-
-			$slap = OStatus::salmon($item, $owner);
-
-			if (empty($contact['notify'])) {
-				Logger::notice('OStatus/DFRN Contact is missing notify, we quit here', ['id' => $contact['id']]);
-				return null;
-			}
-
-			return Salmon::slapper($owner, $contact['notify'], $slap) === 0;
-		} elseif ($protocol == Protocol::DIASPORA) {
+		if ($protocol == self::DIASPORA) {
 			return Diaspora::sendUnshare($owner, $contact) > 0;
-		} elseif ($protocol == Protocol::ACTIVITYPUB) {
+		} elseif (in_array($protocol, [self::ACTIVITYPUB, self::DFRN])) {
 			return ActivityPub\Transmitter::sendContactUndo($contact['url'], $contact['id'], $owner);
 		}
 
@@ -232,11 +191,11 @@ class Protocol
 		}
 
 		$protocol = $contact['network'];
-		if ($protocol == Protocol::DFRN && !empty($contact['protocol'])) {
+		if ($protocol == self::DFRN && !empty($contact['protocol'])) {
 			$protocol = $contact['protocol'];
 		}
 
-		if ($protocol == Protocol::ACTIVITYPUB) {
+		if ($protocol == self::ACTIVITYPUB) {
 			return ActivityPub\Transmitter::sendContactReject($contact['url'], $contact['hub-verify'], $owner);
 		}
 

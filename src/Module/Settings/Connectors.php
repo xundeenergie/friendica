@@ -154,12 +154,8 @@ class Connectors extends BaseSettings
 			$diasp_enabled = $this->config->get('system', 'diaspora_enabled') ?
 				$this->t('Built-in support for %s connectivity is enabled', $this->t('Diaspora (Socialhome, Hubzilla)')) :
 				$this->t('Built-in support for %s connectivity is disabled', $this->t('Diaspora (Socialhome, Hubzilla)'));
-			$ostat_enabled = $this->config->get('system', 'ostatus_disabled') ?
-				$this->t('Built-in support for %s connectivity is disabled', $this->t('OStatus (GNU Social)')) :
-				$this->t('Built-in support for %s connectivity is enabled', $this->t('OStatus (GNU Social)'));
 		} else {
 			$diasp_enabled = '';
-			$ostat_enabled = '';
 		}
 
 		$mail_enabled = function_exists('imap_open') && !$this->config->get('system', 'imap_disabled');
@@ -199,7 +195,6 @@ class Connectors extends BaseSettings
 			'$title' => $this->t('Social Networks'),
 
 			'$diasp_enabled' => $diasp_enabled,
-			'$ostat_enabled' => $ostat_enabled,
 
 			'$general_settings'   => $this->t('General Social Media Settings'),
 			'$accept_only_sharer' => [
@@ -221,8 +216,6 @@ class Connectors extends BaseSettings
 			'$api_auto_attach'         => ['api_auto_attach', $this->t('API: Automatically links at the end of the post as attached posts'), $api_auto_attach, $this->t('When activated, added links at the end of the post react the same way as added links in the web interface.')],
 			'$article_mode'            => ['article_mode', $this->t('Article Mode'), $article_mode, $this->t("Controls how posts with titles are transmitted. Mastodon and its forks don't display the content of these posts if the post is created in the correct (default) way."), $article_modes],
 			'$legacy_contact'          => ['legacy_contact', $this->t('Your legacy ActivityPub/GNU Social account'), $legacy_contact, $this->t('If you enter your old account name from an ActivityPub based system or your GNU Social/Statusnet account name here (in the format user@domain.tld), your contacts will be added automatically. The field will be emptied when done.')],
-			'$repair_ostatus_url'  => 'ostatus/repair',
-			'$repair_ostatus_text' => $this->t('Repair OStatus subscriptions'),
 
 			'$connector_settings_forms' => $connector_settings_forms,
 

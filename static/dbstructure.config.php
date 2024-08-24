@@ -115,8 +115,6 @@ return [
 			"theme" => ["type" => "varchar(255)", "not null" => "1", "default" => "", "comment" => "user theme preference"],
 			"pubkey" => ["type" => "text", "comment" => "RSA public key 4096 bit"],
 			"prvkey" => ["type" => "text", "comment" => "RSA private key 4096 bit"],
-			"spubkey" => ["type" => "text", "comment" => ""],
-			"sprvkey" => ["type" => "text", "comment" => ""],
 			"verified" => ["type" => "boolean", "not null" => "1", "default" => "0", "comment" => "user is verified through email"],
 			"blocked" => ["type" => "boolean", "not null" => "1", "default" => "0", "comment" => "1 for user is blocked"],
 			"blockwall" => ["type" => "boolean", "not null" => "1", "default" => "0", "comment" => "Prohibit contacts to post to the profile page of the user"],
@@ -229,7 +227,6 @@ return [
 			"remote_self" => ["type" => "boolean", "not null" => "1", "default" => "0", "comment" => ""],
 			"rel" => ["type" => "tinyint unsigned", "not null" => "1", "default" => "0", "comment" => "The kind of the relation between the user and the contact"],
 			"protocol" => ["type" => "char(4)", "not null" => "1", "default" => "", "comment" => "Protocol of the contact"],
-			"subhub" => ["type" => "boolean", "not null" => "1", "default" => "0", "comment" => ""],
 			"hub-verify" => ["type" => "varbinary(383)", "not null" => "1", "default" => "", "comment" => ""],
 			"rating" => ["type" => "tinyint", "not null" => "1", "default" => "0", "comment" => "Automatically detected feed poll frequency"],
 			"priority" => ["type" => "tinyint unsigned", "not null" => "1", "default" => "0", "comment" => "Feed poll priority"],
@@ -1353,7 +1350,6 @@ return [
 			"dfrn" => ["type" => "mediumint", "not null" => "1", "default" => "0", "comment" => "Number of successful deliveries via DFRN"],
 			"legacy_dfrn" => ["type" => "mediumint", "not null" => "1", "default" => "0", "comment" => "Number of successful deliveries via legacy DFRN"],
 			"diaspora" => ["type" => "mediumint", "not null" => "1", "default" => "0", "comment" => "Number of successful deliveries via Diaspora"],
-			"ostatus" => ["type" => "mediumint", "not null" => "1", "default" => "0", "comment" => "Number of successful deliveries via OStatus"],
 		],
 		"indexes" => [
 			"PRIMARY" => ["uri-id"],
@@ -1785,26 +1781,6 @@ return [
 			"psid" => ["psid"],
 		]
 	],
-	"push_subscriber" => [
-		"comment" => "Used for OStatus: Contains feed subscribers",
-		"fields" => [
-			"id" => ["type" => "int unsigned", "not null" => "1", "extra" => "auto_increment", "primary" => "1", "comment" => "sequential ID"],
-			"uid" => ["type" => "mediumint unsigned", "not null" => "1", "default" => "0", "foreign" => ["user" => "uid"], "comment" => "User id"],
-			"callback_url" => ["type" => "varbinary(383)", "not null" => "1", "default" => "", "comment" => ""],
-			"topic" => ["type" => "varchar(255)", "not null" => "1", "default" => "", "comment" => ""],
-			"nickname" => ["type" => "varchar(255)", "not null" => "1", "default" => "", "comment" => ""],
-			"push" => ["type" => "tinyint", "not null" => "1", "default" => "0", "comment" => "Retrial counter"],
-			"last_update" => ["type" => "datetime", "not null" => "1", "default" => DBA::NULL_DATETIME, "comment" => "Date of last successful trial"],
-			"next_try" => ["type" => "datetime", "not null" => "1", "default" => DBA::NULL_DATETIME, "comment" => "Next retrial date"],
-			"renewed" => ["type" => "datetime", "not null" => "1", "default" => DBA::NULL_DATETIME, "comment" => "Date of last subscription renewal"],
-			"secret" => ["type" => "varchar(255)", "not null" => "1", "default" => "", "comment" => ""],
-		],
-		"indexes" => [
-			"PRIMARY" => ["id"],
-			"next_try" => ["next_try"],
-			"uid" => ["uid"]
-		]
-	],
 	"register" => [
 		"comment" => "registrations requiring admin approval",
 		"fields" => [
@@ -1979,7 +1955,6 @@ return [
 			"remote_self" => ["type" => "tinyint unsigned", "comment" => "0 => No mirroring, 1-2 => Mirror as own post, 3 => Mirror as reshare"],
 			"fetch_further_information" => ["type" => "tinyint unsigned", "comment" => "0 => None, 1 => Fetch information, 3 => Fetch keywords, 2 => Fetch both"],
 			"ffi_keyword_denylist" => ["type" => "text", "comment" => ""],
-			"subhub" => ["type" => "boolean", "comment" => ""],
 			"hub-verify" => ["type" => "varbinary(383)", "comment" => ""],
 			"protocol" => ["type" => "char(4)", "comment" => "Protocol of the contact"],
 			"rating" => ["type" => "tinyint", "comment" => "Automatically detected feed poll frequency"],

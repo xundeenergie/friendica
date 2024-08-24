@@ -77,7 +77,7 @@ class Common extends BaseProfile
 		$condition = [
 			'blocked' => false,
 			'deleted' => false,
-			'network' => [Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA, Protocol::OSTATUS, Protocol::FEED],
+			'network' => [Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA, Protocol::FEED],
 		];
 
 		$total = Contact\Relation::countCommon($sourceId, $targetId, $condition);

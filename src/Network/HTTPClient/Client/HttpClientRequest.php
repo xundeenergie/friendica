@@ -24,7 +24,6 @@ class HttpClientRequest
 	public const MEDIAPROXY      = 'MediaProxy/1';
 	public const MEDIAVERIFIER   = 'MediaVerifier/1';
 	public const OSTATUS         = 'OStatus/1';
-	public const SALMON          = 'Salmon/1';
 	public const SERVERINFO      = 'ServerInfo/1';
 	public const SERVERDISCOVER  = 'ServerDiscover/1';
 	public const SITEINFO        = 'SiteInfo/1';

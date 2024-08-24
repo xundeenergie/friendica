@@ -8,14 +8,12 @@
 namespace Friendica\Module;
 
 use Friendica\BaseModule;
-use Friendica\Core\System;
 use Friendica\DI;
 use Friendica\Model\Photo;
 use Friendica\Model\User;
 use Friendica\Network\HTTPException\BadRequestException;
 use Friendica\Network\HTTPException\NotFoundException;
 use Friendica\Protocol\ActivityNamespace;
-use Friendica\Protocol\Salmon;
 use Friendica\Util\Network;
 use Friendica\Util\XML;
 
@@ -133,6 +131,11 @@ class Xrd extends BaseModule
 			'aliases' => [$owner['url']],
 			'links'   => [
 				[
+					'rel'  => ActivityNamespace::FEED,
+					'type' => 'application/atom+xml',
+					'href' => $owner['poll'] ?? $baseURL,
+				],
+				[
 					'rel'  => ActivityNamespace::WEBFINGERPROFILE,
 					'type' => 'text/html',
 					'href' => $owner['url'],
@@ -143,19 +146,6 @@ class Xrd extends BaseModule
 					'href' => $owner['url'],
 				],
 				[
-					'rel'      => ActivityNamespace::OSTATUSSUB,
-					'template' => $baseURL . '/contact/follow?url={uri}',
-				],
-				[
-					'rel'  => ActivityNamespace::FEED,
-					'type' => 'application/atom+xml',
-					'href' => $owner['poll'] ?? $baseURL,
-				],
-				[
-					'rel'  => 'salmon',
-					'href' => $baseURL . '/salmon/' . $owner['nickname'],
-				],
-				[
 					'rel'  => ActivityNamespace::HCARD,
 					'type' => 'text/html',
 					'href' => $baseURL . '/hcard/' . $owner['nickname'],
@@ -164,6 +154,14 @@ class Xrd extends BaseModule
 					'rel'  => ActivityNamespace::DIASPORA_SEED,
 					'type' => 'text/html',
 					'href' => $baseURL,
+				],
+				[
+					'rel'  => 'salmon',
+					'href' => $baseURL . '/receive/users/' . $owner['guid'],
+				],
+				[
+					'rel'      => ActivityNamespace::OSTATUSSUB,
+					'template' => $baseURL . '/contact/follow?url={uri}',
 				],
 			]
 		];
@@ -218,23 +216,11 @@ class Xrd extends BaseModule
 				],
 				[
 					'rel'  => 'salmon',
-					'href' => $baseURL . '/salmon/' . $owner['nickname'],
-				],
-				[
-					'rel'  => 'http://salmon-protocol.org/ns/salmon-replies',
-					'href' => $baseURL . '/salmon/' . $owner['nickname'],
-				],
-				[
-					'rel'  => 'http://salmon-protocol.org/ns/salmon-mention',
-					'href' => $baseURL . '/salmon/' . $owner['nickname'] . '/mention',
+					'href' => $baseURL . '/receive/users/' . $owner['guid'],
 				],
 				[
 					'rel'      => ActivityNamespace::OSTATUSSUB,
 					'template' => $baseURL . '/contact/follow?url={uri}',
-				],
-				[
-					'rel'  => 'magic-public-key',
-					'href' => 'data:application/magic-public-key,' . Salmon::salmonKey($owner['spubkey']),
 				],
 				[
 					'rel'  => ActivityNamespace::OPENWEBAUTH,
@@ -262,13 +248,13 @@ class Xrd extends BaseModule
 				'2:Alias' => $alias,
 				'1:link' => [
 					'@attributes' => [
-						'rel'  => 'http://purl.org/macgirvin/dfrn/1.0',
+						'rel'  => ActivityNamespace::DFRN,
 						'href' => $owner['url']
 					]
 				],
 				'2:link' => [
 					'@attributes' => [
-						'rel'  => 'http://schemas.google.com/g/2010#updates-from',
+						'rel'  => ActivityNamespace::FEED,
 						'type' => 'application/atom+xml',
 						'href' => $owner['poll']
 					]
@@ -311,34 +297,16 @@ class Xrd extends BaseModule
 				'8:link' => [
 					'@attributes' => [
 						'rel'  => 'salmon',
-						'href' => $baseURL . '/salmon/' . $owner['nickname']
+						'href' => $baseURL . '/receive/users/' . $owner['guid']
 					]
 				],
 				'9:link' => [
-					'@attributes' => [
-						'rel'  => 'http://salmon-protocol.org/ns/salmon-replies',
-						'href' => $baseURL . '/salmon/' . $owner['nickname']
-					]
-				],
-				'10:link' => [
-					'@attributes' => [
-						'rel'  => 'http://salmon-protocol.org/ns/salmon-mention',
-						'href' => $baseURL . '/salmon/' . $owner['nickname'] . '/mention'
-					]
-				],
-				'11:link' => [
 					'@attributes' => [
 						'rel'      => ActivityNamespace::OSTATUSSUB,
 						'template' => $baseURL . '/contact/follow?url={uri}'
 					]
 				],
-				'12:link' => [
-					'@attributes' => [
-						'rel'  => 'magic-public-key',
-						'href' => 'data:application/magic-public-key,' . Salmon::salmonKey($owner['spubkey'])
-					]
-				],
-				'13:link' => [
+				'10:link' => [
 					'@attributes' => [
 						'rel'  => ActivityNamespace::OPENWEBAUTH,
 						'type' => 'application/x-zot+json',

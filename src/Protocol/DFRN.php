@@ -85,8 +85,7 @@ class DFRN
 			$user['uprvkey'] = $user['prvkey'];
 		} else {
 			$user = ['importer_uid' => 0, 'uprvkey' => '', 'timezone' => 'UTC',
-				'nickname' => '', 'sprvkey' => '', 'spubkey' => '',
-				'page-flags' => 0, 'account-type' => 0, 'prvnets' => 0];
+				'nickname' => '', 'page-flags' => 0, 'account-type' => 0, 'prvnets' => 0];
 		}
 
 		return array_merge($contact, $user);
@@ -362,21 +361,6 @@ class DFRN
 
 		$attributes = ['rel' => 'alternate', 'type' => 'text/html', 'href' => $alternatelink];
 		XML::addElement($doc, $root, 'link', '', $attributes);
-
-
-		if ($public) {
-			// DFRN itself doesn't uses this. But maybe someone else wants to subscribe to the public feed.
-			OStatus::addHubLink($doc, $root, $owner['nick']);
-
-			$attributes = ['rel' => 'salmon', 'href' => DI::baseUrl() . '/salmon/' . $owner['nick']];
-			XML::addElement($doc, $root, 'link', '', $attributes);
-
-			$attributes = ['rel' => 'http://salmon-protocol.org/ns/salmon-replies', 'href' => DI::baseUrl() . '/salmon/' . $owner['nick']];
-			XML::addElement($doc, $root, 'link', '', $attributes);
-
-			$attributes = ['rel' => 'http://salmon-protocol.org/ns/salmon-mention', 'href' => DI::baseUrl() . '/salmon/' . $owner['nick']];
-			XML::addElement($doc, $root, 'link', '', $attributes);
-		}
 
 		// For backward compatibility we keep this element
 		if (in_array($owner['page-flags'], [User::PAGE_FLAGS_COMMUNITY, User::PAGE_FLAGS_COMM_MAN])) {

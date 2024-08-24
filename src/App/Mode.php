@@ -53,11 +53,8 @@ class Mode
 		'objects',
 		'outbox',
 		'poco',
-		'pubsub',
-		'pubsubhubbub',
 		'receive',
 		'rsd_xml',
-		'salmon',
 		'statistics_json',
 		'xrd',
 	];

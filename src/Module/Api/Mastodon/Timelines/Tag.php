@@ -56,8 +56,8 @@ class Tag extends BaseApi
 		$params = ['order' => ['uri-id' => true], 'limit' => $request['limit']];
 
 		$condition = ["`name` = ? AND (`uid` = ? OR (`uid` = ? AND NOT `global`))
-			AND (`network` IN (?, ?, ?, ?) OR (`uid` = ? AND `uid` != ?))",
-			$this->parameters['hashtag'], 0, $uid, Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA, Protocol::OSTATUS, $uid, 0];
+			AND (`network` IN (?, ?, ?) OR (`uid` = ? AND `uid` != ?))",
+			$this->parameters['hashtag'], 0, $uid, Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA, $uid, 0];
 
 		if ($request['local']) {
 			$condition = DBA::mergeConditions($condition, ["`uri-id` IN (SELECT `uri-id` FROM `post-user` WHERE `origin`)"]);

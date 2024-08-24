@@ -602,16 +602,6 @@ class Item
 				Logger::notice('duplicated item with the same guid found.', $condition);
 				return true;
 			}
-		} elseif ($item['network'] == Protocol::OSTATUS) {
-			// Check for an existing post with the same content. There seems to be a problem with OStatus.
-			$condition = [
-				"`body` = ? AND `network` = ? AND `created` = ? AND `contact-id` = ? AND `uid` = ?",
-				$item['body'], $item['network'], $item['created'], $item['contact-id'], $item['uid']
-			];
-			if (Post::exists($condition)) {
-				Logger::notice('duplicated item with the same body found.', $item);
-				return true;
-			}
 		}
 
 		/*
@@ -705,13 +695,12 @@ class Item
 	{
 		if (empty($item['network']) || in_array($item['network'], Protocol::FEDERATED)) {
 			$condition = [
-				'`uri-id` = ? AND `uid` = ? AND `network` IN (?, ?, ?, ?)',
+				'`uri-id` = ? AND `uid` = ? AND `network` IN (?, ?, ?)',
 				$item['uri-id'],
 				$item['uid'],
 				Protocol::ACTIVITYPUB,
 				Protocol::DIASPORA,
-				Protocol::DFRN,
-				Protocol::OSTATUS
+				Protocol::DFRN
 			];
 			$existing = Post::selectFirst(['id', 'network'], $condition);
 			if (DBA::isResult($existing)) {
@@ -908,7 +897,7 @@ class Item
 		/*
 		 * Do we already have this item?
 		 * We have to check several networks since Friendica posts could be repeated
-		 * via OStatus (maybe Diaspora as well)
+		 * via Diaspora.
 		 */
 		$duplicate = self::getDuplicateID($item);
 		if ($duplicate) {

@@ -55,11 +55,11 @@ class HCard extends BaseModule
 		$uri = urlencode('acct:' . $profile['nickname'] . '@' . DI::baseUrl()->getHost() . (DI::baseUrl()->getPath() ? '/' . DI::baseUrl()->getPath() : ''));
 
 		$page['htmlhead'] .= '<meta name="dfrn-global-visibility" content="' . ($profile['net-publish'] ? 'true' : 'false') . '" />' . "\r\n";
-		$page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $baseUrl . '/dfrn_poll/' . $nickname . '" />' . "\r\n";
+		$page['htmlhead'] .= '<link rel="alternate" type="application/atom+xml" href="' . $profile['poll'] . '" />' . "\r\n";
 		$page['htmlhead'] .= '<link rel="lrdd" type="application/xrd+xml" href="' . $baseUrl . '/xrd/?uri=' . $uri . '" />' . "\r\n";
 		header('Link: <' . $baseUrl . '/xrd/?uri=' . $uri . '>; rel="lrdd"; type="application/xrd+xml"', false);
 
-		foreach (['request', 'confirm', 'notify', 'poll'] as $dfrn) {
+		foreach (['notify', 'poll'] as $dfrn) {
 			$page['htmlhead'] .= "<link rel=\"dfrn-{$dfrn}\" href=\"" . $baseUrl . "/dfrn_{$dfrn}/{$nickname}\" />\r\n";
 		}
 

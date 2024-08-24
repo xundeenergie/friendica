@@ -452,7 +452,7 @@ function pre_update_1364()
 		return Update::FAILED;
 	}
 
-	if (!DBA::e("DELETE FROM `push_subscriber` WHERE NOT `uid` IN (SELECT `uid` FROM `user`)")) {
+	if (DBStructure::existsTable('push_subscriber') && !DBA::e("DELETE FROM `push_subscriber` WHERE NOT `uid` IN (SELECT `uid` FROM `user`)")) {
 		return Update::FAILED;
 	}
 

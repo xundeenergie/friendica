@@ -788,10 +788,8 @@ class Contact
 			'url'         => DI::baseUrl() . '/profile/' . $user['nickname'],
 			'nurl'        => Strings::normaliseLink(DI::baseUrl() . '/profile/' . $user['nickname']),
 			'addr'        => $user['nickname'] . '@' . substr(DI::baseUrl(), strpos(DI::baseUrl(), '://') + 3),
-			'request'     => DI::baseUrl() . '/dfrn_request/' . $user['nickname'],
-			'notify'      => DI::baseUrl() . '/dfrn_notify/'  . $user['nickname'],
-			'poll'        => DI::baseUrl() . '/dfrn_poll/'    . $user['nickname'],
-			'confirm'     => DI::baseUrl() . '/dfrn_confirm/' . $user['nickname'],
+			'notify'      => DI::baseUrl() . '/dfrn_notify/' . $user['nickname'],
+			'poll'        => DI::baseUrl() . '/feed/' . $user['nickname'],
 			'name-date'   => DateTimeFormat::utcNow(),
 			'uri-date'    => DateTimeFormat::utcNow(),
 			'avatar-date' => DateTimeFormat::utcNow(),
@@ -873,10 +871,8 @@ class Contact
 			'nurl'         => Strings::normaliseLink($url),
 			'uri-id'       => ItemURI::getIdByURI($url),
 			'addr'         => $user['nickname'] . '@' . substr(DI::baseUrl(), strpos(DI::baseUrl(), '://') + 3),
-			'request'      => DI::baseUrl() . '/dfrn_request/' . $user['nickname'],
 			'notify'       => DI::baseUrl() . '/dfrn_notify/' . $user['nickname'],
-			'poll'         => DI::baseUrl() . '/dfrn_poll/' . $user['nickname'],
-			'confirm'      => DI::baseUrl() . '/dfrn_confirm/' . $user['nickname'],
+			'poll'         => DI::baseUrl() . '/feed/' . $user['nickname'],
 		];
 
 		$avatar = Photo::selectFirst(['resource-id', 'type'], ['uid' => $uid, 'profile' => true]);
@@ -2532,22 +2528,6 @@ class Contact
 		}
 
 		self::update($fields, $condition);
-
-		// We mustn't set the update fields for OStatus contacts since they are updated in OnePoll
-		$condition['network'] = Protocol::OSTATUS;
-
-		// If the contact failed, propagate the update fields to all contacts
-		if (empty($fields['failed'])) {
-			unset($fields['last-update']);
-			unset($fields['success_update']);
-			unset($fields['failure_update']);
-		}
-
-		if (empty($fields)) {
-			return;
-		}
-
-		self::update($fields, $condition);
 	}
 
 	/**
@@ -3065,11 +3045,6 @@ class Contact
 	/**
 	 * Takes a $uid and a url/handle and adds a new contact
 	 *
-	 * Currently if the contact is DFRN, interactive needs to be true, to redirect to the
-	 * dfrn_request page.
-	 *
-	 * Otherwise this can be used to bulk add StatusNet contacts, Twitter contacts, etc.
-	 *
 	 * Returns an array
 	 * $return['success'] boolean true if successful
 	 * $return['message'] error text if success is false.
@@ -3170,35 +3145,24 @@ class Contact
 			return $result;
 		}
 
-		if ($protocol === Protocol::OSTATUS && DI::config()->get('system', 'ostatus_disabled')) {
-			$result['message'] .= DI::l10n()->t('The profile address specified belongs to a network which has been disabled on this site.') . '<br />';
-			$ret['notify'] = '';
-		}
-
 		if (!$ret['notify']) {
 			$result['message'] .= DI::l10n()->t('Limited profile. This person will be unable to receive direct/personal notifications from you.') . '<br />';
 		}
 
-		$writeable = ((($protocol === Protocol::OSTATUS) && ($ret['notify'])) ? 1 : 0);
-
-		$subhub = (($protocol === Protocol::OSTATUS) ? true : false);
-
-		$hidden = (($protocol === Protocol::MAIL) ? 1 : 0);
+		$hidden = ($protocol === Protocol::MAIL);
 
 		$pending = false;
 		if (($protocol == Protocol::ACTIVITYPUB) && isset($ret['manually-approve'])) {
 			$pending = (bool)$ret['manually-approve'];
 		}
 
-		if (in_array($protocol, [Protocol::MAIL, Protocol::DIASPORA, Protocol::ACTIVITYPUB])) {
-			$writeable = 1;
-		}
+		$writeable = in_array($protocol, [Protocol::MAIL, Protocol::DIASPORA, Protocol::ACTIVITYPUB]);
 
 		if (DBA::isResult($contact)) {
 			// update contact
 			$new_relation = (in_array($contact['rel'], [self::FOLLOWER, self::FRIEND]) ? self::FRIEND : self::SHARING);
 
-			$fields = ['rel' => $new_relation, 'subhub' => $subhub, 'readonly' => false, 'network' => $ret['network']];
+			$fields = ['rel' => $new_relation, 'readonly' => false, 'network' => $ret['network']];
 
 			if ($contact['pending'] && !empty($contact['hub-verify'])) {
 				ActivityPub\Transmitter::sendContactAccept($contact['url'], $contact['hub-verify'], $uid);
@@ -3236,7 +3200,6 @@ class Contact
 				'blocked'      => 0,
 				'readonly'     => 0,
 				'pending'      => $pending,
-				'subhub'       => $subhub
 			]);
 		}
 
@@ -3257,11 +3220,6 @@ class Contact
 
 		// Update the avatar
 		self::updateAvatar($contact_id, $ret['photo']);
-
-		// pull feed and consume it, which should subscribe to the hub.
-		if ($contact['network'] == Protocol::OSTATUS) {
-			Worker::add(Worker::PRIORITY_HIGH, 'OnePoll', $contact_id, 'force');
-		}
 
 		if ($probed) {
 			GServer::updateFromProbeArray($ret);
@@ -3731,10 +3689,6 @@ class Contact
 		$networks = [Protocol::DFRN, Protocol::ACTIVITYPUB];
 		if (DI::config()->get('system', 'diaspora_enabled')) {
 			$networks[] = Protocol::DIASPORA;
-		}
-
-		if (!DI::config()->get('system', 'ostatus_disabled')) {
-			$networks[] = Protocol::OSTATUS;
 		}
 
 		$condition = [

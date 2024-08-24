@@ -30,8 +30,8 @@ class Engagement
 	const ALTERNATIVES = ['source:news' => 'source:service', 'source:relay' => 'source:application',
 		'media:picture' => 'media:image', 'media:photo' => 'media:image',
 		'network:activitypub' => 'network:apub', 'network:friendica' => 'network:dfrn',
-		'network:diaspora' => 'network:dspr', 'network:ostatus' => 'network:stat',
-		'network:discourse' => 'network:dscs', 'network:tumblr' => 'network:tmbl', 'network:bluesky' => 'network:bsky'];
+		'network:diaspora' => 'network:dspr', 'network:discourse' => 'network:dscs',
+		'network:tumblr' => 'network:tmbl', 'network:bluesky' => 'network:bsky'];
 	const MEDIA_NONE = 0;
 	const MEDIA_IMAGE = 1;
 	const MEDIA_VIDEO = 2;

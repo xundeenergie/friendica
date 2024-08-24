@@ -152,8 +152,8 @@ class User
 		}
 
 		$system['name'] = App::PLATFORM . " '" . App::CODENAME . "' " . App::VERSION . '-' . DB_UPDATE_VERSION;
-		$system['sprvkey'] = $system['uprvkey'] = $system['prvkey'];
-		$system['spubkey'] = $system['upubkey'] = $system['pubkey'];
+		$system['uprvkey'] = $system['prvkey'];
+		$system['upubkey'] = $system['pubkey'];
 		$system['nickname'] = $system['nick'];
 		$system['page-flags'] = self::PAGE_FLAGS_SOAPBOX;
 		$system['account-type'] = $system['contact-type'];
@@ -183,8 +183,6 @@ class User
 				'register_date' => $system['created'],
 				'pubkey' => $system['pubkey'],
 				'prvkey' => $system['prvkey'],
-				'spubkey' => $system['spubkey'],
-				'sprvkey' => $system['sprvkey'],
 				'guid' => System::createUUID(),
 				'verified' => true,
 				'page-flags' => self::PAGE_FLAGS_SOAPBOX,
@@ -1315,11 +1313,6 @@ class User
 		$prvkey = $keys['prvkey'];
 		$pubkey = $keys['pubkey'];
 
-		// Create another keypair for signing/verifying salmon protocol messages.
-		$sres = Crypto::newKeypair(512);
-		$sprvkey = $sres['prvkey'];
-		$spubkey = $sres['pubkey'];
-
 		$insert_result = DBA::insert('user', [
 			'guid'     => System::createUUID(),
 			'username' => $username,
@@ -1329,8 +1322,6 @@ class User
 			'nickname' => $nickname,
 			'pubkey'   => $pubkey,
 			'prvkey'   => $prvkey,
-			'spubkey'  => $spubkey,
-			'sprvkey'  => $sprvkey,
 			'verified' => $verified,
 			'blocked'  => $blocked,
 			'language' => $language,

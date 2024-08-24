@@ -89,7 +89,6 @@ class LocalRelationship extends \Friendica\BaseRepository
 			'remote_self'               => $localRelationship->remoteSelf,
 			'fetch_further_information' => $localRelationship->fetchFurtherInformation,
 			'ffi_keyword_denylist'      => $localRelationship->ffiKeywordDenylist,
-			'subhub'                    => $localRelationship->subhub,
 			'hub-verify'                => $localRelationship->hubVerify,
 			'protocol'                  => $localRelationship->protocol,
 			'rating'                    => $localRelationship->rating,
