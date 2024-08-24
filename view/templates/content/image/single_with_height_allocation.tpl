@@ -1,3 +1,9 @@
+{{*
+  * Copyright (C) 2010-2024, the Friendica project
+  * SPDX-FileCopyrightText: 2010-2024 the Friendica project
+  *
+  * SPDX-License-Identifier: AGPL-3.0-or-later
+  *}}
 {{* The padding-top height allocation trick only works if the <figure> fills its parent's width completely or with flex. 🤷‍♂️
 	As a result, we need to add a wrapping element for non-flex (non-image grid) environments, mostly single-image cases.
  *}}
