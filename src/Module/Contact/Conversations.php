@@ -72,7 +72,7 @@ class Conversations extends BaseModule
 			throw new NotFoundException($this->t('Contact not found.'));
 		}
 
-		$contact = Model\Contact::getById($pcid);
+		$contact = Model\Contact::getAccountById($pcid);
 		if (empty($contact)) {
 			throw new NotFoundException($this->t('Contact not found.'));
 		}
@@ -97,13 +97,15 @@ class Conversations extends BaseModule
 
 		Nav::setSelected('contact');
 
-		$options = [
-			'lockstate' => ACL::getLockstateForUserId($this->userSession->getLocalUserId()) ? 'lock' : 'unlock',
-			'acl' => ACL::getFullSelectorHTML($this->page, $this->userSession->getLocalUserId(), true, []),
-			'bang' => '',
-			'content' => ($contact['contact-type'] == ModelContact::TYPE_COMMUNITY ? '!' : '@') . ($contact['addr'] ?: $contact['url']),
-		];
-		$o = $this->conversation->statusEditor($options);
+		if (!$contact['ap-posting-restricted']) {
+			$options = [
+				'lockstate' => ACL::getLockstateForUserId($this->userSession->getLocalUserId()) ? 'lock' : 'unlock',
+				'acl' => ACL::getFullSelectorHTML($this->page, $this->userSession->getLocalUserId(), true, []),
+				'bang' => '',
+				'content' => ($contact['contact-type'] == ModelContact::TYPE_COMMUNITY ? '!' : '@') . ($contact['addr'] ?: $contact['url']),
+			];
+			$o = $this->conversation->statusEditor($options);
+		}
 
 		$o .= Contact::getTabsHTML($contact, Contact::TAB_CONVERSATIONS);
 		$o .= Model\Contact::getThreadsFromId($contact['id'], $this->userSession->getLocalUserId(), 0, 0, $request['last_created'] ?? '');
