@@ -384,11 +384,12 @@ class Media
 	private static function fetchLocalData(array $media): array
 	{
 		if (preg_match('|.*?/attach/(\d+)|', $media['url'], $matches)) {
-			$attachment = Attach::selectFirst(['filename', 'filetype', 'filesize'], ['id' => $matches[1]]);
+			$attachment = Attach::selectFirst(['id', 'filename', 'filetype', 'filesize'], ['id' => $matches[1]]);
 			if (!empty($attachment)) {
-				$media['name']     = $attachment['filename'];
-				$media['mimetype'] = $attachment['filetype'];
-				$media['size']     = $attachment['filesize'];
+				$media['attach-id'] = $attachment['id'];
+				$media['name']      = $attachment['filename'];
+				$media['mimetype']  = $attachment['filetype'];
+				$media['size']      = $attachment['filesize'];
 			}
 			return $media;
 		}
@@ -396,7 +397,7 @@ class Media
 		if (!preg_match('|.*?/photo/(.*[a-fA-F0-9])\-(.*[0-9])\..*[\w]|', $media['url'], $matches)) {
 			return $media;
 		}
-		$photo = Photo::selectFirst([], ['resource-id' => $matches[1], 'scale' => $matches[2]]);
+		$photo = Photo::selectFirst(['type', 'datasize', 'width', 'height', 'blurhash'], ['resource-id' => $matches[1], 'scale' => $matches[2]]);
 		if (!empty($photo)) {
 			$media['mimetype'] = $photo['type'];
 			$media['size'] = $photo['datasize'];
@@ -408,7 +409,7 @@ class Media
 		if (!preg_match('|.*?/photo/(.*[a-fA-F0-9])\-(.*[0-9])\..*[\w]|', $media['preview'] ?? '', $matches)) {
 			return $media;
 		}
-		$photo = Photo::selectFirst([], ['resource-id' => $matches[1], 'scale' => $matches[2]]);
+		$photo = Photo::selectFirst(['width', 'height'], ['resource-id' => $matches[1], 'scale' => $matches[2]]);
 		if (!empty($photo)) {
 			$media['preview-width'] = $photo['width'];
 			$media['preview-height'] = $photo['height'];

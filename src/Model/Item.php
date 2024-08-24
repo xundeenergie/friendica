@@ -380,14 +380,6 @@ class Item
 			Event::delete($item['event-id']);
 		}
 
-		// If item has attachments, drop them
-		$attachments = Post\Media::getByURIId($item['uri-id'], [Post\Media::DOCUMENT]);
-		foreach ($attachments as $attachment) {
-			if (preg_match('|attach/(\d+)|', $attachment['url'], $matches)) {
-				Attach::delete(['id' => $matches[1], 'uid' => $item['uid']]);
-			}
-		}
-
 		// Set the item to "deleted"
 		$item_fields = ['deleted' => true, 'edited' => DateTimeFormat::utcNow(), 'changed' => DateTimeFormat::utcNow()];
 		Post::update($item_fields, ['id' => $item['id']]);

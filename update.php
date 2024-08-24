@@ -40,6 +40,7 @@ use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\Database\DBStructure;
 use Friendica\DI;
+use Friendica\Model\Attach;
 use Friendica\Model\Contact;
 use Friendica\Model\Item;
 use Friendica\Model\ItemURI;
@@ -1500,5 +1501,29 @@ function update_1571()
 	}
 	DBA::close($profiles);
 
+	return Update::SUCCESS;
+}
+
+function update_1573()
+{
+	$postmedia = DBA::select('post-media', ['id', 'url'], ["`url` LIKE ?", '%/attach/%']);
+	while ($media = DBA::fetch($postmedia)) {
+		if (!DI::baseUrl()->isLocalUrl($media['url'])) {
+			continue;
+		}
+		if (preg_match('|.*?/attach/(\d+)|', $media['url'], $matches)) {
+			$attachment = Attach::selectFirst(['id', 'filename', 'filetype', 'filesize'], ['id' => $matches[1]]);
+			if (!empty($attachment)) {
+				$fields = [
+					'attach-id' => $attachment['id'],
+					'name'      => $attachment['filename'],
+					'mimetype'  => $attachment['filetype'],
+					'size'      => $attachment['filesize'],
+				];
+				DBA::update('post-media', $fields, ['id' => $media['id']]);
+			}
+		}
+	}
+	DBA::close($media);
 	return Update::SUCCESS;
 }

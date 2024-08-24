@@ -53,7 +53,8 @@ class Site extends BaseAdmin
 		$language         = (!empty($_POST['language'])         ? trim($_POST['language'])      : '');
 		$theme            = (!empty($_POST['theme'])            ? trim($_POST['theme'])         : '');
 		$theme_mobile     = (!empty($_POST['theme_mobile'])     ? trim($_POST['theme_mobile'])  : '');
-		$maximagesize     = (!empty($_POST['maximagesize'])     ? trim($_POST['maximagesize'])              : 0);
+		$maxfilesize      = (!empty($_POST['maxfilesize'])      ? trim($_POST['maxfilesize'])                        : 0);
+		$maximagesize     = (!empty($_POST['maximagesize'])     ? trim($_POST['maximagesize'])                       : 0);
 		$maximagelength   = (!empty($_POST['maximagelength'])   ? intval(trim($_POST['maximagelength']))             : -1);
 		$jpegimagequality = (!empty($_POST['jpegimagequality']) ? intval(trim($_POST['jpegimagequality']))           : 100);
 
@@ -223,6 +224,11 @@ class Site extends BaseAdmin
 			$transactionConfig->delete('system', 'singleuser');
 		} else {
 			$transactionConfig->set('system', 'singleuser', $singleuser);
+		}
+		if (preg_match('/\d+(?:\s*[kmg])?/i', $maxfilesize)) {
+			$transactionConfig->set('system', 'maxfilesize', $maxfilesize);
+		} else {
+			DI::sysmsg()->addNotice(DI::l10n()->t('%s is no valid input for maximum media size', $maxfilesize));
 		}
 		if (preg_match('/\d+(?:\s*[kmg])?/i', $maximagesize)) {
 			$transactionConfig->set('system', 'maximagesize', $maximagesize);
@@ -484,6 +490,10 @@ class Site extends BaseAdmin
 													'', 'pattern="\d+(?:\s*[kmg])?"'],
 			'$maximagelength'   => ['maximagelength', DI::l10n()->t('Maximum image length'), DI::config()->get('system', 'max_image_length'), DI::l10n()->t('Maximum length in pixels of the longest side of uploaded images. Default is -1, which means no limits.')],
 			'$jpegimagequality' => ['jpegimagequality', DI::l10n()->t('JPEG image quality'), DI::config()->get('system', 'jpeg_quality'), DI::l10n()->t('Uploaded JPEGS will be saved at this quality setting [0-100]. Default is 100, which is full quality.')],
+			'$maxfilesize'      => ['maxfilesize', DI::l10n()->t('Maximum media file size'), DI::config()->get('system', 'maxfilesize'), DI::l10n()->t('Maximum size in bytes of uploaded media files. Default is 0, which means no limits. You can put k, m, or g behind the desired value for KiB, MiB, GiB, respectively.
+													The value of <code>upload_max_filesize</code> in your <code>PHP.ini</code> needs be set to at least the desired limit.
+													Currently <code>upload_max_filesize</code> is set to %s (%s byte)', Strings::formatBytes(Strings::getBytesFromShorthand(ini_get('upload_max_filesize'))), Strings::getBytesFromShorthand(ini_get('upload_max_filesize'))),
+													'', 'pattern="\d+(?:\s*[kmg])?"'],
 
 			'$register_policy'        => ['register_policy', DI::l10n()->t('Register policy'), DI::config()->get('config', 'register_policy'), '', $register_choices],
 			'$max_registered_users'   => ['max_registered_users', DI::l10n()->t('Maximum Users'), DI::config()->get('config', 'max_registered_users'), DI::l10n()->t('If defined, the register policy is automatically closed when the given number of users is reached and reopens the registry when the number drops below the limit. It only works when the policy is set to open or close, but not when the policy is set to approval.')],

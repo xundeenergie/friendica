@@ -47,6 +47,7 @@
 		{{include file="field_input.tpl" field=$maximagesize}}
 		{{include file="field_input.tpl" field=$maximagelength}}
 		{{include file="field_input.tpl" field=$jpegimagequality}}
+		{{include file="field_input.tpl" field=$maxfilesize}}
 		<div class="submit"><input type="submit" name="page_site" value="{{$submit}}"/></div>
 
 		<h2>{{$corporate}}</h2>

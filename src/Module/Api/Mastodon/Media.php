@@ -14,6 +14,7 @@ use Friendica\Model\Contact;
 use Friendica\Model\Photo;
 use Friendica\Model\Post;
 use Friendica\Module\BaseApi;
+use Friendica\Util\Strings;
 
 /**
  * @see https://docs.joinmastodon.org/methods/statuses/media/
@@ -26,7 +27,7 @@ class Media extends BaseApi
 		$uid = self::getCurrentUserID();
 
 		$request = $this->getRequest([
-			'file'        => [], // The file to be attached, using multipart form data.
+			'file'        => $_FILES['file'] ?? [], // The file to be attached, using multipart form data.
 			'thumbnail'   => [], // The custom thumbnail of the media to be attached, using multipart form data.
 			'description' => '', // A plain-text description of the media, for accessibility purposes.
 			'focus'       => '', // Two floating points (x,y), comma-delimited ranging from -1.0 to 1.0
@@ -34,14 +35,15 @@ class Media extends BaseApi
 
 		Logger::info('Photo post', ['request' => $request, 'files' => $_FILES]);
 
-		if (empty($_FILES['file'])) {
+		if (empty($request['file'])) {
+			Logger::notice('Upload is invalid', ['request' => $request]);
 			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
 		}
 
-		$type = Post\Media::getType($_FILES['file']['type']);
+		$type = Post\Media::getType($request['file']['type']);
 
 		if (in_array($type, [Post\Media::IMAGE, Post\Media::UNKNOWN])) {
-			$media = Photo::upload($uid, $_FILES['file'], '', null, null, '', '', $request['description']);
+			$media = Photo::upload($uid, $request['file'], '', null, null, '', '', $request['description']);
 			if (empty($media)) {
 				$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
 			}
@@ -50,22 +52,24 @@ class Media extends BaseApi
 
 			$this->jsonExit(DI::mstdnAttachment()->createFromPhoto($media['id']));
 		} else {
-			$tempFileName = $_FILES['file']['tmp_name'];
-			$fileName     = basename($_FILES['file']['name']);
-			$fileSize     = intval($_FILES['file']['size']);
-			$maxFileSize  = DI::config()->get('system', 'maxfilesize');
+			$tempFileName = $request['file']['tmp_name'];
+			$fileName     = basename($request['file']['name']);
+			$fileSize     = intval($request['file']['size']);
+			$maxFileSize  = Strings::getBytesFromShorthand(DI::config()->get('system', 'maxfilesize'));
 
 			if ($fileSize <= 0) {
+				Logger::notice('Filesize is invalid', ['size' => $fileSize, 'request' => $request]);
 				@unlink($tempFileName);
 				$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
 			}
 
 			if ($maxFileSize && $fileSize > $maxFileSize) {
+				Logger::notice('Filesize is too large', ['size' => $fileSize, 'max' => $maxFileSize, 'request' => $request]);
 				@unlink($tempFileName);
 				$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
 			}
 
-			$id = Attach::storeFile($tempFileName, self::getCurrentUserID(), $fileName, $_FILES['file']['type'], '<' . Contact::getPublicIdByUserId(self::getCurrentUserID()) . '>');
+			$id = Attach::storeFile($tempFileName, self::getCurrentUserID(), $fileName, $request['file']['type'], '<' . Contact::getPublicIdByUserId(self::getCurrentUserID()) . '>');
 			@unlink($tempFileName);
 			Logger::info('Uploaded media', ['id' => $id]);
 			$this->jsonExit(DI::mstdnAttachment()->createFromAttach($id));
