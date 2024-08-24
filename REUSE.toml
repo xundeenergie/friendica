@@ -8,7 +8,8 @@ path = [
      "doc/**",
      "spec/*",
      "src/**/README.md",
-     "mods/**"
+     "mods/**",
+     ".github/ISSUE_TEMPLATE/*"
 ]
 SPDX-FileCopyrightText = "2010-2024 The Friendica Project"
 SPDX-License-Identifier = "CC0-1.0"

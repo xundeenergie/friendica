@@ -1,3 +1,9 @@
+{{*
+  * Copyright (C) 2010-2024, the Friendica project
+  * SPDX-FileCopyrightText: 2010-2024 the Friendica project
+  *
+  * SPDX-License-Identifier: AGPL-3.0-or-later
+  *}}
 
 <div class="generic-page-wrapper">
 	{{if $header}}<h3>{{$header}}:&nbsp;{{$name}}{{if $account_type}}&nbsp;<small>({{$account_type}})</small>{{/if}}</h3>{{/if}}

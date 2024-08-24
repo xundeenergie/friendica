@@ -1,3 +1,9 @@
+{{*
+  * Copyright (C) 2010-2024, the Friendica project
+  * SPDX-FileCopyrightText: 2010-2024 the Friendica project
+  *
+  * SPDX-License-Identifier: AGPL-3.0-or-later
+  *}}
 {{if $saved}}
 <span id="saved-search-list-inflated" class="widget inflated fakelink" onclick="openCloseWidget('saved-search-list', 'saved-search-list-inflated');">
 	<h3>{{$title}}</h3>

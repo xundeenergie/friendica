@@ -1,3 +1,9 @@
+{{*
+  * Copyright (C) 2010-2024, the Friendica project
+  * SPDX-FileCopyrightText: 2010-2024 the Friendica project
+  *
+  * SPDX-License-Identifier: AGPL-3.0-or-later
+  *}}
 {{if !$update}}<script type="text/javascript" src="view/theme/frio/frameworks/jquery-color/jquery.color.js?v={{$VERSION}}"></script>{{/if}}
 {{if $mode == display}}<script type="text/javascript" src="view/theme/frio/js/mod_display.js?v={{$VERSION}}"></script>{{/if}}
 {{$live_update nofilter}}

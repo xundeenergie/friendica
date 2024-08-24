@@ -1,3 +1,9 @@
+{{*
+  * Copyright (C) 2010-2024, the Friendica project
+  * SPDX-FileCopyrightText: 2010-2024 the Friendica project
+  *
+  * SPDX-License-Identifier: AGPL-3.0-or-later
+  *}}
 {{* The button to open the jot - in This theme we move the button with js to the second nav bar *}}
 <a class="btn btn-sm btn-primary pull-right{{if !$always_open_compose}} modal-open{{/if}}" id="jotOpen" href="compose/{{$posttype}}{{if $content}}?body={{$content}}{{/if}}" aria-label="{{$new_post}}" title="{{$new_post}}"><i class="fa fa-pencil-square-o fa-2x"></i></a>
 
