@@ -5,6 +5,7 @@
  * SPDX-FileCopyrightText: 2010-2024 the Friendica project
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
+ *
  * The site template for pure content (e.g. (modals)
  *
  * This template is used e.g for bs modals. So outputs
