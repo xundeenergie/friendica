@@ -1368,7 +1368,11 @@ class PostUpdate
 			if (empty($item)) {
 				continue;
 			}
-			Post\Engagement::storeFromItem($item);
+			try {
+				Post\Engagement::storeFromItem($item);
+			} catch (\Throwable $th) {
+				Logger::notice('Exception on storing engagement', ['uri-id' => $engagement['uri-id'], 'code' => $th->getCode(), 'message' => $th->getMessage()]);
+			}
 		}
 		DBA::close($engagements);
 
