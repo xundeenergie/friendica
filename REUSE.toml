@@ -7,6 +7,8 @@ SPDX-PackageDownloadLocation = "https://friendi.ca"
 path = [
      "doc/**",
      "spec/*",
+     "tests/**",
+     "**/.gitignore",
      "src/**/README.md",
      "mods/**",
      "static/*.jsonld",
@@ -16,6 +18,7 @@ path = [
      "view/theme/quattro/TODO",
      "view/theme/quattro/**Makefile",
      "images/icons/**",
+     "view/install/*.png",
      "view/theme/quattro/icons/*",
      "view/theme/smoothly/images/*",
      "images/screenshots/*",
