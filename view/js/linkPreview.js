@@ -3,7 +3,7 @@
 /**
  * SPDX-FileCopyrightText: 2014 Leonardo Cardoso (http://leocardz.com), Rabuzarus to use it in the decentralized social network Friendica (https://friendi.ca).
  *
- * SPDX-License-Identifier: MIT or GPL-2.0-only
+ * SPDX-License-Identifier: MIT OR GPL-2.0-only
  *
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.

@@ -1,4 +1,8 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: 2010-2024 the Friendica project
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
 # Script to setup the vagrant instance for running friendica
 #
 # DO NOT RUN on your physical machine as this won't be of any use
