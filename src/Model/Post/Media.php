@@ -185,18 +185,21 @@ class Media
 
 			// Workaround for systems that can't handle a HEAD request
 			if (!$curlResult->isSuccess() && ($curlResult->getReturnCode() == 405)) {
-				$curlResult = DI::httpClient()->get($media['url'], HttpClientAccept::DEFAULT, [HttpClientOptions::TIMEOUT => $timeout]);
-			}
-
-			if ($curlResult->isSuccess()) {
-				if (empty($media['mimetype'])) {
-					$media['mimetype'] = $curlResult->getContentType() ?? '';
+				try {
+					$curlResult = DI::httpClient()->get($media['url'], HttpClientAccept::DEFAULT, [HttpClientOptions::TIMEOUT => $timeout]);
+					if ($curlResult->isSuccess()) {
+						if (empty($media['mimetype'])) {
+							$media['mimetype'] = $curlResult->getContentType() ?? '';
+						}
+						if (empty($media['size'])) {
+							$media['size'] = (int)($curlResult->getHeader('Content-Length')[0] ?? 0);
+						}
+					} else {
+						Logger::notice('Could not fetch head', ['media' => $media]);
+					}
+				} catch (\Throwable $th) {
+					Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
 				}
-				if (empty($media['size'])) {
-					$media['size'] = (int)($curlResult->getHeader('Content-Length')[0] ?? 0);
-				}
-			} else {
-				Logger::notice('Could not fetch head', ['media' => $media]);
 			}
 		}
 

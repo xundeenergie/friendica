@@ -214,7 +214,12 @@ class Probe
 		Logger::info('Probing', ['host' => $host, 'ssl_url' => $ssl_url, 'url' => $url]);
 		$xrd = null;
 
-		$curlResult = DI::httpClient()->get($ssl_url, HttpClientAccept::XRD_XML, [HttpClientOptions::TIMEOUT => $xrd_timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		try {
+			$curlResult = DI::httpClient()->get($ssl_url, HttpClientAccept::XRD_XML, [HttpClientOptions::TIMEOUT => $xrd_timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return [];
+		}
 		$ssl_connection_error = ($curlResult->getErrorNumber() == CURLE_COULDNT_CONNECT) || ($curlResult->getReturnCode() == 0);
 		if ($curlResult->isSuccess()) {
 			$xml = $curlResult->getBodyString();
@@ -231,7 +236,12 @@ class Probe
 		}
 
 		if ($ssl_connection_error && !is_object($xrd) && !empty($url)) {
-			$curlResult = DI::httpClient()->get($url, HttpClientAccept::XRD_XML, [HttpClientOptions::TIMEOUT => $xrd_timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+			try {
+				$curlResult = DI::httpClient()->get($url, HttpClientAccept::XRD_XML, [HttpClientOptions::TIMEOUT => $xrd_timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+			} catch (\Throwable $th) {
+				Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+				return [];
+			}
 			$connection_error = ($curlResult->getErrorNumber() == CURLE_COULDNT_CONNECT) || ($curlResult->getReturnCode() == 0);
 			if ($curlResult->isTimeout()) {
 				Logger::info('Probing timeout', ['url' => $url]);
@@ -447,7 +457,12 @@ class Probe
 	 */
 	private static function getHideStatus(string $url): bool
 	{
-		$curlResult = DI::httpClient()->get($url, HttpClientAccept::HTML, [HttpClientOptions::CONTENT_LENGTH => 1000000, HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		try {
+			$curlResult = DI::httpClient()->get($url, HttpClientAccept::HTML, [HttpClientOptions::CONTENT_LENGTH => 1000000, HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return false;
+		}
 		if (!$curlResult->isSuccess()) {
 			return false;
 		}
@@ -886,7 +901,12 @@ class Probe
 
 	private static function pollZot(string $url, array $data): array
 	{
-		$curlResult = DI::httpClient()->get($url, 'application/x-zot+json', [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		try {
+			$curlResult = DI::httpClient()->get($url, 'application/x-zot+json', [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return $data;
+		}
 		if ($curlResult->isTimeout()) {
 			return $data;
 		}
@@ -1067,7 +1087,12 @@ class Probe
 	 */
 	private static function pollNoscrape(string $noscrape_url, array $data): array
 	{
-		$curlResult = DI::httpClient()->get($noscrape_url, HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		try {
+			$curlResult = DI::httpClient()->get($noscrape_url, HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return $data;
+		}
 		if ($curlResult->isTimeout()) {
 			self::$isTimeout = true;
 			return $data;
@@ -1227,7 +1252,12 @@ class Probe
 	 */
 	private static function pollHcard(string $hcard_url, array $data): array
 	{
-		$curlResult = DI::httpClient()->get($hcard_url, HttpClientAccept::HTML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		try {
+			$curlResult = DI::httpClient()->get($hcard_url, HttpClientAccept::HTML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return [];
+		}
 		if ($curlResult->isTimeout()) {
 			self::$isTimeout = true;
 			return [];
@@ -1517,7 +1547,12 @@ class Probe
 		}
 
 		// Fetch all additional data from the feed
-		$curlResult = DI::httpClient()->get($data['poll'], HttpClientAccept::FEED_XML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		try {
+			$curlResult = DI::httpClient()->get($data['poll'], HttpClientAccept::FEED_XML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return [];
+		}
 		if ($curlResult->isTimeout()) {
 			self::$isTimeout = true;
 			return [];
@@ -1904,7 +1939,12 @@ class Probe
 			return '';
 		}
 
-		$curlResult = DI::httpClient()->get($gserver['noscrape'] . '/' . $data['nick'], HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		try {
+			$curlResult = DI::httpClient()->get($gserver['noscrape'] . '/' . $data['nick'], HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return '';
+		}
 
 		if ($curlResult->isSuccess() && !empty($curlResult->getBodyString())) {
 			$noscrape = json_decode($curlResult->getBodyString(), true);
@@ -1980,7 +2020,12 @@ class Probe
 	private static function updateFromFeed(array $data): string
 	{
 		// Search for the newest entry in the feed
-		$curlResult = DI::httpClient()->get($data['poll'], HttpClientAccept::ATOM_XML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		try {
+			$curlResult = DI::httpClient()->get($data['poll'], HttpClientAccept::ATOM_XML, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTINFO]);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return '';
+		}
 		if (!$curlResult->isSuccess() || !$curlResult->getBodyString()) {
 			return '';
 		}

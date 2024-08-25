@@ -366,7 +366,12 @@ class HTTPSignature
 			return true;
 		}
 
-		$postResult = self::post($data, $target, $owner);
+		try {
+			$postResult = self::post($data, $target, $owner);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return false;
+		}
 		$return_code = $postResult->getReturnCode();
 
 		return ($return_code >= 200) && ($return_code <= 299);

@@ -152,7 +152,12 @@ class OnePoll
 
 		$cookiejar = tempnam(System::getTempPath(), 'cookiejar-onepoll-');
 		Item::incrementInbound(Protocol::FEED);
-		$curlResult = DI::httpClient()->get($contact['poll'], HttpClientAccept::FEED_XML, [HttpClientOptions::COOKIEJAR => $cookiejar, HttpClientOptions::REQUEST => HttpClientRequest::FEEDFETCHER]);
+		try {
+			$curlResult = DI::httpClient()->get($contact['poll'], HttpClientAccept::FEED_XML, [HttpClientOptions::COOKIEJAR => $cookiejar, HttpClientOptions::REQUEST => HttpClientRequest::FEEDFETCHER]);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return false;
+		}
 		unlink($cookiejar);
 		Logger::debug('Polled feed', ['url' => $contact['poll'], 'http-code' => $curlResult->getReturnCode(), 'redirect-url' => $curlResult->getRedirectUrl()]);
 
@@ -492,7 +497,12 @@ class OnePoll
 			Contact::update(['hub-verify' => $verify_token], ['id' => $contact['id']]);
 		}
 
-		$postResult = DI::httpClient()->post($url, $params, [], 0, HttpClientRequest::PUBSUB);
+		try {
+			$postResult = DI::httpClient()->post($url, $params, [], 0, HttpClientRequest::PUBSUB);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return false;
+		}
 
 		Logger::info('Hub subscription done', ['result' => $postResult->getReturnCode()]);
 

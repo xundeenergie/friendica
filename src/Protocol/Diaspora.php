@@ -2955,7 +2955,12 @@ class Diaspora
 		if (!intval(DI::config()->get('system', 'diaspora_test'))) {
 			$content_type = (($public_batch) ? 'application/magic-envelope+xml' : 'application/json');
 
-			$postResult = DI::httpClient()->post($dest_url . '/', $envelope, ['Content-Type' => $content_type], 0, HttpClientRequest::DIASPORA);
+			try {
+				$postResult = DI::httpClient()->post($dest_url . '/', $envelope, ['Content-Type' => $content_type], 0, HttpClientRequest::DIASPORA);
+			} catch (\Throwable $th) {
+				Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+				return 0;
+			}
 			$return_code = $postResult->getReturnCode();
 			Item::incrementOutbound(Protocol::DIASPORA);
 		} else {

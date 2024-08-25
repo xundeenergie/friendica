@@ -115,10 +115,16 @@ class Delivery
 			$data = ActivityPub\Transmitter::createCachedActivityFromItem($item_id);
 			if (!empty($data)) {
 				$timestamp  = microtime(true);
-				$response   = HTTPSignature::post($data, $inbox, $owner);
-				$runtime    = microtime(true) - $timestamp;
-				$success    = $response->isSuccess();
-				$serverfail = $response->isTimeout();
+				try {
+					$response   = HTTPSignature::post($data, $inbox, $owner);
+					$success    = $response->isSuccess();
+					$serverfail = $response->isTimeout();
+				} catch (\Throwable $th) {
+					Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+					$success    = false;
+					$serverfail = true;
+				}
+				$runtime = microtime(true) - $timestamp;
 				if (!$success) {
 					// 5xx errors are problems on the server. We don't need to continue delivery then.
 					if (!$serverfail && ($response->getReturnCode() >= 500) && ($response->getReturnCode() <= 599)) {
