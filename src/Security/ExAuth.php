@@ -230,7 +230,11 @@ class ExAuth
 
 		$url = ($ssl ? 'https' : 'http') . '://' . $host . '/noscrape/' . $user;
 
-		$curlResult = DI::httpClient()->get($url, HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTVERIFIER]);
+		try {
+			$curlResult = DI::httpClient()->get($url, HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTVERIFIER]);
+		} catch (\Throwable $th) {
+			return false;
+		}
 
 		if (!$curlResult->isSuccess()) {
 			return false;

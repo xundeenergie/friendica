@@ -65,7 +65,12 @@ class ParseUrl
 
 		// Workaround for systems that can't handle a HEAD request. Don't retry on timeouts.
 		if (!$curlResult->isSuccess() && ($curlResult->getReturnCode() >= 400) && !in_array($curlResult->getReturnCode(), [408, 504])) {
-			$curlResult = DI::httpClient()->get($url, $accept, array_merge([HttpClientOptions::CONTENT_LENGTH => 1000000], $options));
+			try {
+				$curlResult = DI::httpClient()->get($url, $accept, array_merge([HttpClientOptions::CONTENT_LENGTH => 1000000], $options));
+			} catch (\Throwable $th) {
+				Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+				return [];
+			}
 		}
 
 		if (!$curlResult->isSuccess()) {

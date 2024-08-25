@@ -588,7 +588,12 @@ class Photo
 
 		$filename = basename($image_url);
 		if (!empty($image_url)) {
-			$ret = DI::httpClient()->get($image_url, HttpClientAccept::IMAGE, [HttpClientOptions::REQUEST => HttpClientRequest::MEDIAPROXY]);
+			try {
+				$ret = DI::httpClient()->get($image_url, HttpClientAccept::IMAGE, [HttpClientOptions::REQUEST => HttpClientRequest::MEDIAPROXY]);
+			} catch (\Throwable $th) {
+				Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+				return false;
+			}
 			Logger::debug('Got picture', ['Content-Type' => $ret->getHeader('Content-Type'), 'url' => $image_url]);
 			$img_str = $ret->getBodyString();
 			$type = $ret->getContentType();
@@ -1043,7 +1048,12 @@ class Photo
 	{
 		$filename = basename($image_url);
 		if (!empty($image_url)) {
-			$ret = DI::httpClient()->get($image_url, HttpClientAccept::IMAGE, [HttpClientOptions::REQUEST => HttpClientRequest::MEDIAPROXY]);
+			try {
+				$ret = DI::httpClient()->get($image_url, HttpClientAccept::IMAGE, [HttpClientOptions::REQUEST => HttpClientRequest::MEDIAPROXY]);
+			} catch (\Throwable $th) {
+				Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+				return [];
+			}
 			Logger::debug('Got picture', ['Content-Type' => $ret->getHeader('Content-Type'), 'url' => $image_url]);
 			$img_str = $ret->getBodyString();
 			$type = $ret->getContentType();

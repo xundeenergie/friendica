@@ -1411,12 +1411,18 @@ class User
 			$photo_failure = false;
 
 			$filename = basename($photo);
-			$curlResult = DI::httpClient()->get($photo, HttpClientAccept::IMAGE, [HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
-			if ($curlResult->isSuccess()) {
-				Logger::debug('Got picture', ['Content-Type' => $curlResult->getHeader('Content-Type'), 'url' => $photo]);
-				$img_str = $curlResult->getBodyString();
-				$type = $curlResult->getContentType();
-			} else {
+			try {
+				$curlResult = DI::httpClient()->get($photo, HttpClientAccept::IMAGE, [HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
+				if ($curlResult->isSuccess()) {
+					Logger::debug('Got picture', ['Content-Type' => $curlResult->getHeader('Content-Type'), 'url' => $photo]);
+					$img_str = $curlResult->getBodyString();
+					$type = $curlResult->getContentType();
+				} else {
+					$img_str = '';
+					$type = '';
+				}
+			} catch (\Throwable $th) {
+				Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
 				$img_str = '';
 				$type = '';
 			}

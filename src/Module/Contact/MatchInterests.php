@@ -109,10 +109,20 @@ class MatchInterests extends BaseModule
 				continue;
 			}
 
-			$result = $this->httpClient->post($server . '/search/user/tags', $searchParameters, [], 0, HttpClientRequest::CONTACTDISCOVER);
+			try {
+				$result = $this->httpClient->post($server . '/search/user/tags', $searchParameters, [], 0, HttpClientRequest::CONTACTDISCOVER);
+			} catch (\Throwable $th) {
+				$this->logger->notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+				continue;
+			}
 			if (!$result->isSuccess()) {
 				// try legacy endpoint
-				$result = $this->httpClient->post($server . '/msearch', $searchParameters, [], 0, HttpClientRequest::CONTACTDISCOVER);
+				try {
+					$result = $this->httpClient->post($server . '/msearch', $searchParameters, [], 0, HttpClientRequest::CONTACTDISCOVER);
+				} catch (\Throwable $th) {
+					$this->logger->notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+					continue;
+				}
 				if (!$result->isSuccess()) {
 					$this->logger->notice('Search-Endpoint not available for server.', ['server' => $server]);
 					continue;
