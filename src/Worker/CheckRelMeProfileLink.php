@@ -51,7 +51,12 @@ class CheckRelMeProfileLink
 		}
 
 		$xrd_timeout = DI::config()->get('system', 'xrd_timeout');
-		$curlResult  = DI::httpClient()->get($owner['homepage'], HttpClientAccept::HTML, [HttpClientOptions::TIMEOUT => $xrd_timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTACTVERIFIER]);
+		try {
+			$curlResult = DI::httpClient()->get($owner['homepage'], HttpClientAccept::HTML, [HttpClientOptions::TIMEOUT => $xrd_timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTACTVERIFIER]);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return;
+		}
 		if (!$curlResult->isSuccess()) {
 			Logger::notice('Could not cURL the homepage URL', ['owner homepage' => $owner['homepage']]);
 			return;

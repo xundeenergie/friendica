@@ -79,6 +79,7 @@ class Network
 				try {
 					$curlResult = DI::httpClient()->get($url, HttpClientAccept::DEFAULT, $options);
 				} catch (\Exception $e) {
+					Logger::notice('Got exception', ['code' => $e->getCode(), 'message' => $e->getMessage()]);
 					return false;
 				}
 			}

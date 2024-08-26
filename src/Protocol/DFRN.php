@@ -996,7 +996,12 @@ class DFRN
 
 		$content_type = ($public_batch ? 'application/magic-envelope+xml' : 'application/json');
 
-		$postResult = DI::httpClient()->post($dest_url, $envelope, ['Content-Type' => $content_type], 0, HttpClientRequest::DFRN);
+		try {
+			$postResult = DI::httpClient()->post($dest_url, $envelope, ['Content-Type' => $content_type], 0, HttpClientRequest::DFRN);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return -25;
+		}
 		Item::incrementOutbound(Protocol::DFRN);
 		$xml = $postResult->getBodyString();
 

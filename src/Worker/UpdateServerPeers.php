@@ -32,7 +32,12 @@ class UpdateServerPeers
 			return;
 		}
 
-		$ret = DI::httpClient()->get($url . '/api/v1/instance/peers', HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::SERVERDISCOVER]);
+		try {
+			$ret = DI::httpClient()->get($url . '/api/v1/instance/peers', HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::SERVERDISCOVER]);
+		} catch (\Throwable $th) {
+			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return;
+		}
 		if (!$ret->isSuccess() || empty($ret->getBodyString())) {
 			Logger::info('Server is not reachable or does not offer the "peers" endpoint', ['url' => $url]);
 			return;

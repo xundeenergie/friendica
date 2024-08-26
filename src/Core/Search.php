@@ -220,7 +220,12 @@ class Search
 			$return = Contact::searchByName($search, $mode, true);
 		} else {
 			$p = $page > 1 ? 'p=' . $page : '';
-			$curlResult = DI::httpClient()->get(self::getGlobalDirectory() . '/search/people?' . $p . '&q=' . urlencode($search), HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTDISCOVER]);
+			try {
+				$curlResult = DI::httpClient()->get(self::getGlobalDirectory() . '/search/people?' . $p . '&q=' . urlencode($search), HttpClientAccept::JSON, [HttpClientOptions::REQUEST => HttpClientRequest::CONTACTDISCOVER]);
+			} catch (\Throwable $th) {
+				Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+				return [];
+			}
 			if ($curlResult->isSuccess()) {
 				$searchResult = json_decode($curlResult->getBodyString(), true);
 				if (!empty($searchResult['profiles'])) {
