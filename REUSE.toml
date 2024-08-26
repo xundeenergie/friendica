@@ -12,6 +12,7 @@ path = [
      "spec/*",
      "tests/**",
      ".devcontainer/**",
+     ".vscode/*",
      ".phpactor.json",
      "**/.gitignore",
      "src/**/README.md",
