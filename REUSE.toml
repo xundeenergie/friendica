@@ -5,9 +5,14 @@ SPDX-PackageDownloadLocation = "https://friendi.ca"
 
 [[annotations]]
 path = [
+     "database.sql",
+     "composer.*",
+     "bin/dev/php-cs-fixer/composer.*",
      "doc/**",
      "spec/*",
      "tests/**",
+     ".devcontainer/**",
+     ".phpactor.json",
      "**/.gitignore",
      "src/**/README.md",
      "mods/**",
@@ -17,7 +22,12 @@ path = [
      "view/theme/vier/README.md",
      "view/theme/quattro/TODO",
      "view/theme/quattro/**Makefile",
+     "view/theme/**/screenshot.jpg",
+     "view/theme/**/screenshot.png",
+     "view/theme/duepuntozero/deriv/**",
      "images/icons/**",
+     "images/friendica*",
+     "images/ff*",
      "view/install/*.png",
      "view/theme/quattro/icons/*",
      "view/theme/smoothly/images/*",
@@ -32,6 +42,11 @@ SPDX-License-Identifier = "CC0-1.0"
 path = "view/lang/**/strings.php"
 SPDX-FileCopyrightText = "2010-2024 The Friendica Project"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = "view/fonts/*"
+SPDX-FileCopyrightText = "2014, Andi Stadler for the Friendica project"
+SPDX-License-Identifier = "CC-BY-SA-4.0"
 
 [[annotations]]
 path = [
@@ -141,3 +156,8 @@ SPDX-License-Identifier = "MIT"
 path = "view/js/vanillaEmojiPicker/*"
 SPDX-FileCopyrightText = "2020, woody180 https://github.com/woody180/vanilla-javascript-emoji-picker"
 SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "view/js/country.js"
+SPDX-FileCopyrightText = "Jim Carlock"
+SPDX-License-Identifier = "CC0-1.0"
