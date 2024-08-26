@@ -29,6 +29,7 @@ path = [
      "images/icons/**",
      "images/friendica*",
      "images/ff*",
+     "images/person-*.jpg",
      "view/install/*.png",
      "view/theme/quattro/icons/*",
      "view/theme/smoothly/images/*",
