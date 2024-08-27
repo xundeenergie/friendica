@@ -814,7 +814,7 @@ class BBCode
 
 				$content = preg_replace(Strings::autoLinkRegEx(), '<a href="$1">$1</a>', $match[3]);
 
-				return $match[1] . $callback($attributes, $author_contact, $content, trim($match[1]) != '');
+				return $match[1] . $callback($attributes, $author_contact, $content ?? '', trim($match[1]) != '');
 			},
 			$text
 		);
