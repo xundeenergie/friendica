@@ -107,7 +107,7 @@ class InstanceV2 extends BaseApi
 			$this->config->get('config', 'max_import_size')
 		), 99, 23);
 
-		$image_size_limit = Strings::getBytesFromShorthand($this->config->get('system', 'maximagesize'));
+		$image_size_limit = Strings::getBytesFromShorthand($this->config->get('system', 'maximagesize') ?? 0);
 		$max_image_length = $this->config->get('system', 'max_image_length');
 		if ($max_image_length > 0) {
 			$image_matrix_limit = pow($max_image_length, 2);
@@ -115,7 +115,7 @@ class InstanceV2 extends BaseApi
 			$image_matrix_limit = 33177600; // 5760^2
 		}
 
-		$media_size_limit = Strings::getBytesFromShorthand($this->config->get('system', 'maxfilesize'));
+		$media_size_limit = Strings::getBytesFromShorthand($this->config->get('system', 'maxfilesize') ?? 0);
 		if (empty($media_size_limit)) {
 			$media_size_limit = Strings::getBytesFromShorthand(ini_get('upload_max_filesize'));
 		}
