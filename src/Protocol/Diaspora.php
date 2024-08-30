@@ -3349,20 +3349,20 @@ class Diaspora
 				}
 			}
 
-			// convert to markdown
-			$body = html_entity_decode(BBCode::toMarkdown($body));
-
-			// Adding the title
-			if (strlen($title)) {
-				$body = '### ' . html_entity_decode($title) . "\n\n" . $body;
-			}
-
 			$attachments = Post\Media::getByURIId($item['uri-id'], [Post\Media::DOCUMENT, Post\Media::TORRENT]);
 			if (!empty($attachments)) {
 				$body .= "\n[hr]\n";
 				foreach ($attachments as $attachment) {
-					$body .= "[" . $attachment['description'] . "](" . $attachment['url'] . ")\n";
+					$body .= "[url=" . $attachment['url'] . "]" . $attachment['description'] . "[/url]\n";
 				}
+			}
+
+			// convert to markdown
+			$body = BBCode::toMarkdown($body);
+
+			// Adding the title
+			if (strlen($title)) {
+				$body = '### ' . html_entity_decode($title) . "\n\n" . $body;
 			}
 
 			$location = [];

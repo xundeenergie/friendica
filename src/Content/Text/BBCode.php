@@ -1306,8 +1306,10 @@ class BBCode
 
 		Hook::callAll('bbcode', $text);
 
-		$text = self::performWithEscapedTags($text, ['code'], function ($text) use ($try_oembed, $simple_html, $for_plaintext, $uriid) {
-			$text = self::performWithEscapedTags($text, ['noparse', 'nobb', 'pre'], function ($text) use ($try_oembed, $simple_html, $for_plaintext, $uriid) {
+		$ev = Event::fromBBCode($text);
+
+		$text = self::performWithEscapedTags($text, ['code'], function ($text) use ($try_oembed, $simple_html, $for_plaintext, $uriid, $ev) {
+			$text = self::performWithEscapedTags($text, ['noparse', 'nobb', 'pre'], function ($text) use ($try_oembed, $simple_html, $for_plaintext, $uriid, $ev) {
 				/*
 				 * preg_match_callback function to replace potential Oembed tags with Oembed content
 				 *
@@ -1361,7 +1363,7 @@ class BBCode
 				$text = self::convertQuotesToHtml($text);
 				$text = self::convertVideoPlatformsToHtml($text, $try_oembed);
 				$text = self::convertOEmbedToHtml($text, $uriid);
-				$text = self::convertEventsToHtml($text, $simple_html, $uriid);
+				$text = self::convertEventsToHtml($text, $simple_html, $uriid, $ev);
 
 				// Some simpler non standard elements
 				$text = self::convertEmojisToHtml($text, $simple_html);
@@ -1510,13 +1512,11 @@ class BBCode
 		return $text;
 	}
 
-	private static function convertEventsToHtml(string $text, int $simple_html, int $uriid): string
+	private static function convertEventsToHtml(string $text, int $simple_html, int $uriid, array $ev): string
 	{
 		// If we find any event code, turn it into an event.
 		// After we're finished processing the bbcode we'll
 		// replace all of the event code with a reformatted version.
-
-		$ev = Event::fromBBCode($text);
 
 		// If we found an event earlier, strip out all the event code and replace with a reformatted version.
 		// Replace the event-start section with the entire formatted event. The other bbcode is stripped.
