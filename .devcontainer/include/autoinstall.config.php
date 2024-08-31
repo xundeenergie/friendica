@@ -31,7 +31,6 @@ return [
 		'default_timezone' => 'UTC',
 		'language' => 'en',
 		'basepath' => '${workspaceFolder}',
-		'url' => 'http://${ServerName}:${ServerPort}',
-		'pidfile' => '/tmp/daemon.pid',
+		'url' => 'http://${ServerName}:${ServerPort}'
 	],
 ];

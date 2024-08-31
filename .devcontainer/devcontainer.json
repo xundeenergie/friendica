@@ -19,9 +19,6 @@
 	"postStartCommand": "service apache2 start",
 
 	"forwardPorts": [
-		80,
-		443,
-		3306,
 		8080
 	],
 
@@ -38,8 +35,8 @@
 				"php.suggest.basic": false
 			}
 		}
-	},
+	}
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	"remoteUser": "vscode"
+	//"remoteUser": "root"
 }
