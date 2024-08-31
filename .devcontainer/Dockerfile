@@ -61,13 +61,13 @@ RUN apt-get install -y --no-install-recommends \
 # pecl will claim success even if one install fails, so we need to perform each install separately
 RUN pecl install apcu-${apcu_version}; \
         pecl install memcached-${memcached_version}; \
-#       pecl install redis-${redis_version}; \
-#       pecl install imagick-${imagick_version}; \
+        pecl install redis-${redis_version}; \
+        pecl install imagick-${imagick_version}; \
         docker-php-ext-enable \
             apcu \
-            memcached
-#            redis \
-#            imagick
+            memcached \
+            redis \
+            imagick
 
 RUN apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
