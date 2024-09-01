@@ -61,11 +61,13 @@ class HttpClient implements ICanSendHttpRequests
 
 		$host = parse_url($url, PHP_URL_HOST);
 		if (empty($host)) {
-			throw new \InvalidArgumentException('Unable to retrieve the host in URL: ' . $url);
+			$this->logger->notice('Unable to retrieve the host in URL', ['url' => $url]);
+			$this->profiler->stopRecording();
+			return CurlResult::createErrorCurl($this->logger, $url);
 		}
 
 		if (!filter_var($host, FILTER_VALIDATE_IP) && !@dns_get_record($host . '.', DNS_A) && !@dns_get_record($host . '.', DNS_AAAA)) {
-			$this->logger->debug('URL cannot be resolved.', ['url' => $url]);
+			$this->logger->info('URL cannot be resolved.', ['url' => $url]);
 			$this->profiler->stopRecording();
 			return CurlResult::createErrorCurl($this->logger, $url);
 		}
@@ -75,7 +77,7 @@ class HttpClient implements ICanSendHttpRequests
 		}
 
 		if (strlen($url) > 1000) {
-			$this->logger->debug('URL is longer than 1000 characters.', ['url' => $url]);
+			$this->logger->info('URL is longer than 1000 characters.', ['url' => $url]);
 			$this->profiler->stopRecording();
 			return CurlResult::createErrorCurl($this->logger, substr($url, 0, 200));
 		}
