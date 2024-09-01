@@ -12,6 +12,7 @@
 <script type="text/javascript">
 	var editor = false;
 	var textlen = 0;
+	var formModified = false;
 
 	function initEditor(callback) {
 		if (editor == false) {
@@ -29,8 +30,9 @@
 			});
 			$(".jothidden").show();
 			$("#profile-jot-text").keyup(function(){
-				var textlen = $(this).val().length;
+				textlen = $(this).val().length;
 				$('#character-counter').text(textlen);
+				formModified = true; // Mark the form as modified when the user types
 			});
 
 			editor = true;
@@ -43,6 +45,21 @@
 	function enableOnUser(){
 		initEditor();
 	}
+
+	// Warn user before leaving the page if the form is modified
+	window.addEventListener('beforeunload', function (e) {
+		if (formModified) {
+			var confirmationMessage = 'There are unsaved changes. Are you sure you want to leave this page?';
+			e.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+			return confirmationMessage; // Gecko, WebKit, Chrome <34
+		}
+	});
+
+	// Reset formModified flag after successful submission
+	function resetFormModifiedFlag() {
+		formModified = false;
+	}
+
 </script>
 
 <script type="text/javascript">
@@ -98,9 +115,10 @@
 				type: 'POST',
 			})
 			.then(function () {
-				// Reset to form for jot reuse in the same page
+				// Reset the form for jot reuse in the same page
 				e.target.reset();
 				$('#jot-modal').modal('hide');
+				resetFormModifiedFlag(); // Reset formModified after successful submission
 			})
 			.always(function() {
 				// Reset the post_id_random to avoid duplicate post errors
@@ -118,7 +136,7 @@
 				}
 
 				NavUpdate();
-			})
+			});
 		});
 
 		$('#wall-image-upload').on('click', function(){
@@ -195,6 +213,7 @@
 		reply = prompt("{{$vidurl}}");
 		if(reply && reply.length) {
 			addeditortext('[video]' + reply + '[/video]');
+			formModified = true; // Mark the form as modified
 		}
 	}
 
@@ -202,6 +221,7 @@
 		reply = prompt("{{$audurl}}");
 		if(reply && reply.length) {
 			addeditortext('[audio]' + reply + '[/audio]');
+			formModified = true; // Mark the form as modified
 		}
 	}
 
@@ -209,6 +229,7 @@
 		reply = prompt("{{$whereareu}}", $('#jot-location').val());
 		if(reply && reply.length) {
 			$('#jot-location').val(reply);
+			formModified = true; // Mark the form as modified
 		}
 	}
 
@@ -219,6 +240,7 @@
 			initEditor(function(){
 				addeditortext(data);
 			});
+			formModified = true; // Mark the form as modified
 		});
 
 		jotShow();
@@ -248,6 +270,7 @@
 				initEditor(function(){
 					addeditortext(data);
 					$('#profile-rotator').hide();
+					formModified = true; // Mark the form as modified
 				});
 			});
 			autosize.update($("#profile-jot-text"));
@@ -267,6 +290,7 @@
 				if(timer) clearTimeout(timer);
 				timer = setTimeout(NavUpdate,3000);
 				liking = 1;
+				formModified = true; // Mark the form as modified
 			}
 		}
 	}
@@ -295,6 +319,7 @@
 					liking = 1;
 					force_update = true;
 					$.colorbox.close();
+					formModified = true; // Mark the form as modified
 				} else {
 					$("#id_term").css("border-color","#FF0000");
 				}
@@ -306,6 +331,7 @@
 	function jotClearLocation() {
 		$('#jot-coord').val('');
 		$('#profile-nolocation-wrapper').hide();
+		formModified = true; // Mark the form as modified
 	}
 
 	function addeditortext(data) {
@@ -318,6 +344,7 @@
 		//insert the data as new value
 		textfield.value = currentText + data;
 		autosize.update($("#profile-jot-text"));
+		formModified = true; // Mark the form as modified
 	}
 
 	{{$geotag nofilter}}
@@ -351,3 +378,4 @@
 		toggleJotNav(elemMobile[0]);
 	}
 </script>
+
