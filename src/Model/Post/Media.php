@@ -181,25 +181,25 @@ class Media
 		// Fetch the mimetype or size if missing.
 		if (Network::isValidHttpUrl($media['url']) && (empty($media['mimetype']) || empty($media['size']))) {
 			$timeout = DI::config()->get('system', 'xrd_timeout');
-			$curlResult = DI::httpClient()->head($media['url'], [HttpClientOptions::TIMEOUT => $timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
+			try {
+				$curlResult = DI::httpClient()->head($media['url'], [HttpClientOptions::TIMEOUT => $timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
 
-			// Workaround for systems that can't handle a HEAD request
-			if (!$curlResult->isSuccess() && ($curlResult->getReturnCode() == 405)) {
-				try {
+				// Workaround for systems that can't handle a HEAD request
+				if (!$curlResult->isSuccess() && ($curlResult->getReturnCode() == 405)) {
 					$curlResult = DI::httpClient()->get($media['url'], HttpClientAccept::DEFAULT, [HttpClientOptions::TIMEOUT => $timeout]);
-					if ($curlResult->isSuccess()) {
-						if (empty($media['mimetype'])) {
-							$media['mimetype'] = $curlResult->getContentType() ?? '';
-						}
-						if (empty($media['size'])) {
-							$media['size'] = (int)($curlResult->getHeader('Content-Length')[0] ?? 0);
-						}
-					} else {
-						Logger::notice('Could not fetch head', ['media' => $media]);
-					}
-				} catch (\Throwable $th) {
-					Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
 				}
+				if ($curlResult->isSuccess()) {
+					if (empty($media['mimetype'])) {
+						$media['mimetype'] = $curlResult->getContentType() ?? '';
+					}
+					if (empty($media['size'])) {
+						$media['size'] = (int)($curlResult->getHeader('Content-Length')[0] ?? 0);
+					}
+				} else {
+					Logger::notice('Could not fetch head', ['media' => $media]);
+				}
+			} catch (\Throwable $th) {
+				Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
 			}
 		}
 
@@ -684,7 +684,7 @@ class Media
 			foreach ($matches[1] as $url) {
 				Logger::info('Got page url (link without description)', ['uri-id' => $uriid, 'url' => $url]);
 				$result = self::insert(['uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $url], false, $network);
-				if ($result && !in_array($network, [Protocol::ACTIVITYPUB, Protocol::OSTATUS, Protocol::DIASPORA])) {
+				if ($result && !in_array($network, [Protocol::ACTIVITYPUB, Protocol::DIASPORA])) {
 					self::revertHTMLType($uriid, $url, $fullbody);
 					Logger::debug('Revert HTML type', ['uri-id' => $uriid, 'url' => $url]);
 				} elseif ($result) {
@@ -700,7 +700,7 @@ class Media
 			foreach ($matches[1] as $url) {
 				Logger::info('Got page url (link with description)', ['uri-id' => $uriid, 'url' => $url]);
 				$result = self::insert(['uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $url], false, $network);
-				if ($result && !in_array($network, [Protocol::ACTIVITYPUB, Protocol::OSTATUS, Protocol::DIASPORA])) {
+				if ($result && !in_array($network, [Protocol::ACTIVITYPUB, Protocol::DIASPORA])) {
 					self::revertHTMLType($uriid, $url, $fullbody);
 					Logger::debug('Revert HTML type', ['uri-id' => $uriid, 'url' => $url]);
 				} elseif ($result) {
