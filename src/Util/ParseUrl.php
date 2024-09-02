@@ -245,6 +245,7 @@ class ParseUrl
 		}
 
 		$body = $curlResult->getBodyString();
+		$siteinfo['size'] = mb_strlen($body);
 
 		$charset = '';
 		try {
