@@ -1715,9 +1715,11 @@ class Probe
 		}
 
 		$feed = $curlResult->getBodyString();
-		$feed_data = Feed::import($feed);
+		if (strpos($curlResult->getContentType(), 'xml') !== false) {
+			$feed_data = Feed::import($feed);
+		}
 
-		if (!$feed_data) {
+		if (empty($feed_data)) {
 			if (!$probe) {
 				return [];
 			}
