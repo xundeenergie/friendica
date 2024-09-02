@@ -51,11 +51,11 @@ class Event
 			$o = '';
 
 			if (!empty($event['summary'])) {
-				$o .= "<h3>" . BBCode::convertForUriId($uriid, Strings::escapeHtml($event['summary']), $simple) . "</h3>";
+				$o .= "<h3>" . strip_tags(BBCode::convertForUriId($uriid, $event['summary'], $simple)) . "</h3>";
 			}
 
 			if (!empty($event['desc'])) {
-				$o .= "<div>" . BBCode::convertForUriId($uriid, Strings::escapeHtml($event['desc']), $simple) . "</div>";
+				$o .= "<div>" . BBCode::convertForUriId($uriid, $event['desc'], $simple) . "</div>";
 			}
 
 			$o .= "<h4>" . DI::l10n()->t('Starts:') . "</h4><p>" . $event_start . "</p>";
@@ -65,7 +65,7 @@ class Event
 			}
 
 			if (!empty($event['location'])) {
-				$o .= "<h4>" . DI::l10n()->t('Location:') . "</h4><p>" . BBCode::convertForUriId($uriid, Strings::escapeHtml($event['location']), $simple) . "</p>";
+				$o .= "<h4>" . DI::l10n()->t('Location:') . "</h4><p>" . strip_tags(BBCode::convertForUriId($uriid, $event['location'], $simple)) . "</p>";
 			}
 
 			return $o;
@@ -73,7 +73,7 @@ class Event
 
 		$o = '<div class="vevent">' . "\r\n";
 
-		$o .= '<div class="summary event-summary">' . BBCode::convertForUriId($uriid, Strings::escapeHtml($event['summary']), $simple) . '</div>' . "\r\n";
+		$o .= '<div class="summary event-summary">' . BBCode::convertForUriId($uriid, $event['summary'], $simple) . '</div>' . "\r\n";
 
 		$o .= '<div class="event-start"><span class="event-label">' . DI::l10n()->t('Starts:') . '</span>&nbsp;<span class="dtstart" title="'
 			. DateTimeFormat::local($event['start'], DateTimeFormat::ATOM)
@@ -88,12 +88,12 @@ class Event
 		}
 
 		if (!empty($event['desc'])) {
-			$o .= '<div class="description event-description">' . BBCode::convertForUriId($uriid, Strings::escapeHtml($event['desc']), $simple) . '</div>' . "\r\n";
+			$o .= '<div class="description event-description">' . BBCode::convertForUriId($uriid, $event['desc'], $simple) . '</div>' . "\r\n";
 		}
 
 		if (!empty($event['location'])) {
 			$o .= '<div class="event-location"><span class="event-label">' . DI::l10n()->t('Location:') . '</span>&nbsp;<span class="location">'
-				. BBCode::convertForUriId($uriid, Strings::escapeHtml($event['location']), $simple)
+				. strip_tags(BBCode::convertForUriId($uriid, $event['location'], $simple))
 				. '</span></div>' . "\r\n";
 
 			// Include a map of the location if the [map] BBCode is used.
@@ -652,7 +652,7 @@ class Event
 			$drop =                  ['calendar/api/delete/' . $event['id'], DI::l10n()->t('Delete event'), '', ''];
 		}
 
-		$title = BBCode::convertForUriId($event['uri-id'], Strings::escapeHtml($event['summary']));
+		$title = strip_tags(BBCode::convertForUriId($event['uri-id'], $event['summary']));
 		if (!$title) {
 			[$title, $_trash] = explode("<br", BBCode::convertForUriId($event['uri-id'], Strings::escapeHtml($event['desc'])), BBCode::TWITTER_API);
 		}
