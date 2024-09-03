@@ -58,34 +58,32 @@ class Import extends \Friendica\Module\BaseModeration
 				$this->blocklist = $this->localBlocklist::extractFromCSVFile($_FILES['listfile']['tmp_name']);
 			} catch (\Throwable $e) {
 				$this->systemMessages->addNotice($this->t('Error importing pattern file'));
+				return;
 			}
-
-			return;
 		}
-
-		if (isset($request['page_blocklist_import'])) {
-			$blocklist = json_decode($request['blocklist'], true);
-			if ($blocklist === null) {
+		else if (isset($request['page_blocklist_import'])) {
+			$this->blocklist = json_decode($request['blocklist'], true);
+			if ($this->blocklist === null) {
 				$this->systemMessages->addNotice($this->t('Error importing pattern file'));
 				return;
 			}
-
-			if (($request['mode'] ?? 'append') == 'replace') {
-				$this->localBlocklist->set($blocklist);
-				$this->systemMessages->addNotice($this->t('Local blocklist replaced with the provided file.'));
-			} else {
-				$count = $this->localBlocklist->append($blocklist);
-				if ($count) {
-					$this->systemMessages->addNotice($this->tt('%d pattern was added to the local blocklist.', '%d patterns were added to the local blocklist.', $count));
-				} else {
-					$this->systemMessages->addNotice($this->t('No pattern was added to the local blocklist.'));
-				}
-			}
-
-			Worker::add(Worker::PRIORITY_LOW, 'UpdateBlockedServers');
-
-			$this->baseUrl->redirect('/moderation/blocklist/server');
 		}
+
+		if (($request['mode'] ?? 'append') == 'replace') {
+			$this->localBlocklist->set($this->blocklist);
+			$this->systemMessages->addNotice($this->t('Local blocklist replaced with the provided file.'));
+		} else {
+			$count = $this->localBlocklist->append($this->blocklist);
+			if ($count) {
+				$this->systemMessages->addNotice($this->tt('%d pattern was added to the local blocklist.', '%d patterns were added to the local blocklist.', $count));
+			} else {
+				$this->systemMessages->addNotice($this->t('No pattern was added to the local blocklist.'));
+			}
+		}
+
+		Worker::add(Worker::PRIORITY_LOW, 'UpdateBlockedServers');
+
+		$this->baseUrl->redirect('/moderation/blocklist/server');
 	}
 
 	/**
