@@ -31,6 +31,6 @@ return [
 		'default_timezone' => 'UTC',
 		'language' => 'en',
 		'basepath' => '${workspaceFolder}',
-		'url' => 'http://${ServerName}:${ServerPort}',
+		'url' => 'http://${ServerName}:${ServerPort}'
 	],
 ];
