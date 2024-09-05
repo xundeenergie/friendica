@@ -107,11 +107,15 @@ class Cron
 
 			Worker::add(Worker::PRIORITY_LOW, 'ExpireSearchIndex');
 
+			Worker::add(Worker::PRIORITY_LOW, 'Expire');
+
 			Worker::add(Worker::PRIORITY_LOW, 'RemoveUnusedTags');
 
 			Worker::add(Worker::PRIORITY_LOW, 'RemoveUnusedContacts');
 
 			Worker::add(Worker::PRIORITY_LOW, 'RemoveUnusedAvatars');
+
+			Worker::add(Worker::PRIORITY_LOW, 'NodeInfo');
 
 			// check upstream version?
 			Worker::add(Worker::PRIORITY_LOW, 'CheckVersion');

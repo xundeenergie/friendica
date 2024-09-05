@@ -29,8 +29,8 @@ class Expire
 			$user = DBA::selectFirst('user', ['uid', 'username', 'expire'], ['uid' => $param]);
 			if (DBA::isResult($user)) {
 				Logger::info('Expire items', ['user' => $user['uid'], 'username' => $user['username'], 'interval' => $user['expire']]);
-				Item::expire($user['uid'], $user['expire']);
-				Logger::info('Expire items done', ['user' => $user['uid'], 'username' => $user['username'], 'interval' => $user['expire']]);
+				$expired = Item::expire($user['uid'], $user['expire']);
+				Logger::info('Expire items done', ['user' => $user['uid'], 'username' => $user['username'], 'interval' => $user['expire'], 'expired' => $expired]);
 			}
 			return;
 		} elseif ($param == 'hook' && !empty($hook_function)) {
