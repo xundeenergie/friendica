@@ -34,22 +34,14 @@ class Xrd extends BaseModule
 			}
 
 			$uri = urldecode(trim($_GET['uri']));
-			if (strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'application/jrd+json') !== false)  {
-				$mode = Response::TYPE_JSON;
-			} else {
-				$mode = Response::TYPE_XML;
-			}
+			$mode = self::getAcceptedContentType($_SERVER['HTTP_ACCEPT'] ?? '', Response::TYPE_JSON);
 		} else {
 			if (empty($_GET['resource'])) {
 				throw new BadRequestException();
 			}
 
 			$uri = urldecode(trim($_GET['resource']));
-			if (strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'application/xrd+xml') !== false)  {
-				$mode = Response::TYPE_XML;
-			} else {
-				$mode = Response::TYPE_JSON;
-			}
+			$mode = self::getAcceptedContentType($_SERVER['HTTP_ACCEPT'] ?? '', Response::TYPE_XML);
 		}
 
 		if (substr($uri, 0, 4) === 'http') {
@@ -67,7 +59,7 @@ class Xrd extends BaseModule
 		}
 
 		if (!empty($host) && $host !== DI::baseUrl()->getHost()) {
-			DI::logger()->notice('Invalid host name for xrd query',['host' => $host, 'uri' => $uri]);
+			DI::logger()->notice('Invalid host name for xrd query', ['host' => $host, 'uri' => $uri]);
 			throw new NotFoundException('Invalid host name for xrd query: ' . $host);
 		}
 
@@ -99,6 +91,36 @@ class Xrd extends BaseModule
 			$this->printXML($alias, $owner, $avatar);
 		} else {
 			$this->printJSON($alias, $owner, $avatar);
+		}
+	}
+
+	/**
+	 * Detect the accepted content type.
+	 * @todo Handle priorities (see "application/xrd+xml,text/xml;q=0.9")
+	 *
+	 * @param string $accept
+	 * @param string $default
+	 * @return string
+	 */
+	private function getAcceptedContentType(string $accept, string $default): string
+	{
+		$parts = [];
+		foreach (explode(',', $accept) as $part) {
+			$parts[] = current(explode(';', $part));
+		}
+
+		if (empty($parts)) {
+			return $default;
+		} elseif (in_array('application/jrd+json', $parts) && !in_array('application/xrd+xml', $parts)) {
+			return Response::TYPE_JSON;
+		} elseif (!in_array('application/jrd+json', $parts) && in_array('application/xrd+xml', $parts)) {
+			return Response::TYPE_XML;
+		} elseif (in_array('application/json', $parts) && !in_array('text/xml', $parts)) {
+			return Response::TYPE_JSON;
+		} elseif (!in_array('application/json', $parts) && in_array('text/xml', $parts)) {
+			return Response::TYPE_XML;
+		} else {
+			return $default;
 		}
 	}
 
