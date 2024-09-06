@@ -271,25 +271,21 @@ class HttpClient implements ICanSendHttpRequests
 	 */
 	public function fetch(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = '', string $request = ''): string
 	{
-		$ret = $this->fetchFull($url, $accept_content, $timeout, $cookiejar, $request);
-
-		return $ret->getBodyString();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function fetchFull(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = '', string $request = ''): ICanHandleHttpResponses
-	{
-		return $this->get(
-			$url,
-			$accept_content,
-			[
-				HttpClientOptions::TIMEOUT   => $timeout,
-				HttpClientOptions::COOKIEJAR => $cookiejar,
-				HttpClientOptions::REQUEST   => $request,
-			]
-		);
+		try {
+			$ret = $this->get(
+				$url,
+				$accept_content,
+				[
+					HttpClientOptions::TIMEOUT   => $timeout,
+					HttpClientOptions::COOKIEJAR => $cookiejar,
+					HttpClientOptions::REQUEST   => $request,
+				]
+			);
+			return $ret->getBodyString();
+		} catch (\Throwable $th) {
+			$this->logger->notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+			return '';
+		}
 	}
 
 	private function getUserAgent(string $type = ''): string

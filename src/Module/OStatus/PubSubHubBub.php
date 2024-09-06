@@ -15,6 +15,7 @@ use Friendica\Model\PushSubscriber;
 use Friendica\Module\Response;
 use Friendica\Network\HTTPClient\Capability\ICanSendHttpRequests;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientOptions;
 use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException;
 use Friendica\Util\Profiler;
@@ -141,7 +142,7 @@ class PubSubHubBub extends \Friendica\BaseModule
 		$hub_callback = rtrim($hub_callback, ' ?&#');
 		$separator    = parse_url($hub_callback, PHP_URL_QUERY) === null ? '?' : '&';
 
-		$fetchResult = $this->httpClient->fetchFull($hub_callback . $separator . $params, HttpClientAccept::DEFAULT, 0, '', HttpClientRequest::PUBSUB);
+		$fetchResult = $this->httpClient->get($hub_callback . $separator . $params, HttpClientAccept::DEFAULT, [HttpClientOptions::REQUEST => HttpClientRequest::PUBSUB]);
 		$body        = $fetchResult->getBodyString();
 		$returnCode  = $fetchResult->getReturnCode();
 

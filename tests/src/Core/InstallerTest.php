@@ -353,11 +353,11 @@ class InstallerTest extends MockedTest
 		// Mocking the CURL Request
 		$networkMock = Mockery::mock(ICanSendHttpRequests::class);
 		$networkMock
-			->shouldReceive('fetchFull')
+			->shouldReceive('get')
 			->with('https://test/install/testrewrite')
 			->andReturn($IHTTPResult);
 		$networkMock
-			->shouldReceive('fetchFull')
+			->shouldReceive('get')
 			->with('http://test/install/testrewrite')
 			->andReturn($IHTTPResult);
 
@@ -400,11 +400,11 @@ class InstallerTest extends MockedTest
 		// Mocking the CURL Request
 		$networkMock = Mockery::mock(ICanSendHttpRequests::class);
 		$networkMock
-			->shouldReceive('fetchFull')
+			->shouldReceive('get')
 			->with('https://test/install/testrewrite')
 			->andReturn($IHTTPResultF);
 		$networkMock
-			->shouldReceive('fetchFull')
+			->shouldReceive('get')
 			->with('http://test/install/testrewrite')
 			->andReturn($IHTTPResultW);
 

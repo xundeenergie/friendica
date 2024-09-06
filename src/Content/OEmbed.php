@@ -18,6 +18,7 @@ use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
+use Friendica\Network\HTTPClient\Client\HttpClientOptions;
 use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Network;
@@ -87,7 +88,7 @@ class OEmbed
 							// but their OEmbed endpoint is only accessible by HTTPS ¯\_(ツ)_/¯
 							$href = str_replace(['http://www.youtube.com/', 'http://player.vimeo.com/'],
 								['https://www.youtube.com/', 'https://player.vimeo.com/'], $href);
-							$result = DI::httpClient()->fetchFull($href . '&maxwidth=' . $a->getThemeInfoValue('videowidth'), HttpClientAccept::DEFAULT, 0, '', HttpClientRequest::SITEINFO);
+							$result = DI::httpClient()->get($href . '&maxwidth=' . $a->getThemeInfoValue('videowidth'), HttpClientAccept::DEFAULT, [HttpClientOptions::REQUEST => HttpClientRequest::SITEINFO]);
 							if ($result->isSuccess()) {
 								$json_string = $result->getBodyString();
 								break;

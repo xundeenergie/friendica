@@ -32,22 +32,6 @@ interface ICanSendHttpRequests
 	public function fetch(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = '', string $request = ''): string;
 
 	/**
-	 * Fetches the whole response of an URL.
-	 *
-	 * Inner workings and parameters are the same as @ref fetchUrl but returns an array with
-	 * all the information collected during the fetch.
-	 *
-	 * @param string $url             URL to fetch
-	 * @param string $accept_content  supply Accept: header with 'accept_content' as the value
-	 * @param int    $timeout         Timeout in seconds, default system config value or 60 seconds
-	 * @param string $cookiejar       Path to cookie jar file
-	 * @param string $request         Request Type
-	 *
-	 * @return ICanHandleHttpResponses With all relevant information, 'body' contains the actual fetched content.
-	 */
-	public function fetchFull(string $url, string $accept_content = HttpClientAccept::DEFAULT, int $timeout = 0, string $cookiejar = '', string $request = ''): ICanHandleHttpResponses;
-
-	/**
 	 * Send a GET to a URL.
 	 *
 	 * @param string $url            URL to get
