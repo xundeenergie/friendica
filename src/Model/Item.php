@@ -2881,10 +2881,10 @@ class Item
 		return $recipients;
 	}
 
-	public static function expire(int $uid, int $days, string $network = "", bool $force = false)
+	public static function expire(int $uid, int $days, string $network = "", bool $force = false): int
 	{
 		if (!$uid || ($days < 1)) {
-			return;
+			return 0;
 		}
 
 		$condition = [
@@ -2913,7 +2913,7 @@ class Item
 		$items = Post::select(['resource-id', 'starred', 'id', 'post-type', 'uid', 'uri-id'], $condition);
 
 		if (!DBA::isResult($items)) {
-			return;
+			return 0;
 		}
 
 		$expire_items = (bool)DI::pConfig()->get($uid, 'expire', 'items', true);
@@ -2955,6 +2955,7 @@ class Item
 		}
 		DBA::close($items);
 		Logger::notice('Expired', ['user' => $uid, 'days' => $days, 'network' => $network, 'force' => $force, 'expired' => $expired, 'expire items' => $expire_items, 'expire notes' => $expire_notes, 'expire starred' => $expire_starred, 'expire photos' => $expire_photos, 'condition' => $condition]);
+		return $expired;
 	}
 
 	public static function firstPostDate(int $uid, bool $wall = false)

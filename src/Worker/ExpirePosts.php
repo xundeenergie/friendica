@@ -27,32 +27,36 @@ class ExpirePosts
 	 */
 	public static function execute()
 	{
+		Logger::notice('Expire posts - start');
+
 		if (!DBA::acquireOptimizeLock()) {
 			Logger::warning('Lock could not be acquired');
+			Worker::defer();
 			return;
 		}
 
+		Logger::notice('Expire posts - Delete expired origin posts');
 		self::deleteExpiredOriginPosts();
 
+		Logger::notice('Expire posts - Delete orphaned entries');
 		self::deleteOrphanedEntries();
 
+		Logger::notice('Expire posts - delete unused item-uri entries');
 		self::deleteUnusedItemUri();
 
+		Logger::notice('Expire posts - delete external posts');
 		self::deleteExpiredExternalPosts();
 
 		if (DI::config()->get('system', 'add_missing_posts')) {
+			Logger::notice('Expire posts - add missing posts');
 			self::addMissingEntries();
 		}
 
+		Logger::notice('Expire posts - delete unused attachments');
 		self::deleteUnusedAttachments();
 
 		DBA::releaseOptimizeLock();
-
-		// Set the expiry for origin posts
-		Worker::add(Worker::PRIORITY_LOW, 'Expire');
-
-		// update nodeinfo data after everything is cleaned up
-		Worker::add(Worker::PRIORITY_LOW, 'NodeInfo');
+		Logger::notice('Expire posts - done');
 	}
 
 	/**
