@@ -245,6 +245,8 @@ class APContact
 			}
 		}
 
+		$apcontact['name'] = self::removeCustomEmojis($apcontact['name'], JsonLD::fetchElementArray($compacted, 'as:tag') ?? []);
+
 		$apcontact['photo'] = JsonLD::fetchElement($compacted, 'as:icon', '@id');
 		if (is_array($apcontact['photo']) || !empty($compacted['as:icon']['as:url']['@id'])) {
 			$apcontact['photo'] = JsonLD::fetchElement($compacted['as:icon'], 'as:url', '@id');
@@ -482,6 +484,19 @@ class APContact
 		Logger::info('Updated profile', ['url' => $url]);
 
 		return DBA::selectFirst('apcontact', [], ['url' => $apcontact['url']]) ?: [];
+	}
+
+	public static function removeCustomEmojis(string $name, array $tags): string
+	{
+		$original = $name;
+		foreach ($tags as $tag) {
+			if ($tag['@type'] != 'toot:Emoji') {
+				continue;
+			}
+			$name = trim(str_replace($tag['as:name'], '', $name));
+		}
+
+		return $name ?: $original;
 	}
 
 	/**
