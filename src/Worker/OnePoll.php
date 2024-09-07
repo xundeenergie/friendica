@@ -188,6 +188,11 @@ class OnePoll
 			return false;
 		}
 
+		if (strpos($curlResult->getContentType(), 'xml') !== false) {
+			Logger::notice('Unexpected content type.', ['id' => $contact['id'], 'url' => $contact['poll'], 'content-type' => $curlResult->getContentType()]);
+			return false;
+		}
+
 		if (!strstr($xml, '<')) {
 			Logger::notice('response did not contain XML.', ['id' => $contact['id'], 'url' => $contact['poll']]);
 			return false;
