@@ -16,6 +16,7 @@ use Friendica\Network\HTTPException\BadRequestException;
 use Friendica\Network\HTTPException\NotFoundException;
 use Friendica\Protocol\ActivityNamespace;
 use Friendica\Protocol\Salmon;
+use Friendica\Util\Network;
 use Friendica\Util\XML;
 
 /**
@@ -44,7 +45,7 @@ class Xrd extends BaseModule
 			$mode = self::getAcceptedContentType($_SERVER['HTTP_ACCEPT'] ?? '', Response::TYPE_XML);
 		}
 
-		if (substr($uri, 0, 4) === 'http') {
+		if (Network::isValidHttpUrl($uri)) {
 			$name = ltrim(basename($uri), '~');
 			$host = parse_url($uri, PHP_URL_HOST);
 		} else if (preg_match('/^[[:alpha:]][[:alnum:]+-.]+:/', $uri)) {

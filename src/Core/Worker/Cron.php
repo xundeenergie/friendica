@@ -67,7 +67,7 @@ class Cron
 		$entries = DBA::select(
 			'workerqueue',
 			['id', 'pid', 'executed', 'priority', 'command', 'parameter'],
-			['NOT `done` AND `pid` != 0'],
+			['NOT `done` AND `pid` != ? AND `executed` > ?', 0, DBA::NULL_DATETIME],
 			['order' => ['priority', 'retrial', 'created']]
 		);
 
