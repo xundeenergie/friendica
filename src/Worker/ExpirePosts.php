@@ -41,9 +41,6 @@ class ExpirePosts
 		Logger::notice('Expire posts - Delete orphaned entries');
 		self::deleteOrphanedEntries();
 
-		Logger::notice('Expire posts - delete unused item-uri entries');
-		self::deleteUnusedItemUri();
-
 		Logger::notice('Expire posts - delete external posts');
 		self::deleteExpiredExternalPosts();
 
@@ -54,6 +51,9 @@ class ExpirePosts
 
 		Logger::notice('Expire posts - delete unused attachments');
 		self::deleteUnusedAttachments();
+
+		Logger::notice('Expire posts - delete unused item-uri entries');
+		self::deleteUnusedItemUri();
 
 		DBA::releaseOptimizeLock();
 		Logger::notice('Expire posts - done');
