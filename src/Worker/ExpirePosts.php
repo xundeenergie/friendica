@@ -66,13 +66,18 @@ class ExpirePosts
 	 */
 	private static function deleteExpiredOriginPosts()
 	{
+		$limit = DI::config()->get('system', 'dbclean-expire-limit');
+		if (empty($limit)) {
+			return;
+		}
+
 		Logger::notice('Delete expired posts');
 		// physically remove anything that has been deleted for more than two months
 		$condition = ["`gravity` = ? AND `deleted` AND `edited` < ?", Item::GRAVITY_PARENT, DateTimeFormat::utc('now - 60 days')];
 		$pass = 0;
 		do {
 			++$pass;
-			$rows = DBA::select('post-user', ['uri-id', 'uid'], $condition, ['limit' => 1000]);
+			$rows = DBA::select('post-user', ['uri-id', 'uid'], $condition, ['limit' => $limit]);
 			$affected_count = 0;
 			while ($row = Post::fetch($rows)) {
 				Logger::info('Delete expired item', ['pass' => $pass, 'uri-id' => $row['uri-id']]);
@@ -178,6 +183,11 @@ class ExpirePosts
 	 */
 	private static function deleteUnusedItemUri()
 	{
+		$limit = DI::config()->get('system', 'dbclean-expire-limit');
+		if (empty($limit)) {
+			return;
+		}
+
 		// We have to avoid deleting newly created "item-uri" entries.
 		// So we fetch a post that had been stored yesterday and only delete older ones.
 		$item = Post::selectFirstThread(
@@ -214,14 +224,15 @@ class ExpirePosts
 		$pass = 0;
 		do {
 			++$pass;
-			$uris = DBA::select('item-uri', ['id'], $condition, ['limit' => 1000]);
+			$uris = DBA::select('item-uri', ['id'], $condition, ['limit' => $limit]);
+			$total = DBA::numRows($uris);
 			Logger::notice('Start deleting orphaned URI-ID', ['pass' => $pass, 'last-id' => $item['uri-id']]);
 			$affected_count = 0;
 			while ($rows = DBA::toArray($uris, false, 100)) {
 				$ids = array_column($rows, 'id');
 				DBA::delete('item-uri', ['id' => $ids]);
 				$affected_count += DBA::affectedRows();
-				Logger::info('Deleted', ['pass' => $pass, 'rows' => $affected_count]);
+				Logger::debug('Deleted', ['pass' => $pass, 'affected_count' => $affected_count, 'total' => $total]);
 			}
 			DBA::close($uris);
 			DBA::commit();
@@ -234,15 +245,15 @@ class ExpirePosts
 	 */
 	private static function deleteExpiredExternalPosts()
 	{
+		$limit = DI::config()->get('system', 'dbclean-expire-limit');
+		if (empty($limit)) {
+			return;
+		}
+
 		$expire_days = DI::config()->get('system', 'dbclean-expire-days');
 		$expire_days_unclaimed = DI::config()->get('system', 'dbclean-expire-unclaimed');
 		if (empty($expire_days_unclaimed)) {
 			$expire_days_unclaimed = $expire_days;
-		}
-
-		$limit = DI::config()->get('system', 'dbclean-expire-limit');
-		if (empty($limit)) {
-			return;
 		}
 
 		if (!empty($expire_days)) {
@@ -268,7 +279,7 @@ class ExpirePosts
 			$pass = 0;
 			do {
 				++$pass;
-				$uris = DBA::select('post-thread', ['uri-id'], $condition, ['limit' => 1000]);
+				$uris = DBA::select('post-thread', ['uri-id'], $condition, ['limit' => $limit]);
 
 				Logger::notice('Start deleting expired threads', ['pass' => $pass]);
 				$affected_count = 0;
@@ -296,14 +307,15 @@ class ExpirePosts
 			$pass = 0;
 			do {
 				++$pass;
-				$uris = DBA::select('post-user', ['uri-id'], $condition, ['limit' => 1000]);
-
+				$uris = DBA::select('post-user', ['uri-id'], $condition, ['limit' => $limit]);
+				$total = DBA::numRows($uris);
 				Logger::notice('Start deleting unclaimed public items', ['pass' => $pass]);
 				$affected_count = 0;
 				while ($rows = DBA::toArray($uris, false, 100)) {
 					$ids = array_column($rows, 'uri-id');
 					DBA::delete('item-uri', ['id' => $ids]);
 					$affected_count += DBA::affectedRows();
+					Logger::debug('Deleted', ['pass' => $pass, 'affected_count' => $affected_count, 'total' => $total]);
 				}
 				DBA::close($uris);
 				DBA::commit();
