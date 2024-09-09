@@ -1780,43 +1780,15 @@ class GServer
 	 */
 	private static function detectNetworkViaContacts(string $url, array $serverdata): array
 	{
-		$contacts = [];
-
-		$nurl = Strings::normaliseLink($url);
-
-		$apcontacts = DBA::select('apcontact', ['url'], ['baseurl' => [$url, $nurl]]);
-		while ($apcontact = DBA::fetch($apcontacts)) {
-			$contacts[Strings::normaliseLink($apcontact['url'])] = $apcontact['url'];
-		}
-		DBA::close($apcontacts);
-
-		$pcontacts = DBA::select('contact', ['url', 'nurl'], ['uid' => 0, 'baseurl' => [$url, $nurl]]);
-		while ($pcontact = DBA::fetch($pcontacts)) {
-			$contacts[$pcontact['nurl']] = $pcontact['url'];
-		}
-		DBA::close($pcontacts);
-
-		if (empty($contacts)) {
+		$contact = DBA::selectFirst('contact', ['network'], ["`network` != ? AND NOT `failed` AND `uid` = ? AND `baseurl` IN (?, ?)", Protocol::PHANTOM, 0, $url, Strings::normaliseLink($url)]);
+		if (empty($contact)) {
 			return $serverdata;
 		}
+		$serverdata['network'] = $contact['network'];
 
-		$time = time();
-		foreach ($contacts as $contact) {
-			// Endlosschleife verhindern wegen gsid!
-			$data = Probe::uri($contact);
-			if (in_array($data['network'], Protocol::FEDERATED)) {
-				$serverdata['network'] = $data['network'];
-
-				if (in_array($serverdata['detection-method'], self::DETECT_UNSPECIFIC)) {
-					$serverdata['detection-method'] = self::DETECT_CONTACTS;
-				}
-				break;
-			} elseif ((time() - $time) > 10) {
-				// To reduce the stress on remote systems we probe a maximum of 10 seconds
-				break;
-			}
+		if (in_array($serverdata['detection-method'], self::DETECT_UNSPECIFIC)) {
+			$serverdata['detection-method'] = self::DETECT_CONTACTS;
 		}
-
 		return $serverdata;
 	}
 
