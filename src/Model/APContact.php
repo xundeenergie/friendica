@@ -490,7 +490,7 @@ class APContact
 	{
 		$original = $name;
 		foreach ($tags as $tag) {
-			if ($tag['@type'] != 'toot:Emoji') {
+			if (empty($tag['@type']) || ($tag['@type'] != 'toot:Emoji')) {
 				continue;
 			}
 			$name = trim(str_replace($tag['as:name'], '', $name));
