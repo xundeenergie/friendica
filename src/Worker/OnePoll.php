@@ -59,15 +59,10 @@ class OnePoll
 
 		$updated = DateTimeFormat::utcNow();
 
-		// Possibly switch the remote contact to AP
-		if ($success && ($contact['network'] === Protocol::OSTATUS)) {
-			ActivityPub\Receiver::switchContact($contact['id'], $importer_uid, $contact['url']);
-		}
-
 		$contact = DBA::selectFirst('contact', [], ['id' => $contact_id]);
 
 		if ($success && ($importer_uid != 0) && in_array($contact['rel'], [Contact::SHARING, Contact::FRIEND])
-			&& in_array($contact['network'], [Protocol::FEED, Protocol::MAIL, Protocol::OSTATUS])) {
+			&& in_array($contact['network'], [Protocol::FEED, Protocol::MAIL])) {
 			$importer = User::getOwnerDataById($importer_uid);
 			if (empty($importer)) {
 				Logger::warning('No self contact for user', ['uid' => $importer_uid]);
@@ -113,7 +108,7 @@ class OnePoll
 	 */
 	private static function updateContact(array $contact, array $fields)
 	{
-		if (in_array($contact['network'], [Protocol::FEED, Protocol::MAIL, Protocol::OSTATUS])) {
+		if (in_array($contact['network'], [Protocol::FEED, Protocol::MAIL])) {
 			// Update the user's contact
 			Contact::update($fields, ['id' => $contact['id']]);
 

@@ -119,10 +119,6 @@ class Plaintext
 				$abstract = BBCode::getAbstract($item['body'], Protocol::TWITTER);
 				break;
 
-			case BBCode::OSTATUS:
-				$abstract = BBCode::getAbstract($item['body'], Protocol::STATUSNET);
-				break;
-
 			case BBCode::BLUESKY:
 				$abstract = BBCode::getAbstract($item['body'], Protocol::BLUESKY);
 				break;

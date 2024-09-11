@@ -19,17 +19,13 @@ use Friendica\Model\Circle;
 use Friendica\Model\GServer;
 use Friendica\Model\Item;
 use Friendica\Model\Post;
-use Friendica\Model\PushSubscriber;
 use Friendica\Model\Tag;
 use Friendica\Model\User;
 use Friendica\Protocol\Activity;
 use Friendica\Protocol\ActivityPub;
 use Friendica\Protocol\Diaspora;
 use Friendica\Protocol\Delivery;
-use Friendica\Protocol\OStatus;
-use Friendica\Protocol\Salmon;
 use Friendica\Util\LDSignature;
-use Friendica\Util\Network;
 use Friendica\Util\Strings;
 
 /*
@@ -52,7 +48,6 @@ class Notifier
 		$target_id = $post_uriid;
 		$top_level = false;
 		$recipients = [];
-		$url_recipients = [];
 
 		$delivery_contacts_stmt = null;
 		$target_item = [];
@@ -148,12 +143,6 @@ class Notifier
 		$public_message = true;
 
 		$unlisted = false;
-
-		// Do a PuSH
-		$push_notify = false;
-
-		// Deliver directly to a group, don't PuSH
-		$direct_group_delivery = false;
 
 		$only_ap_delivery = false;
 
@@ -268,32 +257,6 @@ class Notifier
 				$recipients_followup  = [$parent['contact-id']];
 
 				Logger::info('Followup', ['target' => $target_id, 'guid' => $target_item['guid'], 'to' => $parent['contact-id']]);
-
-				if (($target_item['private'] != Item::PRIVATE) &&
-					(strlen($target_item['allow_cid'].$target_item['allow_gid'].
-						$target_item['deny_cid'].$target_item['deny_gid']) == 0))
-					$push_notify = true;
-
-				if (($thr_parent && ($thr_parent['network'] == Protocol::OSTATUS)) || ($parent['network'] == Protocol::OSTATUS)) {
-					$push_notify = true;
-
-					if ($parent["network"] == Protocol::OSTATUS) {
-						// Distribute the message to the DFRN contacts as if this wasn't a followup since OStatus can't relay comments
-						// Currently it is work at progress
-						$condition = ['uid' => $uid, 'network' => Protocol::DFRN, 'blocked' => false, 'pending' => false, 'archive' => false];
-						$followup_contacts_stmt = DBA::select('contact', ['id'], $condition);
-						while($followup_contact = DBA::fetch($followup_contacts_stmt)) {
-							$recipients_followup[] = $followup_contact['id'];
-						}
-						DBA::close($followup_contacts_stmt);
-					}
-				}
-
-				if ($direct_group_delivery) {
-					$push_notify = false;
-				}
-
-				Logger::info('Notify ' . $target_item["guid"] .' via PuSH: ' . ($push_notify ? "Yes":"No"));
 			} elseif ($exclusive_delivery) {
 				$followup = true;
 
@@ -338,15 +301,9 @@ class Notifier
 						foreach ($people as $person) {
 							if (substr($person,0,4) === 'cid:') {
 								$recipients[] = intval(substr($person,4));
-							} else {
-								$url_recipients[] = substr($person,4);
 							}
 						}
 					}
-				}
-
-				if (count($url_recipients)) {
-					Logger::notice('Deliver', ['target' => $target_id, 'guid' => $target_item['guid'], 'recipients' => $url_recipients]);
 				}
 
 				$recipients = array_unique(array_merge($recipients, $allow_people, $allow_circles));
@@ -368,39 +325,7 @@ class Notifier
 				}
 			}
 
-			// If the thread parent is OStatus then do some magic to distribute the messages.
-			// We have not only to look at the parent, since it could be a Friendica thread.
-			if (($thr_parent && ($thr_parent['network'] == Protocol::OSTATUS)) || ($parent['network'] == Protocol::OSTATUS)) {
-				$diaspora_delivery = false;
-
-				Logger::info('Some parent is OStatus for ' . $target_item['guid'] . ' - Author: ' . $thr_parent['author-id'] . ' - Owner: ' . $thr_parent['owner-id']);
-
-				// Send a salmon to the parent author
-				$probed_contact = DBA::selectFirst('contact', ['url', 'notify'], ['id' => $thr_parent['author-id']]);
-				if (DBA::isResult($probed_contact) && !empty($probed_contact['notify'])) {
-					Logger::notice('Notify parent author', ['url' => $probed_contact['url'], 'notify' => $probed_contact['notify']]);
-					$url_recipients[$probed_contact['notify']] = $probed_contact['notify'];
-				}
-
-				// Send a salmon to the parent owner
-				$probed_contact = DBA::selectFirst('contact', ['url', 'notify'], ['id' => $thr_parent['owner-id']]);
-				if (DBA::isResult($probed_contact) && !empty($probed_contact['notify'])) {
-					Logger::notice('Notify parent owner', ['url' => $probed_contact['url'], 'notify' => $probed_contact['notify']]);
-					$url_recipients[$probed_contact['notify']] = $probed_contact['notify'];
-				}
-
-				// Send a salmon notification to every person we mentioned in the post
-				foreach (Tag::getByURIId($target_item['uri-id'], [Tag::MENTION, Tag::EXCLUSIVE_MENTION, Tag::IMPLICIT_MENTION]) as $tag) {
-					$probed_contact = Contact::getByURL($tag['url']);
-					if (!empty($probed_contact['notify'])) {
-						Logger::notice('Notify mentioned user', ['url' => $probed_contact['url'], 'notify' => $probed_contact['notify']]);
-						$url_recipients[$probed_contact['notify']] = $probed_contact['notify'];
-					}
-				}
-
-				// It only makes sense to distribute answers to OStatus messages to Friendica and OStatus - but not Diaspora
-				$networks = [Protocol::DFRN];
-			} elseif ($diaspora_delivery) {
+			if ($diaspora_delivery) {
 				$networks = [Protocol::DFRN, Protocol::DIASPORA, Protocol::MAIL];
 				if (($parent['network'] == Protocol::DIASPORA) || ($thr_parent['network'] == Protocol::DIASPORA)) {
 					Logger::info('Add AP contacts', ['target' => $target_id, 'guid' => $target_item['guid']]);
@@ -453,14 +378,10 @@ class Notifier
 			$conversants = array_merge($contacts, $participants);
 
 			$delivery_queue_count += self::delivery($cmd, $post_uriid, $sender_uid, $target_item, $thr_parent, $owner, $batch_delivery, true, $conversants, $ap_contacts, []);
-
-			$push_notify = true;
 		}
 
 		$contacts = DBA::toArray($delivery_contacts_stmt);
 		$delivery_queue_count += self::delivery($cmd, $post_uriid, $sender_uid, $target_item, $thr_parent, $owner, $batch_delivery, false, $contacts, $ap_contacts, $conversants);
-
-		$delivery_queue_count += self::deliverOStatus($target_id, $target_item, $owner, $url_recipients, $public_message, $push_notify);
 
 		if (!empty($target_item)) {
 			Logger::info('Calling hooks for ' . $cmd . ' ' . $target_id);
@@ -608,50 +529,6 @@ class Notifier
 			}
 
 			Worker::coolDown();
-		}
-		return $delivery_queue_count;
-	}
-
-	/**
-	 * Deliver the message via OStatus
-	 *
-	 * @param int $target_id
-	 * @param array $target_item
-	 * @param array $owner
-	 * @param array $url_recipients
-	 * @param bool $public_message
-	 * @param bool $push_notify
-	 *
-	 * @return int Count of sent Salmon notifications
-	 * @throws InternalServerErrorException
-	 * @throws Exception
-	 */
-	private static function deliverOStatus(int $target_id, array $target_item, array $owner, array $url_recipients, bool $public_message, bool $push_notify): int
-	{
-		$a = DI::app();
-		$delivery_queue_count = 0;
-
-		$url_recipients = array_filter($url_recipients);
-		// send salmon slaps to mentioned remote tags (@foo@example.com) in OStatus posts
-		// They are especially used for notifications to OStatus users that don't follow us.
-		if (count($url_recipients) && ($public_message || $push_notify) && !empty($target_item)) {
-			$slap = OStatus::salmon($target_item, $owner);
-			foreach ($url_recipients as $url) {
-				Logger::info('Salmon delivery', ['item' => $target_id, 'to' => $url]);
-
-				$delivery_queue_count++;
-				Salmon::slapper($owner, $url, $slap);
-				Item::incrementOutbound(Protocol::OSTATUS);
-				Post\DeliveryData::incrementQueueDone($target_item['uri-id'], Post\DeliveryData::OSTATUS);
-			}
-		}
-
-		// Notify PuSH subscribers (Used for OStatus distribution of regular posts)
-		if ($push_notify) {
-			Logger::info('Activating internal PuSH', ['uid' => $owner['uid']]);
-
-			// Handling the pubsubhubbub requests
-			PushSubscriber::publishFeed($owner['uid'], $a->getQueueValue('priority'));
 		}
 		return $delivery_queue_count;
 	}

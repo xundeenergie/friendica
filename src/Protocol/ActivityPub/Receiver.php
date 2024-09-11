@@ -1285,8 +1285,6 @@ class Receiver
 			DBA::close($parents);
 		}
 
-		self::switchContacts($receivers, $actor);
-
 		// "birdsitelive" is a service that mirrors tweets into the fediverse
 		// These posts can be fetched without authentication, but are not marked as public
 		// We treat them as unlisted posts to be able to handle them.
@@ -1367,62 +1365,6 @@ class Receiver
 		}
 
 		return false;
-	}
-
-	/**
-	 * Switches existing contacts to ActivityPub
-	 *
-	 * @param integer $cid Contact ID
-	 * @param integer $uid User ID
-	 * @param string  $url Profile URL
-	 * @return void
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
-	 * @throws \ImagickException
-	 */
-	public static function switchContact(int $cid, int $uid, string $url)
-	{
-		if (DBA::exists('contact', ['id' => $cid, 'network' => Protocol::ACTIVITYPUB])) {
-			Logger::info('Contact is already ActivityPub', ['id' => $cid, 'uid' => $uid, 'url' => $url]);
-			return;
-		}
-
-		if (Contact::updateFromProbe($cid)) {
-			Logger::info('Update was successful', ['id' => $cid, 'uid' => $uid, 'url' => $url]);
-		}
-
-		// Send a new follow request to be sure that the connection still exists
-		if (($uid != 0) && DBA::exists('contact', ['id' => $cid, 'rel' => [Contact::SHARING, Contact::FRIEND], 'network' => Protocol::ACTIVITYPUB])) {
-			Logger::info('Contact had been switched to ActivityPub. Sending a new follow request.', ['uid' => $uid, 'url' => $url]);
-			ActivityPub\Transmitter::sendActivity('Follow', $url, $uid);
-		}
-	}
-
-	/**
-	 * @TODO Fix documentation and type-hints
-	 *
-	 * @param $receivers
-	 * @param $actor
-	 * @return void
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
-	 * @throws \ImagickException
-	 */
-	private static function switchContacts($receivers, $actor)
-	{
-		if (empty($actor)) {
-			return;
-		}
-
-		foreach ($receivers as $receiver) {
-			$contact = DBA::selectFirst('contact', ['id'], ['uid' => $receiver['uid'], 'network' => Protocol::OSTATUS, 'nurl' => Strings::normaliseLink($actor)]);
-			if (DBA::isResult($contact)) {
-				self::switchContact($contact['id'], $receiver['uid'], $actor);
-			}
-
-			$contact = DBA::selectFirst('contact', ['id'], ['uid' => $receiver['uid'], 'network' => Protocol::OSTATUS, 'alias' => [Strings::normaliseLink($actor), $actor]]);
-			if (DBA::isResult($contact)) {
-				self::switchContact($contact['id'], $receiver['uid'], $actor);
-			}
-		}
 	}
 
 	/**

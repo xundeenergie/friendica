@@ -41,8 +41,6 @@
 					{{include file="field_select.tpl" field=$article_mode}}
 
 					{{include file="field_input.tpl" field=$legacy_contact}}					
-
-					<p><a href="{{$repair_ostatus_url}}">{{$repair_ostatus_text}}</a></p>
 				</div>
 				<div class="panel-footer">
 					<button type="submit" id="general-submit" name="general-submit" class="btn btn-primary" value="{{$submit}}">{{$submit}}</button>

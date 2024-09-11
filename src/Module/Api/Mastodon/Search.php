@@ -140,8 +140,8 @@ class Search extends BaseApi
 
 		if (substr($q, 0, 1) == '#') {
 			$condition = ["`name` = ? AND (`uid` = ? OR (`uid` = ? AND NOT `global`))
-				AND (`network` IN (?, ?, ?, ?) OR (`uid` = ? AND `uid` != ?))",
-				substr($q, 1), 0, $uid, Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA, Protocol::OSTATUS, $uid, 0];
+				AND (`network` IN (?, ?, ?) OR (`uid` = ? AND `uid` != ?))",
+				substr($q, 1), 0, $uid, Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA, $uid, 0];
 			$table = 'tag-search-view';
 		} else {
 			$q = Post\Engagement::escapeKeywords($q);

@@ -125,11 +125,6 @@ class Follow extends BaseModule
 			$submit = '';
 		}
 
-		if (($protocol == Protocol::OSTATUS) && $this->config->get('system', 'ostatus_disabled')) {
-			$this->sysMessages->addNotice($this->t("OStatus support is disabled. Contact can't be added."));
-			$submit = '';
-		}
-
 		if ($protocol == Protocol::MAIL) {
 			$contact['url'] = $contact['addr'];
 		}

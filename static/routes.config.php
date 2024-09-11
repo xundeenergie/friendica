@@ -412,7 +412,7 @@ return [
 	'/credits'                  => [Module\Credits::class,          [R::GET]],
 	'/delegation'               => [Module\User\Delegation::class,  [R::GET, R::POST]],
 	'/dfrn_notify[/{nickname}]' => [Module\DFRN\Notify::class,      [        R::POST]],
-	'/dfrn_poll/{nickname}'     => [Module\DFRN\Poll::class,        [R::GET]],
+	'/dfrn_poll/{nickname}'     => [Module\Feed::class,            [R::GET]],
 	'/dirfind'                  => [Module\Search\Directory::class, [R::GET]],
 	'/directory'                => [Module\Directory::class,        [R::GET]],
 
@@ -510,7 +510,6 @@ return [
 		'/users/deleted'                  => [Module\Moderation\Users\Deleted::class, [R::GET         ]],
 		'/users/create'                   => [Module\Moderation\Users\Create::class,  [R::GET, R::POST]],
 	],
-	'/modexp/{nick}'      => [Module\PublicRSAKey::class,    [R::GET]],
 	'/newmember'          => [Module\Welcome::class,         [R::GET]],
 	'/nodeinfo/1.0'       => [Module\NodeInfo110::class,     [R::GET]],
 	'/nodeinfo/2.0'       => [Module\NodeInfo120::class,     [R::GET]],
@@ -587,14 +586,8 @@ return [
 	'/u/{nickname}'       => $profileRoutes,
 	'/~{nickname}'        => $profileRoutes,
 
-	// OStatus stack modules
-	'/ostatus/repair'                => [Module\OStatus\Repair::class,           [R::GET         ]],
 	'/ostatus/subscribe'             => [Module\OStatus\Subscribe::class,        [R::GET         ]],
 	'/poco'                          => [Module\User\PortableContacts::class,    [R::GET         ]],
-	'/pubsub'                        => [Module\OStatus\PubSub::class,           [R::GET, R::POST]],
-	'/pubsub/{nickname}[/{cid:\d+}]' => [Module\OStatus\PubSub::class,           [R::GET, R::POST]],
-	'/pubsubhubbub[/{nickname}]'     => [Module\OStatus\PubSubHubBub::class,     [        R::POST]],
-	'/salmon[/{nickname}]'           => [Module\OStatus\Salmon::class,           [        R::POST]],
 
 	'/search' => [
 		'[/]'                  => [Module\Search\Index::class, [R::GET         ]],

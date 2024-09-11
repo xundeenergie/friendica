@@ -642,7 +642,7 @@ class Transmitter
 			$networks = Protocol::FEDERATED;
 		} else {
 			// For now only send to these contacts:
-			$networks = [Protocol::ACTIVITYPUB, Protocol::OSTATUS];
+			$networks = [Protocol::ACTIVITYPUB];
 		}
 
 		$data = ['to' => [], 'cc' => [], 'bto' => [], 'bcc' => [], 'audience' => $audience];
@@ -1019,7 +1019,7 @@ class Transmitter
 			$networks = Protocol::FEDERATED;
 		} else {
 			// For now only send to these contacts:
-			$networks = [Protocol::ACTIVITYPUB, Protocol::OSTATUS];
+			$networks = [Protocol::ACTIVITYPUB];
 		}
 
 		$condition = [

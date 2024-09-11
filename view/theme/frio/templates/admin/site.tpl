@@ -153,8 +153,6 @@
 							</div>
 						{{/if}}
 
-						{{include file="field_checkbox.tpl" field=$ostatus_enabled}}
-
 						{{if $diaspora_able}}
 							{{include file="field_checkbox.tpl" field=$diaspora_enabled}}
 						{{else}}

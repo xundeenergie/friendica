@@ -118,21 +118,10 @@ class Contact extends BaseModule
 			return;
 		}
 
-		if ($contact['network'] == Protocol::OSTATUS) {
-			$result = Model\Contact::createFromProbeForUser($contact['uid'], $contact['url'], $contact['network']);
-
-			if ($result['success']) {
-				Model\Contact::update(['subhub' => 1], ['id' => $contact_id]);
-			}
-
-			// pull feed and consume it, which should subscribe to the hub.
-			Worker::add(Worker::PRIORITY_HIGH, 'OnePoll', $contact_id, 'force');
-		} else {
-			try {
-				UpdateContact::add(Worker::PRIORITY_HIGH, $contact_id);
-			} catch (\InvalidArgumentException $e) {
-				Logger::notice($e->getMessage(), ['contact' => $contact]);
-			}
+		try {
+			UpdateContact::add(Worker::PRIORITY_HIGH, $contact_id);
+		} catch (\InvalidArgumentException $e) {
+			Logger::notice($e->getMessage(), ['contact' => $contact]);
 		}
 	}
 

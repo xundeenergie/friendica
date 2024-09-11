@@ -88,15 +88,11 @@ class Widget
 	public static function unavailableNetworks(): array
 	{
 		// Always hide content from these networks
-		$networks = [Protocol::PHANTOM, Protocol::FACEBOOK, Protocol::APPNET, Protocol::TWITTER, Protocol::ZOT];
+		$networks = [Protocol::PHANTOM, Protocol::FACEBOOK, Protocol::APPNET, Protocol::TWITTER, Protocol::ZOT, Protocol::OSTATUS, Protocol::STATUSNET];
 		Addon::loadAddons();
 
 		if (!Addon::isEnabled("discourse")) {
 			$networks[] = Protocol::DISCOURSE;
-		}
-
-		if (!Addon::isEnabled("statusnet")) {
-			$networks[] = Protocol::STATUSNET;
 		}
 
 		if (!Addon::isEnabled("pumpio")) {
@@ -105,10 +101,6 @@ class Widget
 
 		if (!Addon::isEnabled("tumblr")) {
 			$networks[] = Protocol::TUMBLR;
-		}
-
-		if (DI::config()->get("system", "ostatus_disabled")) {
-			$networks[] = Protocol::OSTATUS;
 		}
 
 		if (!DI::config()->get("system", "diaspora_enabled")) {

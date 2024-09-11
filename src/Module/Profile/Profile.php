@@ -336,7 +336,6 @@ class Profile extends BaseProfile
 			$htmlhead .= '<meta content="noindex, noarchive" name="robots" />' . "\n";
 		}
 
-		$htmlhead .= '<link rel="alternate" type="application/atom+xml" href="' . $this->baseUrl . '/dfrn_poll/' . $nickname . '" title="DFRN: ' . $this->t('%s\'s timeline', htmlspecialchars($profile['name'], ENT_COMPAT, 'UTF-8', true)) . '"/>' . "\n";
 		$htmlhead .= '<link rel="alternate" type="application/atom+xml" href="' . $this->baseUrl . '/feed/' . $nickname . '/" title="' . $this->t('%s\'s posts', htmlspecialchars($profile['name'], ENT_COMPAT, 'UTF-8', true)) . '"/>' . "\n";
 		$htmlhead .= '<link rel="alternate" type="application/atom+xml" href="' . $this->baseUrl . '/feed/' . $nickname . '/comments" title="' . $this->t('%s\'s comments', htmlspecialchars($profile['name'], ENT_COMPAT, 'UTF-8', true)) . '"/>' . "\n";
 		$htmlhead .= '<link rel="alternate" type="application/atom+xml" href="' . $this->baseUrl . '/feed/' . $nickname . '/activity" title="' . $this->t('%s\'s timeline', htmlspecialchars($profile['name'], ENT_COMPAT, 'UTF-8', true)) . '"/>' . "\n";
@@ -344,7 +343,7 @@ class Profile extends BaseProfile
 		$htmlhead .= '<link rel="lrdd" type="application/xrd+xml" href="' . $this->baseUrl . '/xrd/?uri=' . $uri . '" />' . "\n";
 		header('Link: <' . $this->baseUrl . '/xrd/?uri=' . $uri . '>; rel="lrdd"; type="application/xrd+xml"', false);
 
-		$dfrn_pages = ['request', 'confirm', 'notify', 'poll'];
+		$dfrn_pages = ['notify', 'poll'];
 		foreach ($dfrn_pages as $dfrn) {
 			$htmlhead .= '<link rel="dfrn-' . $dfrn . '" href="' . $this->baseUrl . '/dfrn_' . $dfrn . '/' . $nickname . '" />' . "\n";
 		}

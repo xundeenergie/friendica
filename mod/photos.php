@@ -388,38 +388,14 @@ function photos_post()
 				foreach ($tags as $tag) {
 					if (strpos($tag, '@') === 0) {
 						$profile = '';
-						$contact = null;
 						$name = substr($tag, 1);
-
-						if ((strpos($name, '@')) || (strpos($name, 'http://'))) {
+						$contact = Contact::getByURL($name);
+						if (empty($contact)) {
 							$newname = $name;
-							$links = @Probe::lrdd($name);
-
-							if (count($links)) {
-								foreach ($links as $link) {
-									if ($link['@attributes']['rel'] === ActivityNamespace::WEBFINGERPROFILE) {
-										$profile = $link['@attributes']['href'];
-									}
-
-									if ($link['@attributes']['rel'] === 'salmon') {
-										$salmon = '$url:' . str_replace(',', '%sc', $link['@attributes']['href']);
-
-										if (strlen($inform)) {
-											$inform .= ',';
-										}
-
-										$inform .= $salmon;
-									}
-								}
-							}
-
-							$taginfo[] = [$newname, $profile, $salmon];
-						} else {
-							$newname = $name;
-							$tagcid = 0;
-
 							if (strrpos($newname, '+')) {
 								$tagcid = intval(substr($newname, strrpos($newname, '+') + 1));
+							} else {
+								$tagcid = 0;
 							}
 
 							if ($tagcid) {
@@ -439,17 +415,17 @@ function photos_post()
 									);
 								}
 							}
+						}
 
-							if (DBA::isResult($contact)) {
-								$newname = $contact['name'];
-								$profile = $contact['url'];
+						if (DBA::isResult($contact)) {
+							$newname = $contact['name'];
+							$profile = $contact['url'];
 
-								$notify = 'cid:' . $contact['id'];
-								if (strlen($inform)) {
-									$inform .= ',';
-								}
-								$inform .= $notify;
+							$notify = 'cid:' . $contact['id'];
+							if (strlen($inform)) {
+								$inform .= ',';
 							}
+							$inform .= $notify;
 						}
 
 						if ($profile) {

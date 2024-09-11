@@ -16,7 +16,7 @@ class Conversation
 	const PARCEL_ACTIVITYPUB        = 0;
 	const PARCEL_DFRN               = 1; // Deprecated
 	const PARCEL_DIASPORA           = 2;
-	const PARCEL_SALMON             = 3;
+	const PARCEL_SALMON             = 3; // @deprecated since version 2024.09
 	const PARCEL_FEED               = 4; // Deprecated
 	const PARCEL_SPLIT_CONVERSATION = 6; // @deprecated since version 2022.09
 	const PARCEL_LEGACY_DFRN        = 7; // @deprecated since version 2021.09

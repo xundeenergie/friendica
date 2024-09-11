@@ -284,7 +284,7 @@ class Relation
 			return false;
 		}
 
-		if (!in_array($contact['network'], [Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::OSTATUS])) {
+		if (!in_array($contact['network'], [Protocol::ACTIVITYPUB, Protocol::DFRN])) {
 			$apcontact = APContact::getByURL($url, false);
 			if (empty($apcontact)) {
 				Logger::info('No discovery - The contact does not seem to speak ActivityPub.', ['id' => $contact['id'], 'url' => $url, 'network' => $contact['network']]);
@@ -369,7 +369,6 @@ class Relation
 		Logger::info('Collecting suggestions', ['uid' => $uid, 'cid' => $cid, 'start' => $start, 'limit' => $limit]);
 
 		$diaspora = DI::config()->get('system', 'diaspora_enabled') ? Protocol::DIASPORA : Protocol::ACTIVITYPUB;
-		$ostatus = !DI::config()->get('system', 'ostatus_disabled') ? Protocol::OSTATUS : Protocol::ACTIVITYPUB;
 
 		// The query returns contacts where contacts interacted with whom the given user follows.
 		// Contacts who already are in the user's contact table are ignored.
@@ -377,12 +376,12 @@ class Relation
 				(SELECT `cid` FROM `contact-relation` WHERE `relation-cid` = ?)
 					AND NOT `cid` IN (SELECT `id` FROM `contact` WHERE `uid` = ? AND `nurl` IN
 						(SELECT `nurl` FROM `contact` WHERE `uid` = ? AND `rel` IN (?, ?))) AND `id` = `cid`)
-			AND NOT `hidden` AND `network` IN (?, ?, ?, ?)
+			AND NOT `hidden` AND `network` IN (?, ?, ?)
 			AND NOT `uri-id` IN (SELECT `uri-id` FROM `account-suggestion` WHERE `uri-id` = `contact`.`uri-id` AND `uid` = ?)",
 			$cid,
 			0,
 			$uid, Contact::FRIEND, Contact::SHARING,
-			Protocol::ACTIVITYPUB, Protocol::DFRN, $diaspora, $ostatus, $uid
+			Protocol::ACTIVITYPUB, Protocol::DFRN, $diaspora, $uid
 			], [
 				'order' => ['last-item' => true],
 				'limit' => $totallimit,
@@ -408,10 +407,10 @@ class Relation
 				(SELECT `relation-cid` FROM `contact-relation` WHERE `cid` = ?)
 					AND NOT `cid` IN (SELECT `id` FROM `contact` WHERE `uid` = ? AND `nurl` IN
 						(SELECT `nurl` FROM `contact` WHERE `uid` = ? AND `rel` IN (?, ?))) AND `id` = `cid`)
-			AND NOT `hidden` AND `network` IN (?, ?, ?, ?)
+			AND NOT `hidden` AND `network` IN (?, ?, ?)
 			AND NOT `uri-id` IN (SELECT `uri-id` FROM `account-suggestion` WHERE `uri-id` = `contact`.`uri-id` AND `uid` = ?)",
 			$cid, 0, $uid, Contact::FRIEND, Contact::SHARING,
-			Protocol::ACTIVITYPUB, Protocol::DFRN, $diaspora, $ostatus, $uid],
+			Protocol::ACTIVITYPUB, Protocol::DFRN, $diaspora, $uid],
 			['order' => ['last-item' => true], 'limit' => $totallimit]
 		);
 
@@ -429,10 +428,10 @@ class Relation
 		// The query returns contacts that follow the given user but aren't followed by that user.
 		$results = DBA::select('contact', [],
 			["`nurl` IN (SELECT `nurl` FROM `contact` WHERE `uid` = ? AND `rel` = ?)
-			AND NOT `hidden` AND `uid` = ? AND `network` IN (?, ?, ?, ?)
+			AND NOT `hidden` AND `uid` = ? AND `network` IN (?, ?, ?)
 			AND NOT `uri-id` IN (SELECT `uri-id` FROM `account-suggestion` WHERE `uri-id` = `contact`.`uri-id` AND `uid` = ?)",
 			$uid, Contact::FOLLOWER, 0,
-			Protocol::ACTIVITYPUB, Protocol::DFRN, $diaspora, $ostatus, $uid],
+			Protocol::ACTIVITYPUB, Protocol::DFRN, $diaspora, $uid],
 			['order' => ['last-item' => true], 'limit' => $totallimit]
 		);
 
@@ -450,10 +449,10 @@ class Relation
 		// The query returns any contact that isn't followed by that user.
 		$results = DBA::select('contact', [],
 			["NOT `nurl` IN (SELECT `nurl` FROM `contact` WHERE `uid` = ? AND `rel` IN (?, ?) AND `nurl` = `nurl`)
-			AND NOT `hidden` AND `uid` = ? AND `network` IN (?, ?, ?, ?)
+			AND NOT `hidden` AND `uid` = ? AND `network` IN (?, ?, ?)
 			AND NOT `uri-id` IN (SELECT `uri-id` FROM `account-suggestion` WHERE `uri-id` = `contact`.`uri-id` AND `uid` = ?)",
 			$uid, Contact::FRIEND, Contact::SHARING, 0,
-			Protocol::ACTIVITYPUB, Protocol::DFRN, $diaspora, $ostatus, $uid],
+			Protocol::ACTIVITYPUB, Protocol::DFRN, $diaspora, $uid],
 			['order' => ['last-item' => true], 'limit' => $totallimit]
 		);
 

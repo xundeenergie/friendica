@@ -799,7 +799,7 @@ class Feed
 			$frequency = [];
 			$oldest = time();
 			$newest = 0;
-			$oldest_date = $newest_date = '';
+			$newest_date = '';
 
 			foreach ($creation_dates as $date) {
 				$timestamp = strtotime($date);
@@ -822,7 +822,6 @@ class Feed
 				}
 				if ($oldest > $day) {
 					$oldest = $day;
-					$oldest_date = $date;
 				}
 
 				if ($newest < $day) {
@@ -917,11 +916,6 @@ class Feed
 		} else {
 			// Check once a week per default for all other networks
 			$rating = 9;
-		}
-
-		// Friendica and OStatus are checked once a day
-		if (in_array($contact['network'], [Protocol::DFRN, Protocol::OSTATUS])) {
-			$rating = 8;
 		}
 
 		// Check archived contacts or contacts with unsupported protocols once a month
@@ -1030,10 +1024,9 @@ class Feed
 
 		$condition = [
 			"`uid` = ? AND `received` > ? AND NOT `deleted` AND `gravity` IN (?, ?)
-			AND `private` != ? AND `visible` AND `wall` AND `parent-network` IN (?, ?, ?, ?)",
+			AND `private` != ? AND `visible` AND `wall` AND `parent-network` IN (?, ?, ?)",
 			$owner['uid'], $check_date, Item::GRAVITY_PARENT, Item::GRAVITY_COMMENT,
-			Item::PRIVATE, Protocol::ACTIVITYPUB,
-			Protocol::OSTATUS, Protocol::DFRN, Protocol::DIASPORA
+			Item::PRIVATE, Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA
 		];
 
 		if ($filter === 'comments') {
@@ -1123,8 +1116,6 @@ class Feed
 		$attributes = ['href' => $owner['url'], 'rel' => 'alternate', 'type' => 'text/html'];
 		XML::addElement($doc, $root, 'link', '', $attributes);
 
-		OStatus::addHubLink($doc, $root, $owner['nick']);
-
 		$attributes = ['href' => DI::baseUrl() . $selfUri, 'rel' => 'self', 'type' => 'application/atom+xml'];
 		XML::addElement($doc, $root, 'link', '', $attributes);
 
@@ -1166,7 +1157,7 @@ class Feed
 			Logger::info('Feed entry author does not match feed owner', ['owner' => $owner['url'], 'author' => $item['author-link']]);
 		}
 
-		$entry = OStatus::entryHeader($doc, $owner, $item, false);
+		$entry = self::entryHeader($doc, $owner, $item, false);
 
 		self::entryContent($doc, $entry, $item, self::getTitle($item), '', true);
 
@@ -1191,7 +1182,7 @@ class Feed
 	private static function entryContent(DOMDocument $doc, DOMElement $entry, array $item, $title, string $verb = '', bool $complete = true)
 	{
 		if ($verb == '') {
-			$verb = OStatus::constructVerb($item);
+			$verb = self::constructVerb($item);
 		}
 
 		XML::addElement($doc, $entry, 'id', $item['uri']);
@@ -1278,7 +1269,7 @@ class Feed
 			}
 		}
 
-		OStatus::getAttachment($doc, $entry, $item);
+		self::getAttachment($doc, $entry, $item);
 	}
 
 	/**
@@ -1345,5 +1336,90 @@ class Feed
 			$replace = true;
 		}
 		return $replace;
+	}
+
+	/**
+	 * Adds attachment data to the XML document
+	 *
+	 * @param DOMDocument $doc  XML document
+	 * @param DOMElement  $root XML root element where the hub links are added
+	 * @param array       $item Data of the item that is to be posted
+	 * @return void
+	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 */
+	private static function getAttachment(DOMDocument $doc, DOMElement $root, array $item)
+	{
+		foreach (Post\Media::getByURIId($item['uri-id'], [Post\Media::AUDIO, Post\Media::IMAGE, Post\Media::VIDEO, Post\Media::DOCUMENT, Post\Media::TORRENT]) as $attachment) {
+			$attributes = ['rel' => 'enclosure',
+				'href' => $attachment['url'],
+				'type' => $attachment['mimetype']];
+
+			if (!empty($attachment['size'])) {
+				$attributes['length'] = intval($attachment['size']);
+			}
+			if (!empty($attachment['description'])) {
+				$attributes['title'] = $attachment['description'];
+			}
+
+			XML::addElement($doc, $root, 'link', '', $attributes);
+		}
+	}
+
+	/**
+	 * @TODO Picture attachments should look like this:
+	 *	<a href="https://status.pirati.ca/attachment/572819" title="https://status.pirati.ca/file/heluecht-20151202T222602-rd3u49p.gif"
+	 *	class="attachment thumbnail" id="attachment-572819" rel="nofollow external">https://status.pirati.ca/attachment/572819</a>
+	 */
+
+	/**
+	 * Returns the given activity if present - otherwise returns the "post" activity
+	 *
+	 * @param array $item Data of the item that is to be posted
+	 * @return string activity
+	 */
+	private static function constructVerb(array $item): string
+	{
+		if (!empty($item['verb'])) {
+			return $item['verb'];
+		}
+
+		return Activity::POST;
+	}
+
+	/**
+	 * Adds a header element to the XML document
+	 *
+	 * @param DOMDocument $doc      XML document
+	 * @param array       $owner    Contact data of the poster
+	 * @param array       $item
+	 * @param bool        $toplevel Is it for en entry element (false) or a feed entry (true)?
+	 * @return DOMElement The entry element where the elements are added
+	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws \ImagickException
+	 */
+	private static function entryHeader(DOMDocument $doc, array $owner, array $item, bool $toplevel): DOMElement
+	{
+		if (!$toplevel) {
+			$entry = $doc->createElement('entry');
+
+			if ($owner['contact-type'] == Contact::TYPE_COMMUNITY) {
+				$entry->setAttribute('xmlns:activity', ActivityNamespace::ACTIVITY);
+
+				$contact = Contact::getByURL($item['author-link']) ?: $owner;
+				$contact['nickname'] = $contact['nickname'] ?? $contact['nick'];
+				$author = self::addAuthor($doc, $contact, false);
+				$entry->appendChild($author);
+			}
+		} else {
+			$entry = $doc->createElementNS(ActivityNamespace::ATOM1, 'entry');
+
+			$entry->setAttribute('xmlns:thr', ActivityNamespace::THREAD);
+			$entry->setAttribute('xmlns:poco', ActivityNamespace::POCO);
+
+			$author = self::addAuthor($doc, $owner);
+			$entry->appendChild($author);
+		}
+
+		return $entry;
 	}
 }

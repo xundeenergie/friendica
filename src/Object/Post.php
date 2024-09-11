@@ -98,8 +98,8 @@ class Post
 					continue;
 				}
 
-				// You can always comment on Diaspora and OStatus items
-				if (in_array($item['network'], [Protocol::OSTATUS, Protocol::DIASPORA]) && (DI::userSession()->getLocalUserId() == $item['uid'])) {
+				// You can always comment on Diaspora items
+				if (in_array($item['network'], [Protocol::DIASPORA]) && (DI::userSession()->getLocalUserId() == $item['uid'])) {
 					$item['writable'] = true;
 				}
 

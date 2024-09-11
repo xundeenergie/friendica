@@ -61,11 +61,6 @@ class NodeInfo110 extends BaseModule
 			$nodeinfo['protocols']['outbound'][] = 'diaspora';
 		}
 
-		if (empty($this->config->get('system', 'ostatus_disabled'))) {
-			$nodeinfo['protocols']['inbound'][]  = 'gnusocial';
-			$nodeinfo['protocols']['outbound'][] = 'gnusocial';
-		}
-
 		$nodeinfo['metadata']['protocols']               = $nodeinfo['protocols'];
 		$nodeinfo['metadata']['protocols']['outbound'][] = 'atom1.0';
 		$nodeinfo['metadata']['protocols']['inbound'][]  = 'atom1.0';

@@ -25,7 +25,6 @@ use Friendica\Model\Contact;
  * @property-read int    $remoteSelf
  * @property-read int    $fetchFurtherInformation
  * @property-read string $ffiKeywordDenylist
- * @property-read bool   $subhub
  * @property-read string $hubVerify
  * @property-read string $protocol
  * @property-read int    $rating
@@ -69,8 +68,6 @@ class LocalRelationship extends \Friendica\BaseEntity
 	protected $fetchFurtherInformation;
 	/** @var string */
 	protected $ffiKeywordDenylist;
-	/** @var bool */
-	protected $subhub;
 	/** @var string */
 	protected $hubVerify;
 	/** @var string */
@@ -80,7 +77,7 @@ class LocalRelationship extends \Friendica\BaseEntity
 	/** @var int */
 	protected $priority;
 
-	public function __construct(int $userId, int $contactId, bool $blocked = false, bool $ignored = false, bool $collapsed = false, bool $hidden = false, bool $pending = false, int $rel = Contact::NOTHING, string $info = '', bool $notifyNewPosts = false, int $remoteSelf = self::MIRROR_DEACTIVATED, int $fetchFurtherInformation = self::FFI_NONE, string $ffiKeywordDenylist = '', bool $subhub = false, string $hubVerify = '', string $protocol = Protocol::PHANTOM, ?int $rating = null, ?int $priority = null)
+	public function __construct(int $userId, int $contactId, bool $blocked = false, bool $ignored = false, bool $collapsed = false, bool $hidden = false, bool $pending = false, int $rel = Contact::NOTHING, string $info = '', bool $notifyNewPosts = false, int $remoteSelf = self::MIRROR_DEACTIVATED, int $fetchFurtherInformation = self::FFI_NONE, string $ffiKeywordDenylist = '', string $hubVerify = '', string $protocol = Protocol::PHANTOM, ?int $rating = null, ?int $priority = null)
 	{
 		$this->userId                  = $userId;
 		$this->contactId               = $contactId;
@@ -95,7 +92,6 @@ class LocalRelationship extends \Friendica\BaseEntity
 		$this->remoteSelf              = $remoteSelf;
 		$this->fetchFurtherInformation = $fetchFurtherInformation;
 		$this->ffiKeywordDenylist      = $ffiKeywordDenylist;
-		$this->subhub                  = $subhub;
 		$this->hubVerify               = $hubVerify;
 		$this->protocol                = $protocol;
 		$this->rating                  = $rating;

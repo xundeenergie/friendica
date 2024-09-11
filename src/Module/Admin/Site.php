@@ -111,7 +111,6 @@ class Site extends BaseAdmin
 		$poco_local_search      = !empty($_POST['poco_local_search']);
 		$nodeinfo               = !empty($_POST['nodeinfo']);
 		$mail_enabled           = !empty($_POST['mail_enabled']);
-		$ostatus_enabled        = !empty($_POST['ostatus_enabled']);
 		$diaspora_enabled       = !empty($_POST['diaspora_enabled']);
 		$force_ssl              = !empty($_POST['force_ssl']);
 		$show_help              = !empty($_POST['show_help']);
@@ -280,7 +279,6 @@ class Site extends BaseAdmin
 		$transactionConfig->set('system', 'proxy'                  , $proxy);
 		$transactionConfig->set('system', 'curl_timeout'           , $timeout);
 		$transactionConfig->set('system', 'imap_disabled'          , !$mail_enabled && function_exists('imap_open'));
-		$transactionConfig->set('system', 'ostatus_disabled'       , !$ostatus_enabled);
 		$transactionConfig->set('system', 'diaspora_enabled'       , $diaspora_enabled);
 
 		$transactionConfig->set('config', 'private_addons'         , $private_addons);
@@ -531,7 +529,6 @@ class Site extends BaseAdmin
 			'$mail_able'              => function_exists('imap_open'),
 			'$mail_enabled'           => ['mail_enabled', DI::l10n()->t('Enable Mail support'), !DI::config()->get('system', 'imap_disabled', !function_exists('imap_open')), DI::l10n()->t('Enable built-in mail support to poll IMAP folders and to reply via mail.')],
 			'$mail_not_able'          => DI::l10n()->t('Mail support can\'t be enabled because the PHP IMAP module is not installed.'),
-			'$ostatus_enabled'        => ['ostatus_enabled', DI::l10n()->t('Enable OStatus support'), !DI::config()->get('system', 'ostatus_disabled'), DI::l10n()->t('Enable built-in OStatus (StatusNet, GNU Social etc.) compatibility. All communications in OStatus are public.')],
 			'$diaspora_able'          => $diaspora_able,
 			'$diaspora_not_able'      => DI::l10n()->t('Diaspora support can\'t be enabled because Friendica was installed into a sub directory.'),
 			'$diaspora_enabled'       => ['diaspora_enabled', DI::l10n()->t('Enable Diaspora support'), DI::config()->get('system', 'diaspora_enabled', $diaspora_able), DI::l10n()->t('Enable built-in Diaspora network compatibility for communicating with diaspora servers.')],
@@ -562,7 +559,7 @@ class Site extends BaseAdmin
 			'$dbclean'                => ['dbclean', DI::l10n()->t('Clean database'), DI::config()->get('system', 'dbclean'), DI::l10n()->t('Remove old remote items, orphaned database records and old content from some other helper tables.')],
 			'$dbclean_expire_days'    => ['dbclean_expire_days', DI::l10n()->t('Lifespan of remote items'), DI::config()->get('system', 'dbclean-expire-days'), DI::l10n()->t('When the database cleanup is enabled, this defines the days after which remote items will be deleted. Own items, and marked or filed items are always kept. 0 disables this behaviour.')],
 			'$dbclean_unclaimed'      => ['dbclean_unclaimed', DI::l10n()->t('Lifespan of unclaimed items'), DI::config()->get('system', 'dbclean-expire-unclaimed'), DI::l10n()->t('When the database cleanup is enabled, this defines the days after which unclaimed remote items (mostly content from the relay) will be deleted. Default value is 90 days. Defaults to the general lifespan value of remote items if set to 0.')],
-			'$dbclean_expire_conv'    => ['dbclean_expire_conv', DI::l10n()->t('Lifespan of raw conversation data'), DI::config()->get('system', 'dbclean_expire_conversation'), DI::l10n()->t('The conversation data is used for ActivityPub and OStatus, as well as for debug purposes. It should be safe to remove it after 14 days, default is 90 days.')],
+			'$dbclean_expire_conv'    => ['dbclean_expire_conv', DI::l10n()->t('Lifespan of raw conversation data'), DI::config()->get('system', 'dbclean_expire_conversation'), DI::l10n()->t('The conversation data is used for ActivityPub, as well as for debug purposes. It should be safe to remove it after 14 days, default is 90 days.')],
 			'$max_comments'           => ['max_comments', DI::l10n()->t('Maximum numbers of comments per post'), DI::config()->get('system', 'max_comments'), DI::l10n()->t('How much comments should be shown for each post? Default value is 100.')],
 			'$max_display_comments'   => ['max_display_comments', DI::l10n()->t('Maximum numbers of comments per post on the display page'), DI::config()->get('system', 'max_display_comments'), DI::l10n()->t('How many comments should be shown on the single view for each post? Default value is 1000.')],
 			'$itemspage_network'      => ['itemspage_network', DI::l10n()->t('Items per page'), DI::config()->get('system', 'itemspage_network'), DI::l10n()->t('Number of items per page in stream pages (network, community, profile/contact statuses, search).')],

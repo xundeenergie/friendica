@@ -29,7 +29,7 @@ class DeliveryData
 	const DFRN = 2;
 	const LEGACY_DFRN = 3; // @deprecated since version 2021.09
 	const DIASPORA = 4;
-	const OSTATUS = 5;
+	const OSTATUS = 5; // @deprecated since version 2024.09
 	const MAIL = 6;
 
 	/**
@@ -82,9 +82,6 @@ class DeliveryData
 				break;
 			case self::DIASPORA:
 				$increments[] = "`diaspora` = `diaspora` + 1";
-				break;
-			case self::OSTATUS:
-				$increments[] = "`ostatus` = `ostatus` + 1";
 				break;
 		}
 

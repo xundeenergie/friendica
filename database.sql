@@ -70,8 +70,6 @@ CREATE TABLE IF NOT EXISTS `user` (
 	`theme` varchar(255) NOT NULL DEFAULT '' COMMENT 'user theme preference',
 	`pubkey` text COMMENT 'RSA public key 4096 bit',
 	`prvkey` text COMMENT 'RSA private key 4096 bit',
-	`spubkey` text COMMENT '',
-	`sprvkey` text COMMENT '',
 	`verified` boolean NOT NULL DEFAULT '0' COMMENT 'user is verified through email',
 	`blocked` boolean NOT NULL DEFAULT '0' COMMENT '1 for user is blocked',
 	`blockwall` boolean NOT NULL DEFAULT '0' COMMENT 'Prohibit contacts to post to the profile page of the user',
@@ -183,7 +181,6 @@ CREATE TABLE IF NOT EXISTS `contact` (
 	`remote_self` boolean NOT NULL DEFAULT '0' COMMENT '',
 	`rel` tinyint unsigned NOT NULL DEFAULT 0 COMMENT 'The kind of the relation between the user and the contact',
 	`protocol` char(4) NOT NULL DEFAULT '' COMMENT 'Protocol of the contact',
-	`subhub` boolean NOT NULL DEFAULT '0' COMMENT '',
 	`hub-verify` varbinary(383) NOT NULL DEFAULT '' COMMENT '',
 	`rating` tinyint NOT NULL DEFAULT 0 COMMENT 'Automatically detected feed poll frequency',
 	`priority` tinyint unsigned NOT NULL DEFAULT 0 COMMENT 'Feed poll priority',
@@ -1345,7 +1342,6 @@ CREATE TABLE IF NOT EXISTS `post-delivery-data` (
 	`dfrn` mediumint NOT NULL DEFAULT 0 COMMENT 'Number of successful deliveries via DFRN',
 	`legacy_dfrn` mediumint NOT NULL DEFAULT 0 COMMENT 'Number of successful deliveries via legacy DFRN',
 	`diaspora` mediumint NOT NULL DEFAULT 0 COMMENT 'Number of successful deliveries via Diaspora',
-	`ostatus` mediumint NOT NULL DEFAULT 0 COMMENT 'Number of successful deliveries via OStatus',
 	 PRIMARY KEY(`uri-id`),
 	FOREIGN KEY (`uri-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE
 ) DEFAULT COLLATE utf8mb4_general_ci COMMENT='Delivery data for items';
@@ -1813,26 +1809,6 @@ CREATE TABLE IF NOT EXISTS `profile_field` (
 ) DEFAULT COLLATE utf8mb4_general_ci COMMENT='Custom profile fields';
 
 --
--- TABLE push_subscriber
---
-CREATE TABLE IF NOT EXISTS `push_subscriber` (
-	`id` int unsigned NOT NULL auto_increment COMMENT 'sequential ID',
-	`uid` mediumint unsigned NOT NULL DEFAULT 0 COMMENT 'User id',
-	`callback_url` varbinary(383) NOT NULL DEFAULT '' COMMENT '',
-	`topic` varchar(255) NOT NULL DEFAULT '' COMMENT '',
-	`nickname` varchar(255) NOT NULL DEFAULT '' COMMENT '',
-	`push` tinyint NOT NULL DEFAULT 0 COMMENT 'Retrial counter',
-	`last_update` datetime NOT NULL DEFAULT '0001-01-01 00:00:00' COMMENT 'Date of last successful trial',
-	`next_try` datetime NOT NULL DEFAULT '0001-01-01 00:00:00' COMMENT 'Next retrial date',
-	`renewed` datetime NOT NULL DEFAULT '0001-01-01 00:00:00' COMMENT 'Date of last subscription renewal',
-	`secret` varchar(255) NOT NULL DEFAULT '' COMMENT '',
-	 PRIMARY KEY(`id`),
-	 INDEX `next_try` (`next_try`),
-	 INDEX `uid` (`uid`),
-	FOREIGN KEY (`uid`) REFERENCES `user` (`uid`) ON UPDATE RESTRICT ON DELETE CASCADE
-) DEFAULT COLLATE utf8mb4_general_ci COMMENT='Used for OStatus: Contains feed subscribers';
-
---
 -- TABLE register
 --
 CREATE TABLE IF NOT EXISTS `register` (
@@ -2010,7 +1986,6 @@ CREATE TABLE IF NOT EXISTS `user-contact` (
 	`remote_self` tinyint unsigned COMMENT '0 => No mirroring, 1-2 => Mirror as own post, 3 => Mirror as reshare',
 	`fetch_further_information` tinyint unsigned COMMENT '0 => None, 1 => Fetch information, 3 => Fetch keywords, 2 => Fetch both',
 	`ffi_keyword_denylist` text COMMENT '',
-	`subhub` boolean COMMENT '',
 	`hub-verify` varbinary(383) COMMENT '',
 	`protocol` char(4) COMMENT 'Protocol of the contact',
 	`rating` tinyint COMMENT 'Automatically detected feed poll frequency',
@@ -3516,7 +3491,6 @@ CREATE VIEW `owner-view` AS SELECT
 	`contact`.`poll` AS `poll`,
 	`contact`.`confirm` AS `confirm`,
 	`contact`.`poco` AS `poco`,
-	`contact`.`subhub` AS `subhub`,
 	`contact`.`hub-verify` AS `hub-verify`,
 	`contact`.`last-update` AS `last-update`,
 	`contact`.`success_update` AS `success_update`,
@@ -3565,8 +3539,6 @@ CREATE VIEW `owner-view` AS SELECT
 	`user`.`theme` AS `theme`,
 	`user`.`pubkey` AS `upubkey`,
 	`user`.`prvkey` AS `uprvkey`,
-	`user`.`sprvkey` AS `sprvkey`,
-	`user`.`spubkey` AS `spubkey`,
 	`user`.`verified` AS `verified`,
 	`user`.`blockwall` AS `blockwall`,
 	`user`.`hidewall` AS `hidewall`,
@@ -3763,7 +3735,6 @@ CREATE VIEW `account-user-view` AS SELECT
 	`ucontact`.`readonly` AS `readonly`,
 	`ucontact`.`blocked` AS `blocked`,
 	`ucontact`.`block_reason` AS `block_reason`,
-	`ucontact`.`subhub` AS `subhub`,
 	`ucontact`.`hub-verify` AS `hub-verify`,
 	`ucontact`.`reason` AS `reason`,
 	`contact`.`notify` AS `dfrn-notify`,

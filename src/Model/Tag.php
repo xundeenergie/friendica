@@ -594,9 +594,9 @@ class Tag
 	public static function countByTag(string $search, int $uid = 0): int
 	{
 		$condition = ["`name` = ? AND (`uid` = ? OR (`uid` = ? AND NOT `global`))
-			AND (`network` IN (?, ?, ?, ?) OR (`uid` = ? AND `uid` != ?))",
+			AND (`network` IN (?, ?, ?) OR (`uid` = ? AND `uid` != ?))",
 			$search, 0, $uid,
-			Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA, Protocol::OSTATUS, $uid, 0,
+			Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA, $uid, 0,
 		];
 
 		return DBA::count('tag-search-view', $condition);
@@ -615,9 +615,9 @@ class Tag
 	public static function getURIIdListByTag(string $search, int $uid = 0, int $start = 0, int $limit = 100, int $last_uriid = 0): array
 	{
 		$condition = ["`name` = ? AND (`uid` = ? OR (`uid` = ? AND NOT `global`))
-			AND (`network` IN (?, ?, ?, ?) OR (`uid` = ? AND `uid` != ?))",
+			AND (`network` IN (?, ?, ?) OR (`uid` = ? AND `uid` != ?))",
 			$search, 0, $uid,
-			Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA, Protocol::OSTATUS, $uid, 0,
+			Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA, $uid, 0,
 		];
 
 		if (!empty($last_uriid)) {

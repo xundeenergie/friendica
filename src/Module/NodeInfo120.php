@@ -54,10 +54,6 @@ class NodeInfo120 extends BaseModule
 			$nodeinfo['protocols'][] = 'diaspora';
 		}
 
-		if (empty($this->config->get('system', 'ostatus_disabled'))) {
-			$nodeinfo['protocols'][] = 'ostatus';
-		}
-
 		$nodeinfo['services']['inbound'][]  = 'atom1.0';
 		$nodeinfo['services']['inbound'][]  = 'rss2.0';
 		$nodeinfo['services']['outbound'][] = 'atom1.0';

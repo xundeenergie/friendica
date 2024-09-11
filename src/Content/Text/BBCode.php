@@ -48,7 +48,6 @@ class BBCode
 	const CONNECTORS   = 4;
 	const TWITTER_API  = 5;
 	const NPF          = 6;
-	const OSTATUS      = 7;
 	const TWITTER      = 8;
 	const BACKLINK     = 8;
 	const ACTIVITYPUB  = 9;
@@ -911,9 +910,6 @@ class BBCode
 				$text = ($is_quote_share ? '<hr />' : '') . $headline . '<blockquote class="shared_content" dir="auto">' . trim($content) . '</blockquote>' . "\n";
 
 				break;
-			case self::OSTATUS:
-				$text = ($is_quote_share ? '<br>' : '') . '<p>' . html_entity_decode('&#x2672; ', ENT_QUOTES, 'UTF-8') . ' @' . $author_contact['addr'] . ': ' . $content . '</p>' . "\n";
-				break;
 			case self::ACTIVITYPUB:
 				$author = '@<span class="vcard"><a href="' . $author_contact['url'] . '" class="url u-url mention" title="' . $author_contact['addr'] . '"><span class="fn nickname mention">' . $author_contact['addr'] . '</span></a>:</span>';
 				$text = '<div><a href="' . $attributes['link'] . '">' . html_entity_decode('&#x2672;', ENT_QUOTES, 'UTF-8') . '</a> ' . $author . '<blockquote>' . $content . '</blockquote></div>' . "\n";
@@ -1252,7 +1248,7 @@ class BBCode
 	 * - 4: Used for WordPress, Libertree (before Markdown), pump.io and tumblr
 	 * - 5: Unused
 	 * - 6: Unused
-	 * - 7: Used for dfrn, OStatus
+	 * - 7: Used for dfrn
 	 * - 8: Used for Twitter, WP backlink text setting
 	 * - 9: ActivityPub
 	 *
@@ -1283,7 +1279,7 @@ class BBCode
 	 * - 4: Used for WordPress, Libertree (before Markdown), pump.io and tumblr
 	 * - 5: Unused
 	 * - 6: Unused
-	 * - 7: Used for dfrn, OStatus
+	 * - 7: Used for dfrn
 	 * - 8: Used for Twitter, WP backlink text setting
 	 * - 9: ActivityPub
 	 *
@@ -1971,7 +1967,7 @@ class BBCode
 				'@<a href="$2">$3</a>',
 				$text
 			);
-		} elseif (in_array($simple_html, [self::OSTATUS, self::ACTIVITYPUB])) {
+		} elseif (in_array($simple_html, [self::ACTIVITYPUB])) {
 			$text = preg_replace(
 				"/([@!])\[url\=(.*?)\](.*?)\[\/url\]/ism",
 				'<span class="h-card"><a href="$2" class="u-url mention">$1<span>$3</span></a></span>',
@@ -2017,7 +2013,7 @@ class BBCode
 			$text
 		);
 
-		if (in_array($simple_html, [self::OSTATUS, self::TWITTER, self::BLUESKY])) {
+		if (in_array($simple_html, [self::TWITTER, self::BLUESKY])) {
 			$text = preg_replace_callback("/([^#@!])\[url\=([^\]]*)\](.*?)\[\/url\]/ism", [self::class, 'expandLinksCallback'], $text);
 			//$text = preg_replace("/[^#@!]\[url\=([^\]]*)\](.*?)\[\/url\]/ism", ' $2 [url]$1[/url]', $text);
 			$text = preg_replace("/\[bookmark\=([^\]]*)\](.*?)\[\/bookmark\]/ism", ' $2 [url]$1[/url]', $text);
@@ -2075,7 +2071,7 @@ class BBCode
 		// Red compatibility, though the link can't be authenticated on Friendica
 		$text = preg_replace("/\[zrl\=(.*?)\](.*?)\[\/zrl\]/ism", '[url=$1]$2[/url]', $text);
 
-		if (in_array($simple_html, [self::INTERNAL, self::EXTERNAL, self::DIASPORA, self::OSTATUS, self::MASTODON_API, self::TWITTER_API, self::ACTIVITYPUB])) {
+		if (in_array($simple_html, [self::INTERNAL, self::EXTERNAL, self::DIASPORA, self::MASTODON_API, self::TWITTER_API, self::ACTIVITYPUB])) {
 			$text = self::shortenLinkDescription($text, $simple_html);
 		} else {
 			$text = self::unifyLinks($text);

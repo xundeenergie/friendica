@@ -50,7 +50,7 @@ class NoScrape extends BaseModule
 			'account-type' => $owner['account-type'],
 		];
 
-		$dfrn_pages = ['request', 'confirm', 'notify', 'poll'];
+		$dfrn_pages = ['notify', 'poll'];
 		foreach ($dfrn_pages as $dfrn) {
 			$json_info["dfrn-{$dfrn}"] = DI::baseUrl() . "/dfrn_{$dfrn}/{$which}";
 		}

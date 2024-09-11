@@ -294,7 +294,7 @@ class Profile extends BaseModule
 		}
 		$lblsuggest = (($contact['network'] === Protocol::DFRN) ? $this->t('Suggest friends') : '');
 
-		$poll_enabled = in_array($contact['network'], [Protocol::DFRN, Protocol::OSTATUS, Protocol::FEED, Protocol::MAIL]);
+		$poll_enabled = in_array($contact['network'], [Protocol::DFRN, Protocol::FEED, Protocol::MAIL]);
 
 		$nettype = $this->t('Network type: %s', ContactSelector::networkToName($contact['network'], $contact['url'], $contact['protocol'], $contact['gsid']));
 
@@ -460,7 +460,7 @@ class Profile extends BaseModule
 	 */
 	private function getContactActions(array $contact, LocalRelationship\Entity\LocalRelationship $localRelationship): array
 	{
-		$poll_enabled    = in_array($contact['network'], [Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::OSTATUS, Protocol::FEED, Protocol::MAIL]);
+		$poll_enabled    = in_array($contact['network'], [Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::FEED, Protocol::MAIL]);
 		$contact_actions = [];
 
 		$formSecurityToken = self::getFormSecurityToken('contact_action');
