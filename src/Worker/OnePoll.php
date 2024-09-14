@@ -183,7 +183,7 @@ class OnePoll
 			return false;
 		}
 
-		if (strpos($curlResult->getContentType(), 'xml') !== false) {
+		if (strpos($curlResult->getContentType(), 'xml') === false) {
 			Logger::notice('Unexpected content type.', ['id' => $contact['id'], 'url' => $contact['poll'], 'content-type' => $curlResult->getContentType()]);
 			return false;
 		}
