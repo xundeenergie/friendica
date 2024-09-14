@@ -50,6 +50,7 @@ class Media
 	const PLAIN       = 19;
 	const ACTIVITY    = 20;
 	const ACCOUNT     = 21;
+	const HLS         = 22;
 	const DOCUMENT    = 128;
 
 	/**
@@ -220,17 +221,14 @@ class Media
 			} else {
 				Logger::notice('No image data', ['media' => $media]);
 			}
-			if (!empty($media['preview'])) {
-				$imagedata = Images::getInfoFromURLCached($media['preview']);
-				if ($imagedata) {
-					$media['preview-width'] = $imagedata[0];
-					$media['preview-height'] = $imagedata[1];
-				}
-			}
 		}
 
 		if ($media['type'] != self::DOCUMENT) {
 			$media = self::addType($media);
+		}
+
+		if (!empty($media['preview'])) {
+			$media = self::addPreviewData($media);
 		}
 
 		if (in_array($media['type'], [self::TEXT, self::APPLICATION, self::HTML, self::XML, self::PLAIN])) {
@@ -243,6 +241,21 @@ class Media
 
 		if ($media['type'] == self::HTML) {
 			$media = self::addPage($media);
+		}
+
+		return $media;
+	}
+
+	private static function addPreviewData(array $media): array
+	{
+		if (!empty($media['preview-width']) && !empty($media['preview-height'])) {
+			return $media;
+		}
+
+		$imagedata = Images::getInfoFromURLCached($media['preview']);
+		if ($imagedata) {
+			$media['preview-width'] = $imagedata[0];
+			$media['preview-height'] = $imagedata[1];
 		}
 
 		return $media;
@@ -466,6 +479,8 @@ class Media
 			$type = self::TEXT;
 		} elseif (($filetype == 'application') && ($subtype == 'x-bittorrent')) {
 			$type = self::TORRENT;
+		} elseif (($filetype == 'application') && ($subtype == 'vnd.apple.mpegurl')) {
+			$type = self::HLS;
 		} elseif ($filetype == 'application') {
 			$type = self::APPLICATION;
 		} else {
@@ -473,8 +488,8 @@ class Media
 			Logger::info('Unknown type', ['filetype' => $filetype, 'subtype' => $subtype, 'media' => $mimeType]);
 		}
 
-		Logger::debug('Detected type', ['filetype' => $filetype, 'subtype' => $subtype, 'media' => $mimeType]);
-		return $type;		
+		Logger::debug('Detected type', ['type' => $type, 'filetype' => $filetype, 'subtype' => $subtype, 'media' => $mimeType]);
+		return $type;
 	}
 
 	/**
