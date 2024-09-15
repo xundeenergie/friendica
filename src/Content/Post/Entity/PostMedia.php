@@ -51,6 +51,7 @@ class PostMedia extends BaseEntity
 	const TYPE_PLAIN       = 19;
 	const TYPE_ACTIVITY    = 20;
 	const TYPE_ACCOUNT     = 21;
+	const TYPE_HLS         = 22;
 	const TYPE_DOCUMENT    = 128;
 
 	/** @var int */

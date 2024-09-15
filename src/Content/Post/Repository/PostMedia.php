@@ -153,7 +153,7 @@ class PostMedia extends BaseRepository
 			}
 
 			if (
-				in_array($PostMedia->type, [Entity\PostMedia::TYPE_AUDIO, Entity\PostMedia::TYPE_IMAGE]) ||
+				in_array($PostMedia->type, [Entity\PostMedia::TYPE_AUDIO, Entity\PostMedia::TYPE_IMAGE, Entity\PostMedia::TYPE_HLS]) ||
 				in_array($PostMedia->mimetype->type, ['audio', 'image'])
 			) {
 				$attachments['visual'][] = $PostMedia;

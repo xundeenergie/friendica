@@ -345,7 +345,7 @@ class Engagement
 		foreach ($media as $entry) {
 			if ($entry['type'] == Post\Media::IMAGE) {
 				$type = $type | self::MEDIA_IMAGE;
-			} elseif ($entry['type'] == Post\Media::VIDEO) {
+			} elseif (in_array($entry['type'], [Post\Media::VIDEO, Post\Media::HLS])) {
 				$type = $type | self::MEDIA_VIDEO;
 			} elseif ($entry['type'] == Post\Media::AUDIO) {
 				$type = $type | self::MEDIA_AUDIO;
