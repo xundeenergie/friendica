@@ -27,12 +27,17 @@ class Network extends NetworkModule
 			System::htmlUpdateExit($o);
 		}
 
-		if ($this->channel->isTimeline($this->selectedTab) || $this->userDefinedChannel->isTimeline($this->selectedTab, $this->session->getLocalUserId())) {
-			$items = $this->getChannelItems($request, $this->session->getLocalUserId());
-		} elseif ($this->community->isTimeline($this->selectedTab)) {
-			$items = $this->getCommunityItems();
-		} else {
-			$items = $this->getItems();
+		try {
+			if ($this->channel->isTimeline($this->selectedTab) || $this->userDefinedChannel->isTimeline($this->selectedTab, $this->session->getLocalUserId())) {
+				$items = $this->getChannelItems($request, $this->session->getLocalUserId());
+			} elseif ($this->community->isTimeline($this->selectedTab)) {
+				$items = $this->getCommunityItems();
+			} else {
+				$items = $this->getItems();
+			}
+		} catch (\Exception $e) {
+			$this->logger->error('Exception when fetching items', ['code' => $e->getCode(), 'message' => $e->getMessage()]);
+			$items = [];
 		}
 
 		$o = $this->conversation->render($items, Conversation::MODE_NETWORK, true, false, $this->getOrder(), $this->session->getLocalUserId());
