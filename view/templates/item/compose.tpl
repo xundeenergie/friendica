@@ -127,33 +127,54 @@
 			// Set initial height
 			textarea.style.height = "auto";
 			textarea.style.height = (textarea.scrollHeight) + "px";
+
+			// Restore saved content
+			const savedContent = localStorage.getItem(`comment-edit-text-${textarea.id}`);
+			if (savedContent) {
+				textarea.value = savedContent;
+				textarea.style.height = "auto";
+				textarea.style.height = (textarea.scrollHeight) + "px";
+			}
 		});
 	});
 
-    function togglePermissions() {
-        var permissionsSection = document.getElementById('permissions-section');
-        if (permissionsSection.style.display === 'none' || permissionsSection.style.display === '') {
-            permissionsSection.style.display = 'block';
-        } else {
-            permissionsSection.style.display = 'none';
-        }
-    }
+	// Auto-save content to localStorage every 5 seconds
+	setInterval(() => {
+		var textareas = document.querySelectorAll(".expandable-textarea");
+		textareas.forEach(function(textarea) {
+			localStorage.setItem(`comment-edit-text-${textarea.id}`, textarea.value);
+		});
+	}, 5000);
 
-    // Warn the user before leaving the page
-    var formSubmitting = false;
+	function togglePermissions() {
+		var permissionsSection = document.getElementById('permissions-section');
+		if (permissionsSection.style.display === 'none' || permissionsSection.style.display === '') {
+			permissionsSection.style.display = 'block';
+		} else {
+			permissionsSection.style.display = 'none';
+		}
+	}
 
-    function setFormSubmitting() {
-        formSubmitting = true;
-    }
+	// Warn the user before leaving the page
+	var formSubmitting = false;
 
-    window.addEventListener("beforeunload", function (event) {
-        if (!formSubmitting) {
-            var confirmationMessage = 'Are you sure you want to reload the page? All unsaved changes will be lost.';
-            event.returnValue = confirmationMessage;
-            return confirmationMessage;
-        }
-    });
+	function setFormSubmitting() {
+		formSubmitting = true;
+		// Remove saved content from localStorage when form is submitted
+		var textareas = document.querySelectorAll(".expandable-textarea");
+		textareas.forEach(function(textarea) {
+			localStorage.removeItem(`comment-edit-text-${textarea.id}`);
+		});
+	}
 
-    // Set the formSubmitting flag when the form is submitted
-    document.getElementById('comment-edit-form-{{$id}}').addEventListener('submit', setFormSubmitting);
+	window.addEventListener("beforeunload", function (event) {
+		if (!formSubmitting) {
+			var confirmationMessage = 'Are you sure you want to reload the page? All unsaved changes will be lost.';
+			event.returnValue = confirmationMessage;
+			return confirmationMessage;
+		}
+	});
+
+	// Set the formSubmitting flag when the form is submitted
+	document.getElementById('comment-edit-form-{{$id}}').addEventListener('submit', setFormSubmitting);
 </script>
