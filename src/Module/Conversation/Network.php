@@ -222,7 +222,9 @@ class Network extends Timeline
 
 			$o .= $this->conversation->render($items, Conversation::MODE_NETWORK, false, false, $this->getOrder(), $this->session->getLocalUserId());
 		} catch (\Exception $e) {
+			$this->logger->error('Exception when fetching items', ['code' => $e->getCode(), 'message' => $e->getMessage()]);
 			$o .= $this->l10n->t('Error %d (%s) while fetching the timeline.', $e->getCode(), $e->getMessage());
+			$items = [];
 		}
 
 		if ($this->pConfig->get($this->session->getLocalUserId(), 'system', 'infinite_scroll')) {
