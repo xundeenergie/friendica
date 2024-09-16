@@ -127,24 +127,8 @@
 			// Set initial height
 			textarea.style.height = "auto";
 			textarea.style.height = (textarea.scrollHeight) + "px";
-
-			// Restore saved content
-			const savedContent = localStorage.getItem(`comment-edit-text-${textarea.id}`);
-			if (savedContent) {
-				textarea.value = savedContent;
-				textarea.style.height = "auto";
-				textarea.style.height = (textarea.scrollHeight) + "px";
-			}
 		});
 	});
-
-	// Auto-save content to localStorage every 5 seconds
-	setInterval(() => {
-		var textareas = document.querySelectorAll(".expandable-textarea");
-		textareas.forEach(function(textarea) {
-			localStorage.setItem(`comment-edit-text-${textarea.id}`, textarea.value);
-		});
-	}, 5000);
 
 	function togglePermissions() {
 		var permissionsSection = document.getElementById('permissions-section');
@@ -160,18 +144,75 @@
 
 	function setFormSubmitting() {
 		formSubmitting = true;
-		// Remove saved content from localStorage when form is submitted
+	}
+
+	document.addEventListener("DOMContentLoaded", function() {
+		var textareas = document.querySelectorAll(".expandable-textarea");
+
+		textareas.forEach(function(textarea) {
+			// Set initial height and restore saved content
+			textarea.style.height = "auto";
+			textarea.style.height = (textarea.scrollHeight) + "px";
+
+			const savedContent = localStorage.getItem(`comment-edit-text-${textarea.id}`);
+			const lastSaved = localStorage.getItem(`last-saved-${textarea.id}`);
+
+			if (savedContent && lastSaved) {
+				// Check whether 10 minutes have elapsed since the last save
+				const currentTime = new Date().getTime();
+				const timeElapsed = currentTime - parseInt(lastSaved, 10);
+
+				if (timeElapsed <= 600000) {  // 600000 ms = 10 Minuten
+					textarea.value = savedContent;
+					textarea.style.height = "auto";
+					textarea.style.height = (textarea.scrollHeight) + "px";
+				} else {
+					// Content is older than 10 minutes, therefore delete
+					localStorage.removeItem(`comment-edit-text-${textarea.id}`);
+					localStorage.removeItem(`last-saved-${textarea.id}`);
+				}
+			}
+		});
+	});
+
+	// Auto-save content to localStorage every 5 seconds
+	setInterval(() => {
+		var textareas = document.querySelectorAll(".expandable-textarea");
+		textareas.forEach(function(textarea) {
+			if (textarea.value.trim() !== "") {
+				// Saving the content
+				localStorage.setItem(`comment-edit-text-${textarea.id}`, textarea.value);
+
+				// Saving the timestamp of the last save
+				const currentTime = new Date().getTime();
+				localStorage.setItem(`last-saved-${textarea.id}`, currentTime.toString());
+			}
+		});
+	}, 5000);
+
+	// Remove content saved when submitting the form
+	function setFormSubmitting() {
+		formSubmitting = true;
+
+		// Removing the content from localStorage
 		var textareas = document.querySelectorAll(".expandable-textarea");
 		textareas.forEach(function(textarea) {
 			localStorage.removeItem(`comment-edit-text-${textarea.id}`);
+			localStorage.removeItem(`last-saved-${textarea.id}`);
 		});
 	}
 
 	window.addEventListener("beforeunload", function (event) {
 		if (!formSubmitting) {
-			var confirmationMessage = 'Are you sure you want to reload the page? All unsaved changes will be lost.';
-			event.returnValue = confirmationMessage;
-			return confirmationMessage;
+			// Get the value of the text field
+			var textField = document.getElementById('comment-edit-text-{{$id}}').value.trim();
+
+			// Check whether the text field contains at least one character
+			if (textField.length > 0) {
+				var confirmationMessage = 'Are you sure you want to reload the page? All unsaved changes will be lost.';
+				event.returnValue = confirmationMessage;
+				return confirmationMessage;
+			}
 		}
 	});
 
