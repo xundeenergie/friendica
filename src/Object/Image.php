@@ -213,6 +213,12 @@ class Image
 		}
 
 		$this->valid = false;
+
+		if (($this->originType == IMAGETYPE_WEBP) && $this->isAnimatedWebP(substr($data, 0, 90))) {
+			DI::logger()->notice('Animated WebP images are unsupported by GDlib. Please install Imagick.', ['file' => $this->filename]);
+			return false;
+		}
+
 		try {
 			$this->image = @imagecreatefromstring($data);
 			if ($this->image !== false) {
