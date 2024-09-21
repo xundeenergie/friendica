@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.09-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-02 05:44+0000\n"
+"POT-Creation-Date: 2024-09-19 14:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1830,7 +1830,7 @@ msgstr ""
 msgid "Create new group"
 msgstr ""
 
-#: src/Content/Item.php:317 src/Model/Item.php:3271
+#: src/Content/Item.php:317 src/Model/Item.php:3272
 msgid "event"
 msgstr ""
 
@@ -1838,7 +1838,7 @@ msgstr ""
 msgid "status"
 msgstr ""
 
-#: src/Content/Item.php:326 src/Model/Item.php:3273
+#: src/Content/Item.php:326 src/Model/Item.php:3274
 #: src/Module/Post/Tag/Add.php:109
 msgid "photo"
 msgstr ""
@@ -2196,7 +2196,7 @@ msgstr ""
 #: src/Content/Nav.php:321 src/Module/BaseModeration.php:114
 #: src/Module/Moderation/Blocklist/Contact.php:96
 #: src/Module/Moderation/Blocklist/Server/Add.php:107
-#: src/Module/Moderation/Blocklist/Server/Import.php:104
+#: src/Module/Moderation/Blocklist/Server/Import.php:102
 #: src/Module/Moderation/Blocklist/Server/Index.php:81
 #: src/Module/Moderation/Item/Delete.php:47
 #: src/Module/Moderation/Reports.php:96 src/Module/Moderation/Summary.php:61
@@ -2245,8 +2245,8 @@ msgstr ""
 msgid "<a href=\"%1$s\" target=\"_blank\" rel=\"noopener noreferrer\">%2$s</a> %3$s"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:929 src/Model/Item.php:4027
-#: src/Model/Item.php:4033 src/Model/Item.php:4034
+#: src/Content/Text/BBCode.php:929 src/Model/Item.php:4028
+#: src/Model/Item.php:4034 src/Model/Item.php:4035
 msgid "Link to source"
 msgstr ""
 
@@ -3385,75 +3385,75 @@ msgstr ""
 msgid "Detected languages in this post:\\n%s"
 msgstr ""
 
-#: src/Model/Item.php:3275
+#: src/Model/Item.php:3276
 msgid "activity"
 msgstr ""
 
-#: src/Model/Item.php:3277
+#: src/Model/Item.php:3278
 msgid "comment"
 msgstr ""
 
-#: src/Model/Item.php:3280 src/Module/Post/Tag/Add.php:109
+#: src/Model/Item.php:3281 src/Module/Post/Tag/Add.php:109
 msgid "post"
 msgstr ""
 
-#: src/Model/Item.php:3450
+#: src/Model/Item.php:3451
 #, php-format
 msgid "%s is blocked"
 msgstr ""
 
-#: src/Model/Item.php:3452
+#: src/Model/Item.php:3453
 #, php-format
 msgid "%s is ignored"
 msgstr ""
 
-#: src/Model/Item.php:3454
+#: src/Model/Item.php:3455
 #, php-format
 msgid "Content from %s is collapsed"
 msgstr ""
 
-#: src/Model/Item.php:3458
+#: src/Model/Item.php:3459
 msgid "Sensitive content"
 msgstr ""
 
-#: src/Model/Item.php:3927
+#: src/Model/Item.php:3928
 msgid "bytes"
 msgstr ""
 
-#: src/Model/Item.php:3958
+#: src/Model/Item.php:3959
 #, php-format
 msgid "%2$s (%3$d%%, %1$d vote)"
 msgid_plural "%2$s (%3$d%%, %1$d votes)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3960
+#: src/Model/Item.php:3961
 #, php-format
 msgid "%2$s (%1$d vote)"
 msgid_plural "%2$s (%1$d votes)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3965
+#: src/Model/Item.php:3966
 #, php-format
 msgid "%d voter. Poll end: %s"
 msgid_plural "%d voters. Poll end: %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3967
+#: src/Model/Item.php:3968
 #, php-format
 msgid "%d voter."
 msgid_plural "%d voters."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3969
+#: src/Model/Item.php:3970
 #, php-format
 msgid "Poll end: %s"
 msgstr ""
 
-#: src/Model/Item.php:4010 src/Model/Item.php:4011
+#: src/Model/Item.php:4011 src/Model/Item.php:4012
 msgid "View on separate page"
 msgstr ""
 
@@ -5831,7 +5831,7 @@ msgstr ""
 #: src/Module/Install.php:311
 #: src/Module/Moderation/Blocklist/Server/Add.php:122
 #: src/Module/Moderation/Blocklist/Server/Add.php:124
-#: src/Module/Moderation/Blocklist/Server/Import.php:115
+#: src/Module/Moderation/Blocklist/Server/Import.php:113
 #: src/Module/Moderation/Blocklist/Server/Index.php:72
 #: src/Module/Moderation/Blocklist/Server/Index.php:73
 #: src/Module/Moderation/Blocklist/Server/Index.php:101
@@ -6695,12 +6695,12 @@ msgstr ""
 msgid "Circle: %s"
 msgstr ""
 
-#: src/Module/Conversation/Network.php:225
+#: src/Module/Conversation/Network.php:226
 #, php-format
 msgid "Error %d (%s) while fetching the timeline."
 msgstr ""
 
-#: src/Module/Conversation/Network.php:302
+#: src/Module/Conversation/Network.php:304
 msgid "Network feed not available."
 msgstr ""
 
@@ -7557,7 +7557,7 @@ msgid "Removes all content related to this contact from the node. Keeps the cont
 msgstr ""
 
 #: src/Module/Moderation/Blocklist/Contact.php:119
-#: src/Module/Moderation/Blocklist/Server/Import.php:110
+#: src/Module/Moderation/Blocklist/Server/Import.php:108
 msgid "Block Reason"
 msgstr ""
 
@@ -7573,7 +7573,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: src/Module/Moderation/Blocklist/Server/Add.php:106
-#: src/Module/Moderation/Blocklist/Server/Import.php:103
+#: src/Module/Moderation/Blocklist/Server/Import.php:101
 msgid "← Return to the list"
 msgstr ""
 
@@ -7654,79 +7654,79 @@ msgid "The reason why you blocked this server domain pattern. This reason will b
 msgstr ""
 
 #: src/Module/Moderation/Blocklist/Server/Import.php:60
-#: src/Module/Moderation/Blocklist/Server/Import.php:69
+#: src/Module/Moderation/Blocklist/Server/Import.php:67
 msgid "Error importing pattern file"
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:75
+#: src/Module/Moderation/Blocklist/Server/Import.php:74
 msgid "Local blocklist replaced with the provided file."
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:79
+#: src/Module/Moderation/Blocklist/Server/Import.php:78
 #, php-format
 msgid "%d pattern was added to the local blocklist."
 msgid_plural "%d patterns were added to the local blocklist."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:81
+#: src/Module/Moderation/Blocklist/Server/Import.php:80
 msgid "No pattern was added to the local blocklist."
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:105
+#: src/Module/Moderation/Blocklist/Server/Import.php:103
 msgid "Import a Server Domain Pattern Blocklist"
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:106
+#: src/Module/Moderation/Blocklist/Server/Import.php:104
 msgid "<p>This file can be downloaded from the <code>/friendica</code> path of any Friendica server.</p>"
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:107
+#: src/Module/Moderation/Blocklist/Server/Import.php:105
 #: src/Module/Moderation/Blocklist/Server/Index.php:92
 msgid "Upload file"
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:108
+#: src/Module/Moderation/Blocklist/Server/Import.php:106
 msgid "Patterns to import"
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:109
+#: src/Module/Moderation/Blocklist/Server/Import.php:107
 msgid "Domain Pattern"
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:111
+#: src/Module/Moderation/Blocklist/Server/Import.php:109
 msgid "Import Mode"
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:112
+#: src/Module/Moderation/Blocklist/Server/Import.php:110
 msgid "Import Patterns"
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:113
+#: src/Module/Moderation/Blocklist/Server/Import.php:111
 #, php-format
 msgid "%d total pattern"
 msgid_plural "%d total patterns"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:115
+#: src/Module/Moderation/Blocklist/Server/Import.php:113
 #: src/Module/Moderation/Blocklist/Server/Index.php:101
 msgid "Server domain pattern blocklist CSV file"
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:116
+#: src/Module/Moderation/Blocklist/Server/Import.php:114
 msgid "Append"
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:116
+#: src/Module/Moderation/Blocklist/Server/Import.php:114
 msgid "Imports patterns from the file that weren't already existing in the current blocklist."
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:117
+#: src/Module/Moderation/Blocklist/Server/Import.php:115
 msgid "Replace"
 msgstr ""
 
-#: src/Module/Moderation/Blocklist/Server/Import.php:117
+#: src/Module/Moderation/Blocklist/Server/Import.php:115
 msgid "Replaces the current blocklist by the imported patterns."
 msgstr ""
 
