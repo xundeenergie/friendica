@@ -1018,18 +1018,18 @@ class Conversation
 		}
 
 		// @todo The following code should be removed, once that we display activity authors on demand 
-		$activity_emoji = [
-			Activity::LIKE        => '👍',
-			Activity::DISLIKE     => '👎',
-			Activity::ATTEND      => '✔️',
-			Activity::ATTENDMAYBE => '❓',
-			Activity::ATTENDNO    => '❌',
-			Activity::ANNOUNCE    => '♻',
-			Activity::VIEW        => '📺',
-			Activity::READ        => '📖',
+		$activity_verbs = [
+			Activity::LIKE,
+			Activity::DISLIKE,
+			Activity::ATTEND,
+			Activity::ATTENDMAYBE,
+			Activity::ATTENDNO,
+			Activity::ANNOUNCE,
+			Activity::VIEW,
+			Activity::READ,
 		];
 
-		$verbs     = array_merge(array_keys($activity_emoji), [Activity::EMOJIREACT, Activity::POST]);
+		$verbs     = array_merge($activity_verbs, [Activity::EMOJIREACT, Activity::POST]);
 		$condition = DBA::mergeConditions(['parent-uri-id' => $uriids, 'gravity' => [ItemModel::GRAVITY_ACTIVITY, ItemModel::GRAVITY_COMMENT], 'verb' => $verbs], ["NOT `deleted`"]);
 		$separator = chr(255) . chr(255) . chr(255);
 
@@ -1038,7 +1038,7 @@ class Conversation
 		$rows = DBA::p($sql, $condition);
 		while ($row = DBA::fetch($rows)) {
 			if ($row['gravity'] == ItemModel::GRAVITY_ACTIVITY) {
-				$emoji = $row['body'] ?: $activity_emoji[$row['verb']];
+				$emoji = $row['body'] ?: $row['verb'];
 			} else {
 				$emoji = '';
 			}

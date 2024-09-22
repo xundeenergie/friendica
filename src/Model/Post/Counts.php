@@ -82,18 +82,18 @@ class Counts
 	{
 		$counts = [];
 
-		$activity_emoji = [
-			Activity::LIKE        => '👍',
-			Activity::DISLIKE     => '👎',
-			Activity::ATTEND      => '✔️',
-			Activity::ATTENDMAYBE => '❓',
-			Activity::ATTENDNO    => '❌',
-			Activity::ANNOUNCE    => '♻',
-			Activity::VIEW        => '📺',
-			Activity::READ        => '📖',
+		$activity_verbs = [
+			Activity::LIKE,
+			Activity::DISLIKE,
+			Activity::ATTEND,
+			Activity::ATTENDMAYBE,
+			Activity::ATTENDNO,
+			Activity::ANNOUNCE,
+			Activity::VIEW,
+			Activity::READ,
 		];
 
-		$verbs = array_merge(array_keys($activity_emoji), [Activity::EMOJIREACT, Activity::POST]);
+		$verbs = array_merge($activity_verbs, [Activity::EMOJIREACT, Activity::POST]);
 
 		$condition  = DBA::mergeConditions($condition, ['verb' => $verbs]);
 		$countquery = DBA::select('post-counts-view', [], $condition);
@@ -101,8 +101,8 @@ class Counts
 			if (!empty($count['reaction'])) {
 				$count['verb'] = Activity::EMOJIREACT;
 				$count['vid']  = Verb::getID($count['verb']);
-			} elseif (!empty($activity_emoji[$count['verb']])) {
-				$count['reaction'] = $activity_emoji[$count['verb']];
+			} elseif (in_array($count['verb'], $activity_verbs)) {
+				$count['reaction'] = $count['verb'];
 			}
 			$counts[] = $count;
 		}
