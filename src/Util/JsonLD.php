@@ -13,6 +13,7 @@ use Exception;
 use Friendica\Core\System;
 use Friendica\DI;
 use Friendica\Protocol\ActivityPub;
+use stdClass;
 
 /**
  * This class contain methods to work with JsonLD data
@@ -68,7 +69,7 @@ class JsonLD
 						$url = DI::basePath() . '/static/apschema.jsonld';
 						break;
 					default:
-						Logger::info('Got url', ['url' =>$url]);
+						Logger::info('Got url', ['url' => $url]);
 						break;
 				}
 		}
@@ -78,8 +79,8 @@ class JsonLD
 		$x = debug_backtrace();
 		if ($x) {
 			foreach ($x as $n) {
-				if ($n['function'] === __FUNCTION__)  {
-					$recursion ++;
+				if ($n['function'] === __FUNCTION__) {
+					$recursion++;
 				}
 			}
 		}
@@ -115,14 +116,13 @@ class JsonLD
 
 		try {
 			$normalized = jsonld_normalize($jsonobj, array('algorithm' => 'URDNA2015', 'format' => 'application/nquads'));
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$normalized = false;
 			$messages = [];
 			$currentException = $e;
 			do {
 				$messages[] = $currentException->getMessage();
-			} while($currentException = $currentException->getPrevious());
+			} while ($currentException = $currentException->getPrevious());
 
 			Logger::warning('JsonLD normalize error');
 			Logger::notice('JsonLD normalize error', ['messages' => $messages]);
@@ -146,7 +146,8 @@ class JsonLD
 	{
 		jsonld_set_document_loader('Friendica\Util\JsonLD::documentLoader');
 
-		$context = (object)['as' => 'https://www.w3.org/ns/activitystreams#',
+		$context = (object)[
+			'as' => 'https://www.w3.org/ns/activitystreams#',
 			'w3id' => 'https://w3id.org/security#',
 			'ldp' => (object)['@id' => 'http://www.w3.org/ns/ldp#', '@type' => '@id'],
 			'vcard' => (object)['@id' => 'http://www.w3.org/2006/vcard/ns#', '@type' => '@id'],
@@ -167,39 +168,11 @@ class JsonLD
 
 		$orig_json = $json;
 
-		if (empty($json['@context'])) {
-			$json['@context'] = ActivityPub::CONTEXT;
-		}
-
-		// Preparation for adding possibly missing content to the context
-		if (!empty($json['@context']) && is_string($json['@context'])) {
-			$json['@context'] = [$json['@context']];
-		}
-
-		if (!empty($json['@context']) && is_array($json['@context'])) {
-			// Remove empty entries from the context (a problem with WriteFreely)
-			$json['@context'] = array_filter($json['@context']);
-
-			// Workaround for servers with missing context
-			// See issue https://github.com/nextcloud/social/issues/330
-			if (!in_array('https://w3id.org/security/v1', $json['@context'])) {
-				$json['@context'][] = 'https://w3id.org/security/v1';
-			}
-		}
-
-		// Bookwyrm transmits "id" fields with "null", which isn't allowed.
-		array_walk_recursive($json, function (&$value, $key) {
-			if ($key == 'id' && is_null($value)) {
-				$value = '';
-			}
-		});
-
-		$jsonobj = json_decode(json_encode($json, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+		$jsonobj = self::fixInvalidJsonLD($json);
 
 		try {
 			$compacted = jsonld_compact($jsonobj, $context);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			$compacted = false;
 			Logger::notice('compacting error', ['msg' => $e->getMessage(), 'previous' => $e->getPrevious(), 'line' => $e->getLine()]);
 			if ($logfailed && DI::config()->get('debug', 'ap_log_failure')) {
@@ -219,6 +192,51 @@ class JsonLD
 		return $json;
 	}
 
+	private static function fixInvalidJsonLD(array $json): stdClass
+	{
+		if (empty($json['@context'])) {
+			$json['@context'] = ActivityPub::CONTEXT;
+		}
+
+		// Preparation for adding possibly missing content to the context
+		if (!empty($json['@context']) && is_string($json['@context'])) {
+			$json['@context'] = [$json['@context']];
+		}
+
+		if (!empty($json['@context']) && is_array($json['@context'])) {
+			// Remove empty entries from the context (a problem with WriteFreely)
+			$json['@context'] = array_filter($json['@context']);
+
+			// Workaround for servers with missing context
+			// See issue https://github.com/nextcloud/social/issues/330
+			if (!in_array('https://w3id.org/security/v1', $json['@context'])) {
+				Logger::debug('Missing security context');
+				$json['@context'][] = 'https://w3id.org/security/v1';
+			}
+		}
+
+		// Issue 14448: Peertube transmits an unexpected type and schema URL.
+		array_walk_recursive($json['@context'], function (&$value, $key) {
+			if ($key == '@type' && $value == '@json') {
+				Logger::debug('"@json" converted to "@id"');
+				$value = '@id';
+			}
+			if ($key == 'sc' && $value == 'http://schema.org/') {
+				Logger::debug('schema.org path fixed');
+				$value = 'http://schema.org#';
+			}
+		});
+
+		// Bookwyrm transmits "id" fields with "null", which isn't allowed.
+		array_walk_recursive($json, function (&$value, $key) {
+			if ($key == 'id' && is_null($value)) {
+				Logger::debug('Fixed null id');
+				$value = '';
+			}
+		});
+
+		return json_decode(json_encode($json, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+	}
 	/**
 	 * Fetches an element array from a JSON array
 	 *
