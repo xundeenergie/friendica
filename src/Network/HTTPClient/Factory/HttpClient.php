@@ -84,7 +84,9 @@ class HttpClient extends BaseFactory
 			// Without this setting it seems as if some webservers send compressed content
 			// This seems to confuse curl so that it shows this uncompressed.
 			/// @todo  We could possibly set this value to "gzip" or something similar
-			RequestOptions::DECODE_CONTENT   => '',
+			//RequestOptions::DECODE_CONTENT   => '',
+			// Fixes Issue 14451 - [Bluesky] Unexpected GZIP response from getTimeline endpoint
+			RequestOptions::DECODE_CONTENT   => true,
 			RequestOptions::FORCE_IP_RESOLVE => ($this->config->get('system', 'ipv4_resolve') ? 'v4' : null),
 			RequestOptions::CONNECT_TIMEOUT  => 10,
 			RequestOptions::TIMEOUT          => $this->config->get('system', 'curl_timeout', 60),
