@@ -204,8 +204,8 @@ class ContactSelector
 
 		$platform_icons = ['diaspora' => 'diaspora', 'friendica' => 'friendica', 'friendika' => 'friendica',
 			'GNU Social' => 'gnu-social', 'gnusocial' => 'gnu-social', 'hubzilla' => 'hubzilla',
-			'mastodon' => 'mastodon', 'peertube' => 'peertube', 'pixelfed' => 'pixelfed',
-			'pleroma' => 'pleroma', 'red' => 'hubzilla', 'redmatrix' => 'hubzilla',
+			'mastodon' => 'mastodon', 'hometown' => 'mastodon', 'peertube' => 'peertube', 'pixelfed' => 'pixelfed',
+			'pleroma' => 'pleroma', 'akkoma' => 'pleroma', 'red' => 'hubzilla', 'redmatrix' => 'hubzilla',
 			'socialhome' => 'social-home', 'wordpress' => 'wordpress', 'lemmy' => 'users',
 			'plume' => 'plume', 'funkwhale' => 'funkwhale', 'nextcloud' => 'nextcloud', 'drupal' => 'drupal',
 			'firefish' => 'fire', 'calckey' => 'calculator', 'kbin' => 'check', 'threads' => 'instagram'];
