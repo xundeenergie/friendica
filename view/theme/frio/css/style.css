@@ -404,7 +404,7 @@ header #banner {
 	font-family: tahoma, "Lucida Sans", sans;
 	color: #fff;
 	font-weight: bold;
-	whitespace: nowrap;
+	white-space: nowrap;
 	padding-left: 55px;
 }
 header #banner #logo-img,
