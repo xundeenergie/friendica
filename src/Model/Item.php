@@ -2319,12 +2319,12 @@ class Item
 			}
 
 			if ($native != $language) {
-				$used_languages .= DI::l10n()->t('%s (%s - %s): %s', $native, $language, $code, number_format($reliability, 5)) . '\n';
+				$used_languages .= DI::l10n()->t('%s (%s - %s): %s', $native, $language, $code, number_format($reliability, 5)) . "\n";
 			} else {
-				$used_languages .= DI::l10n()->t('%s (%s): %s', $native, $code, number_format($reliability, 5)) . '\n';
+				$used_languages .= DI::l10n()->t('%s (%s): %s', $native, $code, number_format($reliability, 5)) . "\n";
 			}
 		}
-		$used_languages = DI::l10n()->t('Detected languages in this post:\n%s', $used_languages);
+		$used_languages = DI::l10n()->t("Detected languages in this post:\n%s", $used_languages);
 		return $used_languages;
 	}
 
