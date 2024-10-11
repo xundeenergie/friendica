@@ -130,6 +130,7 @@ class Profile extends BaseModule
 		if (!Contact::update($fields, ['id' => $ucid, 'uid' => $this->session->getLocalUserId()])) {
 			$this->systemMessages->addNotice($this->t('Failed to update contact record.'));
 		}
+		$this->baseUrl->redirect('contact/' . $contact_id);
 	}
 
 	protected function content(array $request = []): string
