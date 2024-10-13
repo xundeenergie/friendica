@@ -35,7 +35,95 @@ path = [
      "view/theme/smoothly/images/*",
      "images/screenshots/*",
      "view/theme/frio/img/**",
-     "config/local-sample.config.php"
+     "config/local-sample.config.php",
+     "images/article.gif",
+     "images/audio.gif",
+     "images/b_block.gif",
+     "images/b_drop.gif",
+     "images/b_drop.png",
+     "images/b_drophide.gif",
+     "images/b_dropshow.gif",
+     "images/b_edit.gif",
+     "images/b_edit.png",
+     "images/beer_mug.gif",
+     "images/blank.png",
+     "images/bug-x.gif",
+     "images/calendar.png",
+     "images/camera-icon.gif",
+     "images/coffee.gif",
+     "images/connect-bg.png",
+     "images/content-types.png",
+     "images/default-profile-mm.jpg",
+     "images/default-profile-sm.jpg",
+     "images/default-profile.jpg",
+     "images/dislike.gif",
+     "images/document.gif",
+     "images/globe.gif",
+     "images/hide_off.png",
+     "images/hide_on.png",
+     "images/icons.png",
+     "images/larrow.gif",
+     "images/larrw.gif",
+     "images/like.gif",
+     "images/link-icon.gif",
+     "images/lock_icon.gif",
+     "images/lrarrow.gif",
+     "images/mail.png",
+     "images/mapicon.gif",
+     "images/no.gif",
+     "images/noglobe.gif",
+     "images/nosign.jpg",
+     "images/onoff.jpg",
+     "images/pause.gif",
+     "images/pen.png",
+     "images/pencil.gif",
+     "images/penhover.png",
+     "images/people.gif",
+     "images/play.gif",
+     "images/plugin.png",
+     "images/rarrow.gif",
+     "images/rarrw.gif",
+     "images/recycle.gif",
+     "images/remote-link.gif",
+     "images/rotator.gif",
+     "images/search_18.png",
+     "images/selected.png",
+     "images/share.gif",
+     "images/show_all_off.png",
+     "images/show_all_on.png",
+     "images/show_off.png",
+     "images/show_on.png",
+     "images/smiley-Oo.gif",
+     "images/smiley-bangheaddesk.gif",
+     "images/smiley-brokenheart.gif",
+     "images/smiley-cool.gif",
+     "images/smiley-cry.gif",
+     "images/smiley-embarrassed.gif",
+     "images/smiley-facepalm.gif",
+     "images/smiley-foot-in-mouth.gif",
+     "images/smiley-frown.gif",
+     "images/smiley-heart.gif",
+     "images/smiley-innocent.gif",
+     "images/smiley-kiss.gif",
+     "images/smiley-laughing.gif",
+     "images/smiley-money-mouth.gif",
+     "images/smiley-sealed.gif",
+     "images/smiley-shaka.gif",
+     "images/smiley-smile.gif",
+     "images/smiley-surprised.gif",
+     "images/smiley-thumbsup.gif",
+     "images/smiley-tongue-out.gif",
+     "images/smiley-undecided.gif",
+     "images/smiley-wink.gif",
+     "images/smiley-yell.gif",
+     "images/spencil.gif",
+     "images/star.png",
+     "images/star_dummy.png",
+     "images/tools.png",
+     "images/twopeople.png",
+     "images/unlock_icon.gif",
+     "images/video.gif",
+     "images/logo.png",
 ]
 SPDX-FileCopyrightText = "2010-2024 The Friendica Project"
 SPDX-License-Identifier = "CC0-1.0"
@@ -162,4 +250,54 @@ SPDX-License-Identifier = "MIT"
 [[annotations]]
 path = "view/js/country.js"
 SPDX-FileCopyrightText = "Jim Carlock"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "view/js/hls/**"
+SPDX-FileCopyrightText = "2017 Dailymotion (http://www.dailymotion.com)"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = [ "images/rm-16.png", "images/rhash-16.png"]
+SPDX-FileCopyrightText = "Red Matrix Project"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "images/pumpio.png"
+SPDX-FileCopyrightText = "2012 E14N"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = "images/buffer.png"
+SPDX-FileCopyrightText = "buffer.com"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "images/default/corgidon.png"
+SPDX-FileCopyrightText = "Coridon https://github.com/corgidon/"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = "images/default/koyuspace.png"
+SPDX-FileCopyrightText = "Koyuspace https://github.com/koyuspace/mastodon"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
+
+[[annotations]]
+path = "images/default/pleroma.png"
+SPDX-FileCopyrightText = "017-2022 Pleroma Authors <https://pleroma.social/>"
+SPDX-License-Identifier = "CC-BY-SA-4.0"
+
+[[annotations]]
+path = "images/dreamwidth.png"
+SPDX-FileCopyrightText = "Dreamwidth Studios, LLC. https://www.dreamwidth.org/site/opensource"
+SPDX-License-Identifier = "CC-BY-SA-3.0"
+
+[[annotations]]
+path = "images/insanejournal.gif"
+SPDX-FileCopyrightText = "Insane Journal https://www.insanejournal.com"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "images/humane-tech-badge.svg"
+SPDX-FileCopyrightText = "delightful humane design"
 SPDX-License-Identifier = "CC0-1.0"
