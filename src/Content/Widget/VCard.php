@@ -78,7 +78,7 @@ class VCard
 				if (in_array($rel, [Contact::SHARING, Contact::FRIEND])) {
 					$unfollow_link = 'contact/unfollow?url=' . urlencode($contact_url) . '&auto=1';
 				} elseif (!$pending) {
-					$follow_link = 'contact/follow?url=' . urlencode($contact_url) . '&auto=1';
+					$follow_link = 'contact/follow?binurl=' . bin2hex($contact_url) . '&auto=1';
 				}
 			}
 

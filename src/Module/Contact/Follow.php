@@ -56,11 +56,15 @@ class Follow extends BaseModule
 			throw new ForbiddenException($this->t('Access denied.'));
 		}
 
-		if (isset($request['cancel']) || empty($request['url'])) {
-			$this->baseUrl->redirect('contact');
+		if (!empty($request['follow-url'])) {
+			$this->baseUrl->redirect('contact/follow?binurl=' . bin2hex($request['follow-url']));
 		}
 
-		$url = Probe::cleanURI($request['url']);
+		$url = $this->getUrl($request);
+
+		if (isset($request['cancel']) || empty($url)) {
+			$this->baseUrl->redirect('contact');
+		}
 
 		$this->process($url);
 	}
@@ -77,7 +81,7 @@ class Follow extends BaseModule
 		$uid = $this->session->getLocalUserId();
 
 		// uri is used by the /authorize_interaction Mastodon route
-		$url = Probe::cleanURI(trim($request['uri'] ?? $request['url'] ?? ''));
+		$url = $this->getUrl($request);
 
 		// Issue 6874: Allow remote following from Peertube
 		if (strpos($url, 'acct:') === 0) {
@@ -182,7 +186,7 @@ class Follow extends BaseModule
 
 	protected function process(string $url)
 	{
-		$returnPath = 'contact/follow?url=' . urlencode($url);
+		$returnPath = 'contact/follow?binurl=' . bin2hex($url);
 
 		$result = Contact::createFromProbeForUser($this->session->getLocalUserId(), $url);
 
@@ -226,5 +230,15 @@ class Follow extends BaseModule
 		} catch (\InvalidArgumentException $e) {
 			return;
 		}
+	}
+
+	private function getUrl(array $request): string
+	{
+		if (!empty($request['binurl']) && Strings::isHex($request['binurl'])) {
+			$url = hex2bin($request['binurl']);
+		} else {
+			$url = $request['url'] ?? '';
+		}
+		return Probe::cleanURI($url);
 	}
 }
