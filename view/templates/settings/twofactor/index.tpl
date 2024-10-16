@@ -28,15 +28,15 @@
 
 		{{include file="field_password.tpl" field=$password}}
 
-{{if !$has_secret}}
-		<p><button type="submit" name="action" id="confirm-submit-button" class="btn btn-primary confirm-button" value="enable">{{$enable_label}}</button></p>
-{{else}}
-		<p><button type="submit" name="action" id="confirm-submit-button" class="btn btn-primary confirm-button" value="disable">{{$disable_label}}</button></p>
-{{/if}}
 {{if $has_secret && $verified}}
 		<p><button type="submit" name="action" id="confirm-submit-button" class="btn btn-primary confirm-button" value="recovery">{{$recovery_codes_label}}</button></p>
 		<p><button type="submit" name="action" id="confirm-submit-button" class="btn btn-primary confirm-button" value="app_specific">{{$app_specific_passwords_label}}</button></p>
 		<p><button type="submit" name="action" id="confirm-submit-button" class="btn btn-primary confirm-button" value="trusted">{{$trusted_browsers_label}}</button></p>
+{{/if}}
+{{if !$has_secret}}
+		<p><button type="submit" name="action" id="confirm-submit-button" class="btn btn-primary confirm-button" value="enable">{{$enable_label}}</button></p>
+{{else}}
+		<p><button type="submit" name="action" id="confirm-submit-button" class="btn btn-primary confirm-button" value="disable">{{$disable_label}}</button></p>
 {{/if}}
 {{if $has_secret && !$verified}}
 		<p><button type="submit" name="action" id="confirm-submit-button" class="btn btn-primary confirm-button" value="configure">{{$configure_label}}</button></p>
