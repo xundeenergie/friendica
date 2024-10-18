@@ -686,7 +686,7 @@ class BBCode
 			// to the last element
 			$newbody = str_replace(
 				'[$#saved_image' . $cnt . '#$]',
-				'<img src="' . self::proxyUrl($image, self::INTERNAL, $uriid) . '" alt="' . DI::l10n()->t('Image/photo') . '" />',
+				'<img src="' . self::proxyUrl($image, self::INTERNAL, $uriid) . '" alt="' . DI::l10n()->t('Image/photo') . '" class="empty-description"/>',
 				$newbody
 			);
 			$cnt++;
@@ -1859,8 +1859,8 @@ class BBCode
 			$text
 		);
 
-		$text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . DI::l10n()->t('Image/photo') . '" />', $text);
-		$text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img src="$1" alt="' . DI::l10n()->t('Image/photo') . '" />', $text);
+		$text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . DI::l10n()->t('Image/photo') . '" class="empty-description"/>', $text);
+		$text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img src="$1" alt="' . DI::l10n()->t('Image/photo') . '" class="empty-description" />', $text);
 
 		$text = self::convertImages($text, $simple_html, $uriid);
 

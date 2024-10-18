@@ -3733,6 +3733,9 @@ class Item
 					continue;
 				}
 
+				if (empty($PostMedia->description) && DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'accessibility', 'hide_empty_descriptions')) {
+					continue;
+				}
 				$images[] = $PostMedia->withUrl(new Uri($src_url))->withPreview(new Uri($preview_url), $preview_size);
 			}
 		}
