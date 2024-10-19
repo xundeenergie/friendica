@@ -24,7 +24,7 @@
  *
  */
 
- return [
+return [
 	"application-view" => [
 		"fields" => [
 			"id" => ["application", "id"],
@@ -153,6 +153,9 @@
 			"causer-id" => ["post-user", "causer-id"],
 			"causer-blocked" => ["causer", "blocked"],
 			"causer-gsid" => ["causer", "gsid"],
+			"parent-network" => ["post-thread-user", "network"],
+			"parent-owner-id" => ["post-thread-user", "owner-id"],
+			"parent-author-id" => ["post-thread-user", "author-id"],
 		],
 		"query" => "FROM `post-user`
 			LEFT JOIN `post-thread-user` ON `post-thread-user`.`uri-id` = `post-user`.`parent-uri-id` AND `post-thread-user`.`uid` = `post-user`.`uid`
@@ -397,6 +400,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread-user", "network"],
+			"parent-owner-id" => ["post-thread-user", "owner-id"],
 			"parent-author-id" => ["post-thread-user", "author-id"],
 			"parent-author-link" => ["parent-post-author", "url"],
 			"parent-author-name" => ["parent-post-author", "name"],
@@ -588,6 +592,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread-user", "network"],
+			"parent-owner-id" => ["post-thread-user", "owner-id"],
 			"parent-author-id" => ["post-thread-user", "author-id"],
 			"parent-author-link" => ["author", "url"],
 			"parent-author-name" => ["author", "name"],
@@ -779,6 +784,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread-user", "network"],
+			"parent-owner-id" => ["post-thread-user", "owner-id"],
 			"parent-author-id" => ["post-thread-user", "author-id"],
 			"parent-author-link" => ["parent-post-author", "url"],
 			"parent-author-name" => ["parent-post-author", "name"],
@@ -969,6 +975,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread-user", "network"],
+			"parent-owner-id" => ["post-thread-user", "owner-id"],
 			"parent-author-id" => ["post-thread-user", "author-id"],
 			"parent-author-link" => ["author", "url"],
 			"parent-author-name" => ["author", "name"],
@@ -1123,6 +1130,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread", "network"],
+			"parent-owner-id" => ["post-thread", "owner-id"],
 			"parent-author-id" => ["post-thread", "author-id"],
 			"parent-author-link" => ["parent-post-author", "url"],
 			"parent-author-name" => ["parent-post-author", "name"],
@@ -1276,6 +1284,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread", "network"],
+			"parent-owner-id" => ["post-thread", "owner-id"],
 			"parent-author-id" => ["post-thread", "author-id"],
 			"parent-author-link" => ["author", "url"],
 			"parent-author-name" => ["author", "name"],
@@ -1783,7 +1792,7 @@
 			"label" => ["profile_field", "label"],
 			"value" => ["profile_field", "value"],
 			"order" => ["profile_field", "order"],
-			"psid"=> ["profile_field", "psid"],
+			"psid" => ["profile_field", "psid"],
 			"allow_cid" => ["permissionset", "allow_cid"],
 			"allow_gid" => ["permissionset", "allow_gid"],
 			"deny_cid" => ["permissionset", "deny_cid"],
