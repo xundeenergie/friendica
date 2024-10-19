@@ -80,23 +80,25 @@ class Display extends BaseSettings
 
 		$user = User::getById($uid);
 
-		$theme                  = trim($request['theme']);
-		$mobile_theme           = trim($request['mobile_theme'] ?? '');
-		$enable_smile           = (bool)$request['enable_smile'];
-		$enable                 = (array)$request['enable'];
-		$bookmark               = (array)$request['bookmark'];
-		$channel_languages      = (array)$request['channel_languages'];
-		$first_day_of_week      = (bool)$request['first_day_of_week'];
-		$calendar_default_view  = trim($request['calendar_default_view']);
-		$infinite_scroll        = (bool)$request['infinite_scroll'];
-		$enable_smart_threading = (bool)$request['enable_smart_threading'];
-		$enable_dislike         = (bool)$request['enable_dislike'];
-		$display_resharer       = (bool)$request['display_resharer'];
-		$stay_local             = (bool)$request['stay_local'];
-		$show_page_drop         = (bool)$request['show_page_drop'];
-		$display_eventlist      = (bool)$request['display_eventlist'];
-		$preview_mode           = (int)$request['preview_mode'];
-		$browser_update         = (int)$request['browser_update'];
+		$theme                   = trim($request['theme']);
+		$mobile_theme            = trim($request['mobile_theme'] ?? '');
+		$enable_smile            = (bool)$request['enable_smile'];
+		$enable                  = (array)$request['enable'];
+		$bookmark                = (array)$request['bookmark'];
+		$channel_languages       = (array)$request['channel_languages'];
+		$first_day_of_week       = (bool)$request['first_day_of_week'];
+		$calendar_default_view   = trim($request['calendar_default_view']);
+		$infinite_scroll         = (bool)$request['infinite_scroll'];
+		$enable_smart_threading  = (bool)$request['enable_smart_threading'];
+		$enable_dislike          = (bool)$request['enable_dislike'];
+		$display_resharer        = (bool)$request['display_resharer'];
+		$stay_local              = (bool)$request['stay_local'];
+		$hide_empty_descriptions = (bool)$request['hide_empty_descriptions'];
+		$hide_custom_emojis      = (bool)$request['hide_custom_emojis'];
+		$show_page_drop          = (bool)$request['show_page_drop'];
+		$display_eventlist       = (bool)$request['display_eventlist'];
+		$preview_mode            = (int)$request['preview_mode'];
+		$browser_update          = (int)$request['browser_update'];
 		if ($browser_update != -1) {
 			$browser_update = $browser_update * 1000;
 			if ($browser_update < 10000) {
@@ -147,10 +149,13 @@ class Display extends BaseSettings
 		$this->pConfig->set($uid, 'system', 'show_page_drop'          , $show_page_drop);
 		$this->pConfig->set($uid, 'system', 'display_eventlist'       , $display_eventlist);
 		$this->pConfig->set($uid, 'system', 'preview_mode'            , $preview_mode);
-
+		
 		$this->pConfig->set($uid, 'system', 'network_timelines'       , $network_timelines);
 		$this->pConfig->set($uid, 'system', 'enabled_timelines'       , $enabled_timelines);
 		$this->pConfig->set($uid, 'channel', 'languages'              , $channel_languages);
+		
+		$this->pConfig->set($uid, 'accessibility', 'hide_empty_descriptions', $hide_empty_descriptions);
+		$this->pConfig->set($uid, 'accessibility', 'hide_custom_emojis'     , $hide_custom_emojis);
 
 		$this->pConfig->set($uid, 'calendar', 'first_day_of_week'     , $first_day_of_week);
 		$this->pConfig->set($uid, 'calendar', 'default_view'          , $calendar_default_view);
@@ -240,6 +245,9 @@ class Display extends BaseSettings
 		$stay_local             =  $this->pConfig->get($uid, 'system', 'stay_local', false);
 		$show_page_drop         =  $this->pConfig->get($uid, 'system', 'show_page_drop', true);
 		$display_eventlist      =  $this->pConfig->get($uid, 'system', 'display_eventlist', true);
+		
+		$hide_empty_descriptions =  $this->pConfig->get($uid, 'accessibility', 'hide_empty_descriptions', false);
+		$hide_custom_emojis      =  $this->pConfig->get($uid, 'accessibility', 'hide_custom_emojis', false);
 
 		$preview_mode  =  $this->pConfig->get($uid, 'system', 'preview_mode', BBCode::PREVIEW_LARGE);
 		$preview_modes = [
@@ -320,6 +328,8 @@ class Display extends BaseSettings
 			'$show_page_drop'           => ['show_page_drop'          , $this->t('Show the post deletion checkbox'), $show_page_drop, $this->t("Display the checkbox for the post deletion on the network page.")],
 			'$display_eventlist'        => ['display_eventlist'       , $this->t('DIsplay the event list'), $display_eventlist, $this->t("Display the birthday reminder and event list on the network page.")],
 			'$preview_mode'             => ['preview_mode'            , $this->t('Link preview mode'), $preview_mode, $this->t('Appearance of the link preview that is added to each post with a link.'), $preview_modes, false],
+			'$hide_empty_descriptions'  => ['hide_empty_descriptions' , $this->t('Hide pictures with empty alternative text'), $hide_empty_descriptions, $this->t("Don't display pictures that are missing the alternative text.")],
+			'$hide_custom_emojis'       => ['hide_custom_emojis'      , $this->t('Hide custom emojis'), $hide_custom_emojis, $this->t("Don't display custom emojis.")],
 
 			'$timeline_label'       => $this->t('Label'),
 			'$timeline_descriptiom' => $this->t('Description'),
