@@ -93,7 +93,7 @@ class Tag extends BaseApi
 		if (!empty($uid)) {
 			$condition = DBA::mergeConditions(
 				$condition,
-				["NOT `author-id` IN (SELECT `cid` FROM `user-contact` WHERE `uid` = ? AND (`blocked` OR `ignored`) AND `cid` = `author-id`)", $uid]
+				["NOT `author-id` IN (SELECT `cid` FROM `user-contact` WHERE `uid` = ? AND (`blocked` OR `ignored` OR `is-blocked`) AND `cid` = `author-id`)", $uid]
 			);
 		}
 

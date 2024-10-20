@@ -1590,9 +1590,13 @@ class Contact
 	 */
 	public static function getPostsFromId(int $cid, int $uid, bool $only_media = false, string $last_created = null): string
 	{
-		$contact = DBA::selectFirst('contact', ['contact-type', 'network'], ['id' => $cid]);
+		$contact = DBA::selectFirst('contact', ['contact-type', 'network', 'name', 'nick'], ['id' => $cid]);
 		if (!DBA::isResult($contact)) {
 			return '';
+		}
+
+		if (Contact\User::isIsBlocked($cid, $uid)) {
+			return DI::l10n()->t('%s has blocked you', $contact['name'] ?: $contact['nick']);
 		}
 
 		if (empty($contact["network"]) || in_array($contact["network"], Protocol::FEDERATED)) {
@@ -1658,9 +1662,13 @@ class Contact
 	 */
 	public static function getThreadsFromId(int $cid, int $uid, int $update = 0, int $parent = 0, string $last_created = ''): string
 	{
-		$contact = DBA::selectFirst('contact', ['contact-type', 'network'], ['id' => $cid]);
+		$contact = DBA::selectFirst('contact', ['contact-type', 'network', 'name', 'nick'], ['id' => $cid]);
 		if (!DBA::isResult($contact)) {
 			return '';
+		}
+
+		if (Contact\User::isIsBlocked($cid, $uid)) {
+			return DI::l10n()->t('%s has blocked you', $contact['name'] ?: $contact['nick']);
 		}
 
 		if (empty($contact["network"]) || in_array($contact["network"], Protocol::FEDERATED)) {

@@ -58,6 +58,11 @@ class VCard
 		$photo   = Contact::getPhoto($contact);
 
 		if (DI::userSession()->getLocalUserId()) {
+			if (Contact\User::isIsBlocked($contact['id'], DI::userSession()->getLocalUserId())) {
+				$hide_follow  = true;
+				$hide_mention = true;
+			}
+		
 			if ($contact['uid']) {
 				$id      = $contact['id'];
 				$rel     = $contact['rel'];

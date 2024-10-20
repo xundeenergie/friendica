@@ -356,6 +356,11 @@ class Profile extends BaseModule
 
 		$contact_actions = $this->getContactActions($contact, $localRelationship);
 
+		if (Contact\User::isIsBlocked($contact['id'], $this->session->getLocalUserId())) {
+			$relation_text = $this->t('%s has blocked you', $contact['name'] ?: $contact['nick']);
+			unset($contact_actions['follow']);
+		}
+
 		if ($localRelationship->rel !== Contact::NOTHING) {
 			$lbl_info1              = $this->t('Contact Information / Notes');
 			$contact_settings_label = $this->t('Contact Settings');

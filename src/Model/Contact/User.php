@@ -9,7 +9,7 @@ namespace Friendica\Model\Contact;
 
 use Exception;
 use Friendica\Core\Logger;
-use Friendica\Core\Protocol;
+use Friendica\Core\Worker;
 use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\DI;
@@ -140,13 +140,21 @@ class User
 
 		$contact = Contact::getById($cdata['public']);
 		if ($blocked) {
-			Protocol::block($contact, $uid);
+			Worker::add(Worker::PRIORITY_HIGH, 'Contact\Block', $cid, $uid);
 		} else {
-			Protocol::unblock($contact, $uid);
+			Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unblock', $cid, $uid);
 		}
 
 		if ($cdata['user'] != 0) {
 			DBA::update('contact', ['blocked' => $blocked], ['id' => $cdata['user'], 'pending' => false]);
+
+			if ($blocked) {
+				$contact = Contact::getById($cdata['user']);
+				if (!empty($contact)) {
+					// Mastodon-expected behavior: relationship is severed on block
+					Contact::terminateFriendship($contact);
+				}
+			}
 		}
 
 		DBA::update('user-contact', ['blocked' => $blocked], ['cid' => $cdata['public'], 'uid' => $uid], true);
