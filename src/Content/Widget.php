@@ -91,23 +91,59 @@ class Widget
 		$networks = [Protocol::PHANTOM, Protocol::FACEBOOK, Protocol::APPNET, Protocol::TWITTER, Protocol::ZOT, Protocol::OSTATUS, Protocol::STATUSNET];
 		Addon::loadAddons();
 
-		if (!Addon::isEnabled("discourse")) {
+		if (!Addon::isEnabled('discourse')) {
 			$networks[] = Protocol::DISCOURSE;
 		}
 
-		if (!Addon::isEnabled("pumpio")) {
+		if (!Addon::isEnabled('pumpio')) {
 			$networks[] = Protocol::PUMPIO;
 		}
 
-		if (!Addon::isEnabled("tumblr")) {
+		if (!Addon::isEnabled('tumblr')) {
 			$networks[] = Protocol::TUMBLR;
 		}
 
-		if (!DI::config()->get("system", "diaspora_enabled")) {
+		if (!DI::config()->get('system', 'diaspora_enabled')) {
 			$networks[] = Protocol::DIASPORA;
 		}
 
-		if (!Addon::isEnabled("pnut")) {
+		if (!Addon::isEnabled('pnut')) {
+			$networks[] = Protocol::PNUT;
+		}
+		return $networks;
+	}
+
+	/**
+	 * Return available networks as array
+	 *
+	 * @return array Supported networks
+	 */
+	public static function availableNetworks(): array
+	{
+		$networks = [Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::FEED];
+		Addon::loadAddons();
+
+		if (Addon::isEnabled('discourse')) {
+			$networks[] = Protocol::DISCOURSE;
+		}
+
+		if (Addon::isEnabled('pumpio')) {
+			$networks[] = Protocol::PUMPIO;
+		}
+
+		if (Addon::isEnabled('tumblr')) {
+			$networks[] = Protocol::TUMBLR;
+		}
+
+		if (DI::config()->get('system', 'diaspora_enabled')) {
+			$networks[] = Protocol::DIASPORA;
+		}
+
+		if (function_exists('imap_open') && !DI::config()->get('system', 'imap_disabled')) {
+			$networks[] = Protocol::MAIL;
+		}
+
+		if (Addon::isEnabled('pnut')) {
 			$networks[] = Protocol::PNUT;
 		}
 		return $networks;
@@ -382,7 +418,7 @@ class Widget
 
 		$tpl = Renderer::getMarkupTemplate('widget/remote_friends_common.tpl');
 		return Renderer::replaceMacros($tpl, [
-			'$desc'     => DI::l10n()->tt("%d contact in common", "%d contacts in common", $total),
+			'$desc'     => DI::l10n()->tt('%d contact in common', '%d contacts in common', $total),
 			'$base'     => DI::baseUrl(),
 			'$nickname' => $nickname,
 			'$linkmore' => $total > 5 ? 'true' : '',
