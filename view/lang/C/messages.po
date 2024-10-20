@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.09-rc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-20 08:32+0000\n"
+"POT-Creation-Date: 2024-10-20 19:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2035,7 +2035,7 @@ msgid "Create an account"
 msgstr ""
 
 #: src/Content/Nav.php:247 src/Module/Help.php:53
-#: src/Module/Settings/TwoFactor/AppSpecific.php:118
+#: src/Module/Settings/TwoFactor/AppSpecific.php:119
 #: src/Module/Settings/TwoFactor/Index.php:125
 #: src/Module/Settings/TwoFactor/Recovery.php:96
 #: src/Module/Settings/TwoFactor/Verify.php:135 view/theme/vier/theme.php:228
@@ -9565,7 +9565,7 @@ msgstr ""
 
 #: src/Module/Settings/Channels.php:177 src/Module/Settings/Channels.php:198
 #: src/Module/Settings/Display.php:335
-#: src/Module/Settings/TwoFactor/AppSpecific.php:123
+#: src/Module/Settings/TwoFactor/AppSpecific.php:124
 msgid "Description"
 msgstr ""
 
@@ -10427,54 +10427,55 @@ msgid "App-specific password generation failed: This description already exists.
 msgstr ""
 
 #: src/Module/Settings/TwoFactor/AppSpecific.php:80
-msgid "New app-specific password generated."
+#, php-format
+msgid "New app-specific password generated: %s"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:86
+#: src/Module/Settings/TwoFactor/AppSpecific.php:87
 msgid "App-specific passwords successfully revoked."
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:96
+#: src/Module/Settings/TwoFactor/AppSpecific.php:97
 msgid "App-specific password successfully revoked."
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:117
+#: src/Module/Settings/TwoFactor/AppSpecific.php:118
 msgid "Two-factor app-specific passwords"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:119
+#: src/Module/Settings/TwoFactor/AppSpecific.php:120
 msgid "<p>App-specific passwords are randomly generated passwords used instead your regular password to authenticate your account on third-party applications that don't support two-factor authentication.</p>"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:120
+#: src/Module/Settings/TwoFactor/AppSpecific.php:121
 msgid "Make sure to copy your new app-specific password now. You won’t be able to see it again!"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:124
+#: src/Module/Settings/TwoFactor/AppSpecific.php:125
 msgid "Last Used"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:125
+#: src/Module/Settings/TwoFactor/AppSpecific.php:126
 msgid "Revoke"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:126
+#: src/Module/Settings/TwoFactor/AppSpecific.php:127
 msgid "Revoke All"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:129
+#: src/Module/Settings/TwoFactor/AppSpecific.php:130
 msgid "When you generate a new app-specific password, you must use it right away, it will be shown to you once after you generate it."
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:130
+#: src/Module/Settings/TwoFactor/AppSpecific.php:131
 msgid "Generate new app-specific password"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:131
+#: src/Module/Settings/TwoFactor/AppSpecific.php:132
 msgid "Friendiqa on my Fairphone 2..."
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:132
+#: src/Module/Settings/TwoFactor/AppSpecific.php:133
 msgid "Generate"
 msgstr ""
 
