@@ -11,6 +11,7 @@ use Friendica\Database\DBA;
 use Friendica\Model\User;
 use Friendica\Network\HTTPException;
 use Friendica\Protocol\ActivityPub;
+use Friendica\Protocol\ActivityPub\Transmitter;
 use Friendica\Protocol\Diaspora;
 
 /**
@@ -211,7 +212,7 @@ class Protocol
 	}
 
 	/**
-	 * Send a block message to a remote server. Only useful for connector addons.
+	 * Send a block message to a remote server.
 	 *
 	 * @param array $contact Public contact record to block
 	 * @param int   $uid     User issuing the block
@@ -220,6 +221,23 @@ class Protocol
 	 */
 	public static function block(array $contact, int $uid): ?bool
 	{
+		if (empty($contact['network'])) {
+			throw new \InvalidArgumentException('Missing network key in contact array');
+		}
+
+		$protocol = $contact['network'];
+		if ($protocol == self::DFRN && !empty($contact['protocol'])) {
+			$protocol = $contact['protocol'];
+		}
+
+		if ($protocol == self::ACTIVITYPUB) {
+			$activity_id = Transmitter::activityIDFromContact($contact['id'], $uid);
+			if (empty($activity_id)) {
+				return false;
+			}
+			return ActivityPub\Transmitter::sendActivity('Block', $contact['url'], $uid, $activity_id);
+		}
+
 		// Catch-all hook for connector addons
 		$hook_data = [
 			'contact' => $contact,
@@ -232,7 +250,7 @@ class Protocol
 	}
 
 	/**
-	 * Send an unblock message to a remote server. Only useful for connector addons.
+	 * Send an unblock message to a remote server.
 	 *
 	 * @param array $contact Public contact record to unblock
 	 * @param int   $uid     User revoking the block
@@ -241,6 +259,24 @@ class Protocol
 	 */
 	public static function unblock(array $contact, int $uid): ?bool
 	{
+		$owner = User::getOwnerDataById($uid);
+		if (!DBA::isResult($owner)) {
+			return false;
+		}
+
+		if (empty($contact['network'])) {
+			throw new \InvalidArgumentException('Missing network key in contact array');
+		}
+
+		$protocol = $contact['network'];
+		if ($protocol == self::DFRN && !empty($contact['protocol'])) {
+			$protocol = $contact['protocol'];
+		}
+
+		if ($protocol == self::ACTIVITYPUB) {
+			return ActivityPub\Transmitter::sendContactUnblock($contact['url'], $contact['id'], $owner);
+		}
+
 		// Catch-all hook for connector addons
 		$hook_data = [
 			'contact' => $contact,

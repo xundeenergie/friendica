@@ -2103,17 +2103,18 @@ class Transmitter
 	 * Creates an activity id for a given contact id
 	 *
 	 * @param integer $cid Contact ID of target
+	 * @param integer $uid Optional user id. if empty, the contact uid is used.
 	 *
 	 * @return bool|string activity id
 	 */
-	public static function activityIDFromContact(int $cid)
+	public static function activityIDFromContact(int $cid, int $uid = 0)
 	{
 		$contact = DBA::selectFirst('contact', ['uid', 'id', 'created'], ['id' => $cid]);
 		if (!DBA::isResult($contact)) {
 			return false;
 		}
 
-		$hash = hash('ripemd128', $contact['uid'] . '-' . $contact['id'] . '-' . $contact['created']);
+		$hash = hash('ripemd128', $uid ?: $contact['uid'] . '-' . $contact['id'] . '-' . $contact['created']);
 		$uuid = substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20, 12);
 		return DI::baseUrl() . '/activity/' . $uuid;
 	}
@@ -2464,6 +2465,53 @@ class Transmitter
 			'object' => [
 				'id' => $object_id,
 				'type' => 'Follow',
+				'actor' => $owner['url'],
+				'object' => $profile['url']
+			],
+			'instrument' => self::getService(),
+			'to' => [$profile['url']],
+		];
+
+		Logger::info('Sending undo to ' . $target . ' for user ' . $owner['uid'] . ' with id ' . $objectId);
+
+		$signed = LDSignature::sign($data, $owner);
+		return HTTPSignature::transmit($signed, $profile['inbox'], $owner);
+	}
+
+	/**
+	 * Transmits a message that we don't want to block this contact anymore
+	 *
+	 * @param string  $target Target profile
+	 * @param integer $cid    Contact id
+	 * @param array   $owner  Sender owner-view record
+	 * @return bool success
+	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws \ImagickException
+	 * @throws \Exception
+	 */
+	public static function sendContactUnblock(string $target, int $cid, array $owner): bool
+	{
+		$profile = APContact::getByURL($target);
+		if (empty($profile['inbox'])) {
+			Logger::warning('No inbox found for target', ['target' => $target, 'profile' => $profile]);
+			return false;
+		}
+
+		$object_id = self::activityIDFromContact($cid, $owner['uid']);
+		if (empty($object_id)) {
+			return false;
+		}
+
+		$objectId = DI::baseUrl() . '/activity/' . System::createGUID();
+
+		$data = [
+			'@context' => ActivityPub::CONTEXT,
+			'id' => $objectId,
+			'type' => 'Undo',
+			'actor' => $owner['url'],
+			'object' => [
+				'id' => $object_id,
+				'type' => 'Block',
 				'actor' => $owner['url'],
 				'object' => $profile['url']
 			],

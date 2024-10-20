@@ -7,10 +7,8 @@
 
 namespace Friendica\Module\Api\Mastodon\Accounts;
 
-use Friendica\Core\System;
 use Friendica\DI;
 use Friendica\Model\Contact;
-use Friendica\Model\User;
 use Friendica\Module\BaseApi;
 
 /**
@@ -28,15 +26,6 @@ class Block extends BaseApi
 		}
 
 		Contact\User::setBlocked($this->parameters['id'], $uid, true);
-
-		$ucid = Contact::getUserContactId($this->parameters['id'], $uid);
-		if ($ucid) {
-			$contact = Contact::getById($ucid);
-			if (!empty($contact)) {
-				// Mastodon-expected behavior: relationship is severed on block
-				Contact::terminateFriendship($contact);
-			}
-		}
 
 		$this->jsonExit(DI::mstdnRelationship()->createFromContactId($this->parameters['id'], $uid)->toArray());
 	}

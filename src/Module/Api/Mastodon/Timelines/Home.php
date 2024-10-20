@@ -66,7 +66,7 @@ class Home extends BaseApi
 			$condition = DBA::mergeConditions($condition, ['gravity' => Item::GRAVITY_PARENT]);
 		}
 
-		$condition = DBA::mergeConditions($condition, ["NOT EXISTS(SELECT `cid` FROM `user-contact` WHERE `uid` = ? AND `cid` IN (`parent-owner-id`, `parent-author-id`) AND (`blocked` OR `ignored` OR `channel-only`))", $uid]);
+		$condition = DBA::mergeConditions($condition, ["NOT EXISTS(SELECT `cid` FROM `user-contact` WHERE `uid` = ? AND `cid` IN (`parent-owner-id`, `parent-author-id`) AND (`blocked` OR `ignored` OR `is-blocked` OR `channel-only`))", $uid]);
 
 		$items = Post::selectTimelineForUser($uid, ['uri-id'], $condition, $params);
 
