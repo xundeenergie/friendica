@@ -58,6 +58,7 @@ If this is nothing for you, you might be interested in the following:
 * [Tutorial: Creating a Friendica Server with Ubuntu 22.04](https://nequalsonelifestyle.com/2022/07/30/creating-friendica-server-ubuntu/)
   * [Setting Up Friendica Daemon as a Systemd Service Tutorial](https://nequalsonelifestyle.com/2022/08/04/setting-up-friendica-daemon-systemd-service/)
 * [Setting up Friendica on Unraid](https://www.jenovarain.com/2023/03/setting-up-friendica-on-unraid/) (NAS)
+* [Installing Friendica with Elastio](https://elest.io/open-source/friendica)
 
 ### Get Friendica
 
