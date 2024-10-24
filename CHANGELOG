@@ -1,9 +1,46 @@
-Version 2024.09 (unreleased)
+Version 2024.10 (unreleased)
   Friendica Core
+    Updates to the translations AR, BG, CA, CS, DE, EO, ES, ET, FR, GD, HU, IS, IT, JA, NL, PL, RU, SV
+    Updates to the documentation [bmillwood, tobiasd]
+    Updates to the themes (frio) [haheute]
+    Friendica Core is now REUSE complient [tobiasd]
+    General code cleanup [annando, nupplaphil, mexon]
+    Improved federation with Bluesky, Hubzilla, Peertube, threads, Wordpress [annando]
+    Improved the API [annando]
+    Improved display of contact connection state [annando]
+    Improved handling of bad webfinger requests [annando, mexon, zotanmew]
+    Improved the order of actions on the 2FA settings page [tobiasd]
+    Improved server type detection [annando]
+    Improved content negotiation [annando]
+    Improved expiration [annando]
+    Fixed a bug in creating app specific passwords [nupplaphil]
+    Fixed a bug in importing some notes from Mastodon [annando]
+    Fixed a bug with postings from buffer including images [annando]
+    Fixed a apache2 problem with unsafe URLs [annando]
+    Fixed a bug in the contact settings [annando]
+    Fixed a bug with latin1 encoded databases [annando]
+    Fixed a bug while uploading server blocklists [ne20002]
+    Fixed a bug while parsing events [annando]
+    Fixed a bug in the initial registry settings [annando]
+    Added admin info to stats module [nupplaphil]
+    Added an option to exclude postings with images without ALT text [anando]
+    Added an option to hide custom emojis [annando]
+    Added support for HLS [annando]
+    Added devcontainer for Friendica [ne20002]
+    Removed custom emojis from contact names [annando]
+    Removed OStatus support [annando]
 
   Friendica Addons
+    bluesky
+      Added block functionality [annando]
+      Added option to compleate threads [annando]
+    invidious [loma-one]
+    unicode_smilies [loma-one]
 
   Closed Issues
+    14121, 14126, 14145, 14174, 14212, 14244, 14281, 14292, 14294,
+    14303, 14307, 14368, 14370, 14373, 14377, 14381, 14413, 14421,
+    14451, 14464, 14488
 
 Version 2024.08 (2024-08-17)
   Friendica Core
