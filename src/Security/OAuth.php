@@ -131,6 +131,7 @@ class OAuth
 
 		// The redirect_uri could contain several URI that are separated by spaces.
 		if (($application['redirect_uri'] != $redirect_uri) && !in_array($redirect_uri, explode(' ', $application['redirect_uri']))) {
+			Logger::warning('Redirection uri does not match', ['redirect_uri' => $redirect_uri, 'application-redirect_uri' => $application['redirect_uri']]);
 			return [];
 		}
 
