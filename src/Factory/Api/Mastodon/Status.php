@@ -328,7 +328,7 @@ class Status extends BaseFactory
 
 		$delivery_data   = $uid != $item['uid'] ? null : new FriendicaDeliveryData($item['delivery_queue_count'], $item['delivery_queue_done'], $item['delivery_queue_failed']);
 		$visibility_data = $uid != $item['uid'] ? null : new FriendicaVisibility($this->aclFormatter->expand($item['allow_cid']), $this->aclFormatter->expand($item['deny_cid']), $this->aclFormatter->expand($item['allow_gid']), $this->aclFormatter->expand($item['deny_gid']));
-		$friendica       = new FriendicaExtension($item['title'] ?? '', $item['changed'], $item['commented'], $item['received'], $counts->dislikes, $origin_dislike, $network, $platform, $version, $sitename, $delivery_data, $visibility_data);
+		$friendica       = new FriendicaExtension($item['title'] ?? '', $item['changed'], $item['commented'], $item['received'], $counts->dislikes, $origin_dislike, $network, $platform, $version, $sitename, $delivery_data, $visibility_data, BBCode::convertForUriId($item['uri-id'], $item['body'], BBCode::EXTERNAL));
 
 		return new \Friendica\Object\Api\Mastodon\Status($item, $account, $counts, $userAttributes, $sensitive, $application, $mentions, $tags, $card, $attachments, $in_reply, $reshare, $friendica, $quote, $poll, $emojis);
 	}
@@ -399,7 +399,7 @@ class Status extends BaseFactory
 		$attachments = [];
 		$in_reply    = [];
 		$reshare     = [];
-		$friendica   = new FriendicaExtension('', null, null, null, 0, false, null, null, null, null, null, null);
+		$friendica   = new FriendicaExtension('', null, null, null, 0, false, null, null, null, null, null, null, BBCode::convertForUriId($item['uri-id'], $item['body'], BBCode::EXTERNAL));
 
 		return new \Friendica\Object\Api\Mastodon\Status($item, $account, $counts, $userAttributes, $sensitive, $application, $mentions, $tags, $card, $attachments, $in_reply, $reshare, $friendica);
 	}
