@@ -155,15 +155,15 @@ class ContactSelector
 
 			if (!empty($platform)) {
 				$networkname = $platform;
-
-				if ($network == Protocol::ACTIVITYPUB) {
-					$networkname .= ' (AP)';
-				}
 			}
 		}
 
-		if (!empty($protocol) && ($protocol != $network)) {
+		if (!empty($protocol) && ($protocol != $network) && $network != Protocol::DFRN) {
 			$networkname = DI::l10n()->t('%s (via %s)', $networkname, self::networkToName($protocol));
+		} elseif (in_array($network, ['', $protocol]) && ($network == Protocol::DFRN)) {
+			$networkname .= ' (DFRN)';
+		} elseif (in_array($network, ['', $protocol]) && ($network == Protocol::DIASPORA) && ($platform != 'diaspora')) {
+			$networkname .= ' (Diaspora)';
 		}
 
 		return $networkname;
