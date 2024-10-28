@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.09-rc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-20 19:53+0000\n"
+"POT-Creation-Date: 2024-10-27 19:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -755,7 +755,7 @@ msgid "Method not allowed for this module. Allowed method(s): %s"
 msgstr ""
 
 #: src/App/Router.php:297 src/Module/HTTPException/PageNotFound.php:35
-#: src/Module/Stats.php:49
+#: src/Module/Stats.php:56
 msgid "Page not found."
 msgstr ""
 
@@ -772,19 +772,19 @@ msgid "All contacts"
 msgstr ""
 
 #: src/BaseModule.php:425 src/Content/Conversation/Factory/Channel.php:32
-#: src/Content/Widget.php:218 src/Core/ACL.php:181 src/Module/Contact.php:395
+#: src/Content/Widget.php:254 src/Core/ACL.php:181 src/Module/Contact.php:395
 #: src/Module/Privacy/PermissionTooltip.php:150
 #: src/Module/Privacy/PermissionTooltip.php:172
 #: src/Module/Settings/Channels.php:146
 msgid "Followers"
 msgstr ""
 
-#: src/BaseModule.php:430 src/Content/Widget.php:219 src/Module/Contact.php:398
+#: src/BaseModule.php:430 src/Content/Widget.php:255 src/Module/Contact.php:398
 #: src/Module/Settings/Channels.php:145
 msgid "Following"
 msgstr ""
 
-#: src/BaseModule.php:435 src/Content/Widget.php:220 src/Module/Contact.php:401
+#: src/BaseModule.php:435 src/Content/Widget.php:256 src/Module/Contact.php:401
 msgid "Mutual friends"
 msgstr ""
 
@@ -1125,7 +1125,7 @@ msgstr ""
 msgid "Bluesky"
 msgstr ""
 
-#: src/Content/ContactSelector.php:166
+#: src/Content/ContactSelector.php:162
 #, php-format
 msgid "%s (via %s)"
 msgstr ""
@@ -1694,7 +1694,7 @@ msgstr ""
 msgid "Network Widgets"
 msgstr ""
 
-#: src/Content/Feature.php:115 src/Content/Widget.php:194
+#: src/Content/Feature.php:115 src/Content/Widget.php:230
 #: src/Model/Circle.php:587 src/Module/Contact.php:381
 #: src/Module/Welcome.php:62
 msgid "Circles"
@@ -1706,7 +1706,7 @@ msgstr ""
 
 #: src/Content/Feature.php:116 src/Content/GroupManager.php:133
 #: src/Content/Nav.php:264 src/Content/Text/HTML.php:868
-#: src/Content/Widget.php:516 src/Model/User.php:1390
+#: src/Content/Widget.php:552 src/Model/User.php:1390
 msgid "Groups"
 msgstr ""
 
@@ -1714,7 +1714,7 @@ msgstr ""
 msgid "Display posts that have been distributed by the selected group."
 msgstr ""
 
-#: src/Content/Feature.php:117 src/Content/Widget.php:485
+#: src/Content/Feature.php:117 src/Content/Widget.php:521
 msgid "Archives"
 msgstr ""
 
@@ -1722,7 +1722,7 @@ msgstr ""
 msgid "Display an archive where posts can be selected by month and year."
 msgstr ""
 
-#: src/Content/Feature.php:118 src/Content/Widget.php:267
+#: src/Content/Feature.php:118 src/Content/Widget.php:303
 msgid "Protocols"
 msgstr ""
 
@@ -1730,7 +1730,7 @@ msgstr ""
 msgid "Display posts with the selected protocols."
 msgstr ""
 
-#: src/Content/Feature.php:119 src/Content/Widget.php:522
+#: src/Content/Feature.php:119 src/Content/Widget.php:558
 #: src/Module/Settings/Account.php:433
 msgid "Account Types"
 msgstr ""
@@ -1739,7 +1739,7 @@ msgstr ""
 msgid "Display posts done by accounts with the selected account type."
 msgstr ""
 
-#: src/Content/Feature.php:120 src/Content/Widget.php:571
+#: src/Content/Feature.php:120 src/Content/Widget.php:607
 #: src/Module/Admin/Site.php:464 src/Module/BaseSettings.php:111
 #: src/Module/Settings/Channels.php:211 src/Module/Settings/Display.php:309
 msgid "Channels"
@@ -1757,7 +1757,7 @@ msgstr ""
 msgid "Display posts that contain subscribed hashtags."
 msgstr ""
 
-#: src/Content/Feature.php:122 src/Content/Widget.php:297
+#: src/Content/Feature.php:122 src/Content/Widget.php:333
 msgid "Saved Folders"
 msgstr ""
 
@@ -1817,12 +1817,12 @@ msgstr ""
 msgid "External link to group"
 msgstr ""
 
-#: src/Content/GroupManager.php:139 src/Content/Widget.php:491
+#: src/Content/GroupManager.php:139 src/Content/Widget.php:527
 msgid "show less"
 msgstr ""
 
-#: src/Content/GroupManager.php:140 src/Content/Widget.php:389
-#: src/Content/Widget.php:492
+#: src/Content/GroupManager.php:140 src/Content/Widget.php:425
+#: src/Content/Widget.php:528
 msgid "show more"
 msgstr ""
 
@@ -1852,31 +1852,31 @@ msgstr ""
 msgid "Follow Thread"
 msgstr ""
 
-#: src/Content/Item.php:415 src/Model/Contact.php:1249
+#: src/Content/Item.php:415 src/Model/Contact.php:1244
 msgid "View Status"
 msgstr ""
 
-#: src/Content/Item.php:416 src/Content/Item.php:439 src/Model/Contact.php:1184
-#: src/Model/Contact.php:1240 src/Model/Contact.php:1250
+#: src/Content/Item.php:416 src/Content/Item.php:439 src/Model/Contact.php:1179
+#: src/Model/Contact.php:1235 src/Model/Contact.php:1245
 #: src/Module/Directory.php:144 src/Module/Settings/Profile/Index.php:250
 msgid "View Profile"
 msgstr ""
 
-#: src/Content/Item.php:417 src/Model/Contact.php:1251
+#: src/Content/Item.php:417 src/Model/Contact.php:1246
 msgid "View Photos"
 msgstr ""
 
-#: src/Content/Item.php:418 src/Model/Contact.php:1218
+#: src/Content/Item.php:418 src/Model/Contact.php:1213
 #: src/Model/Profile.php:447
 msgid "Network Posts"
 msgstr ""
 
-#: src/Content/Item.php:419 src/Model/Contact.php:1242
-#: src/Model/Contact.php:1253
+#: src/Content/Item.php:419 src/Model/Contact.php:1237
+#: src/Model/Contact.php:1248
 msgid "View Contact"
 msgstr ""
 
-#: src/Content/Item.php:420 src/Model/Contact.php:1254
+#: src/Content/Item.php:420 src/Model/Contact.php:1249
 msgid "Send PM"
 msgstr ""
 
@@ -1916,7 +1916,7 @@ msgid "Search Text"
 msgstr ""
 
 #: src/Content/Item.php:436 src/Content/Widget.php:66
-#: src/Model/Contact.php:1243 src/Model/Contact.php:1255
+#: src/Model/Contact.php:1238 src/Model/Contact.php:1250
 #: src/Module/Contact/Follow.php:152 view/theme/vier/theme.php:183
 msgid "Connect/Follow"
 msgstr ""
@@ -2235,38 +2235,33 @@ msgstr ""
 msgid "last"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:689 src/Content/Text/BBCode.php:1862
-#: src/Content/Text/BBCode.php:1863
-msgid "Image/photo"
-msgstr ""
-
-#: src/Content/Text/BBCode.php:907
+#: src/Content/Text/BBCode.php:908
 #, php-format
 msgid "<a href=\"%1$s\" target=\"_blank\" rel=\"noopener noreferrer\">%2$s</a> %3$s"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:929 src/Model/Item.php:4031
+#: src/Content/Text/BBCode.php:930 src/Model/Item.php:4031
 #: src/Model/Item.php:4037 src/Model/Item.php:4038
 msgid "Link to source"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:1743 src/Content/Text/HTML.php:892
+#: src/Content/Text/BBCode.php:1744 src/Content/Text/HTML.php:892
 msgid "Click to open/close"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:1798
+#: src/Content/Text/BBCode.php:1799
 msgid "$1 wrote:"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:1872 src/Content/Text/BBCode.php:1873
+#: src/Content/Text/BBCode.php:1873 src/Content/Text/BBCode.php:1874
 msgid "Encrypted content"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:2205
+#: src/Content/Text/BBCode.php:2206
 msgid "Invalid source protocol"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:2224
+#: src/Content/Text/BBCode.php:2225
 msgid "Invalid link protocol"
 msgstr ""
 
@@ -2349,63 +2344,63 @@ msgstr ""
 msgid "Local Directory"
 msgstr ""
 
-#: src/Content/Widget.php:196
+#: src/Content/Widget.php:232
 msgid "Everyone"
 msgstr ""
 
-#: src/Content/Widget.php:221 src/Module/Contact.php:404
+#: src/Content/Widget.php:257 src/Module/Contact.php:404
 msgid "No relationship"
 msgstr ""
 
-#: src/Content/Widget.php:226
+#: src/Content/Widget.php:262
 msgid "Relationships"
 msgstr ""
 
-#: src/Content/Widget.php:228 src/Module/Circle.php:280
+#: src/Content/Widget.php:264 src/Module/Circle.php:280
 #: src/Module/Contact.php:325
 msgid "All Contacts"
 msgstr ""
 
-#: src/Content/Widget.php:269
+#: src/Content/Widget.php:305
 msgid "All Protocols"
 msgstr ""
 
-#: src/Content/Widget.php:299 src/Content/Widget.php:330
+#: src/Content/Widget.php:335 src/Content/Widget.php:366
 msgid "Everything"
 msgstr ""
 
-#: src/Content/Widget.php:328
+#: src/Content/Widget.php:364
 msgid "Categories"
 msgstr ""
 
-#: src/Content/Widget.php:385
+#: src/Content/Widget.php:421
 #, php-format
 msgid "%d contact in common"
 msgid_plural "%d contacts in common"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Content/Widget.php:493
+#: src/Content/Widget.php:529
 msgid "On this date"
 msgstr ""
 
-#: src/Content/Widget.php:513
+#: src/Content/Widget.php:549
 msgid "Persons"
 msgstr ""
 
-#: src/Content/Widget.php:514
+#: src/Content/Widget.php:550
 msgid "Organisations"
 msgstr ""
 
-#: src/Content/Widget.php:515 src/Model/Contact.php:1755
+#: src/Content/Widget.php:551 src/Model/Contact.php:1750
 msgid "News"
 msgstr ""
 
-#: src/Content/Widget.php:517
+#: src/Content/Widget.php:553
 msgid "Relays"
 msgstr ""
 
-#: src/Content/Widget.php:524 src/Module/Moderation/BaseUsers.php:56
+#: src/Content/Widget.php:560 src/Module/Moderation/BaseUsers.php:56
 msgid "All"
 msgstr ""
 
@@ -2451,12 +2446,12 @@ msgstr[1] ""
 msgid "More Trending Tags"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:96 src/Model/Contact.php:1212
+#: src/Content/Widget/VCard.php:96 src/Model/Contact.php:1207
 #: src/Model/Profile.php:441
 msgid "Post to group"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:101 src/Model/Contact.php:1216
+#: src/Content/Widget/VCard.php:101 src/Model/Contact.php:1211
 #: src/Model/Profile.php:445 src/Module/Moderation/Item/Source.php:77
 msgid "Mention"
 msgstr ""
@@ -2484,13 +2479,13 @@ msgstr ""
 msgid "Network:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:120 src/Model/Contact.php:1244
-#: src/Model/Contact.php:1256 src/Model/Profile.php:458
+#: src/Content/Widget/VCard.php:120 src/Model/Contact.php:1239
+#: src/Model/Contact.php:1251 src/Model/Profile.php:458
 #: src/Module/Contact/Profile.php:476
 msgid "Unfollow"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:126 src/Model/Contact.php:1214
+#: src/Content/Widget/VCard.php:126 src/Model/Contact.php:1209
 #: src/Model/Profile.php:443
 msgid "View group"
 msgstr ""
@@ -3033,32 +3028,32 @@ msgstr ""
 msgid "Enter a valid existing folder"
 msgstr ""
 
-#: src/Core/Update.php:66
+#: src/Core/Update.php:104
 #, php-format
 msgid "Updates from version %s are not supported. Please update at least to version 2021.01 and wait until the postupdate finished version 1383."
 msgstr ""
 
-#: src/Core/Update.php:77
+#: src/Core/Update.php:115
 #, php-format
 msgid "Updates from postupdate version %s are not supported. Please update at least to version 2021.01 and wait until the postupdate finished version 1383."
 msgstr ""
 
-#: src/Core/Update.php:169
+#: src/Core/Update.php:207
 #, php-format
 msgid "%s: executing pre update %d"
 msgstr ""
 
-#: src/Core/Update.php:211
+#: src/Core/Update.php:249
 #, php-format
 msgid "%s: executing post update %d"
 msgstr ""
 
-#: src/Core/Update.php:285
+#: src/Core/Update.php:323
 #, php-format
 msgid "Update %s failed. See error logs."
 msgstr ""
 
-#: src/Core/Update.php:325
+#: src/Core/Update.php:363
 #, php-format
 msgid ""
 "\n"
@@ -3068,16 +3063,16 @@ msgid ""
 "\t\t\t\tfriendica developer if you can not help me on your own. My database might be invalid."
 msgstr ""
 
-#: src/Core/Update.php:331
+#: src/Core/Update.php:369
 #, php-format
 msgid "The error message is\\n[pre]%s[/pre]"
 msgstr ""
 
-#: src/Core/Update.php:335 src/Core/Update.php:363
+#: src/Core/Update.php:373 src/Core/Update.php:401
 msgid "[Friendica Notify] Database update"
 msgstr ""
 
-#: src/Core/Update.php:357
+#: src/Core/Update.php:395
 #, php-format
 msgid ""
 "\n"
@@ -3118,16 +3113,16 @@ msgstr ""
 msgid "Errors encountered performing database changes: "
 msgstr ""
 
-#: src/Database/DBStructure.php:218
+#: src/Database/DBStructure.php:228
 msgid "Another database update is currently running."
 msgstr ""
 
-#: src/Database/DBStructure.php:222
+#: src/Database/DBStructure.php:232
 #, php-format
 msgid "%s: Database update"
 msgstr ""
 
-#: src/Database/DBStructure.php:479
+#: src/Database/DBStructure.php:489
 #, php-format
 msgid "%s: updating %s table."
 msgstr ""
@@ -3194,84 +3189,84 @@ msgstr ""
 msgid "Edit circles"
 msgstr ""
 
-#: src/Model/Contact.php:1263 src/Module/Moderation/Users/Pending.php:88
+#: src/Model/Contact.php:1258 src/Module/Moderation/Users/Pending.php:88
 #: src/Module/Notifications/Introductions.php:124
 #: src/Module/Notifications/Introductions.php:196
 msgid "Approve"
 msgstr ""
 
-#: src/Model/Contact.php:1599 src/Model/Contact.php:1671
+#: src/Model/Contact.php:1594 src/Model/Contact.php:1666
 #: src/Module/Contact/Profile.php:360
 #, php-format
 msgid "%s has blocked you"
 msgstr ""
 
-#: src/Model/Contact.php:1751
+#: src/Model/Contact.php:1746
 msgid "Organisation"
 msgstr ""
 
-#: src/Model/Contact.php:1759
+#: src/Model/Contact.php:1754
 msgid "Group"
 msgstr ""
 
-#: src/Model/Contact.php:1763 src/Module/Moderation/BaseUsers.php:120
+#: src/Model/Contact.php:1758 src/Module/Moderation/BaseUsers.php:120
 msgid "Relay"
 msgstr ""
 
-#: src/Model/Contact.php:3078
+#: src/Model/Contact.php:3073
 msgid "Disallowed profile URL."
 msgstr ""
 
-#: src/Model/Contact.php:3083 src/Module/Friendica.php:86
+#: src/Model/Contact.php:3078 src/Module/Friendica.php:86
 msgid "Blocked domain"
 msgstr ""
 
-#: src/Model/Contact.php:3088
+#: src/Model/Contact.php:3083
 msgid "Connect URL missing."
 msgstr ""
 
-#: src/Model/Contact.php:3097
+#: src/Model/Contact.php:3092
 msgid "The contact could not be added. Please check the relevant network credentials in your Settings -> Social Networks page."
 msgstr ""
 
-#: src/Model/Contact.php:3115
+#: src/Model/Contact.php:3110
 #, php-format
 msgid "Expected network %s does not match actual network %s"
 msgstr ""
 
-#: src/Model/Contact.php:3132
+#: src/Model/Contact.php:3127
 msgid "This seems to be a relay account. They can't be followed by users."
 msgstr ""
 
-#: src/Model/Contact.php:3139
+#: src/Model/Contact.php:3134
 msgid "The profile address specified does not provide adequate information."
 msgstr ""
 
-#: src/Model/Contact.php:3141
+#: src/Model/Contact.php:3136
 msgid "No compatible communication protocols or feeds were discovered."
 msgstr ""
 
-#: src/Model/Contact.php:3144
+#: src/Model/Contact.php:3139
 msgid "An author or name was not found."
 msgstr ""
 
-#: src/Model/Contact.php:3147
+#: src/Model/Contact.php:3142
 msgid "No browser URL could be matched to this address."
 msgstr ""
 
-#: src/Model/Contact.php:3150
+#: src/Model/Contact.php:3145
 msgid "Unable to match @-style Identity Address with a known protocol or email contact."
 msgstr ""
 
-#: src/Model/Contact.php:3151
+#: src/Model/Contact.php:3146
 msgid "Use mailto: in front of address to force email check."
 msgstr ""
 
-#: src/Model/Contact.php:3157
+#: src/Model/Contact.php:3152
 msgid "Limited profile. This person will be unable to receive direct/personal notifications from you."
 msgstr ""
 
-#: src/Model/Contact.php:3216
+#: src/Model/Contact.php:3211
 msgid "Unable to retrieve contact information."
 msgstr ""
 
@@ -3572,7 +3567,7 @@ msgstr ""
 msgid "Title/Description:"
 msgstr ""
 
-#: src/Model/Profile.php:799 src/Module/Admin/Summary.php:183
+#: src/Model/Profile.php:799 src/Module/Admin/Summary.php:176
 #: src/Module/Moderation/Report/Create.php:266
 #: src/Module/Moderation/Summary.php:62
 msgid "Summary"
@@ -3886,7 +3881,7 @@ msgstr ""
 #: src/Module/Admin/Federation.php:206 src/Module/Admin/Logs/Settings.php:74
 #: src/Module/Admin/Logs/View.php:71 src/Module/Admin/Queue.php:59
 #: src/Module/Admin/Site.php:447 src/Module/Admin/Storage.php:124
-#: src/Module/Admin/Summary.php:182 src/Module/Admin/Themes/Details.php:82
+#: src/Module/Admin/Summary.php:175 src/Module/Admin/Themes/Details.php:82
 #: src/Module/Admin/Themes/Index.php:103 src/Module/Admin/Tos.php:63
 #: src/Module/Moderation/Users/Create.php:47
 #: src/Module/Moderation/Users/Pending.php:82
@@ -5364,75 +5359,75 @@ msgstr ""
 msgid "Your table_definition_cache is too low (%d). This can lead to the database error \"Prepared statement needs to be re-prepared\". Please set it at least to %d. See <a href=\"%s\">here</a> for more information.<br />"
 msgstr ""
 
-#: src/Module/Admin/Summary.php:71
+#: src/Module/Admin/Summary.php:68
 #, php-format
 msgid "There is a new version of Friendica available for download. Your current version is %1$s, upstream version is %2$s"
 msgstr ""
 
-#: src/Module/Admin/Summary.php:80
+#: src/Module/Admin/Summary.php:76
 msgid "The database update failed. Please run \"php bin/console.php dbstructure update\" from the command line and have a look at the errors that might appear."
 msgstr ""
 
-#: src/Module/Admin/Summary.php:84
+#: src/Module/Admin/Summary.php:80
 msgid "The last update failed. Please run \"php bin/console.php dbstructure update\" from the command line and have a look at the errors that might appear. (Some of the errors are possibly inside the logfile.)"
 msgstr ""
 
-#: src/Module/Admin/Summary.php:88
+#: src/Module/Admin/Summary.php:84
 msgid "The system.url entry is missing. This is a low level setting and can lead to unexpected behavior. Please add a valid entry as soon as possible in the config file or per console command!"
 msgstr ""
 
-#: src/Module/Admin/Summary.php:93
+#: src/Module/Admin/Summary.php:89
 msgid "The worker was never executed. Please check your database structure!"
 msgstr ""
 
-#: src/Module/Admin/Summary.php:95
+#: src/Module/Admin/Summary.php:91
 #, php-format
 msgid "The last worker execution was on %s UTC. This is older than one hour. Please check your crontab settings."
 msgstr ""
 
-#: src/Module/Admin/Summary.php:100
+#: src/Module/Admin/Summary.php:96
 #, php-format
 msgid "Friendica's configuration now is stored in config/local.config.php, please copy config/local-sample.config.php and move your config from <code>.htconfig.php</code>. See <a href=\"%s\">the Config help page</a> for help with the transition."
 msgstr ""
 
-#: src/Module/Admin/Summary.php:104
+#: src/Module/Admin/Summary.php:100
 #, php-format
 msgid "Friendica's configuration now is stored in config/local.config.php, please copy config/local-sample.config.php and move your config from <code>config/local.ini.php</code>. See <a href=\"%s\">the Config help page</a> for help with the transition."
 msgstr ""
 
-#: src/Module/Admin/Summary.php:110
+#: src/Module/Admin/Summary.php:106
 #, php-format
 msgid "<a href=\"%s\">%s</a> is not reachable on your system. This is a severe configuration issue that prevents server to server communication. See <a href=\"%s\">the installation page</a> for help."
 msgstr ""
 
-#: src/Module/Admin/Summary.php:134
+#: src/Module/Admin/Summary.php:130
 #, php-format
 msgid "Friendica's system.basepath was updated from '%s' to '%s'. Please remove the system.basepath from your db to avoid differences."
 msgstr ""
 
-#: src/Module/Admin/Summary.php:142
+#: src/Module/Admin/Summary.php:138
 #, php-format
 msgid "Friendica's current system.basepath '%s' is wrong and the config file '%s' isn't used."
 msgstr ""
 
-#: src/Module/Admin/Summary.php:150
+#: src/Module/Admin/Summary.php:146
 #, php-format
 msgid "Friendica's current system.basepath '%s' is not equal to the config file '%s'. Please fix your configuration."
 msgstr ""
 
-#: src/Module/Admin/Summary.php:161
+#: src/Module/Admin/Summary.php:157
 msgid "Message queues"
 msgstr ""
 
-#: src/Module/Admin/Summary.php:167
+#: src/Module/Admin/Summary.php:160
 msgid "Server Settings"
 msgstr ""
 
-#: src/Module/Admin/Summary.php:185
+#: src/Module/Admin/Summary.php:178
 msgid "Version"
 msgstr ""
 
-#: src/Module/Admin/Summary.php:189
+#: src/Module/Admin/Summary.php:182
 msgid "Active addons"
 msgstr ""
 
@@ -8376,7 +8371,7 @@ msgstr ""
 msgid "Incomplete request data"
 msgstr ""
 
-#: src/Module/OAuth/Authorize.php:92
+#: src/Module/OAuth/Authorize.php:93
 #, php-format
 msgid "Please copy the following authentication code into your application and close this window: %s"
 msgstr ""
