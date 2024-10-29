@@ -76,7 +76,7 @@ class Source extends BaseModeration
 				'urllbl'      => $this->t('URL'),
 				'mentionlbl'  => $this->t('Mention'),
 				'implicitlbl' => $this->t('Implicit Mention'),
-				'error'       => $this->t('Error'),
+				'error'       => $this->tt('Error','Errors', 1),
 				'notfound'    => $this->t('Item not found'),
 				'nosource'    => $this->t('No source recorded'),
 				'noconfig'    => !$this->config->get('debug', 'store_source') ? $this->t('Please make sure the <code>debug.store_source</code> config key is set in <code>config/local.config.php</code> for future items to have sources.') : '',
