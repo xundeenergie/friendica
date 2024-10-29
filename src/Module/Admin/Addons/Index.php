@@ -63,7 +63,7 @@ class Index extends BaseAdmin
 			'$function' => 'addons',
 			'$addons' => $addons,
 			'$pcount' => count($addons),
-			'$noplugshint' => DI::l10n()->t('There are currently no addons available on your node. You can find the official addon repository at %1$s and might find other interesting addons in the open addon registry at %2$s', 'https://github.com/friendica/friendica-addons', 'http://addons.friendi.ca'),
+			'$noplugshint' => DI::l10n()->t('There are currently no addons available on your node. You can find the official addon repository at %1$s.', 'https://git.friendi.ca/friendica/friendica-addons'),
 			'$form_security_token' => self::getFormSecurityToken('admin_addons'),
 		]);
 	}
