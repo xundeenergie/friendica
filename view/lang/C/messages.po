@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.09-rc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-27 19:18+0000\n"
+"POT-Creation-Date: 2024-10-29 05:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3934,7 +3934,7 @@ msgstr ""
 
 #: src/Module/Admin/Addons/Index.php:66
 #, php-format
-msgid "There are currently no addons available on your node. You can find the official addon repository at %1$s and might find other interesting addons in the open addon registry at %2$s"
+msgid "There are currently no addons available on your node. You can find the official addon repository at %1$s."
 msgstr ""
 
 #: src/Module/Admin/DBSync.php:37
