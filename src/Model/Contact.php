@@ -1367,7 +1367,7 @@ class Contact
 				$personal_contact = DBA::selectFirst('contact', $fields, ["`nurl` = ? AND `uid` != 0", Strings::normaliseLink($url)]);
 			}
 
-			if (DBA::isResult($personal_contact)) {
+			if (DBA::isResult($personal_contact) && !Probe::isProbable($personal_contact['network'])) {
 				Logger::info('Take contact data from personal contact', ['url' => $url, 'update' => $update, 'contact' => $personal_contact]);
 				$data = $personal_contact;
 				$data['photo'] = $personal_contact['avatar'];
