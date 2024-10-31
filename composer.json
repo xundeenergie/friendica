@@ -112,6 +112,9 @@
 				"npm-asset-library": "view/asset",
 				"bower-asset-library": "view/asset"
 			}
+		},
+		"allow-plugins": {
+			"php-http/discovery": false
 		}
 	},
 	"archive": {
