@@ -112,12 +112,6 @@
 		"autoloader-suffix": "Friendica",
 		"optimize-autoloader": true,
 		"preferred-install": "dist",
-		"fxp-asset": {
-			"installer-paths": {
-				"npm-asset-library": "view/asset",
-				"bower-asset-library": "view/asset"
-			}
-		},
 		"allow-plugins": {
 			"composer/installers": true,
 			"oomphinc/composer-installers-extender": true,
