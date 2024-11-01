@@ -95,9 +95,12 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"Friendica\\": "src/",
-			"Friendica\\Addon\\": "addon/"
-		}
+			"Friendica\\": "src/"
+		},
+		"classmap": ["addon/"],
+		"exclude-from-classmap": [
+			"addon/*/vendor/"
+		]
 	},
 	"autoload-dev": {
 		"psr-4": {
