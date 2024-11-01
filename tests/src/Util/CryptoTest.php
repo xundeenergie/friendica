@@ -6,14 +6,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 /// @todo Use right namespace - needs alternative way of mocking random_int()
-namespace Friendica\Util;
+namespace Friendica\Test\src\Util;
 
-use phpseclib\Crypt\RSA;
-use phpseclib\Math\BigInteger;
+use Friendica\Util\Crypto;
+use phpmock\phpunit\PHPMock;
 use PHPUnit\Framework\TestCase;
 
 class CryptoTest extends TestCase
 {
+	use PHPMock;
+
 	public static function tearDownAfterClass(): void
 	{
 		// Reset mocking
@@ -39,6 +41,14 @@ class CryptoTest extends TestCase
 
 	public function testRandomDigitsRandomInt()
 	{
+		$random_int = $this->getFunctionMock(__NAMESPACE__, 'random_int');
+        $random_int->expects($this->any())->willReturnCallback(function($min, $max) {
+			global $phpMock;
+			if (isset($phpMock['random_int'])) {
+				return call_user_func_array($phpMock['random_int'], func_get_args());
+			}
+		});
+
 		self::assertRandomInt(0, 9);
 
 		$test = Crypto::randomDigits(1);
@@ -76,18 +86,5 @@ class CryptoTest extends TestCase
 				'key' => file_get_contents(__DIR__ . '/../../datasets/crypto/rsa/diaspora-public-pem'),
 			],
 		];
-	}
-}
-
-/**
- * A workaround to replace the PHP native random_int() (>= 7.0) with a mocked function
- *
- * @return int
- */
-function random_int($min, $max)
-{
-	global $phpMock;
-	if (isset($phpMock['random_int'])) {
-		return call_user_func_array($phpMock['random_int'], func_get_args());
 	}
 }
