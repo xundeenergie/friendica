@@ -124,6 +124,15 @@
 			"php-http/discovery": false
 		}
 	},
+	"extra": {
+		"installer-types": ["bower-asset", "npm-asset"],
+		"installer-paths": {
+			"view/asset/{$name}/": [
+				"type:bower-asset",
+				"type:npm-asset"
+			]
+		}
+	},
 	"archive": {
 		"exclude": [
 			"/.*",
