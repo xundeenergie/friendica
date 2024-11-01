@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "54311f4bed63e279077593d1b357f292",
+    "content-hash": "24ce422b54b70a7841c08c428e3dd7e8",
     "packages": [
         {
             "name": "asika/simple-console",
@@ -105,25 +105,6 @@
             "type": "bower-asset",
             "license": [
                 "WTFPL"
-            ]
-        },
-        {
-            "name": "bower-asset/dompurify",
-            "version": "1.0.11",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:cure53/DOMPurify.git",
-                "reference": "3c1c0d7e11cda896b0c69cf82e0ca6e0c0e7dd38"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cure53/DOMPurify/zipball/3c1c0d7e11cda896b0c69cf82e0ca6e0c0e7dd38",
-                "reference": "3c1c0d7e11cda896b0c69cf82e0ca6e0c0e7dd38"
-            },
-            "type": "bower-asset",
-            "license": [
-                "MPL-2.0",
-                "Apache-2.0"
             ]
         },
         {
@@ -1876,6 +1857,18 @@
             "type": "npm-asset",
             "license": [
                 "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/dompurify",
+            "version": "1.0.11",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/dompurify/-/dompurify-1.0.11.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MPL-2.0 OR Apache-2.0"
             ]
         },
         {
