@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "24ce422b54b70a7841c08c428e3dd7e8",
+    "content-hash": "4385276f5e7c27e2ceb7b16531dbc33a",
     "packages": [
         {
             "name": "asika/simple-console",
@@ -105,26 +105,6 @@
             "type": "bower-asset",
             "license": [
                 "WTFPL"
-            ]
-        },
-        {
-            "name": "bower-asset/fork-awesome",
-            "version": "1.2.0",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:ForkAwesome/Fork-Awesome.git",
-                "reference": "1e3849530d0266ece3a883649e1398414b92241d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ForkAwesome/Fork-Awesome/zipball/1e3849530d0266ece3a883649e1398414b92241d",
-                "reference": "1e3849530d0266ece3a883649e1398414b92241d"
-            },
-            "type": "bower-asset",
-            "license": [
-                "OFL-1.1",
-                "MIT",
-                "CC-BY-3.0"
             ]
         },
         {
@@ -1908,6 +1888,18 @@
             "type": "npm-asset",
             "license": [
                 "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/fork-awesome",
+            "version": "1.2.0",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/fork-awesome/-/fork-awesome-1.2.0.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "(OFL-1.1 AND MIT)"
             ]
         },
         {
