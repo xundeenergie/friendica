@@ -24,39 +24,15 @@ class CryptoTest extends TestCase
 		parent::tearDownAfterClass();
 	}
 
-	/**
-	 * Replaces random_int results with given mocks
-	 *
-	 */
-	private function assertRandomInt($min, $max)
-	{
-		global $phpMock;
-		$phpMock['random_int'] = function ($mMin, $mMax) use ($min, $max) {
-			self::assertEquals($min, $mMin);
-			self::assertEquals($max, $mMax);
-			return 1;
-		};
-	}
-
 	public function testRandomDigitsRandomInt()
 	{
-		$random_int = $this->getFunctionMock(__NAMESPACE__, 'random_int');
+		$random_int = $this->getFunctionMock('Friendica\Util', 'random_int');
 		$random_int->expects($this->any())->willReturnCallback(function($min, $max) {
-			global $phpMock;
-			if (isset($phpMock['random_int'])) {
-				return call_user_func_array($phpMock['random_int'], func_get_args());
-			}
+			return 1;
 		});
 
-		self::assertRandomInt(0, 9);
-
-		$test = Crypto::randomDigits(1);
-		self::assertEquals(1, strlen($test));
-		self::assertEquals(1, $test);
-
-		$test = Crypto::randomDigits(8);
-		self::assertEquals(8, strlen($test));
-		self::assertEquals(11111111, $test);
+		self::assertSame(1, Crypto::randomDigits(1));
+		self::assertSame(11111111, Crypto::randomDigits(8));
 	}
 
 	public function dataRsa(): array
@@ -74,7 +50,7 @@ class CryptoTest extends TestCase
 	 */
 	public function testPubRsaToMe(string $key, string $expected)
 	{
-		self::assertEquals($expected, Crypto::rsaToPem(base64_decode($key)));
+		self::assertSame($expected, Crypto::rsaToPem(base64_decode($key)));
 	}
 
 

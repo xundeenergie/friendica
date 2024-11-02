@@ -313,6 +313,6 @@ class Crypto
 			$rn .= random_int(0, 9);
 		}
 
-		return $rn;
+		return (int) $rn;
 	}
 }

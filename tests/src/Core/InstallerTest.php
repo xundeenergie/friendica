@@ -151,7 +151,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckKeys($function, $expected)
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) use ($function, $expected) {
 			if ($function_name === $function) {
 				return $expected;
@@ -170,7 +170,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctionsWithoutIntlChar()
 	{
-		$class_exists = $this->getFunctionMock(__NAMESPACE__, 'class_exists');
+		$class_exists = $this->getFunctionMock('Friendica\Core', 'class_exists');
 		$class_exists->expects($this->any())->willReturnCallback(function($class_name) {
 			if ($class_name === 'IntlChar') {
 				return false;
@@ -195,7 +195,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctionsWithoutCurlInit()
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'curl_init') {
 				return false;
@@ -220,7 +220,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctionsWithoutImagecreateformjpeg()
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'imagecreatefromjpeg') {
 				return false;
@@ -245,7 +245,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctionsWithoutOpensslpublicencrypt()
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'openssl_public_encrypt') {
 				return false;
@@ -270,7 +270,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctionsWithoutMbStrlen()
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'mb_strlen') {
 				return false;
@@ -295,7 +295,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctionsWithoutIconvStrlen()
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'iconv_strlen') {
 				return false;
@@ -320,7 +320,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctionsWithoutPosixkill()
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'posix_kill') {
 				return false;
@@ -345,7 +345,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctionsWithoutProcOpen()
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'proc_open') {
 				return false;
@@ -370,7 +370,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctionsWithoutJsonEncode()
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'json_encode') {
 				return false;
@@ -395,7 +395,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctionsWithoutFinfoOpen()
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'finfo_open') {
 				return false;
@@ -420,7 +420,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctionsWithoutGmpStrval()
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'gmp_strval') {
 				return false;
@@ -445,7 +445,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckFunctions()
 	{
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if (in_array(
 				$function_name,
@@ -500,7 +500,7 @@ class InstallerTest extends MockedTest
 	public function testCheckHtAccessFail()
 	{
 		// Mocking that we can use CURL
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'curl_init') {
 				return true;
@@ -553,7 +553,7 @@ class InstallerTest extends MockedTest
 	public function testCheckHtAccessWork()
 	{
 		// Mocking that we can use CURL
-		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists = $this->getFunctionMock('Friendica\Core', 'function_exists');
 		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
 			if ($function_name === 'curl_init') {
 				return true;
@@ -604,7 +604,7 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckImagickWithImagick()
 	{
-		$class_exists = $this->getFunctionMock(__NAMESPACE__, 'class_exists');
+		$class_exists = $this->getFunctionMock('Friendica\Core', 'class_exists');
 		$class_exists->expects($this->any())->willReturnCallback(function($class_name) {
 			if ($class_name === 'Imagick') {
 				return true;
