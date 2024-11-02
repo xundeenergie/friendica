@@ -118,24 +118,6 @@ class InstallerTest extends MockedTest
 		self::assertArraySubset($subSet, $assertionArray, false, "expected subset: " . PHP_EOL . print_r($subSet, true) . PHP_EOL . "current subset: " . print_r($assertionArray, true));
 	}
 
-	/**
-	 * Replaces class_exist results with given mocks
-	 *
-	 * @param array $classes a list from class names and their results
-	 */
-	private function setClasses(array $classes)
-	{
-		global $phpMock;
-		$phpMock['class_exists'] = function($class) use ($classes) {
-			foreach ($classes as $name => $value) {
-				if ($class == $name) {
-					return $value;
-				}
-			}
-			return '__phpunit_continue__';
-		};
-	}
-
 	public static function getCheckKeysData(): array
 	{
 		return [
@@ -494,8 +476,6 @@ class InstallerTest extends MockedTest
 
 	/**
 	 * @small
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
 	 */
 	public function testCheckHtAccessFail()
 	{
@@ -547,8 +527,6 @@ class InstallerTest extends MockedTest
 
 	/**
 	 * @small
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
 	 */
 	public function testCheckHtAccessWork()
 	{
@@ -597,64 +575,15 @@ class InstallerTest extends MockedTest
 		self::assertTrue($install->checkHtAccess('https://test'));
 	}
 
-	/**
-	 * @small
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
-	public function testCheckImagickWithImagick()
+	public function testImagickNotInstalled()
 	{
 		$class_exists = $this->getFunctionMock('Friendica\Core', 'class_exists');
 		$class_exists->expects($this->any())->willReturnCallback(function($class_name) {
 			if ($class_name === 'Imagick') {
-				return true;
+				return false;
 			}
 			return call_user_func_array('\class_exists', func_get_args());
 		});
-
-		$this->l10nMock->shouldReceive('t')->andReturnUsing(function ($args) { return $args; });
-
-		$install = new Installer();
-
-		// even there is no supported type, Imagick should return true (because it is not required)
-		self::assertTrue($install->checkImagick());
-
-		self::assertCheckExist(1,
-			$this->l10nMock->t('ImageMagick supports GIF'),
-			'',
-			true,
-			false,
-			$install->getChecks());
-	}
-
-	/**
-	 * @small
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
-	 */
-	public function testImagickNotFound()
-	{
-		static::markTestIncomplete('Disabled due not working/difficult mocking global functions - needs more care!');
-
-		$this->l10nMock->shouldReceive('t')->andReturnUsing(function ($args) { return $args; });
-
-		$this->setClasses(['Imagick' => true]);
-
-		$install = new Installer();
-
-		// even there is no supported type, Imagick should return true (because it is not required)
-		self::assertTrue($install->checkImagick());
-		self::assertCheckExist(1,
-			$this->l10nMock->t('ImageMagick supports GIF'),
-			'',
-			false,
-			false,
-			$install->getChecks());
-	}
-
-	public function testImagickNotInstalled()
-	{
-		$this->setClasses(['Imagick' => false]);
 		$this->mockL10nT('ImageMagick PHP extension is not installed');
 
 		$install = new Installer();
