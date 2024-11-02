@@ -5,12 +5,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/// @todo this is in the same namespace as Install for mocking 'function_exists'
-namespace Friendica\Core;
+namespace Friendica\Test\src\Core;
 
 use Dice\Dice;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Friendica\Core\Config\ValueObject\Cache;
+use Friendica\Core\Installer;
+use Friendica\Core\L10n;
 use Friendica\DI;
 use Friendica\Network\HTTPClient\Capability\ICanHandleHttpResponses;
 use Friendica\Network\HTTPClient\Capability\ICanSendHttpRequests;
@@ -18,18 +19,20 @@ use Friendica\Test\MockedTest;
 use Friendica\Test\Util\VFSTrait;
 use Mockery;
 use Mockery\MockInterface;
+use phpmock\phpunit\PHPMock;
 
 class InstallerTest extends MockedTest
 {
 	use VFSTrait;
 	use ArraySubsetAsserts;
+	use PHPMock;
 
 	/**
 	 * @var L10n|MockInterface
 	 */
 	private $l10nMock;
 	/**
-	 * @var Dice|MockInterface
+	 * @var Dice&MockInterface
 	 */
 	private $dice;
 
@@ -41,7 +44,7 @@ class InstallerTest extends MockedTest
 
 		$this->l10nMock = Mockery::mock(L10n::class);
 
-		/** @var Dice|MockInterface $dice */
+		/** @var Dice&MockInterface $dice */
 		$this->dice = Mockery::mock(Dice::class)->makePartial();
 		$this->dice = $this->dice->addRules(include __DIR__ . '/../../../static/dependencies.config.php');
 
@@ -116,24 +119,6 @@ class InstallerTest extends MockedTest
 	}
 
 	/**
-	 * Replaces function_exists results with given mocks
-	 *
-	 * @param array $functions a list from function names and their result
-	 */
-	private function setFunctions(array $functions)
-	{
-		global $phpMock;
-		$phpMock['function_exists'] = function($function) use ($functions) {
-			foreach ($functions as $name => $value) {
-				if ($function == $name) {
-					return $value;
-				}
-			}
-			return '__phpunit_continue__';
-		};
-	}
-
-	/**
 	 * Replaces class_exist results with given mocks
 	 *
 	 * @param array $classes a list from class names and their results
@@ -151,29 +136,50 @@ class InstallerTest extends MockedTest
 		};
 	}
 
+	public static function getCheckKeysData(): array
+	{
+		return [
+			'openssl_pkey_new does not exist' => ['openssl_pkey_new', false],
+			'openssl_pkey_new does exists' => ['openssl_pkey_new', true],
+		];
+	}
+
 	/**
 	 * @small
+	 *
+	 * @dataProvider getCheckKeysData
 	 */
-	public function testCheckKeys()
+	public function testCheckKeys($function, $expected)
 	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) use ($function, $expected) {
+			if ($function_name === $function) {
+				return $expected;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
 		$this->l10nMock->shouldReceive('t')->andReturnUsing(function ($args) { return $args; });
 
-		$this->setFunctions(['openssl_pkey_new' => false]);
 		$install = new Installer();
-		self::assertFalse($install->checkKeys());
-
-		$this->setFunctions(['openssl_pkey_new' => true]);
-		$install = new Installer();
-		self::assertTrue($install->checkKeys());
+		self::assertSame($expected, $install->checkKeys());
 	}
 
 	/**
 	 * @small
 	 */
-	public function testCheckFunctions()
+	public function testCheckFunctionsWithoutIntlChar()
 	{
+		$class_exists = $this->getFunctionMock(__NAMESPACE__, 'class_exists');
+		$class_exists->expects($this->any())->willReturnCallback(function($class_name) {
+			if ($class_name === 'IntlChar') {
+				return false;
+			}
+			return call_user_func_array('\class_exists', func_get_args());
+		});
+
 		$this->mockFunctionL10TCalls();
-		$this->setClasses(['IntlChar' => false]);
+
 		$install = new Installer();
 		self::assertFalse($install->checkFunctions());
 		self::assertCheckExist(2,
@@ -182,9 +188,23 @@ class InstallerTest extends MockedTest
 			false,
 			true,
 			$install->getChecks());
+	}
 
-		$this->mockFunctionL10TCalls();
-		$this->setFunctions(['curl_init' => false, 'imagecreatefromjpeg' => true]);
+	/**
+	 * @small
+	 */
+	public function testCheckFunctionsWithoutCurlInit()
+	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'curl_init') {
+				return false;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
+		$this->mockFunctionL10TCalls(true);
+
 		$install = new Installer();
 		self::assertFalse($install->checkFunctions());
 		self::assertCheckExist(4,
@@ -193,9 +213,23 @@ class InstallerTest extends MockedTest
 			false,
 			true,
 			$install->getChecks());
+	}
 
-		$this->mockFunctionL10TCalls();
-		$this->setFunctions(['imagecreatefromjpeg' => false]);
+	/**
+	 * @small
+	 */
+	public function testCheckFunctionsWithoutImagecreateformjpeg()
+	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'imagecreatefromjpeg') {
+				return false;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
+		$this->mockFunctionL10TCalls(true);
+
 		$install = new Installer();
 		self::assertFalse($install->checkFunctions());
 		self::assertCheckExist(5,
@@ -204,9 +238,23 @@ class InstallerTest extends MockedTest
 			false,
 			true,
 			$install->getChecks());
+	}
 
-		$this->mockFunctionL10TCalls();
-		$this->setFunctions(['openssl_public_encrypt' => false]);
+	/**
+	 * @small
+	 */
+	public function testCheckFunctionsWithoutOpensslpublicencrypt()
+	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'openssl_public_encrypt') {
+				return false;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
+		$this->mockFunctionL10TCalls(true);
+
 		$install = new Installer();
 		self::assertFalse($install->checkFunctions());
 		self::assertCheckExist(6,
@@ -215,9 +263,23 @@ class InstallerTest extends MockedTest
 			false,
 			true,
 			$install->getChecks());
+	}
 
-		$this->mockFunctionL10TCalls();
-		$this->setFunctions(['mb_strlen' => false]);
+	/**
+	 * @small
+	 */
+	public function testCheckFunctionsWithoutMbStrlen()
+	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'mb_strlen') {
+				return false;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
+		$this->mockFunctionL10TCalls(true);
+
 		$install = new Installer();
 		self::assertFalse($install->checkFunctions());
 		self::assertCheckExist(7,
@@ -226,9 +288,23 @@ class InstallerTest extends MockedTest
 			false,
 			true,
 			$install->getChecks());
+	}
 
-		$this->mockFunctionL10TCalls();
-		$this->setFunctions(['iconv_strlen' => false]);
+	/**
+	 * @small
+	 */
+	public function testCheckFunctionsWithoutIconvStrlen()
+	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'iconv_strlen') {
+				return false;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
+		$this->mockFunctionL10TCalls(true);
+
 		$install = new Installer();
 		self::assertFalse($install->checkFunctions());
 		self::assertCheckExist(8,
@@ -237,9 +313,23 @@ class InstallerTest extends MockedTest
 			false,
 			true,
 			$install->getChecks());
+	}
 
-		$this->mockFunctionL10TCalls();
-		$this->setFunctions(['posix_kill' => false]);
+	/**
+	 * @small
+	 */
+	public function testCheckFunctionsWithoutPosixkill()
+	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'posix_kill') {
+				return false;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
+		$this->mockFunctionL10TCalls(true);
+
 		$install = new Installer();
 		self::assertFalse($install->checkFunctions());
 		self::assertCheckExist(9,
@@ -248,9 +338,23 @@ class InstallerTest extends MockedTest
 			false,
 			true,
 			$install->getChecks());
+	}
 
-		$this->mockFunctionL10TCalls();
-		$this->setFunctions(['proc_open' => false]);
+	/**
+	 * @small
+	 */
+	public function testCheckFunctionsWithoutProcOpen()
+	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'proc_open') {
+				return false;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
+		$this->mockFunctionL10TCalls(true);
+
 		$install = new Installer();
 		self::assertFalse($install->checkFunctions());
 		self::assertCheckExist(10,
@@ -259,8 +363,23 @@ class InstallerTest extends MockedTest
 			false,
 			true,
 			$install->getChecks());
-		$this->mockFunctionL10TCalls();
-		$this->setFunctions(['json_encode' => false]);
+	}
+
+	/**
+	 * @small
+	 */
+	public function testCheckFunctionsWithoutJsonEncode()
+	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'json_encode') {
+				return false;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
+		$this->mockFunctionL10TCalls(true);
+
 		$install = new Installer();
 		self::assertFalse($install->checkFunctions());
 		self::assertCheckExist(11,
@@ -269,9 +388,23 @@ class InstallerTest extends MockedTest
 			false,
 			true,
 			$install->getChecks());
+	}
 
-		$this->mockFunctionL10TCalls();
-		$this->setFunctions(['finfo_open' => false]);
+	/**
+	 * @small
+	 */
+	public function testCheckFunctionsWithoutFinfoOpen()
+	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'finfo_open') {
+				return false;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
+		$this->mockFunctionL10TCalls(true);
+
 		$install = new Installer();
 		self::assertFalse($install->checkFunctions());
 		self::assertCheckExist(12,
@@ -280,9 +413,23 @@ class InstallerTest extends MockedTest
 			false,
 			true,
 			$install->getChecks());
+	}
 
-		$this->mockFunctionL10TCalls();
-		$this->setFunctions(['gmp_strval' => false]);
+	/**
+	 * @small
+	 */
+	public function testCheckFunctionsWithoutGmpStrval()
+	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'gmp_strval') {
+				return false;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
+		$this->mockFunctionL10TCalls(true);
+
 		$install = new Installer();
 		self::assertFalse($install->checkFunctions());
 		self::assertCheckExist(13,
@@ -291,20 +438,36 @@ class InstallerTest extends MockedTest
 		false,
 			true,
 			$install->getChecks());
+	}
+
+	/**
+	 * @small
+	 */
+	public function testCheckFunctions()
+	{
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if (in_array(
+				$function_name,
+				[
+					'curl_init',
+					'imagecreatefromjpeg',
+					'openssl_public_encrypt',
+					'mb_strlen',
+					'iconv_strlen',
+					'posix_kill',
+					'json_encode',
+					'finfo_open',
+					'gmp_strval',
+				]
+			)) {
+				return true;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
 
 		$this->mockFunctionL10TCalls(true);
-		$this->setFunctions([
-			'curl_init' => true,
-			'imagecreatefromjpeg' => true,
-			'openssl_public_encrypt' => true,
-			'mb_strlen' => true,
-			'iconv_strlen' => true,
-			'posix_kill' => true,
-			'json_encode' => true,
-			'finfo_open' => true,
-			'gmp_strval' => true,
-		]);
-		$this->setClasses(['IntlChar' => true]);
+
 		$install = new Installer();
 		self::assertTrue($install->checkFunctions());
 	}
@@ -336,6 +499,15 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckHtAccessFail()
 	{
+		// Mocking that we can use CURL
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'curl_init') {
+				return true;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
 		$this->l10nMock->shouldReceive('t')->andReturnUsing(function ($args) { return $args; });
 
 		// Mocking the CURL Response
@@ -367,9 +539,6 @@ class InstallerTest extends MockedTest
 
 		DI::init($this->dice, true);
 
-		// Mocking that we can use CURL
-		$this->setFunctions(['curl_init' => true]);
-
 		$install = new Installer();
 
 		self::assertFalse($install->checkHtAccess('https://test'));
@@ -383,6 +552,15 @@ class InstallerTest extends MockedTest
 	 */
 	public function testCheckHtAccessWork()
 	{
+		// Mocking that we can use CURL
+		$function_exists = $this->getFunctionMock(__NAMESPACE__, 'function_exists');
+		$function_exists->expects($this->any())->willReturnCallback(function($function_name) {
+			if ($function_name === 'curl_init') {
+				return true;
+			}
+			return call_user_func_array('\function_exists', func_get_args());
+		});
+
 		$this->l10nMock->shouldReceive('t')->andReturnUsing(function ($args) { return $args; });
 
 		// Mocking the failed CURL Response
@@ -414,9 +592,6 @@ class InstallerTest extends MockedTest
 
 		DI::init($this->dice, true);
 
-		// Mocking that we can use CURL
-		$this->setFunctions(['curl_init' => true]);
-
 		$install = new Installer();
 
 		self::assertTrue($install->checkHtAccess('https://test'));
@@ -427,13 +602,17 @@ class InstallerTest extends MockedTest
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function testImagick()
+	public function testCheckImagickWithImagick()
 	{
-		static::markTestIncomplete('needs adapted class_exists() mock');
+		$class_exists = $this->getFunctionMock(__NAMESPACE__, 'class_exists');
+		$class_exists->expects($this->any())->willReturnCallback(function($class_name) {
+			if ($class_name === 'Imagick') {
+				return true;
+			}
+			return call_user_func_array('\class_exists', func_get_args());
+		});
 
 		$this->l10nMock->shouldReceive('t')->andReturnUsing(function ($args) { return $args; });
-
-		$this->setClasses(['Imagick' => true]);
 
 		$install = new Installer();
 
@@ -505,35 +684,4 @@ class InstallerTest extends MockedTest
 
 		$install->setUpCache($configCache, '/test/');
 	}
-}
-
-/**
- * A workaround to replace the PHP native function_exists with a mocked function
- *
- * @param string $function_name the Name of the function
- *
- * @return bool true or false
- */
-function function_exists(string $function_name)
-{
-	global $phpMock;
-	if (isset($phpMock['function_exists'])) {
-		$result = call_user_func_array($phpMock['function_exists'], func_get_args());
-		if ($result !== '__phpunit_continue__') {
-			return $result;
-		}
-	}
-	return call_user_func_array('\function_exists', func_get_args());
-}
-
-function class_exists($class_name)
-{
-	global $phpMock;
-	if (isset($phpMock['class_exists'])) {
-		$result = call_user_func_array($phpMock['class_exists'], func_get_args());
-		if ($result !== '__phpunit_continue__') {
-			return $result;
-		}
-	}
-	return call_user_func_array('\class_exists', func_get_args());
 }

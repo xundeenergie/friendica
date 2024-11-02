@@ -5,7 +5,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-/// @todo Use right namespace - needs alternative way of mocking random_int()
 namespace Friendica\Test\src\Util;
 
 use Friendica\Util\Crypto;
@@ -42,7 +41,7 @@ class CryptoTest extends TestCase
 	public function testRandomDigitsRandomInt()
 	{
 		$random_int = $this->getFunctionMock(__NAMESPACE__, 'random_int');
-        $random_int->expects($this->any())->willReturnCallback(function($min, $max) {
+		$random_int->expects($this->any())->willReturnCallback(function($min, $max) {
 			global $phpMock;
 			if (isset($phpMock['random_int'])) {
 				return call_user_func_array($phpMock['random_int'], func_get_args());
