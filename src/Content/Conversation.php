@@ -1518,6 +1518,7 @@ class Conversation
 				'network'              => $item['network'],
 				'network_name'         => ContactSelector::networkToName($item['author-network'], $item['author-link'], $item['network'], $item['author-gsid']),
 				'network_icon'         => ContactSelector::networkToIcon($item['network'], $item['author-link'], $item['author-gsid']),
+				'network_svg'          => ContactSelector::networkToSVG($item['network'], $item['author-link'], $item['author-gsid'], '', $this->session->getLocalUserId()),
 				'linktitle'            => $this->l10n->t('View %s\'s profile @ %s', $profile_name, $item['author-link']),
 				'profile_url'          => $profile_link,
 				'item_photo_menu_html' => $this->item->photoMenu($item, $formSecurityToken),

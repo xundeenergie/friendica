@@ -111,7 +111,7 @@ as the value of $top_child_total (this is done at the end of this file)
 			<div class="contact-photo-wrapper mframe{{if $item.owner_url}} wwfrom{{/if}} p-author h-card">
 				<a class="userinfo click-card u-url" id="wall-item-photo-menu-{{$item.id}}" href="{{$item.profile_url}}">
 					<div class="contact-photo-image-wrapper">
-						<img src="{{$item.thumb}}" class="contact-photo-xs media-object {{$item.sparkle}} p-name u-photo" id="wall-item-photo-comment-{{$item.id}}" alt="{{$item.name}}"  loading="lazy"/>
+						<img src="{{$item.thumb}}" class="contact-photo-xs media-object {{$item.sparkle}} p-name u-photo" id="wall-item-photo-comment-{{$item.id}}" alt="{{$item.name}}" loading="lazy"/>
 					</div>
 				</a>
 			</div>
@@ -126,15 +126,19 @@ as the value of $top_child_total (this is done at the end of this file)
 		{{* contact info header*}}
 		<div class="contact-info">
 			<div class="preferences">
-				{{if $item.network_icon && $item.plink}}
+				{{if $item.network_svg && $item.plink}}
+					<span class="wall-item-network"><a href="{{$item.plink.href}}" class="plink u-url" target="_blank"><img class="network-svg" src="{{$item.network_svg}}" alt="{{$item.network_name}} - {{$item.plink.title}}" title="{{$item.network_name}} - {{$item.plink.title}}" loading="lazy"/></a></span>
+				{{elseif $item.network_icon && $item.plink}}
    					<span class="wall-item-network"><a href="{{$item.plink.href}}" class="plink u-url" aria-label="{{$item.plink.title}}" target="_blank"><i class="fa fa-{{$item.network_icon}} fakelink" title="{{$item.network_name}} - {{$item.plink.title}}" aria-hidden="true"></i></a></span>
 				{{elseif $item.plink}}
-       					<a href="{{$item.plink.href}}" class="plink u-url" aria-label="{{$item.plink.title}}" title="{{$item.network_name}} - {{$item.plink.title}}" target="_blank">{{$item.network_name}}</a>
+       				<a href="{{$item.plink.href}}" class="plink u-url" aria-label="{{$item.plink.title}}" title="{{$item.network_name}} - {{$item.plink.title}}" target="_blank">{{$item.network_name}}</a>
+				{{elseif $item.network_icon}}
+					<span class="wall-item-network"><img class="network-svg" src="{{$item.network_svg}}" title="{{$item.network_name}}" loading="lazy" aria-hidden="true"/></span>
    				{{elseif $item.network_icon}}
-       					<span class="wall-item-network"><i class="fa fa-{{$item.network_icon}}" title="{{$item.network_name}}" aria-hidden="true"></i></span>
-    				{{else}}
-        				<span class="wall-item-network" title="{{$item.app}}">{{$item.network_name}}</span>
-    				{{/if}}
+       				<span class="wall-item-network"><i class="fa fa-{{$item.network_icon}}" title="{{$item.network_name}}" aria-hidden="true"></i></span>
+    			{{else}}
+        			<span class="wall-item-network" title="{{$item.app}}">{{$item.network_name}}</span>
+    			{{/if}}
 			</div>
 		{{if $item.thread_level==1}}
 			<div class="hidden-sm hidden-xs media-body"><!-- <= For computer -->

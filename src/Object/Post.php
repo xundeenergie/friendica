@@ -608,6 +608,7 @@ class Post
 			'network'         => $item['network'],
 			'network_name'    => ContactSelector::networkToName($item['author-network'], $item['author-link'], $item['network'], $item['author-gsid']),
 			'network_icon'    => ContactSelector::networkToIcon($item['network'], $item['author-link'], $item['author-gsid']),
+			'network_svg'     => ContactSelector::networkToSVG($item['network'], $item['author-link'], $item['author-gsid'], '', DI::userSession()->getLocalUserId()),
 			'received'        => $item['received'],
 			'commented'       => $item['commented'],
 			'created_date'    => $item['created'],

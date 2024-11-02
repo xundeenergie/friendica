@@ -30,6 +30,7 @@
 	{{include file="field_select.tpl" field=$preview_mode}}
 	{{include file="field_checkbox.tpl" field=$hide_empty_descriptions}}
 	{{include file="field_checkbox.tpl" field=$hide_custom_emojis}}
+	{{include file="field_checkbox.tpl" field=$black_platform_icons}}
 	<h2>{{$timeline_title}}</h2>
 	{{$timeline_explanation}}
 	<table class="table table-condensed table-striped table-bordered">

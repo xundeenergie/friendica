@@ -95,6 +95,7 @@ class Display extends BaseSettings
 		$stay_local              = (bool)$request['stay_local'];
 		$hide_empty_descriptions = (bool)$request['hide_empty_descriptions'];
 		$hide_custom_emojis      = (bool)$request['hide_custom_emojis'];
+		$black_platform_icons    = (bool)$request['black_platform_icons'];
 		$show_page_drop          = (bool)$request['show_page_drop'];
 		$display_eventlist       = (bool)$request['display_eventlist'];
 		$preview_mode            = (int)$request['preview_mode'];
@@ -156,6 +157,7 @@ class Display extends BaseSettings
 		
 		$this->pConfig->set($uid, 'accessibility', 'hide_empty_descriptions', $hide_empty_descriptions);
 		$this->pConfig->set($uid, 'accessibility', 'hide_custom_emojis'     , $hide_custom_emojis);
+		$this->pConfig->set($uid, 'accessibility', 'black_platform_icons'   , $black_platform_icons);
 
 		$this->pConfig->set($uid, 'calendar', 'first_day_of_week'     , $first_day_of_week);
 		$this->pConfig->set($uid, 'calendar', 'default_view'          , $calendar_default_view);
@@ -248,6 +250,7 @@ class Display extends BaseSettings
 		
 		$hide_empty_descriptions =  $this->pConfig->get($uid, 'accessibility', 'hide_empty_descriptions', false);
 		$hide_custom_emojis      =  $this->pConfig->get($uid, 'accessibility', 'hide_custom_emojis', false);
+		$black_platform_icons    =  $this->pConfig->get($uid, 'accessibility', 'black_platform_icons', false);
 
 		$preview_mode  =  $this->pConfig->get($uid, 'system', 'preview_mode', BBCode::PREVIEW_LARGE);
 		$preview_modes = [
@@ -330,6 +333,7 @@ class Display extends BaseSettings
 			'$preview_mode'             => ['preview_mode'            , $this->t('Link preview mode'), $preview_mode, $this->t('Appearance of the link preview that is added to each post with a link.'), $preview_modes, false],
 			'$hide_empty_descriptions'  => ['hide_empty_descriptions' , $this->t('Hide pictures with empty alternative text'), $hide_empty_descriptions, $this->t("Don't display pictures that are missing the alternative text.")],
 			'$hide_custom_emojis'       => ['hide_custom_emojis'      , $this->t('Hide custom emojis'), $hide_custom_emojis, $this->t("Don't display custom emojis.")],
+			'$black_platform_icons'     => ['black_platform_icons'    , $this->t('Black platform Icons'), $black_platform_icons, $this->t("Use black platform icons instead of colored ones.")],
 
 			'$timeline_label'       => $this->t('Label'),
 			'$timeline_descriptiom' => $this->t('Description'),

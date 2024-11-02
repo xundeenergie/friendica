@@ -932,6 +932,7 @@ class BBCode
 					'$guid'         => $attributes['guid'],
 					'$network_name' => ContactSelector::networkToName($network, $attributes['profile']),
 					'$network_icon' => ContactSelector::networkToIcon($network, $attributes['profile']),
+					'$network_svg'  => ContactSelector::networkToSVG($network, $attributes['profile']),
 					'$content'      => self::TOP_ANCHOR . self::setMentions(trim($content), 0, $network) . self::BOTTOM_ANCHOR,
 				]);
 				break;
