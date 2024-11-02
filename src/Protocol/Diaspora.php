@@ -2962,7 +2962,6 @@ class Diaspora
 				return 0;
 			}
 			$return_code = $postResult->getReturnCode();
-			Item::incrementOutbound(Protocol::DIASPORA);
 		} else {
 			Logger::notice('test_mode');
 			return 200;
@@ -2971,6 +2970,7 @@ class Diaspora
 		if (!empty($contact['gsid']) && (empty($return_code) || $postResult->isTimeout())) {
 			GServer::setFailureById($contact['gsid']);
 		} elseif (!empty($contact['gsid']) && ($return_code >= 200) && ($return_code <= 299)) {
+			Item::incrementOutbound(Protocol::DIASPORA);
 			GServer::setReachableById($contact['gsid'], Protocol::DIASPORA);
 		}
 

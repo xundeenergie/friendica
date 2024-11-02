@@ -297,7 +297,9 @@ class HTTPSignature
 
 		self::setInboxStatus($target, ($return_code >= 200) && ($return_code <= 299));
 
-		Item::incrementOutbound(Protocol::ACTIVITYPUB);
+		if (($return_code >= 200) && ($return_code <= 299)) {
+			Item::incrementOutbound(Protocol::ACTIVITYPUB);
+		}
 
 		return $postResult;
 	}

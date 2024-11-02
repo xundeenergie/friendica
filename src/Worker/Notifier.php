@@ -527,7 +527,7 @@ class Notifier
 				continue;
 			}
 
-			Logger::info('Delivery', ['batch' => $in_batch, 'target' => $post_uriid, 'uid' => $sender_uid, 'guid' => $target_item['guid'] ?? '', 'to' => $contact]);
+			Logger::info('Delivery', ['cmd' => $cmd, 'batch' => $in_batch, 'target' => $post_uriid, 'uid' => $sender_uid, 'guid' => $target_item['guid'] ?? '', 'to' => $contact]);
 
 			// Ensure that posts with our own protocol arrives before Diaspora posts arrive.
 			// Situation is that sometimes Friendica servers receive Friendica posts over the Diaspora protocol first.
