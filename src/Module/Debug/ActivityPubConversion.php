@@ -23,10 +23,7 @@ class ActivityPubConversion extends BaseModule
 
 	protected function content(array $request = []): string
 	{
-		function visible_whitespace($s)
-		{
-			return '<pre>' . htmlspecialchars($s) . '</pre>';
-		}
+
 
 		$results = [];
 		if (!empty($_REQUEST['source'])) {
@@ -43,11 +40,11 @@ class ActivityPubConversion extends BaseModule
 				$formatted = json_encode($source, JSON_PRETTY_PRINT);
 				$results[] = [
 					'title'   => DI::l10n()->t('Formatted'),
-					'content' => visible_whitespace(trim(var_export($formatted, true), "'")),
+					'content' => $this->visible_whitespace(trim(var_export($formatted, true), "'")),
 				];
 				$results[] = [
 					'title'   => DI::l10n()->t('Source'),
-					'content' => visible_whitespace(var_export($source, true))
+					'content' => $this->visible_whitespace(var_export($source, true))
 				];
 				$activity = JsonLD::compact($source);
 				if (!$activity) {
@@ -55,7 +52,7 @@ class ActivityPubConversion extends BaseModule
 				}
 				$results[] = [
 					'title'   => DI::l10n()->t('Activity'),
-					'content' => visible_whitespace(var_export($activity, true))
+					'content' => $this->visible_whitespace(var_export($activity, true))
 				];
 
 				$type = JsonLD::fetchElement($activity, '@type');
@@ -107,14 +104,14 @@ class ActivityPubConversion extends BaseModule
 
 				$results[] = [
 					'title'   => DI::l10n()->t('Object data'),
-					'content' => visible_whitespace(var_export($object_data, true))
+					'content' => $this->visible_whitespace(var_export($object_data, true))
 				];
 
 				$item = ActivityPub\Processor::createItem($object_data, true);
 
 				$results[] = [
 					'title'   => DI::l10n()->t('Result Item'),
-					'content' => visible_whitespace(var_export($item, true))
+					'content' => $this->visible_whitespace(var_export($item, true))
 				];
 			} catch (\Throwable $e) {
 				$results[] = [
@@ -133,5 +130,10 @@ class ActivityPubConversion extends BaseModule
 		]);
 
 		return $o;
+	}
+
+	private function visible_whitespace(string $s): string
+	{
+		return '<pre>' . htmlspecialchars($s) . '</pre>';
 	}
 }
