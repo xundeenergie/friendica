@@ -1391,7 +1391,7 @@ class Transmitter
 			}
 		}
 
-		if (!$api_mode && !$item['origin']) {
+		if (!$api_mode && !$item['deleted'] && !$item['origin']) {
 			Logger::debug('Post is not ours and is not stored', ['id' => $item['id'], 'uri-id' => $item['uri-id']]);
 			return false;
 		}

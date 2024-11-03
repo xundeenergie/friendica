@@ -1082,7 +1082,7 @@ class Contact
 	 */
 	public static function markForArchival(array $contact)
 	{
-		if ((!isset($contact['url']) || !isset($contact['uri-id'])) && !empty($contact['id'])) {
+		if ((!isset($contact['uri-id']) || !isset($contact['url']) || !isset($contact['archive']) || !isset($contact['self']) || !isset($contact['term-date'])) && !empty($contact['id'])) {
 			$fields = ['id', 'uri-id', 'url', 'archive', 'self', 'term-date'];
 			$contact = DBA::selectFirst('contact', $fields, ['id' => $contact['id']]);
 			if (!DBA::isResult($contact)) {
