@@ -1896,8 +1896,14 @@ class Receiver
 		}
 
 		$object_data['unlisted'] = in_array(-1, $object_data['receiver']);
-		unset($object_data['receiver'][-1]);
-		unset($object_data['reception_type'][-1]);
+
+		if (array_key_exists(-1, $object_data['receiver'])) {
+			unset($object_data['receiver'][-1]);
+		}
+
+		if (array_key_exists(-1, $object_data['reception_type'])) {
+			unset($object_data['reception_type'][-1]);
+		}
 
 		return $object_data;
 	}
