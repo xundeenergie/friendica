@@ -122,11 +122,7 @@ class APCuCache extends AbstractCache implements ICanCacheInMemory
 			$prefix = $this->getPrefix();
 			$prefix = preg_quote($prefix, '/');
 
-			if (class_exists('\APCIterator')) {
-				$iterator = new \APCIterator('user', '/^' . $prefix . '/', APC_ITER_KEY);
-			} else {
-				$iterator = new \APCUIterator('/^' . $prefix . '/', APC_ITER_KEY);
-			}
+			$iterator = new \APCUIterator('/^' . $prefix . '/', APC_ITER_KEY);
 
 			return apcu_delete($iterator);
 		}
@@ -149,10 +145,7 @@ class APCuCache extends AbstractCache implements ICanCacheInMemory
 			return false;
 		} elseif (!ini_get('apc.enabled') && !ini_get('apc.enable_cli')) {
 			return false;
-		} elseif (
-			version_compare(phpversion('apc') ?: '0.0.0', '4.0.6') === -1 &&
-			version_compare(phpversion('apcu') ?: '0.0.0', '5.1.0') === -1
-		) {
+		} elseif (version_compare(phpversion('apcu') ?: '0.0.0', '5.1.0', '<')) {
 			return false;
 		}
 
