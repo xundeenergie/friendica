@@ -47,7 +47,6 @@ class Notifier
 		Logger::info('Invoked', ['cmd' => $cmd, 'target' => $post_uriid, 'sender_uid' => $sender_uid]);
 
 		$target_id = $post_uriid;
-		$top_level = false;
 		$recipients = [];
 
 		$delivery_contacts_stmt = null;
@@ -127,8 +126,6 @@ class Notifier
 					$item['deleted'] = 1;
 				}
 			}
-
-			$top_level = $target_item['gravity'] == Item::GRAVITY_PARENT;
 		}
 
 		$owner = User::getOwnerDataById($uid);
@@ -172,6 +169,7 @@ class Notifier
 			if (!$target_item['origin'] && $target_item['network'] == Protocol::ACTIVITYPUB) {
 				$only_ap_delivery  = true;
 				$diaspora_delivery = false;
+				Logger::debug('Only AP Delivery', ['guid' => $target_item['guid'], 'uri-id' => $target_item['uri-id'], 'network' => $target_item['network'], 'parent-network' => $parent['network'], 'thread-parent-network' => $thr_parent['network']]);
 			}
 
 			// Only deliver threaded replies (comment to a comment) to Diaspora
@@ -195,33 +193,13 @@ class Notifier
 
 			// if $parent['wall'] == 1 we will already have the parent message in our array
 			// and we will relay the whole lot.
-
-			$localhost = str_replace('www.', '', DI::baseUrl()->getHost());
-			if (strpos($localhost, ':')) {
-				$localhost = substr($localhost, 0, strpos($localhost, ':'));
-			}
-			/**
-			 *
-			 * Be VERY CAREFUL if you make any changes to the following several lines. Seemingly innocuous changes
-			 * have been known to cause runaway conditions which affected several servers, along with
-			 * permissions issues.
-			 *
-			 */
-
 			$relay_to_owner = false;
 
-			if (!$top_level && ($parent['wall'] == 0) && (stristr($target_item['uri'], $localhost))) {
+			if (($target_item['gravity'] != Item::GRAVITY_PARENT) && !$parent['wall'] && $target_item['origin']) {
 				$relay_to_owner = true;
 			}
 
-			// until the 'origin' flag has been in use for several months
-			// we will just use it as a fallback test
-			// later we will be able to use it as the primary test of whether or not to relay.
-
-			if (!$target_item['origin']) {
-				$relay_to_owner = false;
-			}
-			if ($parent['origin']) {
+			if (!$target_item['origin'] || $parent['origin']) {
 				$relay_to_owner = false;
 			}
 
@@ -345,52 +323,54 @@ class Notifier
 		$ap_contacts = $apdelivery['contacts'];
 		$delivery_queue_count += $apdelivery['count'];
 
-		if (empty($delivery_contacts_stmt)) {
-			$condition = ['id' => $recipients, 'self' => false, 'uid' => [0, $uid],
-				'blocked' => false, 'pending' => false, 'archive' => false];
-			if (!empty($networks)) {
-				$condition['network'] = $networks;
-			}
-			$delivery_contacts_stmt = DBA::select('contact', ['id', 'uri-id', 'addr', 'url', 'network', 'protocol', 'baseurl', 'gsid', 'batch'], $condition);
-		}
-
-		$conversants = [];
-		$batch_delivery = false;
-
-		if ($public_message && !in_array($cmd, [Delivery::MAIL, Delivery::SUGGESTION]) && !$followup) {
-			$participants = [];
-
-			if ($diaspora_delivery && !$unlisted) {
-				$batch_delivery = true;
-
-				$participants = DBA::selectToArray('contact', ['batch', 'network', 'protocol', 'baseurl', 'gsid', 'id', 'url', 'name'],
-					["`network` = ? AND `batch` != '' AND `uid` = ? AND `rel` != ? AND NOT `blocked` AND NOT `pending` AND NOT `archive`", Protocol::DIASPORA, $owner['uid'], Contact::SHARING],
-					['group_by' => ['batch', 'network', 'protocol']]);
-
-				// Fetch the participation list
-				// The function will ensure that there are no duplicates
-				$participants = Diaspora::participantsForThread($target_item, $participants);
+		if (!$only_ap_delivery) {
+			if (empty($delivery_contacts_stmt)) {
+				$condition = ['id' => $recipients, 'self' => false, 'uid' => [0, $uid],
+					'blocked' => false, 'pending' => false, 'archive' => false];
+				if (!empty($networks)) {
+					$condition['network'] = $networks;
+				}
+				$delivery_contacts_stmt = DBA::select('contact', ['id', 'uri-id', 'addr', 'url', 'network', 'protocol', 'baseurl', 'gsid', 'batch'], $condition);
 			}
 
-			$condition = [
-				'network' => Protocol::DFRN,
-				'uid'     => $owner['uid'],
-				'self'    => false,
-				'blocked' => false,
-				'pending' => false,
-				'archive' => false,
-				'rel'     => [Contact::FOLLOWER, Contact::FRIEND]
-			];
+			$conversants = [];
+			$batch_delivery = false;
 
-			$contacts = DBA::selectToArray('contact', ['id', 'uri-id', 'url', 'addr', 'name', 'network', 'protocol', 'baseurl', 'gsid'], $condition);
+			if ($public_message && !in_array($cmd, [Delivery::MAIL, Delivery::SUGGESTION]) && !$followup) {
+				$participants = [];
 
-			$conversants = array_merge($contacts, $participants);
+				if ($diaspora_delivery && !$unlisted) {
+					$batch_delivery = true;
 
-			$delivery_queue_count += self::delivery($cmd, $post_uriid, $sender_uid, $target_item, $parent, $thr_parent, $owner, $batch_delivery, true, $conversants, $ap_contacts, []);
+					$participants = DBA::selectToArray('contact', ['batch', 'network', 'protocol', 'baseurl', 'gsid', 'id', 'url', 'name'],
+						["`network` = ? AND `batch` != '' AND `uid` = ? AND `rel` != ? AND NOT `blocked` AND NOT `pending` AND NOT `archive`", Protocol::DIASPORA, $owner['uid'], Contact::SHARING],
+						['group_by' => ['batch', 'network', 'protocol']]);
+
+					// Fetch the participation list
+					// The function will ensure that there are no duplicates
+					$participants = Diaspora::participantsForThread($target_item, $participants);
+				}
+
+				$condition = [
+					'network' => Protocol::DFRN,
+					'uid'     => $owner['uid'],
+					'self'    => false,
+					'blocked' => false,
+					'pending' => false,
+					'archive' => false,
+					'rel'     => [Contact::FOLLOWER, Contact::FRIEND]
+				];
+
+				$contacts = DBA::selectToArray('contact', ['id', 'uri-id', 'url', 'addr', 'name', 'network', 'protocol', 'baseurl', 'gsid'], $condition);
+
+				$conversants = array_merge($contacts, $participants);
+
+				$delivery_queue_count += self::delivery($cmd, $post_uriid, $sender_uid, $target_item, $parent, $thr_parent, $owner, $batch_delivery, true, $conversants, $ap_contacts, []);
+			}
+
+			$contacts = DBA::toArray($delivery_contacts_stmt);
+			$delivery_queue_count += self::delivery($cmd, $post_uriid, $sender_uid, $target_item, $parent, $thr_parent, $owner, $batch_delivery, false, $contacts, $ap_contacts, $conversants);
 		}
-
-		$contacts = DBA::toArray($delivery_contacts_stmt);
-		$delivery_queue_count += self::delivery($cmd, $post_uriid, $sender_uid, $target_item, $parent, $thr_parent, $owner, $batch_delivery, false, $contacts, $ap_contacts, $conversants);
 
 		if (!empty($target_item)) {
 			Logger::info('Calling hooks for ' . $cmd . ' ' . $target_id);
