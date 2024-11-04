@@ -232,12 +232,7 @@ class Babel extends BaseModule
 					if (file_exists('addon/twitter/twitter.php')) {
 						require_once 'addon/twitter/twitter.php';
 
-						if (parse_url($json) !== false) {
-							preg_match('#^https?://(?:mobile\.|www\.)?twitter.com/[^/]+/status/(\d+).*#', $json, $matches);
-							$status = twitter_statuses_show($matches[1]);
-						} else {
-							$status = json_decode($json);
-						}
+						$status = json_decode($json);
 
 						$results[] = [
 							'title'   => DI::l10n()->t('Decoded post'),
@@ -258,23 +253,9 @@ class Babel extends BaseModule
 							$postarray['object-type'] = Activity\ObjectType::BOOKMARK;
 						}
 
-						$picture = \twitter_media_entities($status, $postarray);
-
 						$results[] = [
 							'title'   => DI::l10n()->t('Post array before expand entities'),
 							'content' => $this->visible_whitespace(var_export($postarray, true)),
-						];
-
-						$converted = \twitter_expand_entities($postarray['body'], $status, $picture);
-
-						$results[] = [
-							'title'   => DI::l10n()->t('Post converted'),
-							'content' => $this->visible_whitespace(var_export($converted, true)),
-						];
-
-						$results[] = [
-							'title'   => DI::l10n()->t('Converted body'),
-							'content' => $this->visible_whitespace($converted['body']),
 						];
 					} else {
 						$results[] = [
