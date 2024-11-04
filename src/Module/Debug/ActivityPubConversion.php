@@ -23,9 +23,8 @@ class ActivityPubConversion extends BaseModule
 
 	protected function content(array $request = []): string
 	{
-
-
 		$results = [];
+
 		if (!empty($_REQUEST['source'])) {
 			try {
 				$source = json_decode($_REQUEST['source'], true);
@@ -87,10 +86,6 @@ class ActivityPubConversion extends BaseModule
 
 				if (!$trust_source) {
 					throw new \Exception('No trust for activity type "' . $type . '", so we quit now.');
-				}
-
-				if (!empty($body) && empty($object_data['raw'])) {
-					$object_data['raw'] = $body;
 				}
 
 				// Internal flag for thread completion. See Processor.php
