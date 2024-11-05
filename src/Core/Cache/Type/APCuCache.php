@@ -7,6 +7,7 @@
 
 namespace Friendica\Core\Cache\Type;
 
+use APCUIterator;
 use Friendica\Core\Cache\Enum\Duration;
 use Friendica\Core\Cache\Capability\ICanCacheInMemory;
 use Friendica\Core\Cache\Exception\InvalidCacheDriverException;
@@ -41,11 +42,7 @@ class APCuCache extends AbstractCache implements ICanCacheInMemory
 		$ns = $this->getCacheKey($prefix ?? '');
 		$ns = preg_quote($ns, '/');
 
-		if (class_exists('\APCIterator')) {
-			$iterator = new \APCIterator('user', '/^' . $ns. '/', APC_ITER_KEY);
-		} else {
-			$iterator = new \APCUIterator('/^' . $ns . '/', APC_ITER_KEY);
-		}
+		$iterator = new APCUIterator('/^' . $ns . '/', APC_ITER_KEY);
 
 		$keys = [];
 		foreach ($iterator as $item) {
@@ -122,7 +119,7 @@ class APCuCache extends AbstractCache implements ICanCacheInMemory
 			$prefix = $this->getPrefix();
 			$prefix = preg_quote($prefix, '/');
 
-			$iterator = new \APCUIterator('/^' . $prefix . '/', APC_ITER_KEY);
+			$iterator = new APCUIterator('/^' . $prefix . '/', APC_ITER_KEY);
 
 			return apcu_delete($iterator);
 		}
