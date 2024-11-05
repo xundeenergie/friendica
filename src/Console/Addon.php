@@ -144,6 +144,8 @@ HELP;
 
 		}
 		$this->out($table->getTable());
+
+		return 0;
 	}
 
 	/**
