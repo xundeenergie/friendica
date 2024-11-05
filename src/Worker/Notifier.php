@@ -169,7 +169,7 @@ class Notifier
 			if (!$target_item['origin'] && $target_item['network'] == Protocol::ACTIVITYPUB) {
 				$only_ap_delivery  = true;
 				$diaspora_delivery = false;
-				Logger::debug('Only AP Delivery', ['guid' => $target_item['guid'], 'uri-id' => $target_item['uri-id'], 'network' => $target_item['network'], 'parent-network' => $parent['network'], 'thread-parent-network' => $thr_parent['network']]);
+				Logger::debug('Remote post arrived via AP', ['guid' => $target_item['guid'], 'uri-id' => $target_item['uri-id'], 'network' => $target_item['network'], 'parent-network' => $parent['network'], 'thread-parent-network' => $thr_parent['network']]);
 			}
 
 			// Only deliver threaded replies (comment to a comment) to Diaspora
@@ -683,10 +683,10 @@ class Notifier
 
 			Logger::info('Origin item will be distributed', ['id' => $target_item['id'], 'url' => $target_item['uri'], 'verb' => $target_item['verb']]);
 			$check_signature = false;
-		} elseif (!Post\Activity::exists($target_item['uri-id'])) {
-			Logger::info('Remote item is no AP post. It will not be distributed.', ['id' => $target_item['id'], 'url' => $target_item['uri'], 'verb' => $target_item['verb']]);
+		} elseif (!$target_item['deleted'] && !Post\Activity::exists($target_item['uri-id'])) {
+			Logger::info('Remote activity not found. It will not be distributed.', ['id' => $target_item['id'], 'url' => $target_item['uri'], 'verb' => $target_item['verb']]);
 			return ['count' => 0, 'contacts' => []];
-		} elseif ($parent['origin'] && (($target_item['gravity'] != Item::GRAVITY_ACTIVITY) || DI::config()->get('system', 'redistribute_activities'))) {
+		} elseif ($parent['origin'] && ($target_item['private'] != Item::PRIVATE) && (($target_item['gravity'] != Item::GRAVITY_ACTIVITY) || DI::config()->get('system', 'redistribute_activities'))) {
 			$inboxes = ActivityPub\Transmitter::fetchTargetInboxes($parent, $uid);
 
 			if (in_array($target_item['private'], [Item::PUBLIC])) {
