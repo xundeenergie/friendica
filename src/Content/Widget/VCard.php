@@ -26,7 +26,6 @@ class VCard
 	/**
 	 * Get HTML for vcard block
 	 *
-	 * @template widget/vcard.tpl
 	 * @param array $contact
 	 * @param bool  $hide_mention
 	 * @param bool  $hide_follow
