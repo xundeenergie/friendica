@@ -512,5 +512,7 @@ HELP;
 				$this->out($this->getHelp());
 				return false;
 		}
+
+		return false;
 	}
 }
