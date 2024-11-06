@@ -71,6 +71,8 @@ abstract class DI
 	//
 
 	/**
+	 * @deprecated 2024.12 use DI::apphelper() instead
+	 *
 	 * @return App
 	 */
 	public static function app()

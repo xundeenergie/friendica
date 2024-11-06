@@ -172,23 +172,24 @@ class App
 	/**
 	 * Set the timezone
 	 *
+	 * @deprecated 2024.12 Use AppHelper::setTimeZone() instead
+	 *
 	 * @param string $timezone A valid time zone identifier, see https://www.php.net/manual/en/timezones.php
 	 * @return void
 	 */
 	public function setTimeZone(string $timezone)
 	{
-		$this->timezone = (new \DateTimeZone($timezone))->getName();
-		DateTimeFormat::setLocalTimeZone($this->timezone);
+		DI::apphelper()->setTimeZone($timezone);
 	}
 
 	/**
 	 * Get the timezone
 	 *
-	 * @return int
+	 * @deprecated 2024.12 Use AppHelper::getTimeZone() instead
 	 */
 	public function getTimeZone(): string
 	{
-		return $this->timezone;
+		return DI::apphelper()->getTimeZone();
 	}
 
 	/**
@@ -364,7 +365,7 @@ class App
 			$timezone = $default_timezone ?? '' ?: 'UTC';
 		}
 
-		$this->setTimeZone($timezone);
+		DI::apphelper()->setTimeZone($timezone);
 	}
 
 	/**
