@@ -126,6 +126,11 @@ class App
 	private $session;
 
 	/**
+	 * @var AppHelper $appHelper
+	 */
+	private $appHelper;
+
+	/**
 	 * Set the profile owner ID
 	 *
 	 * @param int $owner_id
@@ -156,7 +161,7 @@ class App
 	 */
 	public function setContactId(int $contact_id)
 	{
-		DI::apphelper()->setContactId($contact_id);
+		$this->appHelper->setContactId($contact_id);
 	}
 
 	/**
@@ -168,7 +173,7 @@ class App
 	 */
 	public function getContactId(): int
 	{
-		return DI::apphelper()->getContactId();
+		return $this->appHelper->getContactId();
 	}
 
 	/**
@@ -181,7 +186,7 @@ class App
 	 */
 	public function setTimeZone(string $timezone)
 	{
-		DI::apphelper()->setTimeZone($timezone);
+		$this->appHelper->setTimeZone($timezone);
 	}
 
 	/**
@@ -191,7 +196,7 @@ class App
 	 */
 	public function getTimeZone(): string
 	{
-		return DI::apphelper()->getTimeZone();
+		return $this->appHelper->getTimeZone();
 	}
 
 	/**
@@ -303,6 +308,7 @@ class App
 		$this->args           = $args;
 		$this->pConfig        = $pConfig;
 		$this->session        = $session;
+		$this->appHelper      = DI::apphelper();
 
 		$this->load($dbaDefinition, $viewDefinition);
 	}
@@ -367,7 +373,7 @@ class App
 			$timezone = $default_timezone ?? '' ?: 'UTC';
 		}
 
-		DI::apphelper()->setTimeZone($timezone);
+		$this->appHelper->setTimeZone($timezone);
 	}
 
 	/**
