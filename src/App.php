@@ -61,7 +61,6 @@ class App
 		'videoheight'       => 350,
 	];
 
-	private $profile_owner = 0;
 	private $queue         = [];
 
 	/**
@@ -133,22 +132,26 @@ class App
 	/**
 	 * Set the profile owner ID
 	 *
+	 * @deprecated 2024.12 Use AppHelper::setProfileOwner() instead
+	 *
 	 * @param int $owner_id
 	 * @return void
 	 */
 	public function setProfileOwner(int $owner_id)
 	{
-		$this->profile_owner = $owner_id;
+		$this->appHelper->setProfileOwner($owner_id);
 	}
 
 	/**
 	 * Get the profile owner ID
 	 *
+	 * @deprecated 2024.12 Use AppHelper::getProfileOwner() instead
+	 *
 	 * @return int
 	 */
 	public function getProfileOwner(): int
 	{
-		return $this->profile_owner;
+		return $this->appHelper->getProfileOwner();
 	}
 
 	/**
@@ -460,11 +463,13 @@ class App
 		$this->setCurrentTheme($system_theme);
 
 		$page_theme = null;
+		$profile_owner = $this->appHelper->getProfileOwner();
+
 		// Find the theme that belongs to the user whose stuff we are looking at
-		if (!empty($this->profile_owner) && ($this->profile_owner != $this->session->getLocalUserId())) {
+		if (!empty($profile_owner) && ($profile_owner != $this->session->getLocalUserId())) {
 			// Allow folks to override user themes and always use their own on their own site.
 			// This works only if the user is on the same server
-			$user = $this->database->selectFirst('user', ['theme'], ['uid' => $this->profile_owner]);
+			$user = $this->database->selectFirst('user', ['theme'], ['uid' => $profile_owner]);
 			if ($this->database->isResult($user) && !$this->session->getLocalUserId()) {
 				$page_theme = $user['theme'];
 			}
@@ -493,12 +498,14 @@ class App
 		$this->setCurrentMobileTheme($system_mobile_theme);
 
 		$page_mobile_theme = null;
+		$profile_owner = $this->appHelper->getProfileOwner();
+
 		// Find the theme that belongs to the user whose stuff we are looking at
-		if (!empty($this->profile_owner) && ($this->profile_owner != $this->session->getLocalUserId())) {
+		if (!empty($profile_owner) && ($profile_owner != $this->session->getLocalUserId())) {
 			// Allow folks to override user themes and always use their own on their own site.
 			// This works only if the user is on the same server
 			if (!$this->session->getLocalUserId()) {
-				$page_mobile_theme = $this->pConfig->get($this->profile_owner, 'system', 'mobile-theme');
+				$page_mobile_theme = $this->pConfig->get($profile_owner, 'system', 'mobile-theme');
 			}
 		}
 

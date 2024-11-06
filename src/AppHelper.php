@@ -22,9 +22,27 @@ use Friendica\Util\DateTimeFormat;
  */
 final class AppHelper
 {
+	private $profile_owner = 0;
+
 	private $timezone = '';
 
 	private $contact_id = 0;
+
+	/**
+	 * Set the profile owner ID
+	 */
+	public function setProfileOwner(int $owner_id): void
+	{
+		$this->profile_owner = $owner_id;
+	}
+
+	/**
+	 * Get the profile owner ID
+	 */
+	public function getProfileOwner(): int
+	{
+		return $this->profile_owner;
+	}
 
 	/**
 	 * Set the timezone
