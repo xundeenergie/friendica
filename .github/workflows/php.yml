@@ -16,7 +16,7 @@ jobs:
           MYSQL_USER: test
         ports:
           - 3306/tcp
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3 --wait-timeout=28800 --interactive-timeout=28800
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3 --interactive-timeout=28800
       redis:
         image: redis
         ports:
