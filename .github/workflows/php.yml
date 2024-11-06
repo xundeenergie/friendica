@@ -32,7 +32,7 @@ jobs:
         php-versions: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
@@ -43,28 +43,13 @@ jobs:
           coverage: xdebug
           ini-values: apc.enabled=1, apc.enable_cli=1
 
+      # Install composer dependencies and handle caching in one go.
+      # @link https://github.com/marketplace/actions/install-php-dependencies-with-composer
+      - name: "Install Composer dependencies"
+        uses: "ramsey/composer-install@v2"
+
       - name: Start mysql service
         run: sudo /etc/init.d/mysql start
-
-      - name: Validate composer.json and composer.lock
-        run: composer validate
-
-      - name: Get composer cache directory
-        id: composercache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composercache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Install dependencies
-        run: composer install --prefer-dist
-
-      - name: Setup PHPUnit 8
-        run: bin/dev/setup-phpunit.sh
 
       - name: Copy default Friendica config
         run: cp config/local-sample.config.php config/local.config.php
