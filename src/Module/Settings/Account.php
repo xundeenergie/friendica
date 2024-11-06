@@ -40,8 +40,6 @@ class Account extends BaseSettings
 
 		self::checkFormSecurityTokenRedirectOnError($redirectUrl, 'settings');
 
-		$a = DI::app();
-
 		$user = User::getById($this->session->getLocalUserId());
 
 		if (!empty($request['password-submit'])) {
@@ -111,7 +109,7 @@ class Account extends BaseSettings
 			}
 
 			if (strlen($timezone) && $timezone != $user['timezone']) {
-				$a->setTimeZone($timezone);
+				DI::apphelper()->setTimeZone($timezone);
 			}
 
 			$fields = [
@@ -383,8 +381,6 @@ class Account extends BaseSettings
 			return '';
 		}
 
-		$a = DI::app();
-
 		$user = User::getById($this->session->getLocalUserId());
 
 		$username         = $user['username'];
@@ -404,7 +400,7 @@ class Account extends BaseSettings
 		$expire_network_only = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'expire', 'network_only', false);
 
 		if (!strlen($user['timezone'])) {
-			$timezone = $a->getTimeZone();
+			$timezone = DI::apphelper()->getTimeZone();
 		}
 
 		// Set the account type to "Community" when the page is a community page but the account type doesn't fit

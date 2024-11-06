@@ -284,7 +284,7 @@ function item_process(array $post, array $request, bool $preview, string $return
 	unset($post['api_source']);
 
 	if (!empty($request['scheduled_at'])) {
-		$scheduled_at = DateTimeFormat::convert($request['scheduled_at'], 'UTC', DI::app()->getTimeZone());
+		$scheduled_at = DateTimeFormat::convert($request['scheduled_at'], 'UTC', DI::apphelper()->getTimeZone());
 		if ($scheduled_at > DateTimeFormat::utcNow()) {
 			unset($post['created']);
 			unset($post['edited']);

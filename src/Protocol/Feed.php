@@ -556,7 +556,7 @@ class Feed
 				Logger::info('Feed is too old', ['created' => $item['created'], 'uid' => $item['uid'], 'uri' => $item['uri']]);
 				continue;
 			}
-			
+
 			if (!empty($item['plink'])) {
 				$fetch_further_information = $contact['fetch_further_information'] ?? LocalRelationship::FFI_NONE;
 			} else {
@@ -1014,7 +1014,7 @@ class Feed
 
 		// Display events in the user's timezone
 		if (strlen($owner['timezone'])) {
-			DI::app()->setTimeZone($owner['timezone']);
+			DI::apphelper()->setTimeZone($owner['timezone']);
 		}
 
 		$previous_created = $last_update;
