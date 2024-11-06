@@ -10,6 +10,7 @@ namespace Friendica;
 use Exception;
 use Friendica\App\Arguments;
 use Friendica\App\BaseURL;
+use Friendica\App\Mode;
 use Friendica\App\Request;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Content\Nav;
@@ -66,7 +67,7 @@ class App
 	private $queue         = [];
 
 	/**
-	 * @var App\Mode The Mode of the Application
+	 * @var Mode The Mode of the Application
 	 */
 	private $mode;
 
@@ -260,7 +261,7 @@ class App
 	/**
 	 * @param Database                    $database The Friendica Database
 	 * @param IManageConfigValues         $config   The Configuration
-	 * @param App\Mode                    $mode     The mode of this Friendica app
+	 * @param Mode                        $mode     The mode of this Friendica app
 	 * @param BaseURL                     $baseURL  The full base URL of this Friendica app
 	 * @param LoggerInterface             $logger   The current app logger
 	 * @param Profiler                    $profiler The profiler of this application
@@ -271,8 +272,22 @@ class App
 	 * @param DbaDefinition               $dbaDefinition
 	 * @param ViewDefinition              $viewDefinition
 	 */
-	public function __construct(Request $request, Authentication $auth, Database $database, IManageConfigValues $config, App\Mode $mode, BaseURL $baseURL, LoggerInterface $logger, Profiler $profiler, L10n $l10n, Arguments $args, IManagePersonalConfigValues $pConfig, IHandleUserSessions $session, DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
-	{
+	public function __construct(
+		Request $request,
+		Authentication $auth,
+		Database $database,
+		IManageConfigValues $config,
+		Mode $mode,
+		BaseURL $baseURL,
+		LoggerInterface $logger,
+		Profiler $profiler,
+		L10n $l10n,
+		Arguments $args,
+		IManagePersonalConfigValues $pConfig,
+		IHandleUserSessions $session,
+		DbaDefinition $dbaDefinition,
+		ViewDefinition $viewDefinition
+	) {
 		$this->requestId      = $request->getRequestId();
 		$this->auth           = $auth;
 		$this->database       = $database;
@@ -318,7 +333,7 @@ class App
 
 		$this->profiler->reset();
 
-		if ($this->mode->has(App\Mode::DBAVAILABLE)) {
+		if ($this->mode->has(Mode::DBAVAILABLE)) {
 			Core\Hook::loadHooks();
 			$loader = (new Config())->createConfigFileManager($this->getBasePath(), $_SERVER);
 			Core\Hook::callAll('load_config', $loader);
@@ -536,7 +551,7 @@ class App
 
 		try {
 			// Missing DB connection: ERROR
-			if ($this->mode->has(App\Mode::LOCALCONFIGPRESENT) && !$this->mode->has(App\Mode::DBAVAILABLE)) {
+			if ($this->mode->has(Mode::LOCALCONFIGPRESENT) && !$this->mode->has(Mode::DBAVAILABLE)) {
 				throw new HTTPException\InternalServerErrorException($this->l10n->t('Apologies but the website is unavailable at the moment.'));
 			}
 
@@ -648,7 +663,7 @@ class App
 			$page['page_title'] = $moduleName;
 
 			// The "view" module is required to show the theme CSS
-			if (!$this->mode->isInstall() && !$this->mode->has(App\Mode::MAINTENANCEDISABLED) && $moduleName !== 'view') {
+			if (!$this->mode->isInstall() && !$this->mode->has(Mode::MAINTENANCEDISABLED) && $moduleName !== 'view') {
 				$module = $router->getModule(Maintenance::class);
 			} else {
 				// determine the module class and save it to the module instance
