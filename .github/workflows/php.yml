@@ -9,7 +9,6 @@ jobs:
     services:
       mariadb:
         image: mariadb:latest
-        restart: always
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_DATABASE: test
