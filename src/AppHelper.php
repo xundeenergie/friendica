@@ -24,13 +24,14 @@ final class AppHelper
 {
 	private $timezone = '';
 
+	private $contact_id = 0;
+
 	/**
 	 * Set the timezone
 	 *
 	 * @param string $timezone A valid time zone identifier, see https://www.php.net/manual/en/timezones.php
-	 * @return void
 	 */
-	public function setTimeZone(string $timezone)
+	public function setTimeZone(string $timezone): void
 	{
 		$this->timezone = (new DateTimeZone($timezone))->getName();
 
@@ -38,12 +39,26 @@ final class AppHelper
 	}
 
 	/**
-	 * Get the timezone
-	 *
-	 * @return int
+	 * Get the timezone name
 	 */
 	public function getTimeZone(): string
 	{
 		return $this->timezone;
+	}
+
+	/**
+	 * Set the contact ID
+	 */
+	public function setContactId(int $contact_id): void
+	{
+		$this->contact_id = $contact_id;
+	}
+
+	/**
+	 * Get the contact ID
+	 */
+	public function getContactId(): int
+	{
+		return $this->contact_id;
 	}
 }

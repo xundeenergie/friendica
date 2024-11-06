@@ -61,9 +61,7 @@ class App
 		'videoheight'       => 350,
 	];
 
-	private $timezone      = '';
 	private $profile_owner = 0;
-	private $contact_id    = 0;
 	private $queue         = [];
 
 	/**
@@ -151,22 +149,26 @@ class App
 	/**
 	 * Set the contact ID
 	 *
+	 * @deprecated 2024.12 Use AppHelper::setContactId() instead
+	 *
 	 * @param int $contact_id
 	 * @return void
 	 */
 	public function setContactId(int $contact_id)
 	{
-		$this->contact_id = $contact_id;
+		DI::apphelper()->setContactId($contact_id);
 	}
 
 	/**
 	 * Get the contact ID
 	 *
+	 * @deprecated 2024.12 Use AppHelper::getContactId() instead
+	 *
 	 * @return int
 	 */
 	public function getContactId(): int
 	{
-		return $this->contact_id;
+		return DI::apphelper()->getContactId();
 	}
 
 	/**
