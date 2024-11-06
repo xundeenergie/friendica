@@ -76,7 +76,6 @@ class Login extends BaseModule
 
 		if (!empty($request['auth-params']) && $request['auth-params'] === 'login') {
 			$this->auth->withPassword(
-				DI::app(),
 				trim($request['username']),
 				trim($request['password']),
 				!empty($request['remember']),

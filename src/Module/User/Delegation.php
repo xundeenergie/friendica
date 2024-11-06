@@ -120,7 +120,7 @@ class Delegation extends BaseModule
 
 		$this->session->clear();
 
-		$this->auth->setForUser($this->app, $user, true, true);
+		$this->auth->setForUser($user, true, true);
 
 		if ($limited_id) {
 			$this->session->setSubManagedUserId($original_id);

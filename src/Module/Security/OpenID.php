@@ -57,7 +57,7 @@ class OpenID extends BaseModule
 					// successful OpenID login
 					$session->remove('openid');
 
-					DI::auth()->setForUser(DI::app(), $user, true, true);
+					DI::auth()->setForUser($user, true, true);
 
 					$this->baseUrl->redirect(DI::session()->pop('return_path', ''));
 				}

@@ -8,10 +8,10 @@
 namespace Friendica\Security;
 
 use Exception;
-use Friendica\App;
 use Friendica\App\BaseURL;
 use Friendica\App\Mode;
 use Friendica\App\Request;
+use Friendica\AppHelper;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\Hook;
@@ -55,6 +55,8 @@ class Authentication
 	private $session;
 	/** @var IManagePersonalConfigValues */
 	private $pConfig;
+	/** @var AppHelper */
+	private $appHelper;
 	/** @var string */
 	private $remoteAddress;
 
@@ -94,6 +96,7 @@ class Authentication
 		Cookie $cookie,
 		IHandleUserSessions $session,
 		IManagePersonalConfigValues $pConfig,
+		AppHelper $appHelper,
 		Request $request
 	) {
 		$this->config        = $config;
@@ -105,18 +108,17 @@ class Authentication
 		$this->cookie        = $cookie;
 		$this->session       = $session;
 		$this->pConfig       = $pConfig;
+		$this->appHelper     = $appHelper;
 		$this->remoteAddress = $request->getRemoteAddress();
 	}
 
 	/**
 	 * Tries to auth the user from the cookie or session
 	 *
-	 * @param App $app The Friendica Application context
-	 *
 	 * @throws HttpException\InternalServerErrorException In case of Friendica internal exceptions
 	 * @throws Exception In case of general exceptions (like SQL Grammar)
 	 */
-	public function withSession(App $app)
+	public function withSession()
 	{
 		// When the "Friendica" cookie is set, take the value to authenticate and renew the cookie.
 		if ($this->cookie->get('uid')) {
@@ -147,7 +149,7 @@ class Authentication
 
 				// Do the authentication if not done by now
 				if (!$this->session->isAuthenticated()) {
-					$this->setForUser($app, $user);
+					$this->setForUser($user);
 
 					if ($this->config->get('system', 'paranoia')) {
 						$this->session->set('addr', $this->cookie->get('ip'));
@@ -159,7 +161,7 @@ class Authentication
 		if ($this->session->isVisitor()) {
 			$contact = $this->dba->selectFirst('contact', ['id'], ['id' => $this->session->get('visitor_id')]);
 			if ($this->dba->isResult($contact)) {
-				$app->setContactId($contact['id']);
+				$this->appHelper->setContactId($contact['id']);
 			}
 		}
 
@@ -193,7 +195,7 @@ class Authentication
 				$this->baseUrl->redirect();
 			}
 
-			$this->setForUser($app, $user);
+			$this->setForUser($user);
 		}
 	}
 
@@ -232,7 +234,6 @@ class Authentication
 	/**
 	 * Attempts to authenticate using login/password
 	 *
-	 * @param App    $app         The Friendica Application context
 	 * @param string $username
 	 * @param string $password    Clear password
 	 * @param bool   $remember    Whether to set the session remember flag
@@ -244,7 +245,7 @@ class Authentication
 	 * @throws HTTPException\MovedPermanentlyException
 	 * @throws HTTPException\TemporaryRedirectException
 	 */
-	public function withPassword(App $app, string $username, string $password, bool $remember, string $return_path = '')
+	public function withPassword(string $username, string $password, bool $remember, string $return_path = '')
 	{
 		$record = null;
 
@@ -285,7 +286,7 @@ class Authentication
 			$return_path = '/security/password_too_long?' . http_build_query(['return_path' => $return_path]);
 		}
 
-		$this->setForUser($app, $record, true, true);
+		$this->setForUser($record, true, true);
 
 		$this->baseUrl->redirect($return_path);
 	}
@@ -293,7 +294,6 @@ class Authentication
 	/**
 	 * Sets the provided user's authenticated session
 	 *
-	 * @param App   $app         The Friendica application context
 	 * @param array $user_record The current "user" record
 	 * @param bool  $login_initial
 	 * @param bool  $interactive
@@ -307,7 +307,7 @@ class Authentication
 	 * @throws HTTPException\InternalServerErrorException In case of Friendica specific exceptions
 	 *
 	 */
-	public function setForUser(App $app, array $user_record, bool $login_initial = false, bool $interactive = false, bool $refresh_login = true)
+	public function setForUser(array $user_record, bool $login_initial = false, bool $interactive = false, bool $refresh_login = true)
 	{
 		$my_url = $this->baseUrl . '/profile/' . $user_record['nickname'];
 
@@ -329,12 +329,12 @@ class Authentication
 		$this->session->set('new_member', time() < ($member_since + (60 * 60 * 24 * 14)));
 
 		if (strlen($user_record['timezone'])) {
-			$app->setTimeZone($user_record['timezone']);
+			$this->appHelper->setTimeZone($user_record['timezone']);
 		}
 
 		$contact = $this->dba->selectFirst('contact', ['id'], ['uid' => $user_record['uid'], 'self' => true]);
 		if ($this->dba->isResult($contact)) {
-			$app->setContactId($contact['id']);
+			$this->appHelper->setContactId($contact['id']);
 			$this->session->set('cid', $contact['id']);
 		}
 

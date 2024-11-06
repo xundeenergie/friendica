@@ -88,7 +88,7 @@ class Trust extends BaseModule
 			}
 
 			try {
-				$this->auth->setForUser($this->app, User::getById($this->session->getLocalUserId()), true, true);
+				$this->auth->setForUser(User::getById($this->session->getLocalUserId()), true, true);
 				$this->baseUrl->redirect($this->session->pop('return_path', ''));
 			} catch (FoundException | TemporaryRedirectException | MovedPermanentlyException $e) {
 				// exception wanted!
@@ -109,7 +109,7 @@ class Trust extends BaseModule
 			try {
 				$trustedBrowser = $this->trustedBrowserRepository->selectOneByHash($this->cookie->get('2fa_cookie_hash'));
 				if (!$trustedBrowser->trusted) {
-					$this->auth->setForUser($this->app, User::getById($this->session->getLocalUserId()), true, true);
+					$this->auth->setForUser(User::getById($this->session->getLocalUserId()), true, true);
 					$this->baseUrl->redirect($this->session->pop('return_path', ''));
 				}
 			} catch (TrustedBrowserNotFoundException $exception) {

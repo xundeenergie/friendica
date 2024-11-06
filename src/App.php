@@ -601,7 +601,7 @@ class App
 			}
 
 			if (!$this->mode->isBackend()) {
-				$auth->withSession($this);
+				$auth->withSession();
 			}
 
 			if ($this->session->isUnauthenticated()) {
