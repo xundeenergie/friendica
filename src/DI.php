@@ -78,6 +78,11 @@ abstract class DI
 		return self::$dice->create(App::class);
 	}
 
+	public static function apphelper(): AppHelper
+	{
+		return self::$dice->create(AppHelper::class);
+	}
+
 	/**
 	 * @return Database\Database
 	 */
