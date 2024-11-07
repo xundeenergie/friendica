@@ -9,26 +9,26 @@ jobs:
 
     services:
       mariadb:
-        image: mariadb:latest
+        image: mariadb:11.1
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: true
           MYSQL_DATABASE: test
           MYSQL_PASSWORD: test
           MYSQL_USER: test
         ports:
-          - 3306
+          - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
       redis:
         image: redis
         ports:
-          - 6379
+          - 6379/tcp
         options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
       memcached:
         image: memcached
         ports:
-          - 11211
+          - 11211/tcp
 
     strategy:
       fail-fast: false
