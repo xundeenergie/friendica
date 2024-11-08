@@ -41,7 +41,7 @@ class Display extends DisplayModule
 			throw new HTTPException\NotFoundException($this->t('The requested item doesn\'t exist or has been deleted.'));
 		}
 
-		$this->app->setProfileOwner($item['uid'] ?: $profileUid);
+		$this->appHelper->setProfileOwner($item['uid'] ?: $profileUid);
 		$parentUriId = $item['parent-uri-id'];
 
 		if (empty($force)) {

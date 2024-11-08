@@ -23,21 +23,21 @@ class Profile extends BaseModule
 {
 	protected function rawContent(array $request = [])
 	{
-		$a = DI::app();
+		$appHelper = DI::apphelper();
 
 		// Ensure we've got a profile owner if updating.
-		$a->setProfileOwner((int)($request['p'] ?? 0));
+		$appHelper->setProfileOwner((int)($request['p'] ?? 0));
 
-		if (DI::config()->get('system', 'block_public') && !DI::userSession()->getLocalUserId() && !DI::userSession()->getRemoteContactID($a->getProfileOwner())) {
+		if (DI::config()->get('system', 'block_public') && !DI::userSession()->getLocalUserId() && !DI::userSession()->getRemoteContactID($appHelper->getProfileOwner())) {
 			throw new ForbiddenException();
 		}
 
-		$remote_contact = DI::userSession()->getRemoteContactID($a->getProfileOwner());
-		$is_owner = DI::userSession()->getLocalUserId() == $a->getProfileOwner();
-		$last_updated_key = "profile:" . $a->getProfileOwner() . ":" . DI::userSession()->getLocalUserId() . ":" . $remote_contact;
+		$remote_contact = DI::userSession()->getRemoteContactID($appHelper->getProfileOwner());
+		$is_owner = DI::userSession()->getLocalUserId() == $appHelper->getProfileOwner();
+		$last_updated_key = "profile:" . $appHelper->getProfileOwner() . ":" . DI::userSession()->getLocalUserId() . ":" . $remote_contact;
 
 		if (!DI::userSession()->isAuthenticated()) {
-			$user = User::getById($a->getProfileOwner(), ['hidewall']);
+			$user = User::getById($appHelper->getProfileOwner(), ['hidewall']);
 			if ($user['hidewall']) {
 				throw new ForbiddenException(DI::l10n()->t('Access to this profile has been restricted.'));
 			}
@@ -50,7 +50,7 @@ class Profile extends BaseModule
 		}
 
 		// Get permissions SQL - if $remote_contact is true, our remote user has been pre-verified and we already have fetched their circles
-		$sql_extra = Item::getPermissionsSQLByUserId($a->getProfileOwner());
+		$sql_extra = Item::getPermissionsSQLByUserId($appHelper->getProfileOwner());
 
 		$last_updated_array = DI::session()->get('last_updated', []);
 
@@ -58,7 +58,7 @@ class Profile extends BaseModule
 
 		$condition = ["`uid` = ? AND NOT `contact-blocked` AND NOT `contact-pending`
 				AND `visible` AND (NOT `deleted` OR `gravity` = ?)
-				AND `wall` " . $sql_extra, $a->getProfileOwner(), Item::GRAVITY_ACTIVITY];
+				AND `wall` " . $sql_extra, $appHelper->getProfileOwner(), Item::GRAVITY_ACTIVITY];
 
 		if ($request['force'] && !empty($request['item'])) {
 			// When the parent is provided, we only fetch this
@@ -90,7 +90,7 @@ class Profile extends BaseModule
 		$last_updated_array[$last_updated_key] = time();
 		DI::session()->set('last_updated', $last_updated_array);
 
-		if ($is_owner && !$a->getProfileOwner() && ProfileModel::shouldDisplayEventList(DI::userSession()->getLocalUserId(), DI::mode())) {
+		if ($is_owner && !$appHelper->getProfileOwner() && ProfileModel::shouldDisplayEventList(DI::userSession()->getLocalUserId(), DI::mode())) {
 			$o .= ProfileModel::getBirthdays(DI::userSession()->getLocalUserId());
 			$o .= ProfileModel::getEventsReminderHTML(DI::userSession()->getLocalUserId(), DI::userSession()->getPublicContactId());
 		}
@@ -102,7 +102,7 @@ class Profile extends BaseModule
 			}
 		}
 
-		$o .= DI::conversation()->render($items, Conversation::MODE_PROFILE, $a->getProfileOwner(), false, 'received', $a->getProfileOwner());
+		$o .= DI::conversation()->render($items, Conversation::MODE_PROFILE, $appHelper->getProfileOwner(), false, 'received', $appHelper->getProfileOwner());
 
 		System::htmlUpdateExit($o);
 	}

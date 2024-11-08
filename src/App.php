@@ -326,15 +326,15 @@ class App implements AppHelper
 
 		set_include_path(
 			get_include_path() . PATH_SEPARATOR
-			. $this->getBasePath() . DIRECTORY_SEPARATOR . 'include' . PATH_SEPARATOR
-			. $this->getBasePath() . DIRECTORY_SEPARATOR . 'library' . PATH_SEPARATOR
-			. $this->getBasePath());
+			. $this->appHelper->getBasePath() . DIRECTORY_SEPARATOR . 'include' . PATH_SEPARATOR
+			. $this->appHelper->getBasePath() . DIRECTORY_SEPARATOR . 'library' . PATH_SEPARATOR
+			. $this->appHelper->getBasePath());
 
 		$this->profiler->reset();
 
 		if ($this->mode->has(Mode::DBAVAILABLE)) {
 			Core\Hook::loadHooks();
-			$loader = (new Config())->createConfigFileManager($this->getBasePath(), $_SERVER);
+			$loader = (new Config())->createConfigFileManager($this->appHelper->getBasePath(), $_SERVER);
 			Core\Hook::callAll('load_config', $loader);
 
 			// Hooks are now working, reload the whole definitions with hook enabled
@@ -528,7 +528,7 @@ class App implements AppHelper
 			if ($this->mode->isInstall() && $moduleName !== 'install') {
 				$this->baseURL->redirect('install');
 			} else {
-				Core\Update::check($this->getBasePath(), false);
+				Core\Update::check($this->appHelper->getBasePath(), false);
 				Core\Addon::loadAddons();
 				Core\Hook::loadHooks();
 			}

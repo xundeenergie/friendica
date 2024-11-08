@@ -9,6 +9,7 @@ namespace Friendica\Model;
 
 use Friendica\App;
 use Friendica\App\Mode;
+use Friendica\AppHelper;
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Widget\ContactBlock;
 use Friendica\Core\Cache\Enum\Duration;
@@ -199,7 +200,7 @@ class Profile
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public static function load(App $a, string $nickname, bool $show_contacts = true): array
+	public static function load(AppHelper $appHelper, string $nickname, bool $show_contacts = true): array
 	{
 		$profile = User::getOwnerDataByNick($nickname);
 		if (!isset($profile['account_removed']) || $profile['account_removed']) {
@@ -213,13 +214,13 @@ class Profile
 			throw new HTTPException\NotFoundException(DI::l10n()->t('User not found.'));
 		}
 
-		$a->setProfileOwner($profile['uid']);
+		$appHelper->setProfileOwner($profile['uid']);
 
 		DI::page()['title'] = $profile['name'] . ' @ ' . DI::config()->get('config', 'sitename');
 
 		if (!DI::userSession()->getLocalUserId()) {
-			$a->setCurrentTheme($profile['theme']);
-			$a->setCurrentMobileTheme(DI::pConfig()->get($a->getProfileOwner(), 'system', 'mobile_theme') ?? '');
+			$appHelper->setCurrentTheme($profile['theme']);
+			$appHelper->setCurrentMobileTheme(DI::pConfig()->get($appHelper->getProfileOwner(), 'system', 'mobile_theme') ?? '');
 		}
 
 		/*
@@ -228,7 +229,7 @@ class Profile
 
 		Renderer::setActiveTemplateEngine(); // reset the template engine to the default in case the user's theme doesn't specify one
 
-		$theme_info_file = 'view/theme/' . $a->getCurrentTheme() . '/theme.php';
+		$theme_info_file = 'view/theme/' . $appHelper->getCurrentTheme() . '/theme.php';
 		if (file_exists($theme_info_file)) {
 			require_once $theme_info_file;
 		}
