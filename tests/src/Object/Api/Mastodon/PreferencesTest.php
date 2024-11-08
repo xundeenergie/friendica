@@ -14,7 +14,7 @@ class PreferencesTest extends TestCase
 {
     public function testToArrayReturnsArray(): void
     {
-        $preferences = new Preferences('visibility',true, 'language', 'media', false);
+        $preferences = new Preferences('visibility', true, 'language', 'media', false);
 
         self::assertSame(
             [
@@ -30,7 +30,7 @@ class PreferencesTest extends TestCase
 
     public function testJsonSerializeReturnsArray(): void
     {
-        $preferences = new Preferences('visibility',true, 'language', 'media', false);
+        $preferences = new Preferences('visibility', true, 'language', 'media', false);
 
         self::assertSame(
             [
