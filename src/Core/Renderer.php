@@ -155,9 +155,9 @@ class Renderer
 			if (isset(self::$template_engine_instance[$template_engine])) {
 				return self::$template_engine_instance[$template_engine];
 			} else {
-				$a = DI::app();
+				$appHelper = DI::apphelper();
 				$class = self::$template_engines[$template_engine];
-				$obj = new $class($a->getCurrentTheme(), $a->getThemeInfo());
+				$obj = new $class($appHelper->getCurrentTheme(), $appHelper->getThemeInfo());
 				self::$template_engine_instance[$template_engine] = $obj;
 				return $obj;
 			}
