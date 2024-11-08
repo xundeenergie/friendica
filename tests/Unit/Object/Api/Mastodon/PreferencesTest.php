@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Object\Api\Mastodon;
+namespace Friendica\Test\Unit\Object\Api\Mastodon;
 
 use Friendica\Object\Api\Mastodon\Preferences;
 use PHPUnit\Framework\TestCase;
