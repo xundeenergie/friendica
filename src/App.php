@@ -61,8 +61,6 @@ class App
 		'videoheight'       => 350,
 	];
 
-	private $queue         = [];
-
 	/**
 	 * @var Mode The Mode of the Application
 	 */
@@ -205,33 +203,39 @@ class App
 	/**
 	 * Set workerqueue information
 	 *
+	 * @deprecated 2024.12 Use AppHelper::setQueue() instead
+	 *
 	 * @param array $queue
 	 * @return void
 	 */
 	public function setQueue(array $queue)
 	{
-		$this->queue = $queue;
+		$this->appHelper->setQueue($queue);
 	}
 
 	/**
 	 * Fetch workerqueue information
 	 *
+	 * @deprecated 2024.12 Use AppHelper::getQueue() instead
+	 *
 	 * @return array Worker queue
 	 */
 	public function getQueue(): array
 	{
-		return $this->queue ?? [];
+		return $this->appHelper->getQueue();
 	}
 
 	/**
 	 * Fetch a specific workerqueue field
+	 *
+	 * @deprecated 2024.12 Use AppHelper::getQueueValue() instead
 	 *
 	 * @param string $index Work queue record to fetch
 	 * @return mixed Work queue item or NULL if not found
 	 */
 	public function getQueueValue(string $index)
 	{
-		return $this->queue[$index] ?? null;
+		return $this->appHelper->getQueueValue($index);
 	}
 
 	public function setThemeInfoValue(string $index, $value)

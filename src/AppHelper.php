@@ -28,6 +28,8 @@ final class AppHelper
 
 	private $contact_id = 0;
 
+	private $queue = [];
+
 	/**
 	 * Set the profile owner ID
 	 */
@@ -78,5 +80,37 @@ final class AppHelper
 	public function getContactId(): int
 	{
 		return $this->contact_id;
+	}
+
+	/**
+	 * Set workerqueue information
+	 *
+	 * @param array<string,mixed> $queue
+	 */
+	public function setQueue(array $queue): void
+	{
+		$this->queue = $queue;
+	}
+
+	/**
+	 * Fetch workerqueue information
+	 *
+	 * @return array<string,mixed> Worker queue
+	 */
+	public function getQueue(): array
+	{
+		return $this->queue;
+	}
+
+	/**
+	 * Fetch a specific workerqueue field
+	 *
+	 * @param string $index Work queue record to fetch
+	 *
+	 * @return mixed|null Work queue item or NULL if not found
+	 */
+	public function getQueueValue(string $index)
+	{
+		return $this->queue[$index] ?? null;
 	}
 }
