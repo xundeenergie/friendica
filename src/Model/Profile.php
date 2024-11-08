@@ -7,7 +7,6 @@
 
 namespace Friendica\Model;
 
-use Friendica\App;
 use Friendica\App\Mode;
 use Friendica\AppHelper;
 use Friendica\Content\Text\BBCode;
@@ -191,7 +190,6 @@ class Profile
 	 *      the theme is chosen before the _init() function of a theme is run, which will usually
 	 *      load a lot of theme-specific content
 	 *
-	 * @param App    $a
 	 * @param string $nickname string
 	 * @param bool   $show_contacts
 	 *
@@ -688,15 +686,13 @@ class Profile
 	 * settings take precedence; unless a local user is logged in which means they don't
 	 * want to see anybody else's theme settings except their own while on this site.
 	 *
-	 * @param App $a
-	 *
 	 * @return int user ID
 	 *
 	 * @note Returns local_user instead of user ID if "always_my_theme" is set to true
 	 */
-	public static function getThemeUid(App $a): int
+	public static function getThemeUid(AppHelper $appHelper): int
 	{
-		return DI::userSession()->getLocalUserId() ?: $a->getProfileOwner();
+		return DI::userSession()->getLocalUserId() ?: $appHelper->getProfileOwner();
 	}
 
 	/**

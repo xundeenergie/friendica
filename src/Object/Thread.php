@@ -57,7 +57,7 @@ class Thread
 			return;
 		}
 
-		$a = DI::app();
+		$appHelper = DI::apphelper();
 
 		switch ($mode) {
 			case Conversation::MODE_NETWORK:
@@ -67,7 +67,7 @@ class Thread
 				break;
 			case Conversation::MODE_PROFILE:
 			case Conversation::MODE_DISPLAY:
-				$this->profile_owner = $a->getProfileOwner();
+				$this->profile_owner = $appHelper->getProfileOwner();
 				$this->writable = Security::canWriteToUserWall($this->profile_owner) || $writable;
 				break;
 			case Conversation::MODE_CHANNEL:
