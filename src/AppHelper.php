@@ -9,14 +9,17 @@ namespace Friendica;
 
 use DateTimeZone;
 use Exception;
+use Friendica\App\BaseURL;
 use Friendica\App\Mode;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Core\L10n;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
+use Friendica\Core\System;
 use Friendica\Core\Theme;
 use Friendica\Database\Database;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Strings;
 
@@ -69,6 +72,11 @@ final class AppHelper
 	private $mode;
 
 	/**
+	 * @var BaseURL
+	 */
+	private $baseURL;
+
+	/**
 	 * @var L10n The translator
 	 */
 	private $l10n;
@@ -87,6 +95,7 @@ final class AppHelper
 		Database $database,
 		IManageConfigValues $config,
 		Mode $mode,
+		BaseURL $baseURL,
 		L10n $l10n,
 		IManagePersonalConfigValues $pConfig,
 		IHandleUserSessions $session
@@ -95,6 +104,7 @@ final class AppHelper
 		$this->config = $config;
 		$this->mode = $mode;
 		$this->l10n = $l10n;
+		$this->baseURL = $baseURL;
 		$this->pConfig = $pConfig;
 		$this->session = $session;
 	}
@@ -369,6 +379,23 @@ final class AppHelper
 				|| file_exists('view/theme/' . $mobile_theme_name . '/style.php'))
 		) {
 			$this->setCurrentMobileTheme($mobile_theme_name);
+		}
+	}
+
+	/**
+	 * Automatically redirects to relative or absolute URL
+	 * Should only be used if it isn't clear if the URL is either internal or external
+	 *
+	 * @param string $toUrl The target URL
+	 *
+	 * @throws InternalServerErrorException
+	 */
+	public function redirect(string $toUrl)
+	{
+		if (!empty(parse_url($toUrl, PHP_URL_SCHEME))) {
+			System::externalRedirect($toUrl);
+		} else {
+			$this->baseURL->redirect($toUrl);
 		}
 	}
 }

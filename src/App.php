@@ -19,6 +19,7 @@ use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
 use Friendica\Module\Maintenance;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Security\Authentication;
 use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Core\Config\Capability\IManageConfigValues;
@@ -614,17 +615,15 @@ class App
 	 * Automatically redirects to relative or absolute URL
 	 * Should only be used if it isn't clear if the URL is either internal or external
 	 *
+	 * @deprecated 2024.12 Use AppHelper::redirect() instead
+	 *
 	 * @param string $toUrl The target URL
 	 *
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public function redirect(string $toUrl)
 	{
-		if (!empty(parse_url($toUrl, PHP_URL_SCHEME))) {
-			Core\System::externalRedirect($toUrl);
-		} else {
-			$this->baseURL->redirect($toUrl);
-		}
+		$this->appHelper->redirect($toUrl);
 	}
 
 	/**
