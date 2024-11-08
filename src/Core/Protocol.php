@@ -33,26 +33,26 @@ class Protocol
 	const SUPPORT_PRIVATE = [self::DFRN, self::DIASPORA, self::MAIL, self::ACTIVITYPUB, self::PUMPIO];
 
 	// Supported through a connector
-	const DIASPORA2 = 'dspc';    // Diaspora connector
-	const PUMPIO    = 'pump';    // pump.io
-	const TWITTER   = 'twit';    // Twitter
-	const DISCOURSE = 'dscs';    // Discourse
-	const TUMBLR    = 'tmbl';    // Tumblr
 	const BLUESKY   = 'bsky';    // Bluesky
+	const DIASPORA2 = 'dspc';    // Diaspora connector
+	const DISCOURSE = 'dscs';    // Discourse
+	const PNUT      = 'pnut';    // pnut.io
+	const PUMPIO    = 'pump';    // pump.io
+	const TUMBLR    = 'tmbl';    // Tumblr
+	const TWITTER   = 'twit';    // Twitter
 
 	// Dead protocols
-	const OSTATUS   = 'stat';    // GNU Social and other OStatus implementations
-	const STATUSNET = 'stac';    // Statusnet connector
 	const APPNET    = 'apdn';    // app.net - Dead protocol
 	const FACEBOOK  = 'face';    // Facebook API - Not working anymore, API is closed
 	const GPLUS     = 'goog';    // Google+ - Dead in 2019
+	const OSTATUS   = 'stat';    // GNU Social and other OStatus implementations
+	const STATUSNET = 'stac';    // Statusnet connector
 
 	// Currently unsupported
 	const ICALENDAR = 'ical';    // iCalendar
-	const MYSPACE   = 'mysp';    // MySpace
 	const LINKEDIN  = 'lnkd';    // LinkedIn
+	const MYSPACE   = 'mysp';    // MySpace
 	const NEWS      = 'nntp';    // Network News Transfer Protocol
-	const PNUT      = 'pnut';    // pnut.io
 	const XMPP      = 'xmpp';    // XMPP
 	const ZOT       = 'zot!';    // Zot!
 

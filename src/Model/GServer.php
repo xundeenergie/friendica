@@ -753,6 +753,10 @@ class GServer
 			$serverdata = self::detectNetworkViaContacts($url, $serverdata);
 		}
 
+		if ($serverdata['platform'] == 'mastodon') {
+			$serverdata = self::detectMastodonForks($serverdata);
+		}
+
 		if (($serverdata['network'] == Protocol::PHANTOM) && in_array($serverdata['detection-method'], [self::DETECT_MANUAL, self::DETECT_BODY])) {
 			self::setFailureByUrl($url);
 			return false;
@@ -1789,6 +1793,23 @@ class GServer
 		if (in_array($serverdata['detection-method'], self::DETECT_UNSPECIFIC)) {
 			$serverdata['detection-method'] = self::DETECT_CONTACTS;
 		}
+		return $serverdata;
+	}
+
+	private static function detectMastodonForks(array $serverdata): array
+	{
+		if (strpos($serverdata['version'], 'glitch') !== false) {
+			$serverdata['platform'] = 'glitchsoc';
+		}
+
+		if (strpos($serverdata['version'], 'chuckya') !== false) {
+			$serverdata['platform'] = 'chuckya';
+		}
+
+		if (strpos($serverdata['version'], 'sakura') !== false) {
+			$serverdata['platform'] = 'sakura';
+		}
+
 		return $serverdata;
 	}
 

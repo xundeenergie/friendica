@@ -202,13 +202,33 @@ class ContactSelector
 			Protocol::BLUESKY   =>   'circle', /// @todo
 		];
 
-		$platform_icons = ['diaspora' => 'diaspora', 'friendica' => 'friendica', 'friendika' => 'friendica',
-			'GNU Social' => 'gnu-social', 'gnusocial' => 'gnu-social', 'hubzilla' => 'hubzilla',
-			'mastodon' => 'mastodon', 'hometown' => 'mastodon', 'peertube' => 'peertube', 'pixelfed' => 'pixelfed',
-			'pleroma' => 'pleroma', 'akkoma' => 'pleroma', 'red' => 'hubzilla', 'redmatrix' => 'hubzilla',
-			'socialhome' => 'social-home', 'wordpress' => 'wordpress', 'lemmy' => 'users',
-			'plume' => 'plume', 'funkwhale' => 'funkwhale', 'nextcloud' => 'nextcloud', 'drupal' => 'drupal',
-			'firefish' => 'fire', 'calckey' => 'calculator', 'kbin' => 'check', 'threads' => 'instagram'];
+		$platform_icons = [
+			'diaspora' => 'diaspora',
+			'friendica' => 'friendica',
+			'friendika' => 'friendica',
+			'GNU Social' => 'gnu-social',
+			'gnusocial' => 'gnu-social',
+			'hubzilla' => 'hubzilla',
+			'mastodon' => 'mastodon',
+			'hometown' => 'mastodon',
+			'peertube' => 'peertube',
+			'pixelfed' => 'pixelfed',
+			'pleroma' => 'pleroma',
+			'akkoma' => 'pleroma',
+			'red' => 'hubzilla',
+			'redmatrix' => 'hubzilla',
+			'socialhome' => 'social-home',
+			'wordpress' => 'wordpress',
+			'lemmy' => 'users',
+			'plume' => 'plume',
+			'funkwhale' => 'funkwhale',
+			'nextcloud' => 'nextcloud',
+			'drupal' => 'drupal',
+			'firefish' => 'fire',
+			'calckey' => 'calculator',
+			'kbin' => 'check',
+			'threads' => 'instagram'
+		];
 
 		$search  = array_keys($nets);
 		$replace = array_values($nets);
@@ -230,5 +250,88 @@ class ContactSelector
 		}
 
 		return $network_icon;
+	}
+
+	public static function networkToSVG(string $network, string $profile = "", int $gsid = null, string $platform = '', int $uid = 0): string
+	{
+		$nets = [
+			Protocol::ACTIVITYPUB => 'activitypub', // https://commons.wikimedia.org/wiki/File:ActivityPub-logo-symbol.svg
+			Protocol::BLUESKY     => 'bluesky', // https://commons.wikimedia.org/wiki/File:Bluesky_Logo.svg
+			Protocol::DFRN        => 'friendica', 
+			Protocol::DIASPORA    => 'diaspora', // https://www.svgrepo.com/svg/362315/diaspora
+			Protocol::DIASPORA2   => 'diaspora', // https://www.svgrepo.com/svg/362315/diaspora
+			Protocol::DISCOURSE   => 'discourse', // https://commons.wikimedia.org/wiki/File:Discourse_icon.svg
+			Protocol::FEED        => 'rss', // https://commons.wikimedia.org/wiki/File:Generic_Feed-icon.svg
+			Protocol::MAIL        => 'email', // https://www.svgrepo.com/svg/501173/email
+			Protocol::OSTATUS     => '',
+			Protocol::PNUT        => '',
+			Protocol::PUMPIO      => 'pump-io', // https://commons.wikimedia.org/wiki/File:Pump.io_Logo.svg
+			Protocol::STATUSNET   => '',
+			Protocol::TUMBLR      => 'tumblr', // https://commons.wikimedia.org/wiki/File:Tumblr.svg
+			Protocol::TWITTER     => '',
+			Protocol::ZOT         => 'hubzilla', // https://www.svgrepo.com/svg/362219/hubzilla
+		];
+
+		$svg = [
+			'akkoma', // https://commons.wikimedia.org/wiki/File:Akkoma_logo.svg
+			'calckey', // https://commons.wikimedia.org/wiki/File:Calckey_Logomark.svg
+			'diaspora', // https://www.svgrepo.com/svg/362315/diaspora
+			'firefish', // https://commons.wikimedia.org/wiki/File:Firefish_animated.svg
+			'flipboard', // https://commons.wikimedia.org/wiki/File:Flipboard_logo.svg
+			'friendica', 
+			'glitchsoc', // https://iconography.fediverse.info/black/glitch-soc.svg
+			'gnusocial', // https://commons.wikimedia.org/wiki/File:GNU_Social_Image_Logo.svg
+			'gotosocial', // https://iconography.fediverse.info/black/gotosocial.svg
+			'hometown', // https://iconography.fediverse.info/black/hometown.svg
+			'hubzilla', // https://www.svgrepo.com/svg/362219/hubzilla
+			'iceshrimp', // https://iconography.fediverse.info/black/iceshrimp.svg
+			'lemmy', // https://commons.wikimedia.org/wiki/File:Lemmy_logo.svg
+			'mastodon', // https://commons.wikimedia.org/wiki/File:Mastodon_logotype_(simple)_new_hue.svg
+			'mbin', // https://iconography.fediverse.info/black/mbin.svg
+			'misskey', // https://commons.wikimedia.org/wiki/File:Misskey_Mi_icon.svg
+			'mobilizon', // https://www.svgrepo.com/svg/517896/mobilizon
+			'peertube', // https://commons.wikimedia.org/wiki/File:Logo_de_PeerTube.svg
+			'pixelfed', // https://commons.wikimedia.org/wiki/File:Pixelfed_logo_multicolor_(September_2018).svg
+			'pleroma', // https://commons.wikimedia.org/wiki/File:Smaller_Pleroma_logo.svg
+			'plume', // https://commons.wikimedia.org/wiki/File:Plume.svg
+			'sharkey', // https://iconography.fediverse.info/black/sharky.svg
+			'threads', // https://commons.wikimedia.org/wiki/File:Threads_(app)_logo.svg
+			'wordpress', // https://commons.wikimedia.org/wiki/File:WordPress_blue_logo.svg
+		];
+
+		$search  = array_keys($nets);
+		$replace = array_values($nets);
+
+		$network_svg = str_replace($search, $replace, $network);
+
+		if (in_array($network, Protocol::FEDERATED)) {
+			if (!empty($gsid) && !empty(self::$serverdata[$gsid])) {
+				$gserver = self::$serverdata[$gsid];
+			} elseif (!empty($gsid)) {
+				$gserver = DBA::selectFirst('gserver', ['platform', 'network'], ['id' => $gsid]);
+				self::$serverdata[$gsid] = $gserver;
+			} elseif (!empty($platform)) {
+				$gserver = ['platform' => $platform];
+			} elseif ($profile != "") {
+				$gserver = self::getServerForProfile($profile);
+			}
+			if (!empty($gserver['platform'])) {
+				$network_svg = in_array($gserver['platform'], $svg) ? $gserver['platform'] : $network_svg;
+			}
+		}
+
+		if (empty($network_svg)) {
+			return '';
+		}
+
+		$color = ['activitypub', 'akkoma', 'bluesky', 'discourse', 'firefish', 'flipboard',
+			'friendica', 'gnusocial', 'mastodon', 'peertube', 'pixelfed', 'pleroma',
+			'rss', 'tumblr', 'wordpress'];
+
+		if (($uid && DI::pConfig()->get($uid, 'accessibility', 'black_platform_icons')) || !in_array($network_svg, $color)) {
+			return 'images/platforms/black/' . $network_svg . '.svg';
+		} else {
+			return 'images/platforms/color/' . $network_svg . '.svg';
+		}
 	}
 }
