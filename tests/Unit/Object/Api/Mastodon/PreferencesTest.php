@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Object\Api\Mastodon;
+namespace Friendica\Test\Unit\Object\Api\Mastodon;
 
 use Friendica\Object\Api\Mastodon\Preferences;
 use PHPUnit\Framework\TestCase;
@@ -14,7 +14,7 @@ class PreferencesTest extends TestCase
 {
     public function testToArrayReturnsArray(): void
     {
-        $preferences = new Preferences('visibility',true, 'language', 'media', false);
+        $preferences = new Preferences('visibility', true, 'language', 'media', false);
 
         self::assertSame(
             [
@@ -30,7 +30,7 @@ class PreferencesTest extends TestCase
 
     public function testJsonSerializeReturnsArray(): void
     {
-        $preferences = new Preferences('visibility',true, 'language', 'media', false);
+        $preferences = new Preferences('visibility', true, 'language', 'media', false);
 
         self::assertSame(
             [
