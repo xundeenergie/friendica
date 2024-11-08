@@ -16,7 +16,7 @@ jobs:
           MYSQL_PASSWORD: test
           MYSQL_USER: test
         ports:
-          - 33306/tcp
+          - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
       redis:
@@ -61,7 +61,7 @@ jobs:
 
       - name: Verify MariaDB connection
         env:
-          PORT: ${{ job.services.mariadb.ports[33306] }}
+          PORT: ${{ job.services.mariadb.ports[3306] }}
         run: |
           while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
             sleep 1
@@ -69,7 +69,7 @@ jobs:
 
       - name: Setup MYSQL database
         env:
-          PORT: ${{ job.services.mariadb.ports[33306] }}
+          PORT: ${{ job.services.mariadb.ports[3306] }}
         run: |
           mysql -h"127.0.0.1" -P"$PORT" -utest -ptest test < database.sql
 
@@ -77,7 +77,7 @@ jobs:
         run: $(git rev-parse --show-toplevel)/bin/phpunit --configuration tests/phpunit.xml --coverage-clover clover.xml
         env:
           MYSQL_HOST: 127.0.0.1
-          MYSQL_PORT: ${{ job.services.mariadb.ports[33306] }}
+          MYSQL_PORT: ${{ job.services.mariadb.ports[3306] }}
           MYSQL_DATABASE: test
           MYSQL_PASSWORD: test
           MYSQL_USER: test
