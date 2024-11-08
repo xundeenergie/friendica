@@ -533,7 +533,7 @@ class Worker
 	 */
 	private static function execFunction(array $queue, string $funcname, array $argv, bool $method_call)
 	{
-		$a = DI::app();
+		$appHelper = DI::apphelper();
 
 		self::coolDown();
 
@@ -547,7 +547,7 @@ class Worker
 		// For this reason the variables have to be initialized.
 		DI::profiler()->reset();
 
-		$a->setQueue($queue);
+		$appHelper->setQueue($queue);
 
 		$up_duration = microtime(true) - self::$up_start;
 
@@ -571,7 +571,7 @@ class Worker
 
 		Logger::disableWorker();
 
-		$a->setQueue([]);
+		$appHelper->setQueue([]);
 
 		$duration = (microtime(true) - $stamp);
 
@@ -830,7 +830,7 @@ class Worker
 					return false;
 				} elseif ($max_idletime > 0) {
 					Logger::debug('Maximum idletime not reached.', ['last' => $last_check, 'last-check' => $last_date, 'seconds' => $max_idletime, 'load' => $load, 'max_load' => $maxsysload, 'active_worker' => $active, 'max_worker' => $maxqueues]);
-				}	
+				}
 			}
 		}
 
@@ -1371,20 +1371,20 @@ class Worker
 	 */
 	public static function getRetrial(): int
 	{
-		$queue = DI::app()->getQueue();
+		$queue = DI::apphelper()->getQueue();
 		return $queue['retrial'] ?? 0;
 	}
 
 	/**
 	 * Defers the current worker entry
 	 *
-	 * @param int $worker_defer_limit Maximum defer limit 
+	 * @param int $worker_defer_limit Maximum defer limit
 	 * @return boolean had the entry been deferred?
 	 * @throws \Exception
 	 */
 	public static function defer(int $worker_defer_limit = 0): bool
 	{
-		$queue = DI::app()->getQueue();
+		$queue = DI::apphelper()->getQueue();
 
 		if (empty($queue)) {
 			return false;

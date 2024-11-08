@@ -40,7 +40,7 @@ class FetchMissingActivity
 			Logger::info('Defer limit reached, activity could not be fetched', ['url' => $url]);
 
 			// recursively delete all entries that belong to this worker task
-			$queue = DI::app()->getQueue();
+			$queue = DI::apphelper()->getQueue();
 			if (!empty($queue['id'])) {
 				Queue::deleteByWorkerId($queue['id']);
 			}

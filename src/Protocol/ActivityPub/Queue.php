@@ -192,7 +192,7 @@ class Queue
 		}
 
 		if (!empty($entry['wid'])) {
-			$worker = DI::app()->getQueue();
+			$worker = DI::apphelper()->getQueue();
 			$wid = $worker['id'] ?? 0;
 			if ($entry['wid'] != $wid) {
 				$workerqueue = DBA::selectFirst('workerqueue', ['pid'], ['id' => $entry['wid'], 'done' => false]);

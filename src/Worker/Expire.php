@@ -21,7 +21,7 @@ class Expire
 {
 	public static function execute($param = '', $hook_function = '')
 	{
-		$a = DI::app();
+		$appHelper = DI::apphelper();
 
 		Hook::loadHooks();
 
@@ -48,7 +48,7 @@ class Expire
 		$r = DBA::select('user', ['uid', 'username'], ["`expire` != ?", 0]);
 		while ($row = DBA::fetch($r)) {
 			Logger::info('Calling expiry', ['user' => $row['uid'], 'username' => $row['username']]);
-			Worker::add(['priority' => $a->getQueueValue('priority'), 'created' => $a->getQueueValue('created'), 'dont_fork' => true],
+			Worker::add(['priority' => $appHelper->getQueueValue('priority'), 'created' => $appHelper->getQueueValue('created'), 'dont_fork' => true],
 				'Expire', (int)$row['uid']);
 		}
 		DBA::close($r);
@@ -56,7 +56,7 @@ class Expire
 		Logger::notice('calling hooks');
 		foreach (Hook::getByName('expire') as $hook) {
 			Logger::info('Calling expire', ['hook' => $hook[1]]);
-			Worker::add(['priority' => $a->getQueueValue('priority'), 'created' => $a->getQueueValue('created'), 'dont_fork' => true],
+			Worker::add(['priority' => $appHelper->getQueueValue('priority'), 'created' => $appHelper->getQueueValue('created'), 'dont_fork' => true],
 				'Expire', 'hook', $hook[1]);
 		}
 

@@ -41,7 +41,7 @@ class Notifier
 {
 	public static function execute(string $cmd, int $post_uriid, int $sender_uid = 0)
 	{
-		$a = DI::app();
+		$appHelper = DI::apphelper();
 
 		Logger::info('Invoked', ['cmd' => $cmd, 'target' => $post_uriid, 'sender_uid' => $sender_uid]);
 
@@ -69,7 +69,7 @@ class Notifier
 			foreach ($inboxes as $inbox => $receivers) {
 				$ap_contacts = array_merge($ap_contacts, $receivers);
 				Logger::info('Delivery via ActivityPub', ['cmd' => $cmd, 'target' => $target_id, 'inbox' => $inbox]);
-				Worker::add(['priority' => Worker::PRIORITY_HIGH, 'created' => $a->getQueueValue('created'), 'dont_fork' => true],
+				Worker::add(['priority' => Worker::PRIORITY_HIGH, 'created' => $appHelper->getQueueValue('created'), 'dont_fork' => true],
 					'APDelivery', $cmd, $target_id, $inbox, $uid, $receivers, $post_uriid);
 			}
 		} elseif ($cmd == Delivery::SUGGESTION) {
@@ -77,7 +77,7 @@ class Notifier
 			$uid = $suggest->uid;
 			$recipients[] = $suggest->cid;
 		} elseif ($cmd == Delivery::REMOVAL) {
-			return self::notifySelfRemoval($target_id, $a->getQueueValue('priority'), $a->getQueueValue('created'));
+			return self::notifySelfRemoval($target_id, $appHelper->getQueueValue('priority'), $appHelper->getQueueValue('created'));
 		} elseif ($cmd == Delivery::RELOCATION) {
 			$uid = $target_id;
 
@@ -162,7 +162,7 @@ class Notifier
 			Logger::info('Got post', ['guid' => $target_item['guid'], 'uri-id' => $target_item['uri-id'], 'network' => $target_item['network'], 'parent-network' => $parent['network'], 'thread-parent-network' => $thr_parent['network']]);
 
 			if (!self::isRemovalActivity($cmd, $owner, Protocol::ACTIVITYPUB)) {
-				$apdelivery = self::activityPubDelivery($cmd, $target_item, $parent, $thr_parent, $a->getQueueValue('priority'), $a->getQueueValue('created'), $owner);
+				$apdelivery = self::activityPubDelivery($cmd, $target_item, $parent, $thr_parent, $appHelper->getQueueValue('priority'), $appHelper->getQueueValue('created'), $owner);
 				$ap_contacts = $apdelivery['contacts'];
 				$delivery_queue_count += $apdelivery['count'];
 				// Restrict distribution to AP, when there are no permissions.
@@ -386,7 +386,7 @@ class Notifier
 		if (!empty($target_item)) {
 			Logger::info('Calling hooks for ' . $cmd . ' ' . $target_id);
 
-			Hook::fork($a->getQueueValue('priority'), 'notifier_normal', $target_item);
+			Hook::fork($appHelper->getQueueValue('priority'), 'notifier_normal', $target_item);
 
 			Hook::callAll('notifier_end', $target_item);
 
@@ -424,7 +424,7 @@ class Notifier
 	 */
 	private static function delivery(string $cmd, int $post_uriid, int $sender_uid, array $target_item, array $thr_parent, array $owner, bool $batch_delivery, bool $in_batch, array $contacts, array $ap_contacts, array $conversants = []): int
 	{
-		$a = DI::app();
+		$appHelper = DI::apphelper();
 		$delivery_queue_count = 0;
 
 		if (!empty($target_item['verb']) && ($target_item['verb'] == Activity::ANNOUNCE)) {
@@ -511,10 +511,10 @@ class Notifier
 			// Situation is that sometimes Friendica servers receive Friendica posts over the Diaspora protocol first.
 			// The conversion in Markdown reduces the formatting, so these posts should arrive after the Friendica posts.
 			// This is only important for high and medium priority tasks and not for Low priority jobs like deletions.
-			if (($contact['network'] == Protocol::DIASPORA) && in_array($a->getQueueValue('priority'), [Worker::PRIORITY_HIGH, Worker::PRIORITY_MEDIUM])) {
-				$deliver_options = ['priority' => $a->getQueueValue('priority'), 'dont_fork' => true];
+			if (($contact['network'] == Protocol::DIASPORA) && in_array($appHelper->getQueueValue('priority'), [Worker::PRIORITY_HIGH, Worker::PRIORITY_MEDIUM])) {
+				$deliver_options = ['priority' => $appHelper->getQueueValue('priority'), 'dont_fork' => true];
 			} else {
-				$deliver_options = ['priority' => $a->getQueueValue('priority'), 'created' => $a->getQueueValue('created'), 'dont_fork' => true];
+				$deliver_options = ['priority' => $appHelper->getQueueValue('priority'), 'created' => $appHelper->getQueueValue('created'), 'dont_fork' => true];
 			}
 
 			if (!empty($contact['gsid']) && DI::config()->get('system', 'bulk_delivery')) {
