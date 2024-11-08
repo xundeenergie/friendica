@@ -8,7 +8,16 @@
 namespace Friendica;
 
 use DateTimeZone;
+use Exception;
+use Friendica\App\Mode;
+use Friendica\Core\Config\Capability\IManageConfigValues;
+use Friendica\Core\L10n;
+use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
+use Friendica\Core\Session\Capability\IHandleUserSessions;
+use Friendica\Core\Theme;
+use Friendica\Database\Database;
 use Friendica\Util\DateTimeFormat;
+use Friendica\Util\Strings;
 
 /**
  * Helper for our main application structure for the life of this page.
@@ -29,6 +38,58 @@ final class AppHelper
 	private $contact_id = 0;
 
 	private $queue = [];
+
+	/** @var string The name of the current theme */
+	private $currentTheme;
+
+	/** @var string The name of the current mobile theme */
+	private $currentMobileTheme;
+
+	/**
+	 * @var Database The Friendica database connection
+	 */
+	private $database;
+
+	/**
+	 * @var IManageConfigValues The config
+	 */
+	private $config;
+
+	/**
+	 * @var Mode The Mode of the Application
+	 */
+	private $mode;
+
+	/**
+	 * @var L10n The translator
+	 */
+	private $l10n;
+
+	/**
+	 * @var IManagePersonalConfigValues
+	 */
+	private $pConfig;
+
+	/**
+	 * @var IHandleUserSessions
+	 */
+	private $session;
+
+	public function __construct(
+		Database $database,
+		IManageConfigValues $config,
+		Mode $mode,
+		L10n $l10n,
+		IManagePersonalConfigValues $pConfig,
+		IHandleUserSessions $session
+	) {
+		$this->database = $database;
+		$this->config = $config;
+		$this->mode = $mode;
+		$this->l10n = $l10n;
+		$this->pConfig = $pConfig;
+		$this->session = $session;
+	}
 
 	/**
 	 * Set the profile owner ID
@@ -112,5 +173,148 @@ final class AppHelper
 	public function getQueueValue(string $index)
 	{
 		return $this->queue[$index] ?? null;
+	}
+
+	/**
+	 * Returns the current theme name. May be overridden by the mobile theme name.
+	 *
+	 * @return string Current theme name or empty string in installation phase
+	 * @throws Exception
+	 */
+	public function getCurrentTheme(): string
+	{
+		if ($this->mode->isInstall()) {
+			return '';
+		}
+
+		// Specific mobile theme override
+		if (($this->mode->isMobile() || $this->mode->isTablet()) && $this->session->get('show-mobile', true)) {
+			$user_mobile_theme = $this->getCurrentMobileTheme();
+
+			// --- means same mobile theme as desktop
+			if (!empty($user_mobile_theme) && $user_mobile_theme !== '---') {
+				return $user_mobile_theme;
+			}
+		}
+
+		if (!$this->currentTheme) {
+			$this->computeCurrentTheme();
+		}
+
+		return $this->currentTheme;
+	}
+
+	/**
+	 * Returns the current mobile theme name.
+	 *
+	 * @return string Mobile theme name or empty string if installer
+	 * @throws Exception
+	 */
+	public function getCurrentMobileTheme(): string
+	{
+		if ($this->mode->isInstall()) {
+			return '';
+		}
+
+		if (is_null($this->currentMobileTheme)) {
+			$this->computeCurrentMobileTheme();
+		}
+
+		return $this->currentMobileTheme;
+	}
+
+	/**
+	 * Setter for current theme name
+	 *
+	 * @param string $theme Name of current theme
+	 */
+	public function setCurrentTheme(string $theme)
+	{
+		$this->currentTheme = $theme;
+	}
+
+	/**
+	 * Setter for current mobile theme name
+	 *
+	 * @param string $theme Name of current mobile theme
+	 */
+	public function setCurrentMobileTheme(string $theme)
+	{
+		$this->currentMobileTheme = $theme;
+	}
+
+	/**
+	 * Computes the current theme name based on the node settings, the page owner settings and the user settings
+	 *
+	 * @throws Exception
+	 */
+	private function computeCurrentTheme()
+	{
+		$system_theme = $this->config->get('system', 'theme');
+		if (!$system_theme) {
+			throw new Exception($this->l10n->t('No system theme config value set.'));
+		}
+
+		// Sane default
+		$this->setCurrentTheme($system_theme);
+
+		$page_theme = null;
+		$profile_owner = $this->getProfileOwner();
+
+		// Find the theme that belongs to the user whose stuff we are looking at
+		if (!empty($profile_owner) && ($profile_owner != $this->session->getLocalUserId())) {
+			// Allow folks to override user themes and always use their own on their own site.
+			// This works only if the user is on the same server
+			$user = $this->database->selectFirst('user', ['theme'], ['uid' => $profile_owner]);
+			if ($this->database->isResult($user) && !$this->session->getLocalUserId()) {
+				$page_theme = $user['theme'];
+			}
+		}
+
+		$theme_name = $page_theme ?: $this->session->get('theme', $system_theme);
+
+		$theme_name = Strings::sanitizeFilePathItem($theme_name);
+		if ($theme_name
+		    && in_array($theme_name, Theme::getAllowedList())
+		    && (file_exists('view/theme/' . $theme_name . '/style.css')
+		        || file_exists('view/theme/' . $theme_name . '/style.php'))
+		) {
+			$this->setCurrentTheme($theme_name);
+		}
+	}
+
+	/**
+	 * Computes the current mobile theme name based on the node settings, the page owner settings and the user settings
+	 */
+	private function computeCurrentMobileTheme()
+	{
+		$system_mobile_theme = $this->config->get('system', 'mobile-theme', '');
+
+		// Sane default
+		$this->setCurrentMobileTheme($system_mobile_theme);
+
+		$page_mobile_theme = null;
+		$profile_owner = $this->getProfileOwner();
+
+		// Find the theme that belongs to the user whose stuff we are looking at
+		if (!empty($profile_owner) && ($profile_owner != $this->session->getLocalUserId())) {
+			// Allow folks to override user themes and always use their own on their own site.
+			// This works only if the user is on the same server
+			if (!$this->session->getLocalUserId()) {
+				$page_mobile_theme = $this->pConfig->get($profile_owner, 'system', 'mobile-theme');
+			}
+		}
+
+		$mobile_theme_name = $page_mobile_theme ?: $this->session->get('mobile-theme', $system_mobile_theme);
+
+		$mobile_theme_name = Strings::sanitizeFilePathItem($mobile_theme_name);
+		if ($mobile_theme_name == '---'
+			||
+			in_array($mobile_theme_name, Theme::getAllowedList())
+			&& (file_exists('view/theme/' . $mobile_theme_name . '/style.css')
+				|| file_exists('view/theme/' . $mobile_theme_name . '/style.php'))
+		) {
+			$this->setCurrentMobileTheme($mobile_theme_name);
+		}
 	}
 }
