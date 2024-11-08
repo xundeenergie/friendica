@@ -25,8 +25,6 @@ use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\L10n;
 use Friendica\Core\System;
-use Friendica\Core\Theme;
-use Friendica\Database\Database;
 use Friendica\Module\Special\HTTPException as ModuleHTTPException;
 use Friendica\Network\HTTPException;
 use Friendica\Protocol\ATProtocol\DID;
@@ -35,7 +33,6 @@ use Friendica\Util\DateTimeFormat;
 use Friendica\Util\HTTPInputData;
 use Friendica\Util\HTTPSignature;
 use Friendica\Util\Profiler;
-use Friendica\Util\Strings;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -93,11 +90,6 @@ class App
 	private $profiler;
 
 	/**
-	 * @var Database The Friendica database connection
-	 */
-	private $database;
-
-	/**
 	 * @var L10n The translator
 	 */
 	private $l10n;
@@ -106,11 +98,6 @@ class App
 	 * @var App\Arguments
 	 */
 	private $args;
-
-	/**
-	 * @var IManagePersonalConfigValues
-	 */
-	private $pConfig;
 
 	/**
 	 * @var IHandleUserSessions
@@ -269,7 +256,6 @@ class App
 	}
 
 	/**
-	 * @param Database                    $database The Friendica Database
 	 * @param IManageConfigValues         $config   The Configuration
 	 * @param Mode                        $mode     The mode of this Friendica app
 	 * @param BaseURL                     $baseURL  The full base URL of this Friendica app
@@ -277,7 +263,6 @@ class App
 	 * @param Profiler                    $profiler The profiler of this application
 	 * @param L10n                        $l10n     The translator instance
 	 * @param App\Arguments               $args     The Friendica Arguments of the call
-	 * @param IManagePersonalConfigValues $pConfig  Personal configuration
 	 * @param IHandleUserSessions         $session  The (User)Session handler
 	 * @param DbaDefinition               $dbaDefinition
 	 * @param ViewDefinition              $viewDefinition
@@ -285,7 +270,6 @@ class App
 	public function __construct(
 		Request $request,
 		Authentication $auth,
-		Database $database,
 		IManageConfigValues $config,
 		Mode $mode,
 		BaseURL $baseURL,
@@ -293,14 +277,12 @@ class App
 		Profiler $profiler,
 		L10n $l10n,
 		Arguments $args,
-		IManagePersonalConfigValues $pConfig,
 		IHandleUserSessions $session,
 		DbaDefinition $dbaDefinition,
 		ViewDefinition $viewDefinition
 	) {
 		$this->requestId      = $request->getRequestId();
 		$this->auth           = $auth;
-		$this->database       = $database;
 		$this->config         = $config;
 		$this->mode           = $mode;
 		$this->baseURL        = $baseURL;
@@ -308,7 +290,6 @@ class App
 		$this->logger         = $logger;
 		$this->l10n           = $l10n;
 		$this->args           = $args;
-		$this->pConfig        = $pConfig;
 		$this->session        = $session;
 		$this->appHelper      = DI::apphelper();
 
