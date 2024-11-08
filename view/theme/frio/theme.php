@@ -12,7 +12,8 @@
  * Maintainer: Hypolite Petovan <https://friendica.mrpetovan.com/profile/hypolite>
  */
 
-use Friendica\App;
+use Friendica\App\Mode;
+use Friendica\AppHelper;
 use Friendica\Content\Text\Plaintext;
 use Friendica\Core\Hook;
 use Friendica\Core\Logger;
@@ -36,12 +37,12 @@ const FRIO_CUSTOM_SCHEME = '---';
  * This script can be included even when the app is in maintenance mode which requires us to avoid any config call
  */
 
-function frio_init(App $a)
+function frio_init(AppHelper $appHelper)
 {
 	global $frio;
 	$frio = 'view/theme/frio';
 
-	$a->setThemeInfoValue('videowidth', 622);
+	$appHelper->setThemeInfoValue('videowidth', 622);
 
 	Renderer::setActiveTemplateEngine('smarty3');
 
@@ -179,13 +180,12 @@ function frio_contact_photo_menu(&$args)
  *  Some links will point to the local pages because the user would expect
  *  local page (these pages are: search, community, help, apps, directory).
  *
- * @param App   $a        The App class
  * @param array $nav_info The original nav info array: nav, banner, userinfo, sitelocation
  * @throws Exception
  */
 function frio_remote_nav(array &$nav_info)
 {
-	if (DI::mode()->has(App\Mode::MAINTENANCEDISABLED)) {
+	if (DI::mode()->has(Mode::MAINTENANCEDISABLED)) {
 		// get the homelink from $_SESSION
 		$homelink = DI::userSession()->getMyUrl();
 		if (!$homelink) {
