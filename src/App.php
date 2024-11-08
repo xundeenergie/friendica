@@ -46,7 +46,7 @@ use Psr\Log\LoggerInterface;
  * before we spit the page out.
  *
  */
-class App
+class App implements AppHelper
 {
 	const PLATFORM = 'Friendica';
 	const CODENAME = 'Yellow Archangel';
