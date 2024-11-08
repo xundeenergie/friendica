@@ -45,6 +45,13 @@ final class AppHelper
 	/** @var string The name of the current mobile theme */
 	private $currentMobileTheme;
 
+	// Allow themes to control internal parameters
+	// by changing App values in theme.php
+	private $theme_info = [
+		'videowidth' => 425,
+		'videoheight' => 350,
+	];
+
 	/**
 	 * @var Database The Friendica database connection
 	 */
@@ -228,7 +235,7 @@ final class AppHelper
 	 *
 	 * @param string $theme Name of current theme
 	 */
-	public function setCurrentTheme(string $theme)
+	public function setCurrentTheme(string $theme): void
 	{
 		$this->currentTheme = $theme;
 	}
@@ -238,9 +245,24 @@ final class AppHelper
 	 *
 	 * @param string $theme Name of current mobile theme
 	 */
-	public function setCurrentMobileTheme(string $theme)
+	public function setCurrentMobileTheme(string $theme): void
 	{
 		$this->currentMobileTheme = $theme;
+	}
+
+	public function setThemeInfoValue(string $index, $value): void
+	{
+		$this->theme_info[$index] = $value;
+	}
+
+	public function getThemeInfo(): array
+	{
+		return $this->theme_info;
+	}
+
+	public function getThemeInfoValue(string $index, $default = null)
+	{
+		return $this->theme_info[$index] ?? $default;
 	}
 
 	/**

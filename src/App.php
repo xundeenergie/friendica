@@ -51,13 +51,6 @@ class App
 	const CODENAME = 'Yellow Archangel';
 	const VERSION  = '2024.09-dev';
 
-	// Allow themes to control internal parameters
-	// by changing App values in theme.php
-	private $theme_info = [
-		'videowidth'        => 425,
-		'videoheight'       => 350,
-	];
-
 	/**
 	 * @var Mode The Mode of the Application
 	 */
@@ -220,19 +213,28 @@ class App
 		return $this->appHelper->getQueueValue($index);
 	}
 
+	/**
+	 * @deprecated 2024.12 Use AppHelper::setThemeInfoValue() instead
+	 */
 	public function setThemeInfoValue(string $index, $value)
 	{
-		$this->theme_info[$index] = $value;
+		$this->appHelper->setThemeInfoValue($index, $value);
 	}
 
+	/**
+	 * @deprecated 2024.12 Use AppHelper::getThemeInfo() instead
+	 */
 	public function getThemeInfo()
 	{
-		return $this->theme_info;
+		return $this->appHelper->getThemeInfo();
 	}
 
+	/**
+	 * @deprecated 2024.12 Use AppHelper::getThemeInfoValue() instead
+	 */
 	public function getThemeInfoValue(string $index, $default = null)
 	{
-		return $this->theme_info[$index] ?? $default;
+		return $this->appHelper->getThemeInfoValue($index, $default);
 	}
 
 	/**
