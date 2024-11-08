@@ -11,6 +11,7 @@ use DateTimeZone;
 use Exception;
 use Friendica\App\Mode;
 use Friendica\Core\Config\Capability\IManageConfigValues;
+use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Core\L10n;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
@@ -263,6 +264,37 @@ final class AppHelper
 	public function getThemeInfoValue(string $index, $default = null)
 	{
 		return $this->theme_info[$index] ?? $default;
+	}
+
+	/**
+	 * Provide a sane default if nothing is chosen or the specified theme does not exist.
+	 *
+	 * @return string Current theme's stylesheet path
+	 * @throws Exception
+	 */
+	public function getCurrentThemeStylesheetPath(): string
+	{
+		return Theme::getStylesheetPath($this->getCurrentTheme());
+	}
+
+	/**
+	 * Returns the current config cache of this node
+	 *
+	 * @return Cache
+	 */
+	public function getConfigCache(): Cache
+	{
+		return $this->config->getCache();
+	}
+
+	/**
+	 * The basepath of this app
+	 *
+	 * @return string Base path from configuration
+	 */
+	public function getBasePath(): string
+	{
+		return $this->config->get('system', 'basepath');
 	}
 
 	/**

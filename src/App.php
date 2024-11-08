@@ -240,21 +240,25 @@ class App
 	/**
 	 * Returns the current config cache of this node
 	 *
+	 * @deprecated 2024.12 Use AppHelper::getConfigCache() instead
+	 *
 	 * @return Cache
 	 */
 	public function getConfigCache()
 	{
-		return $this->config->getCache();
+		return $this->appHelper->getConfigCache();
 	}
 
 	/**
 	 * The basepath of this app
 	 *
+	 * @deprecated 2024.12 Use AppHelper::getBasePath() instead
+	 *
 	 * @return string Base path from configuration
 	 */
 	public function getBasePath(): string
 	{
-		return $this->config->get('system', 'basepath');
+		return $this->appHelper->getBasePath();
 	}
 
 	/**
@@ -414,12 +418,14 @@ class App
 	/**
 	 * Provide a sane default if nothing is chosen or the specified theme does not exist.
 	 *
+	 * @deprecated 2024.12 Use AppHelper::getCurrentThemeStylesheetPath() instead
+	 *
 	 * @return string Current theme's stylesheet path
 	 * @throws Exception
 	 */
 	public function getCurrentThemeStylesheetPath(): string
 	{
-		return Core\Theme::getStylesheetPath($this->appHelper->getCurrentTheme());
+		return $this->appHelper->getCurrentThemeStylesheetPath();
 	}
 
 	/**
