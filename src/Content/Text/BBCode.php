@@ -1628,7 +1628,7 @@ class BBCode
 	private static function convertStylesToHtml(string $text, int $simple_html): string
 	{
 		// Markdown is designed to pass through HTML elements that it can't handle itself,
-		// so that the other system would parse the original HTML element. 
+		// so that the other system would parse the original HTML element.
 		// But Diaspora has chosen not to do this and doesn't parse HTML elements.
 		// So we need to make some changes here.
 		if ($simple_html == BBCode::DIASPORA) {
@@ -1924,19 +1924,20 @@ class BBCode
 
 	private static function convertVideoPlatformsToHtml(string $text, bool $try_oembed): string
 	{
-		$a = DI::app();
+		$appHelper = DI::apphelper();
+
 		$text = self::normalizeVideoLinks($text);
 
 		// Youtube extensions
 		if ($try_oembed && OEmbed::isAllowedURL('https://www.youtube.com/embed/')) {
-			$text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '<iframe width="' . $a->getThemeInfoValue('videowidth') . '" height="' . $a->getThemeInfoValue('videoheight') . '" src="https://www.youtube.com/embed/$1" frameborder="0" ></iframe>', $text);
+			$text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '<iframe width="' . $appHelper->getThemeInfoValue('videowidth') . '" height="' . $appHelper->getThemeInfoValue('videoheight') . '" src="https://www.youtube.com/embed/$1" frameborder="0" ></iframe>', $text);
 		} else {
 			$text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '[url]https://www.youtube.com/watch?v=$1[/url]', $text);
 		}
 
 		// Vimeo extensions
 		if ($try_oembed && OEmbed::isAllowedURL('https://player.vimeo.com/video')) {
-			$text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", '<iframe width="' . $a->getThemeInfoValue('videowidth') . '" height="' . $a->getThemeInfoValue('videoheight') . '" src="https://player.vimeo.com/video/$1" frameborder="0" ></iframe>', $text);
+			$text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", '<iframe width="' . $appHelper->getThemeInfoValue('videowidth') . '" height="' . $appHelper->getThemeInfoValue('videoheight') . '" src="https://player.vimeo.com/video/$1" frameborder="0" ></iframe>', $text);
 		} else {
 			$text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", '[url]https://vimeo.com/$1[/url]', $text);
 		}

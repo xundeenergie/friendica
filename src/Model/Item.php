@@ -3347,7 +3347,7 @@ class Item
 	 */
 	public static function prepareBody(array &$item, bool $attach = false, bool $is_preview = false, bool $only_cache = false): string
 	{
-		$a = DI::app();
+		$appHelper = DI::apphelper();
 		$uid = DI::userSession()->getLocalUserId();
 		Hook::callAll('prepare_body_init', $item);
 
@@ -3517,8 +3517,8 @@ class Item
 		}
 
 		// Replace friendica image url size with theme preference.
-		if (!empty($a->getThemeInfoValue('item_image_size'))) {
-			$ps = $a->getThemeInfoValue('item_image_size');
+		if (!empty($appHelper->getThemeInfoValue('item_image_size'))) {
+			$ps = $appHelper->getThemeInfoValue('item_image_size');
 			$s = preg_replace('|(<img[^>]+src="[^"]+/photo/[0-9a-f]+)-[0-9]|', "$1-" . $ps, $s);
 		}
 

@@ -208,11 +208,11 @@ class Theme
 	 */
 	public static function getPathForFile(string $file): string
 	{
-		$a = DI::app();
+		$appHelper = DI::apphelper();
 
-		$theme = $a->getCurrentTheme();
+		$theme = $appHelper->getCurrentTheme();
 
-		$parent = Strings::sanitizeFilePathItem($a->getThemeInfoValue('extends', $theme));
+		$parent = Strings::sanitizeFilePathItem($appHelper->getThemeInfoValue('extends', $theme));
 
 		$paths = [
 			"view/theme/$theme/$file",
@@ -245,11 +245,11 @@ class Theme
 			return 'view/theme/' . $theme . '/style.css';
 		}
 
-		$a = DI::app();
+		$appHelper = DI::apphelper();
 
 		$query_params = [];
 
-		$puid = Profile::getThemeUid($a);
+		$puid = Profile::getThemeUid($appHelper);
 		if ($puid) {
 			$query_params['puid'] = $puid;
 		}
@@ -267,8 +267,8 @@ class Theme
 	{
 		$theme = Strings::sanitizeFilePathItem($theme);
 
-		$a = DI::app();
-		$base_theme = $a->getThemeInfoValue('extends') ?? '';
+		$appHelper = DI::apphelper();
+		$base_theme = $appHelper->getThemeInfoValue('extends') ?? '';
 
 		if (file_exists("view/theme/$theme/config.php")) {
 			return "view/theme/$theme/config.php";
