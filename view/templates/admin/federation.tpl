@@ -4,7 +4,7 @@
   *
   * SPDX-License-Identifier: AGPL-3.0-or-later
   *}}
-<script src="{{$baseurl}}/view/asset/Chart-js/dist/Chart.min.js?v={{$VERSION}}"></script>
+<script src="{{$baseurl}}/view/asset/chart.js/dist/Chart.min.js?v={{$VERSION}}"></script>
 <div id="adminpage">
 	<h1>{{$title}} - {{$page}}</h1>
 
