@@ -18,7 +18,7 @@ class CryptoTest extends TestCase
 	public function testRandomDigitsRandomInt()
 	{
 		$random_int = $this->getFunctionMock('Friendica\Util', 'random_int');
-		$random_int->expects($this->any())->willReturnCallback(function($min, $max) {
+		$random_int->expects($this->any())->willReturnCallback(function ($min, $max) {
 			return 12345678;
 		});
 
