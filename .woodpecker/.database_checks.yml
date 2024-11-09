@@ -40,6 +40,8 @@ steps:
   composer_install:
     image: friendicaci/php${PHP_MAJOR_VERSION}:php${PHP_VERSION}
     commands:
+      # create empty addon folder
+      - mkdir addon
       - export COMPOSER_HOME=.composer
       - ./bin/composer.phar validate
       - ./bin/composer.phar install --prefer-dist
