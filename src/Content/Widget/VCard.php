@@ -42,11 +42,9 @@ class VCard
 
 		if ($contact['network'] != '') {
 			$network_link   = Strings::formatNetworkName($contact['network'], $contact_url);
-			$network_avatar = ContactSelector::networkToIcon($contact['network'], $contact_url);
-			$network_svg    = ContactSelector::networkToSVG($contact['network'], $contact_url, 0, '', DI::userSession()->getLocalUserId());
+			$network_svg    = ContactSelector::networkToSVG($contact['network'], $contact['gsid'], '', DI::userSession()->getLocalUserId());
 		} else {
 			$network_link   = '';
-			$network_avatar = '';
 			$network_svg    = '';
 		}
 
@@ -114,7 +112,6 @@ class VCard
 			'$matrix'           => DI::l10n()->t('Matrix:'),
 			'$location'         => DI::l10n()->t('Location:'),
 			'$network_link'     => $network_link,
-			'$network_avatar'   => $network_avatar,
 			'$network_svg'      => $network_svg,
 			'$network'          => DI::l10n()->t('Network:'),
 			'$account_type'     => Contact::getAccountType($contact['contact-type']),

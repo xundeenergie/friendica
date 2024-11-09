@@ -1,2 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg fill="#000000" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.102 0c-.024 0-.053 0-.081 0-6.559 0-11.891 5.252-12.02 11.779v.012c0 .209.006 12.209.006 12.209l12.097-.01c6.582-.055 11.897-5.404 11.897-11.995s-5.315-11.939-11.892-11.995h-.005zm-.102 18.857c-.005 0-.01 0-.015 0-1.053 0-2.05-.239-2.94-.666l.041.018-4.345 1.077 1.227-4.018c-.522-.945-.83-2.072-.83-3.27 0-3.788 3.071-6.859 6.859-6.859s6.859 3.071 6.859 6.859c0 3.787-3.069 6.858-6.856 6.859z"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512px" height="512px" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Discourse</title>
+    <g id="All-Fediverse-Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Discourse">
+            <path d="M258.668773,0 C397.32238,0 510,117.038436 510,255.926019 C510,394.813602 397.420961,511.753396 258.619483,511.753396 L3,512 L3,251.536461 C3,112.599557 119.867295,0 258.668773,0 Z M242,82 C174,86 129.083546,119.58552 105,167 C73,230 90,290 115,326 L97,418 L199,407 C249,436 324,441 386,384 C443,331 443,257 416,200 C389,143 310,78 242,82 Z" id="Path-2" fill="#000000" fill-rule="nonzero"></path>
+            <rect id="Rectangle" x="0" y="0" width="512" height="512"></rect>
+        </g>
+    </g>
+</svg>

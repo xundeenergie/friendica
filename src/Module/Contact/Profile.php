@@ -297,7 +297,7 @@ class Profile extends BaseModule
 
 		$poll_enabled = in_array($contact['network'], [Protocol::DFRN, Protocol::FEED, Protocol::MAIL]);
 
-		$nettype = $this->t('Network type: %s', ContactSelector::networkToName($contact['network'], $contact['url'], $contact['protocol'], $contact['gsid']));
+		$nettype = $this->t('Network type: %s', ContactSelector::networkToName($contact['network'], $contact['protocol'], $contact['gsid']));
 
 		// tabs
 		$tab_str = Module\Contact::getTabsHTML($contact, Module\Contact::TAB_PROFILE);

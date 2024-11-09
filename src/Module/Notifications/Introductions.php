@@ -156,7 +156,8 @@ class Introductions extends BaseNotifications
 						$header .= ' <' . $Introduction->getAddr() . '>';
 					}
 
-					$header .= ' (' . ContactSelector::networkToName($Introduction->getNetwork(), $Introduction->getUrl()) . ')';
+					$gsid = ContactSelector::getServerIdForProfile($Introduction->getUrl());
+					$header .= ' (' . ContactSelector::networkToName($Introduction->getNetwork(), '', $gsid) . ')';
 
 					if ($Introduction->getNetwork() != Protocol::DIASPORA) {
 						$discard = $this->t('Discard');
@@ -191,7 +192,7 @@ class Introductions extends BaseNotifications
 						'$addr'                  => $Introduction->getAddr(),
 						'$lbl_knowyou'           => $lbl_knowyou,
 						'$lbl_network'           => $this->t('Network:'),
-						'$network'               => ContactSelector::networkToName($Introduction->getNetwork(), $Introduction->getUrl()),
+						'$network'               => ContactSelector::networkToName($Introduction->getNetwork(), '', $gsid),
 						'$knowyou'               => $knowyou,
 						'$approve'               => $this->t('Approve'),
 						'$note'                  => $Introduction->getNote(),
