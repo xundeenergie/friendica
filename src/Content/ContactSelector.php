@@ -12,15 +12,19 @@ use Friendica\Core\Protocol;
 use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Util\Strings;
-use GuzzleHttp\Psr7\Uri;
 
 /**
  * ContactSelector class
  */
 class ContactSelector
 {
+	const SVG_COLOR_BLACK = 0;
+	const SVG_BLACK       = 1;
+	const SVG_COLOR_WHITE = 2;
+	const SVG_WHITE       = 3;
+
 	static $serverdata = [];
-	static $server_url = [];
+	static $server_id  = [];
 
 	/**
 	 * @param string  $current  current
@@ -50,50 +54,51 @@ class ContactSelector
 		return $o;
 	}
 
-	private static function getServerForProfile(string $profile)
+	/**
+	 * Fetches the server id for a given profile
+	 *
+	 * @param string $profile
+	 * @return integer
+	 */
+	public static function getServerIdForProfile(string $profile): int
 	{
-		$server_url = self::getServerURLForProfile($profile);
-
-		if (!empty(self::$serverdata[$server_url])) {
-			return self::$serverdata[$server_url];
+		if (!empty(self::$server_id[$profile])) {
+			return self::$server_id[$profile];
 		}
 
-		// Now query the GServer for the platform name
-		$gserver = DBA::selectFirst('gserver', ['platform', 'network'], ['nurl' => $server_url]);
+		$contact = DBA::selectFirst('contact', ['gsid'], ['uid' => 0, 'nurl' => Strings::normaliseLink($profile)]);
+		if (empty($contact['gsid'])) {
+			return 0;
+		}
 
-		self::$serverdata[$server_url] = $gserver;
-		return $gserver;
+		self::$server_id[$profile] = $contact['gsid'];
+
+		return $contact['gsid'];
 	}
 
 	/**
-	 * @param string $profile Profile URL
-	 * @return string Server URL
-	 * @throws \Exception
+	 * Get server array for a given server id
+	 *
+	 * @param integer $gsid
+	 * @return array
 	 */
-	private static function getServerURLForProfile(string $profile): string
+	private static function getServerForId(int $gsid = null): array
 	{
-		if (!empty(self::$server_url[$profile])) {
-			return self::$server_url[$profile];
+		if (empty($gsid)) {
+			return [];
 		}
 
-		$server_url = '';
-
-		// Fetch the server url from the contact table
-		$contact = DBA::selectFirst('contact', ['baseurl'], ['uid' => 0, 'nurl' => Strings::normaliseLink($profile)]);
-		if (DBA::isResult($contact) && !empty($contact['baseurl'])) {
-			$server_url = Strings::normaliseLink($contact['baseurl']);
+		if (!empty(self::$serverdata[$gsid])) {
+			return self::$serverdata[$gsid];
 		}
 
-		if (empty($server_url)) {
-			// Create the server url out of the profile url
-			$parts = parse_url($profile);
-			unset($parts['path']);
-			$server_url = Strings::normaliseLink((string)Uri::fromParts((array)$parts));
+		$gserver = DBA::selectFirst('gserver', ['id', 'url', 'platform', 'network'], ['id' => $gsid]);
+		if (empty($gserver)) {
+			return [];
 		}
 
-		self::$server_url[$profile] = $server_url;
-
-		return $server_url;
+		self::$serverdata[$gserver['id']] = $gserver;
+		return $gserver;
 	}
 
 	/**
@@ -106,7 +111,7 @@ class ContactSelector
 	 * @return string
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
-	public static function networkToName(string $network, string $profile = '', string $protocol = '', int $gsid = null): string
+	public static function networkToName(string $network, string $protocol = '', int $gsid = null): string
 	{
 		$nets = [
 			Protocol::DFRN      =>   DI::l10n()->t('DFRN'),
@@ -137,15 +142,8 @@ class ContactSelector
 
 		$networkname = str_replace($search, $replace, $network);
 
-		if ((in_array($network, Protocol::FEDERATED)) && ($profile != "")) {
-			if (!empty($gsid) && !empty(self::$serverdata[$gsid])) {
-				$gserver = self::$serverdata[$gsid];
-			} elseif (!empty($gsid)) {
-				$gserver = DBA::selectFirst('gserver', ['platform', 'network'], ['id' => $gsid]);
-				self::$serverdata[$gsid] = $gserver;
-			} else {
-				$gserver = self::getServerForProfile($profile);
-			}
+		if (in_array($network, Protocol::FEDERATED) && !empty($gsid)) {
+			$gserver = self::getServerForId($gsid);
 
 			if (!empty($gserver['platform'])) {
 				$platform = $gserver['platform'];
@@ -170,90 +168,21 @@ class ContactSelector
 	}
 
 	/**
-	 * Determines network's icon name
+	 * Fetch the platform SVG of a given system
+	 * @see https://codeberg.org/FediverseIconography/pages
+	 * @see https://github.com/simple-icons/simple-icons
+	 * @see https://icon-sets.iconify.design
 	 *
-	 * @param string $network network
-	 * @param string $profile optional, default empty
-	 * @param int $gsid Server id
-	 * @return string Name for network icon
-	 * @throws \Exception
+	 * @param string $network
+	 * @param integer|null $gsid
+	 * @param string $platform
+	 * @param integer $uid
+	 * @return string
 	 */
-	public static function networkToIcon(string $network, string $profile = "", int $gsid = null): string
+	public static function networkToSVG(string $network, int $gsid = null, string $platform = '', int $uid = 0): string
 	{
-		$nets = [
-			Protocol::DFRN      =>   'friendica',
-			Protocol::OSTATUS   =>   'gnu-social', // There is no generic OStatus icon
-			Protocol::FEED      =>   'rss',
-			Protocol::MAIL      =>   'inbox',
-			Protocol::DIASPORA  =>   'diaspora',
-			Protocol::ZOT       =>   'hubzilla',
-			Protocol::LINKEDIN  =>   'linkedin',
-			Protocol::XMPP      =>   'xmpp',
-			Protocol::MYSPACE   =>   'file-text-o', /// @todo
-			Protocol::GPLUS     =>   'google-plus',
-			Protocol::PUMPIO    =>   'file-text-o', /// @todo
-			Protocol::TWITTER   =>   'twitter',
-			Protocol::DISCOURSE =>   'dot-circle-o', /// @todo
-			Protocol::DIASPORA2 =>   'diaspora',
-			Protocol::STATUSNET =>   'gnu-social',
-			Protocol::ACTIVITYPUB => 'activitypub',
-			Protocol::PNUT      =>   'file-text-o', /// @todo
-			Protocol::TUMBLR    =>   'tumblr',
-			Protocol::BLUESKY   =>   'circle', /// @todo
-		];
+		$platform_icon_style = $uid ? (DI::pConfig()->get($uid, 'accessibility', 'platform_icon_style') ?? self::SVG_COLOR_BLACK) : self::SVG_COLOR_BLACK;
 
-		$platform_icons = [
-			'diaspora' => 'diaspora',
-			'friendica' => 'friendica',
-			'friendika' => 'friendica',
-			'GNU Social' => 'gnu-social',
-			'gnusocial' => 'gnu-social',
-			'hubzilla' => 'hubzilla',
-			'mastodon' => 'mastodon',
-			'hometown' => 'mastodon',
-			'peertube' => 'peertube',
-			'pixelfed' => 'pixelfed',
-			'pleroma' => 'pleroma',
-			'akkoma' => 'pleroma',
-			'red' => 'hubzilla',
-			'redmatrix' => 'hubzilla',
-			'socialhome' => 'social-home',
-			'wordpress' => 'wordpress',
-			'lemmy' => 'users',
-			'plume' => 'plume',
-			'funkwhale' => 'funkwhale',
-			'nextcloud' => 'nextcloud',
-			'drupal' => 'drupal',
-			'firefish' => 'fire',
-			'calckey' => 'calculator',
-			'kbin' => 'check',
-			'threads' => 'instagram'
-		];
-
-		$search  = array_keys($nets);
-		$replace = array_values($nets);
-
-		$network_icon = str_replace($search, $replace, $network);
-
-		if ((in_array($network, Protocol::FEDERATED)) && ($profile != "")) {
-			if (!empty($gsid) && !empty(self::$serverdata[$gsid])) {
-				$gserver = self::$serverdata[$gsid];
-			} elseif (!empty($gsid)) {
-				$gserver = DBA::selectFirst('gserver', ['platform', 'network'], ['id' => $gsid]);
-				self::$serverdata[$gsid] = $gserver;
-			} else {
-				$gserver = self::getServerForProfile($profile);
-			}
-			if (!empty($gserver['platform'])) {
-				$network_icon = $platform_icons[strtolower($gserver['platform'])] ?? $network_icon;
-			}
-		}
-
-		return $network_icon;
-	}
-
-	public static function networkToSVG(string $network, string $profile = "", int $gsid = null, string $platform = '', int $uid = 0): string
-	{
 		$nets = [
 			Protocol::ACTIVITYPUB => 'activitypub', // https://commons.wikimedia.org/wiki/File:ActivityPub-logo-symbol.svg
 			Protocol::BLUESKY     => 'bluesky', // https://commons.wikimedia.org/wiki/File:Bluesky_Logo.svg
@@ -272,66 +201,77 @@ class ContactSelector
 			Protocol::ZOT         => 'hubzilla', // https://www.svgrepo.com/svg/362219/hubzilla
 		];
 
-		$svg = [
-			'akkoma', // https://commons.wikimedia.org/wiki/File:Akkoma_logo.svg
-			'calckey', // https://commons.wikimedia.org/wiki/File:Calckey_Logomark.svg
-			'diaspora', // https://www.svgrepo.com/svg/362315/diaspora
-			'firefish', // https://commons.wikimedia.org/wiki/File:Firefish_animated.svg
-			'flipboard', // https://commons.wikimedia.org/wiki/File:Flipboard_logo.svg
-			'friendica', 
-			'glitchsoc', // https://iconography.fediverse.info/black/glitch-soc.svg
-			'gnusocial', // https://commons.wikimedia.org/wiki/File:GNU_Social_Image_Logo.svg
-			'gotosocial', // https://iconography.fediverse.info/black/gotosocial.svg
-			'hometown', // https://iconography.fediverse.info/black/hometown.svg
-			'hubzilla', // https://www.svgrepo.com/svg/362219/hubzilla
-			'iceshrimp', // https://iconography.fediverse.info/black/iceshrimp.svg
-			'lemmy', // https://commons.wikimedia.org/wiki/File:Lemmy_logo.svg
-			'mastodon', // https://commons.wikimedia.org/wiki/File:Mastodon_logotype_(simple)_new_hue.svg
-			'mbin', // https://iconography.fediverse.info/black/mbin.svg
-			'misskey', // https://commons.wikimedia.org/wiki/File:Misskey_Mi_icon.svg
-			'mobilizon', // https://www.svgrepo.com/svg/517896/mobilizon
-			'peertube', // https://commons.wikimedia.org/wiki/File:Logo_de_PeerTube.svg
-			'pixelfed', // https://commons.wikimedia.org/wiki/File:Pixelfed_logo_multicolor_(September_2018).svg
-			'pleroma', // https://commons.wikimedia.org/wiki/File:Smaller_Pleroma_logo.svg
-			'plume', // https://commons.wikimedia.org/wiki/File:Plume.svg
-			'sharkey', // https://iconography.fediverse.info/black/sharky.svg
-			'threads', // https://commons.wikimedia.org/wiki/File:Threads_(app)_logo.svg
-			'wordpress', // https://commons.wikimedia.org/wiki/File:WordPress_blue_logo.svg
-		];
-
 		$search  = array_keys($nets);
 		$replace = array_values($nets);
 
 		$network_svg = str_replace($search, $replace, $network);
 
-		if (in_array($network, Protocol::FEDERATED)) {
-			if (!empty($gsid) && !empty(self::$serverdata[$gsid])) {
-				$gserver = self::$serverdata[$gsid];
-			} elseif (!empty($gsid)) {
-				$gserver = DBA::selectFirst('gserver', ['platform', 'network'], ['id' => $gsid]);
-				self::$serverdata[$gsid] = $gserver;
-			} elseif (!empty($platform)) {
-				$gserver = ['platform' => $platform];
-			} elseif ($profile != "") {
-				$gserver = self::getServerForProfile($profile);
-			}
-			if (!empty($gserver['platform'])) {
-				$network_svg = in_array($gserver['platform'], $svg) ? $gserver['platform'] : $network_svg;
-			}
+		if (in_array($network, Protocol::FEDERATED) && !empty($gsid)) {
+			$gserver = self::getServerForId($gsid);
+			$platform = $gserver['platform'];
+		}
+
+		$svg = ['aardwolf', 'activitypods', 'activitypub', 'akkoma', 'anfora', 'awakari', 'azorius',
+			'bluesky', 'bonfire', 'bookwyrm', 'bridgy_fed', 'brighteon_social', 'brutalinks', 'calckey',
+			'castopod', 'catodon', 'chatter_net', 'chuckya', 'clubsall', 'communecter', 'decodon',
+			'diaspora', 'discourse', 'dolphin', 'drupal', 'email', 'emissary', 'epicyon', 'f2ap',
+			'fedibird', 'fedify', 'firefish', 'flipboard', 'flohmarkt', 'forgefriends', 'forgejo',
+			'forte', 'foundkey', 'friendica', 'funkwhale', 'gancio', 'gath.io', 'ghost', 'gitlab',
+			'glitch-soc', 'glitchsoc', 'gnu_social', 'gnusocial', 'goblin', 'go-fed', 'gotosocial',
+			'greatape', 'guppe', 'hollo', 'hometown', 'honk', 'hubzilla', 'iceshrimp', 'juick', 'kazarma',
+			'kbin', 'kepi', 'kitsune', 'kmyblue', 'kookie', 'ktistec', 'lemmy', 'loops', 'mastodon',
+			'mbin', 'micro.blog', 'minds', 'misskey', 'mistpark', 'mitra', 'mobilizon', 'neodb',
+			'newsmast', 'nextcloud_social', 'nodebb', 'osada', 'owncast', 'peertube', 'piefed', 'pinetta',
+			'pixelfed', 'pleroma', 'plume', 'postmarks', 'prismo', 'pump-io', 'rebased', 'redmatrix',
+			'reel2bits', 'rss', 'ruffy', 'sakura', 'seppo', 'shadowfacts', 'sharky', 'shuttlecraft',
+			'smilodon', 'smithereen', 'snac', 'soapbox', 'socialhome', 'streams', 'sublinks', 'sutty',
+			'takahē', 'takesama', 'threads', 'tumblr', 'vernissage', 'vervis', 'vidzy', 'vocata', 'wafrn',
+			'wildebeest', 'wordpress', 'write.as', 'writefreely', 'wxwclub', 'xwiki', 'zap'];
+
+		if ($platform_icon_style == self::SVG_WHITE) {
+			$svg = ['activitypub', 'akkoma', 'andstatus', 'bluesky', 'bonfire', 'bookwyrm', 'bridgy_fed', 
+				'calckey', 'diaspora', 'discourse', 'drupal', 'email', 'firefish', 'flipboard', 'forgejo',
+				'friendica', 'funkwhale', 'ghost', 'gitlab', 'gnusocial', 'gotosocial', 'kbin', 'lemmy',
+				'mastodon', 'microblog', 'minds', 'misskey', 'mobilizon', 'nextcloud', 'peertube',
+				'pixelfed', 'pleroma', 'rss', 'shark', 'threads', 'wordpress', 'xwiki'];
+		}
+
+		if (!empty($platform)) {
+			$aliases = [
+				'brighteon'               => 'brighteon_social',
+				'bridgy-fed'              => 'bridgy_fed',
+				'friendika'               => 'friendica',
+				'gathio'                  => 'gath.io',
+				'GNU Social'              => 'gnu_social',
+				'gnusocial'               => 'gnu_social',
+				'guppe groups'            => 'guppe',
+				'microblog'               => 'micro.blog',
+				'microblogpub'            => 'micro.blog',
+				'nextcloud'               => 'nextcloud_social',
+				'red'                     => 'redmatrix',
+				'sharkey'                 => 'sharky',
+				'sutty-distributed-press' => 'sutty',
+			];
+
+			$platform    = str_replace(array_keys($aliases), array_values($aliases), $platform);
+			$network_svg = in_array($platform, $svg) ? $platform : $network_svg;
 		}
 
 		if (empty($network_svg)) {
 			return '';
 		}
 
-		$color = ['activitypub', 'akkoma', 'bluesky', 'discourse', 'firefish', 'flipboard',
-			'friendica', 'gnusocial', 'mastodon', 'peertube', 'pixelfed', 'pleroma',
-			'rss', 'tumblr', 'wordpress'];
+		$color = ['aardwolf', 'activitypods', 'activitypub', 'akkoma', 'bluesky', 'chuckya', 'decodon',
+			'discourse', 'fedify', 'firefish', 'flipboard', 'friendica', 'gitlab', 'gnusocial', 'kookie',
+			'loops', 'mastodon', 'mbin', 'misskey', 'neodb', 'newsmast', 'nodebb', 'peertube', 'pixelfed',
+			'pleroma', 'rss', 'sharky', 'tumblr', 'vervis', 'vocata', 'wordpress'];
 
-		if (($uid && DI::pConfig()->get($uid, 'accessibility', 'black_platform_icons')) || !in_array($network_svg, $color)) {
-			return 'images/platforms/black/' . $network_svg . '.svg';
-		} else {
+		if (in_array($platform_icon_style, [self::SVG_COLOR_BLACK, self::SVG_COLOR_WHITE]) && in_array($network_svg, $color)) {
 			return 'images/platforms/color/' . $network_svg . '.svg';
+		} elseif (in_array($platform_icon_style, [self::SVG_WHITE, self::SVG_COLOR_WHITE])) {
+			return 'images/platforms/white/' . $network_svg . '.svg';
+		} else {
+			return 'images/platforms/black/' . $network_svg . '.svg';
 		}
 	}
 }

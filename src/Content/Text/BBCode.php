@@ -921,6 +921,7 @@ class BBCode
 				$contact = Contact::getByURL($attributes['profile'], false, ['network']);
 				$network = $contact['network'] ?? Protocol::PHANTOM;
 
+				$gsid = ContactSelector::getServerIdForProfile($attributes['profile']);
 				$tpl = Renderer::getMarkupTemplate('shared_content.tpl');
 				$text .= self::SHARED_ANCHOR . Renderer::replaceMacros($tpl, [
 					'$profile'      => $attributes['profile'],
@@ -930,9 +931,8 @@ class BBCode
 					'$link_title'   => DI::l10n()->t('Link to source'),
 					'$posted'       => $attributes['posted'],
 					'$guid'         => $attributes['guid'],
-					'$network_name' => ContactSelector::networkToName($network, $attributes['profile']),
-					'$network_icon' => ContactSelector::networkToIcon($network, $attributes['profile']),
-					'$network_svg'  => ContactSelector::networkToSVG($network, $attributes['profile']),
+					'$network_name' => ContactSelector::networkToName($network, '', $gsid),
+					'$network_svg'  => ContactSelector::networkToSVG($network, $gsid),
 					'$content'      => self::TOP_ANCHOR . self::setMentions(trim($content), 0, $network) . self::BOTTOM_ANCHOR,
 				]);
 				break;

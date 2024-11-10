@@ -178,10 +178,6 @@ main .nav-tabs > li.active > a:hover {
 	border: 0;
 }
 
-.network-svg {
-	background-color: $font_color;
-}
-
 .badge {
 	background-color: $nav_bg;
 }

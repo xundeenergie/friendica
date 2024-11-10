@@ -216,7 +216,7 @@ class Status extends BaseFactory
 		}
 
 		if ($platform == '') {
-			$platform = ContactSelector::networkToName($item['network'], $item['author-link'], $item['network'], $item['author-gsid']);
+			$platform = ContactSelector::networkToName($item['network'], $item['network'], $item['author-gsid']);
 		}
 
 		$application = new \Friendica\Object\Api\Mastodon\Application($item['app'] ?: $platform);

@@ -77,7 +77,7 @@
 						{{include file="field_select.tpl" field=$preview_mode}}
 						{{include file="field_checkbox.tpl" field=$hide_empty_descriptions}}
 						{{include file="field_checkbox.tpl" field=$hide_custom_emojis}}
-						{{include file="field_checkbox.tpl" field=$black_platform_icons}}
+						{{include file="field_select.tpl" field=$platform_icon_style}}
 					</div>
 					<div class="panel-footer">
 						<button type="submit" name="submit" class="btn btn-primary" value="{{$submit}}">{{$submit}}</button>

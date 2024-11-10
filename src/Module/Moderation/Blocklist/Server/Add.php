@@ -96,7 +96,6 @@ class Add extends BaseModeration
 
 		array_walk($gservers, function (array &$gserver) {
 			$gserver['domain'] = (new Uri($gserver['url']))->getHost();
-			$gserver['network_icon'] = ContactSelector::networkToIcon($gserver['network']);
 			$gserver['network_svg']  = ContactSelector::networkToSVG($gserver['network']);
 			$gserver['network_name'] = ContactSelector::networkToName($gserver['network']);
 		});

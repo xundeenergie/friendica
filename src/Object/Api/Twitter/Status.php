@@ -121,7 +121,7 @@ class Status extends BaseDataTransferObject
 		$this->entities             = $entities;
 		$this->extended_entities    = $entities;
 
-		$origin = ContactSelector::networkToName($item['author-network'], $item['author-link'], $item['network']);
+		$origin = ContactSelector::networkToName($item['author-network'], $item['network'], $item['author-gsid']);
 
 		if (empty($this->source)) {
 			$this->source = $origin;

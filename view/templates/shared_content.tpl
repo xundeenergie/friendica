@@ -30,14 +30,10 @@
 		<div class="preferences">
 			{{if $network_svg && $link}}
 				<span class="wall-item-network"><a href="{{$link}}" class="plink u-url" target="_blank"><img class="network-svg" src="{{$network_svg}}" alt="{{$network_name}} - {{$link_title}}" title="{{$network_name}} - {{$link_title}}" loading="lazy"/></a></span>
-			{{elseif $network_icon && $link}}
-				<span class="wall-item-network"><a href="{{$link}}" class="plink u-url" aria-label="{{$link_title}}" target="_blank"><i class="fa fa-{{$network_icon}} fakelink" title="{{$network_name}} - {{$link_title}}" aria-hidden="true"></i></a></span>
 			{{elseif $link}}
 				<a href="{{$link}}" class="plink u-url" aria-label="{{$link_title}}" title="{{$network_name}} - {{$link_title}}" target="_blank">{{$network_name}}</a>
-			{{elseif $network_icon}}
-				<span class="wall-item-network"><img class="network-svg" src="{{$network_svg}}" title="{{$network_name}}" loading="lazy" aria-hidden="true"/></span>
-			{{elseif $network_icon}}
-				<span class="wall-item-network"><i class="fa fa-{{$network_icon}}" title="{{$network_name}}" aria-hidden="true"></i></span>
+			{{elseif $network_svg}}
+				<span class="wall-item-network"><img class="network-svg" src="{{$network_svg}}" alt="{{$network_name}} - {{$link_title}}" title="{{$network_name}} - {{$link_title}}" loading="lazy"/></span>
 			{{else}}
 				<span class="wall-item-network" title="{{$app}}">{{$network_name}}</span>
 			{{/if}}

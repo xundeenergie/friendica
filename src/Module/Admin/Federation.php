@@ -182,7 +182,7 @@ class Federation extends BaseAdmin
 			}
 
 			$gserver['platform']    = $systems[$platform]['name'];
-			$gserver['svg']         = ContactSelector::networkToSVG($gserver['network'], '', null, $platform, DI::userSession()->getLocalUserId());
+			$gserver['svg']         = ContactSelector::networkToSVG($gserver['network'], null, $platform, DI::userSession()->getLocalUserId());
 			$gserver['totallbl']    = DI::l10n()->tt('%2$s total system'                   , '%2$s total systems'                     , $gserver['total'], number_format($gserver['total']));
 			$gserver['monthlbl']    = DI::l10n()->tt('%2$s active user last month'         , '%2$s active users last month'           , $gserver['month'] ?? 0, number_format($gserver['month'] ?? 0));
 			$gserver['halfyearlbl'] = DI::l10n()->tt('%2$s active user last six months'    , '%2$s active users last six months'      , $gserver['halfyear'] ?? 0, number_format($gserver['halfyear'] ?? 0));
