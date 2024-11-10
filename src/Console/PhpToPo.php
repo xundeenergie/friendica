@@ -7,7 +7,8 @@
 
 namespace Friendica\Console;
 
-use Friendica\App;
+use Friendica\AppHelper;
+use stdClass;
 
 /**
  * Read a strings.php file and create messages.po in the same directory
@@ -20,14 +21,14 @@ class PhpToPo extends \Asika\SimpleConsole\Console
 	private $normBaseMsgIds = [];
 	const NORM_REGEXP = "|[\\\]|";
 
-	/** @var App */
-	private $app;
+	/** @var AppHelper */
+	private $appHelper;
 
-	public function __construct(App $app, array $argv = null)
+	public function __construct(AppHelper $appHelper, array $argv = null)
 	{
 		parent::__construct($argv);
 
-		$this->app = $app;
+		$this->appHelper = $appHelper;
 	}
 
 	protected function getHelp()
@@ -66,7 +67,8 @@ HELP;
 			throw new \Asika\SimpleConsole\CommandArgsException('Too many arguments');
 		}
 
-		$a = $this->app;
+		$a          = new stdClass();
+		$a->strings = [];
 
 		$phpfile = realpath($this->getArgument(0));
 
