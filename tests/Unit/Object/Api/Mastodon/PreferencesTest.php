@@ -19,10 +19,10 @@ class PreferencesTest extends TestCase
 		self::assertSame(
 			[
 				'posting:default:visibility' => 'visibility',
-				'posting:default:sensitive' => true,
-				'posting:default:language' => 'language',
-				'reading:expand:media' => 'media',
-				'reading:expand:spoilers' => false,
+				'posting:default:sensitive'  => true,
+				'posting:default:language'   => 'language',
+				'reading:expand:media'       => 'media',
+				'reading:expand:spoilers'    => false,
 			],
 			$preferences->toArray(),
 		);
@@ -35,10 +35,10 @@ class PreferencesTest extends TestCase
 		self::assertSame(
 			[
 				'posting:default:visibility' => 'visibility',
-				'posting:default:sensitive' => true,
-				'posting:default:language' => 'language',
-				'reading:expand:media' => 'media',
-				'reading:expand:spoilers' => false,
+				'posting:default:sensitive'  => true,
+				'posting:default:language'   => 'language',
+				'reading:expand:media'       => 'media',
+				'reading:expand:spoilers'    => false,
 			],
 			$preferences->jsonSerialize(),
 		);
