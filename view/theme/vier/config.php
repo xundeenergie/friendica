@@ -7,13 +7,13 @@
  *
  */
 
-use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\Core\Renderer;
 use Friendica\DI;
 
 require_once __DIR__ . '/theme.php';
 
-function theme_content(App $a)
+function theme_content(AppHelper $appHelper)
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		return;
@@ -40,11 +40,11 @@ function theme_content(App $a)
 	$show_friends = get_vier_config('show_friends', true);
 	$show_lastusers = get_vier_config('show_lastusers', true);
 
-	return vier_form($a,$style, $show_pages, $show_profiles, $show_helpers,
+	return vier_form($appHelper,$style, $show_pages, $show_profiles, $show_helpers,
 			$show_services, $show_friends, $show_lastusers);
 }
 
-function theme_post(App $a)
+function theme_post(AppHelper $appHelper)
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		return;
@@ -62,7 +62,7 @@ function theme_post(App $a)
 }
 
 
-function theme_admin(App $a) {
+function theme_admin(AppHelper $appHelper) {
 
 	if (!function_exists('get_vier_config'))
 		return;
@@ -85,13 +85,13 @@ function theme_admin(App $a) {
 	$show_services = get_vier_config('show_services', true, true);
 	$show_friends = get_vier_config('show_friends', true, true);
 	$show_lastusers = get_vier_config('show_lastusers', true, true);
-	$o .= vier_form($a,$style, $show_pages, $show_profiles, $show_helpers, $show_services,
+	$o .= vier_form($appHelper,$style, $show_pages, $show_profiles, $show_helpers, $show_services,
 			$show_friends, $show_lastusers);
 
 	return $o;
 }
 
-function theme_admin_post(App $a) {
+function theme_admin_post(AppHelper $appHelper) {
 	if (isset($_POST['vier-settings-submit'])){
 		DI::config()->set('vier', 'style', $_POST['vier_style']);
 		DI::config()->set('vier', 'show_pages', $_POST['vier_show_pages']);
@@ -104,8 +104,8 @@ function theme_admin_post(App $a) {
 	}
 }
 
-/// @TODO $a is no longer used
-function vier_form(App $a, $style, $show_pages, $show_profiles, $show_helpers, $show_services, $show_friends, $show_lastusers) {
+/// @TODO $appHelper is no longer used
+function vier_form(AppHelper $appHelper, $style, $show_pages, $show_profiles, $show_helpers, $show_services, $show_friends, $show_lastusers) {
 	$styles = [
 		"breathe"=>"Breathe",
 		"netcolour"=>"Coloured Networks",

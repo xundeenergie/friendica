@@ -7,7 +7,8 @@
  *
  */
 
-use Friendica\App;
+use Friendica\App\Mode;
+use Friendica\AppHelper;
 use Friendica\Core\Renderer;
 use Friendica\DI;
 
@@ -15,13 +16,13 @@ use Friendica\DI;
  * This script can be included even when the app is in maintenance mode which requires us to avoid any config call
  */
 
-function duepuntozero_init(App $a) {
+function duepuntozero_init(AppHelper $appHelper) {
 
 	Renderer::setActiveTemplateEngine('smarty3');
 
 	$colorset = null;
 
-	if (DI::mode()->has(App\Mode::MAINTENANCEDISABLED)) {
+	if (DI::mode()->has(Mode::MAINTENANCEDISABLED)) {
 		$colorset = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'duepuntozero', 'colorset');
 		if (!$colorset)
 			$colorset = DI::config()->get('duepuntozero', 'colorset');          // user setting have priority, then node settings
