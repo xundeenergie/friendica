@@ -11,7 +11,9 @@ use Exception;
 use Friendica\App\Arguments;
 use Friendica\App\BaseURL;
 use Friendica\App\Mode;
+use Friendica\App\Page;
 use Friendica\App\Request;
+use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Content\Nav;
 use Friendica\Core\Config\Factory\Config;
@@ -426,10 +428,10 @@ class App implements AppHelper
 	 *
 	 * This probably should change to limit the size of this monster method.
 	 *
-	 * @param App\Router                  $router
+	 * @param Router                      $router
 	 * @param IManagePersonalConfigValues $pconfig
 	 * @param Authentication              $auth       The Authentication backend of the node
-	 * @param App\Page                    $page       The Friendica page printing container
+	 * @param Page                        $page       The Friendica page printing container
 	 * @param ModuleHTTPException         $httpException The possible HTTP Exception container
 	 * @param HTTPInputData               $httpInput  A library for processing PHP input streams
 	 * @param float                       $start_time The start time of the overall script execution
@@ -438,8 +440,17 @@ class App implements AppHelper
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public function runFrontend(App\Router $router, IManagePersonalConfigValues $pconfig, Authentication $auth, App\Page $page, Nav $nav, ModuleHTTPException $httpException, HTTPInputData $httpInput, float $start_time, array $server)
-	{
+	public function runFrontend(
+		Router $router,
+		IManagePersonalConfigValues $pconfig,
+		Authentication $auth,
+		Page $page,
+		Nav $nav,
+		ModuleHTTPException $httpException,
+		HTTPInputData $httpInput,
+		float $start_time,
+		array $server
+	) {
 		$requeststring = ($server['REQUEST_METHOD'] ?? '') . ' ' . ($server['REQUEST_URI'] ?? '') . ' ' . ($server['SERVER_PROTOCOL'] ?? '');
 		$this->logger->debug('Request received', ['address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '']);
 		$request_start = microtime(true);
