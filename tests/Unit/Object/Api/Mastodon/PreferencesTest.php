@@ -12,35 +12,35 @@ use PHPUnit\Framework\TestCase;
 
 class PreferencesTest extends TestCase
 {
-    public function testToArrayReturnsArray(): void
-    {
-        $preferences = new Preferences('visibility', true, 'language', 'media', false);
+	public function testToArrayReturnsArray(): void
+	{
+		$preferences = new Preferences('visibility', true, 'language', 'media', false);
 
-        self::assertSame(
-            [
-                'posting:default:visibility' => 'visibility',
-                'posting:default:sensitive' => true,
-                'posting:default:language' => 'language',
-                'reading:expand:media' => 'media',
-                'reading:expand:spoilers' => false,
-            ],
-            $preferences->toArray(),
-        );
-    }
+		self::assertSame(
+			[
+				'posting:default:visibility' => 'visibility',
+				'posting:default:sensitive'  => true,
+				'posting:default:language'   => 'language',
+				'reading:expand:media'       => 'media',
+				'reading:expand:spoilers'    => false,
+			],
+			$preferences->toArray(),
+		);
+	}
 
-    public function testJsonSerializeReturnsArray(): void
-    {
-        $preferences = new Preferences('visibility', true, 'language', 'media', false);
+	public function testJsonSerializeReturnsArray(): void
+	{
+		$preferences = new Preferences('visibility', true, 'language', 'media', false);
 
-        self::assertSame(
-            [
-                'posting:default:visibility' => 'visibility',
-                'posting:default:sensitive' => true,
-                'posting:default:language' => 'language',
-                'reading:expand:media' => 'media',
-                'reading:expand:spoilers' => false,
-            ],
-            $preferences->jsonSerialize(),
-        );
-    }
+		self::assertSame(
+			[
+				'posting:default:visibility' => 'visibility',
+				'posting:default:sensitive'  => true,
+				'posting:default:language'   => 'language',
+				'reading:expand:media'       => 'media',
+				'reading:expand:spoilers'    => false,
+			],
+			$preferences->jsonSerialize(),
+		);
+	}
 }
