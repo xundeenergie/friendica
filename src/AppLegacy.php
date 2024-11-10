@@ -52,7 +52,7 @@ final class AppLegacy implements AppHelper
 	// Allow themes to control internal parameters
 	// by changing App values in theme.php
 	private $theme_info = [
-		'videowidth' => 425,
+		'videowidth'  => 425,
 		'videoheight' => 350,
 	];
 
@@ -101,12 +101,12 @@ final class AppLegacy implements AppHelper
 		IHandleUserSessions $session
 	) {
 		$this->database = $database;
-		$this->config = $config;
-		$this->mode = $mode;
-		$this->l10n = $l10n;
-		$this->baseURL = $baseURL;
-		$this->pConfig = $pConfig;
-		$this->session = $session;
+		$this->config   = $config;
+		$this->mode     = $mode;
+		$this->l10n     = $l10n;
+		$this->baseURL  = $baseURL;
+		$this->pConfig  = $pConfig;
+		$this->session  = $session;
 	}
 
 	/**
@@ -320,7 +320,7 @@ final class AppLegacy implements AppHelper
 		// Sane default
 		$this->setCurrentTheme($system_theme);
 
-		$page_theme = null;
+		$page_theme    = null;
 		$profile_owner = $this->getProfileOwner();
 
 		// Find the theme that belongs to the user whose stuff we are looking at
@@ -337,9 +337,9 @@ final class AppLegacy implements AppHelper
 
 		$theme_name = Strings::sanitizeFilePathItem($theme_name);
 		if ($theme_name
-		    && in_array($theme_name, Theme::getAllowedList())
-		    && (file_exists('view/theme/' . $theme_name . '/style.css')
-		        || file_exists('view/theme/' . $theme_name . '/style.php'))
+			&& in_array($theme_name, Theme::getAllowedList())
+			&& (file_exists('view/theme/' . $theme_name . '/style.css')
+				|| file_exists('view/theme/' . $theme_name . '/style.php'))
 		) {
 			$this->setCurrentTheme($theme_name);
 		}
@@ -356,7 +356,7 @@ final class AppLegacy implements AppHelper
 		$this->setCurrentMobileTheme($system_mobile_theme);
 
 		$page_mobile_theme = null;
-		$profile_owner = $this->getProfileOwner();
+		$profile_owner     = $this->getProfileOwner();
 
 		// Find the theme that belongs to the user whose stuff we are looking at
 		if (!empty($profile_owner) && ($profile_owner != $this->session->getLocalUserId())) {

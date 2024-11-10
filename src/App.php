@@ -262,18 +262,6 @@ class App implements AppHelper
 		return $this->appHelper->getBasePath();
 	}
 
-	/**
-	 * @param IManageConfigValues         $config   The Configuration
-	 * @param Mode                        $mode     The mode of this Friendica app
-	 * @param BaseURL                     $baseURL  The full base URL of this Friendica app
-	 * @param LoggerInterface             $logger   The current app logger
-	 * @param Profiler                    $profiler The profiler of this application
-	 * @param L10n                        $l10n     The translator instance
-	 * @param App\Arguments               $args     The Friendica Arguments of the call
-	 * @param IHandleUserSessions         $session  The (User)Session handler
-	 * @param DbaDefinition               $dbaDefinition
-	 * @param ViewDefinition              $viewDefinition
-	 */
 	public function __construct(
 		Request $request,
 		Authentication $auth,
@@ -288,17 +276,17 @@ class App implements AppHelper
 		DbaDefinition $dbaDefinition,
 		ViewDefinition $viewDefinition
 	) {
-		$this->requestId      = $request->getRequestId();
-		$this->auth           = $auth;
-		$this->config         = $config;
-		$this->mode           = $mode;
-		$this->baseURL        = $baseURL;
-		$this->profiler       = $profiler;
-		$this->logger         = $logger;
-		$this->l10n           = $l10n;
-		$this->args           = $args;
-		$this->session        = $session;
-		$this->appHelper      = DI::apphelper();
+		$this->requestId = $request->getRequestId();
+		$this->auth      = $auth;
+		$this->config    = $config;
+		$this->mode      = $mode;
+		$this->baseURL   = $baseURL;
+		$this->profiler  = $profiler;
+		$this->logger    = $logger;
+		$this->l10n      = $l10n;
+		$this->args      = $args;
+		$this->session   = $session;
+		$this->appHelper = DI::apphelper();
 
 		$this->load($dbaDefinition, $viewDefinition);
 	}
@@ -328,7 +316,8 @@ class App implements AppHelper
 			get_include_path() . PATH_SEPARATOR
 			. $this->appHelper->getBasePath() . DIRECTORY_SEPARATOR . 'include' . PATH_SEPARATOR
 			. $this->appHelper->getBasePath() . DIRECTORY_SEPARATOR . 'library' . PATH_SEPARATOR
-			. $this->appHelper->getBasePath());
+			. $this->appHelper->getBasePath()
+		);
 
 		$this->profiler->reset();
 
@@ -592,7 +581,7 @@ class App implements AppHelper
 
 			// Let the module run its internal process (init, get, post, ...)
 			$timestamp = microtime(true);
-			$response = $module->run($httpException, $input);
+			$response  = $module->run($httpException, $input);
 			$this->profiler->set(microtime(true) - $timestamp, 'content');
 
 			// Wrapping HTML responses in the theme template
