@@ -431,7 +431,7 @@ class Page implements ArrayAccess
 
 		if (function_exists(str_replace('-', '_', $currentTheme) . '_init')) {
 			$func = str_replace('-', '_', $currentTheme) . '_init';
-			$func($app);
+			$func($appHelper);
 		}
 
 		/* Create the page head after setting the language
@@ -441,7 +441,7 @@ class Page implements ArrayAccess
 		 * all the module functions have executed so that all
 		 * theme choices made by the modules can take effect.
 		 */
-		$this->initHead($app, $args, $l10n, $config, $pconfig, $localUID);
+		$this->initHead($appHelper, $args, $l10n, $config, $pconfig, $localUID);
 
 		/* Build the page ending -- this is stuff that goes right before
 		 * the closing </body> tag
@@ -527,7 +527,7 @@ class Page implements ArrayAccess
 		}
 
 		// Theme templates expect $a as an App instance
-		$a = $app;
+		$a = $appHelper;
 
 		// Used as is in view/php/default.php
 		$lang = $l10n->getCurrentLang();
