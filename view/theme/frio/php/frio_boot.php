@@ -9,7 +9,7 @@
  *
  */
 
-use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\DI;
 
 /**
@@ -17,19 +17,19 @@ use Friendica\DI;
  *
  * @todo Check if this is really needed.
  */
-function load_page(App $a)
+function load_page(AppHelper $appHelper)
 {
 	if (isset($_GET['mode']) && ($_GET['mode'] == 'minimal')) {
 		require 'view/theme/frio/minimal.php';
 	} elseif ((isset($_GET['mode']) && ($_GET['mode'] == 'none'))) {
 		require 'view/theme/frio/none.php';
 	} else {
-		$template = 'view/theme/' . $a->getCurrentTheme() . '/'
+		$template = 'view/theme/' . $appHelper->getCurrentTheme() . '/'
 			. ((DI::page()['template'] ?? '') ?: 'default' ) . '.php';
 		if (file_exists($template)) {
 			require_once $template;
 		} else {
-			require_once str_replace('theme/' . $a->getCurrentTheme() . '/', '', $template);
+			require_once str_replace('theme/' . $appHelper->getCurrentTheme() . '/', '', $template);
 		}
 	}
 }

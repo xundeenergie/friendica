@@ -11,6 +11,7 @@ use ArrayAccess;
 use DOMDocument;
 use DOMXPath;
 use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\Content\Nav;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Hook;
@@ -176,16 +177,16 @@ class Page implements ArrayAccess
 	 * - Infinite scroll data
 	 * - head.tpl template
 	 *
-	 * @param App                         $app      The Friendica App instance
-	 * @param Arguments                   $args     The Friendica App Arguments
-	 * @param L10n                        $l10n     The l10n language instance
-	 * @param IManageConfigValues         $config   The Friendica configuration
-	 * @param IManagePersonalConfigValues $pConfig  The Friendica personal configuration (for user)
-	 * @param int                         $localUID The local user id
+	 * @param AppHelper                   $appHelper The Friendica App instance
+	 * @param Arguments                   $args      The Friendica App Arguments
+	 * @param L10n                        $l10n      The l10n language instance
+	 * @param IManageConfigValues         $config    The Friendica configuration
+	 * @param IManagePersonalConfigValues $pConfig   The Friendica personal configuration (for user)
+	 * @param int                         $localUID  The local user id
 	 *
 	 * @throws HTTPException\InternalServerErrorException
 	 */
-	private function initHead(App $app, Arguments $args, L10n $l10n, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, int $localUID)
+	private function initHead(AppHelper $appHelper, Arguments $args, L10n $l10n, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, int $localUID)
 	{
 		$interval = ($localUID ? $pConfig->get($localUID, 'system', 'update_interval') : 40000);
 
@@ -209,7 +210,7 @@ class Page implements ArrayAccess
 		if (!empty(Renderer::$theme['stylesheet'])) {
 			$stylesheet = Renderer::$theme['stylesheet'];
 		} else {
-			$stylesheet = $app->getCurrentThemeStylesheetPath();
+			$stylesheet = $appHelper->getCurrentThemeStylesheetPath();
 		}
 
 		$this->registerStylesheet($stylesheet);
@@ -306,7 +307,6 @@ class Page implements ArrayAccess
 	 * - Registered footer scripts (through App->registerFooterScript())
 	 * - footer.tpl template
 	 *
-	 * @param App  $app  The Friendica App instance
 	 * @param Mode $mode The Friendica runtime mode
 	 * @param L10n $l10n The l10n instance
 	 *
@@ -392,22 +392,22 @@ class Page implements ArrayAccess
 	/**
 	 * Executes the creation of the current page and prints it to the screen
 	 *
-	 * @param App                         $app      The Friendica App
-	 * @param BaseURL                     $baseURL  The Friendica Base URL
-	 * @param Arguments                   $args     The Friendica App arguments
-	 * @param Mode                        $mode     The current node mode
-	 * @param ResponseInterface           $response The Response of the module class, including type, content & headers
-	 * @param L10n                        $l10n     The l10n language class
+	 * @param AppHelper                   $appHelper The Friendica App
+	 * @param BaseURL                     $baseURL   The Friendica Base URL
+	 * @param Arguments                   $args      The Friendica App arguments
+	 * @param Mode                        $mode      The current node mode
+	 * @param ResponseInterface           $response  The Response of the module class, including type, content & headers
+	 * @param L10n                        $l10n      The l10n language class
 	 * @param Profiler                    $profiler
-	 * @param IManageConfigValues         $config   The Configuration of this node
-	 * @param IManagePersonalConfigValues $pconfig  The personal/user configuration
+	 * @param IManageConfigValues         $config    The Configuration of this node
+	 * @param IManagePersonalConfigValues $pconfig   The personal/user configuration
 	 * @param Nav                         $nav
 	 * @param int                         $localUID
 	 * @throws HTTPException\MethodNotAllowedException
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws HTTPException\ServiceUnavailableException
 	 */
-	public function run(App $app, UserSession $session, BaseURL $baseURL, Arguments $args, Mode $mode, ResponseInterface $response, L10n $l10n, Profiler $profiler, IManageConfigValues $config, IManagePersonalConfigValues $pconfig, Nav $nav, int $localUID)
+	public function run(AppHelper $appHelper, UserSession $session, BaseURL $baseURL, Arguments $args, Mode $mode, ResponseInterface $response, L10n $l10n, Profiler $profiler, IManageConfigValues $config, IManagePersonalConfigValues $pconfig, Nav $nav, int $localUID)
 	{
 		$moduleName = $args->getModuleName();
 
@@ -423,7 +423,7 @@ class Page implements ArrayAccess
 		$this->initContent($response, $mode);
 
 		// Load current theme info after module has been initialized as theme could have been set in module
-		$currentTheme = $app->getCurrentTheme();
+		$currentTheme = $appHelper->getCurrentTheme();
 		$theme_info_file = 'view/theme/' . $currentTheme . '/theme.php';
 		if (file_exists($theme_info_file)) {
 			require_once $theme_info_file;
