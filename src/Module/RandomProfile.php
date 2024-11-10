@@ -18,13 +18,13 @@ class RandomProfile extends BaseModule
 {
 	protected function content(array $request = []): string
 	{
-		$a = DI::app();
+		$appHelper = DI::apphelper();
 
 		$contact = Contact::getRandomContact();
 
 		if (!empty($contact)) {
 			$link = Contact::magicLinkByContact($contact);
-			$a->redirect($link);
+			$appHelper->redirect($link);
 		}
 
 		DI::baseUrl()->redirect('profile');

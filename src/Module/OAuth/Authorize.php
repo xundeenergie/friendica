@@ -59,14 +59,14 @@ class Authorize extends BaseApi
 		$uid = DI::userSession()->getLocalUserId();
 		if (empty($uid)) {
 			Logger::info('Redirect to login');
-			DI::app()->redirect('login?' . http_build_query(['return_authorize' => $redirect]));
+			DI::apphelper()->redirect('login?' . http_build_query(['return_authorize' => $redirect]));
 		} else {
 			Logger::info('Already logged in user', ['uid' => $uid]);
 		}
 
 		if (!OAuth::existsTokenForUser($application, $uid) && !DI::session()->get('oauth_acknowledge')) {
 			Logger::info('Redirect to acknowledge');
-			DI::app()->redirect('oauth/acknowledge?' . http_build_query(['return_authorize' => $redirect, 'application' => $application['name']]));
+			DI::apphelper()->redirect('oauth/acknowledge?' . http_build_query(['return_authorize' => $redirect, 'application' => $application['name']]));
 		}
 
 		DI::session()->remove('oauth_acknowledge');
@@ -77,7 +77,7 @@ class Authorize extends BaseApi
 		}
 
 		if ($application['redirect_uri'] != 'urn:ietf:wg:oauth:2.0:oob') {
-			DI::app()->redirect($request['redirect_uri'] . (strpos($request['redirect_uri'], '?') ? '&' : '?') . http_build_query(['code' => $token['code'], 'state' => $request['state']]));
+			DI::apphelper()->redirect($request['redirect_uri'] . (strpos($request['redirect_uri'], '?') ? '&' : '?') . http_build_query(['code' => $token['code'], 'state' => $request['state']]));
 		}
 
 		self::$oauth_code = $token['code'];
