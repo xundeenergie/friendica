@@ -59,8 +59,8 @@ class Install extends BaseModule
 	 */
 	private $installer;
 
-	/** @var AppHelper */
-	protected $appHelper;
+	/** @var Cache */
+	protected $configCache;
 	/** @var Mode */
 	protected $mode;
 
@@ -68,9 +68,9 @@ class Install extends BaseModule
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
-		$this->appHelper = $appHelper;
-		$this->mode      = $mode;
-		$this->installer = $installer;
+		$this->configCache = $appHelper->getConfigCache();
+		$this->mode        = $mode;
+		$this->installer   = $installer;
 
 		if (!$this->mode->isInstall()) {
 			throw new HTTPException\ForbiddenException();
@@ -84,8 +84,7 @@ class Install extends BaseModule
 		}
 
 		// get basic installation information and save them to the config cache
-		$configCache = $this->appHelper->getConfigCache();
-		$this->installer->setUpCache($configCache, $basePath->getPath());
+		$this->installer->setUpCache($this->configCache, $basePath->getPath());
 
 		// We overwrite current theme css, because during install we may not have a working mod_rewrite
 		// so we may not have a css at all. Here we set a static css file for the install procedure pages
@@ -96,31 +95,29 @@ class Install extends BaseModule
 
 	protected function post(array $request = [])
 	{
-		$configCache = $this->appHelper->getConfigCache();
-
 		switch ($this->currentWizardStep) {
 			case self::SYSTEM_CHECK:
 			case self::BASE_CONFIG:
-				$this->checkSetting($configCache, $_POST, 'config', 'php_path');
+				$this->checkSetting($this->configCache, $_POST, 'config', 'php_path');
 				break;
 
 			case self::DATABASE_CONFIG:
-				$this->checkSetting($configCache, $_POST, 'config', 'php_path');
+				$this->checkSetting($this->configCache, $_POST, 'config', 'php_path');
 
-				$this->checkSetting($configCache, $_POST, 'system', 'basepath');
-				$this->checkSetting($configCache, $_POST, 'system', 'url');
+				$this->checkSetting($this->configCache, $_POST, 'system', 'basepath');
+				$this->checkSetting($this->configCache, $_POST, 'system', 'url');
 				break;
 
 			case self::SITE_SETTINGS:
-				$this->checkSetting($configCache, $_POST, 'config', 'php_path');
+				$this->checkSetting($this->configCache, $_POST, 'config', 'php_path');
 
-				$this->checkSetting($configCache, $_POST, 'system', 'basepath');
-				$this->checkSetting($configCache, $_POST, 'system', 'url');
+				$this->checkSetting($this->configCache, $_POST, 'system', 'basepath');
+				$this->checkSetting($this->configCache, $_POST, 'system', 'url');
 
-				$this->checkSetting($configCache, $_POST, 'database', 'hostname', Core\Installer::DEFAULT_HOST);
-				$this->checkSetting($configCache, $_POST, 'database', 'username', '');
-				$this->checkSetting($configCache, $_POST, 'database', 'password', '');
-				$this->checkSetting($configCache, $_POST, 'database', 'database', '');
+				$this->checkSetting($this->configCache, $_POST, 'database', 'hostname', Core\Installer::DEFAULT_HOST);
+				$this->checkSetting($this->configCache, $_POST, 'database', 'username', '');
+				$this->checkSetting($this->configCache, $_POST, 'database', 'password', '');
+				$this->checkSetting($this->configCache, $_POST, 'database', 'database', '');
 
 				// If we cannot connect to the database, return to the previous step
 				if (!$this->installer->checkDB(DI::dba())) {
@@ -130,19 +127,19 @@ class Install extends BaseModule
 				break;
 
 			case self::FINISHED:
-				$this->checkSetting($configCache, $_POST, 'config', 'php_path');
+				$this->checkSetting($this->configCache, $_POST, 'config', 'php_path');
 
-				$this->checkSetting($configCache, $_POST, 'system', 'basepath');
-				$this->checkSetting($configCache, $_POST, 'system', 'url');
+				$this->checkSetting($this->configCache, $_POST, 'system', 'basepath');
+				$this->checkSetting($this->configCache, $_POST, 'system', 'url');
 
-				$this->checkSetting($configCache, $_POST, 'database', 'hostname', Core\Installer::DEFAULT_HOST);
-				$this->checkSetting($configCache, $_POST, 'database', 'username', '');
-				$this->checkSetting($configCache, $_POST, 'database', 'password', '');
-				$this->checkSetting($configCache, $_POST, 'database', 'database', '');
+				$this->checkSetting($this->configCache, $_POST, 'database', 'hostname', Core\Installer::DEFAULT_HOST);
+				$this->checkSetting($this->configCache, $_POST, 'database', 'username', '');
+				$this->checkSetting($this->configCache, $_POST, 'database', 'password', '');
+				$this->checkSetting($this->configCache, $_POST, 'database', 'database', '');
 
-				$this->checkSetting($configCache, $_POST, 'system', 'default_timezone', Core\Installer::DEFAULT_TZ);
-				$this->checkSetting($configCache, $_POST, 'system', 'language', Core\Installer::DEFAULT_LANG);
-				$this->checkSetting($configCache, $_POST, 'config', 'admin_email', '');
+				$this->checkSetting($this->configCache, $_POST, 'system', 'default_timezone', Core\Installer::DEFAULT_TZ);
+				$this->checkSetting($this->configCache, $_POST, 'system', 'language', Core\Installer::DEFAULT_LANG);
+				$this->checkSetting($this->configCache, $_POST, 'config', 'admin_email', '');
 
 				// If we cannot connect to the database, return to the Database config wizard
 				if (!$this->installer->checkDB(DI::dba())) {
@@ -150,7 +147,7 @@ class Install extends BaseModule
 					return;
 				}
 
-				if (!$this->installer->createConfig($configCache)) {
+				if (!$this->installer->createConfig($this->configCache)) {
 					return;
 				}
 
@@ -172,15 +169,13 @@ class Install extends BaseModule
 
 	protected function content(array $request = []): string
 	{
-		$configCache = $this->appHelper->getConfigCache();
-
 		$output = '';
 
 		$install_title = $this->t('Friendica Communications Server - Setup');
 
 		switch ($this->currentWizardStep) {
 			case self::SYSTEM_CHECK:
-				$php_path = $configCache->get('config', 'php_path');
+				$php_path = $this->configCache->get('config', 'php_path');
 
 				$status = $this->installer->checkEnvironment($this->baseUrl, $php_path);
 
@@ -202,8 +197,8 @@ class Install extends BaseModule
 				break;
 
 			case self::BASE_CONFIG:
-				$baseUrl = $configCache->get('system', 'url') ?
-					new Uri($configCache->get('system', 'url')) :
+				$baseUrl = $this->configCache->get('system', 'url') ?
+					new Uri($this->configCache->get('system', 'url')) :
 					$this->baseUrl;
 
 				$tpl    = Renderer::getMarkupTemplate('install/02_base_config.tpl');
@@ -212,7 +207,7 @@ class Install extends BaseModule
 					'$pass'       => $this->t('Base settings'),
 					'$basepath'   => ['system-basepath',
 						$this->t("Base path to installation"),
-						$configCache->get('system', 'basepath'),
+						$this->configCache->get('system', 'basepath'),
 						$this->t("If the system cannot detect the correct path to your installation, enter the correct path here. This setting should only be set if you are using a restricted system and symbolic links to your webroot."),
 						$this->t('Required')],
 					'$system_url'    => ['system-url',
@@ -220,7 +215,7 @@ class Install extends BaseModule
 						(string)$baseUrl,
 						$this->t("Overwrite this field in case the system URL determination isn't right, otherwise leave it as is."),
 						$this->t('Required')],
-					'$php_path'   => $configCache->get('config', 'php_path'),
+					'$php_path'   => $this->configCache->get('config', 'php_path'),
 					'$submit'     => $this->t('Submit'),
 				]);
 				break;
@@ -236,31 +231,31 @@ class Install extends BaseModule
 					'$required'   => $this->t('Required'),
 					'$requirement_not_satisfied' => $this->t('Requirement not satisfied'),
 					'$checks'     => $this->installer->getChecks(),
-					'$basepath'   => $configCache->get('system', 'basepath'),
-					'$system_url' => $configCache->get('system', 'url'),
+					'$basepath'   => $this->configCache->get('system', 'basepath'),
+					'$system_url' => $this->configCache->get('system', 'url'),
 					'$dbhost'     => ['database-hostname',
 						$this->t('Database Server Name'),
-						$configCache->get('database', 'hostname'),
+						$this->configCache->get('database', 'hostname'),
 						'',
 						$this->t('Required')],
 					'$dbuser'     => ['database-username',
 						$this->t('Database Login Name'),
-						$configCache->get('database', 'username'),
+						$this->configCache->get('database', 'username'),
 						'',
 						$this->t('Required'),
 						'autofocus'],
 					'$dbpass'     => ['database-password',
 						$this->t('Database Login Password'),
-						$configCache->get('database', 'password'),
+						$this->configCache->get('database', 'password'),
 						$this->t("For security reasons the password must not be empty"),
 						$this->t('Required')],
 					'$dbdata'     => ['database-database',
 						$this->t('Database Name'),
-						$configCache->get('database', 'database'),
+						$this->configCache->get('database', 'database'),
 						'',
 						$this->t('Required')],
 					'$lbl_10'     => $this->t('Please select a default timezone for your website'),
-					'$php_path'   => $configCache->get('config', 'php_path'),
+					'$php_path'   => $this->configCache->get('config', 'php_path'),
 					'$submit'     => $this->t('Submit')
 				]);
 				break;
@@ -275,27 +270,27 @@ class Install extends BaseModule
 					'$required'   => $this->t('Required'),
 					'$checks'     => $this->installer->getChecks(),
 					'$pass'       => $this->t('Site settings'),
-					'$basepath'   => $configCache->get('system', 'basepath'),
-					'$system_url' => $configCache->get('system', 'url'),
-					'$dbhost'     => $configCache->get('database', 'hostname'),
-					'$dbuser'     => $configCache->get('database', 'username'),
-					'$dbpass'     => $configCache->get('database', 'password'),
-					'$dbdata'     => $configCache->get('database', 'database'),
+					'$basepath'   => $this->configCache->get('system', 'basepath'),
+					'$system_url' => $this->configCache->get('system', 'url'),
+					'$dbhost'     => $this->configCache->get('database', 'hostname'),
+					'$dbuser'     => $this->configCache->get('database', 'username'),
+					'$dbpass'     => $this->configCache->get('database', 'password'),
+					'$dbdata'     => $this->configCache->get('database', 'database'),
 					'$adminmail'  => ['config-admin_email',
 						$this->t('Site administrator email address'),
-						$configCache->get('config', 'admin_email'),
+						$this->configCache->get('config', 'admin_email'),
 						$this->t('Your account email address must match this in order to use the web admin panel.'),
 						$this->t('Required'), 'autofocus', 'email'],
 					'$timezone'   => Temporal::getTimezoneField('system-default_timezone',
 						$this->t('Please select a default timezone for your website'),
-						$configCache->get('system', 'default_timezone'),
+						$this->configCache->get('system', 'default_timezone'),
 						''),
 					'$language'   => ['system-language',
 						$this->t('System Language:'),
-						$configCache->get('system', 'language'),
+						$this->configCache->get('system', 'language'),
 						$this->t('Set the default language for your Friendica installation interface and to send emails.'),
 						$lang_choices],
-					'$php_path'   => $configCache->get('config', 'php_path'),
+					'$php_path'   => $this->configCache->get('config', 'php_path'),
 					'$submit'     => $this->t('Submit')
 				]);
 				break;
