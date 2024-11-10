@@ -8,6 +8,7 @@
  */
 
 use Friendica\App;
+use Friendica\Content\ContactSelector;
 use Friendica\Core\Renderer;
 use Friendica\DI;
 
@@ -19,6 +20,8 @@ function theme_post(App $a)
 	if (!DI::userSession()->getLocalUserId()) {
 		return;
 	}
+
+	$previous_scheme = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'frio', 'scheme');
 
 	if (isset($_POST['frio-settings-submit'])) {
 		foreach ([
@@ -40,8 +43,22 @@ function theme_post(App $a)
 			}
 
 		}
-
 		DI::pConfig()->set(DI::userSession()->getLocalUserId(), 'frio', 'css_modified',     time());
+
+		$current_scheme = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'frio', 'scheme');
+
+		if ($previous_scheme != $current_scheme) {
+			$icon_style = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'accessibility', 'platform_icon_style');
+			if (in_array($current_scheme, ['dark', 'black']) && in_array($icon_style, [ContactSelector::SVG_BLACK])) {
+				DI::pConfig()->set(DI::userSession()->getLocalUserId(), 'accessibility', 'platform_icon_style', ContactSelector::SVG_WHITE);
+			} elseif (in_array($current_scheme, ['dark', 'black']) && in_array($icon_style, [ContactSelector::SVG_COLOR_BLACK])) {
+				DI::pConfig()->set(DI::userSession()->getLocalUserId(), 'accessibility', 'platform_icon_style', ContactSelector::SVG_COLOR_WHITE);
+			} elseif (in_array($current_scheme, ['light']) && in_array($icon_style, [ContactSelector::SVG_WHITE])) {
+				DI::pConfig()->set(DI::userSession()->getLocalUserId(), 'accessibility', 'platform_icon_style', ContactSelector::SVG_BLACK);
+			} elseif (in_array($current_scheme, ['light']) && in_array($icon_style, [ContactSelector::SVG_COLOR_WHITE])) {
+				DI::pConfig()->set(DI::userSession()->getLocalUserId(), 'accessibility', 'platform_icon_style', ContactSelector::SVG_COLOR_BLACK);
+			}
+		}
 	}
 }
 
