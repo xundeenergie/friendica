@@ -161,6 +161,7 @@
 		"phpstan": "phpstan analyze --memory-limit 1024M --configuration .phpstan.neon",
 		"lint": "find . -name \\*.php -not -path './vendor/*' -not -path './view/asset/*' -print0 | xargs -0 -n1 php -l",
 		"docker:translate": "docker run --rm -v $PWD:/data -w /data friendicaci/transifex bin/run_xgettext.sh",
+		"lang:recreate": "bin/run_xgettext.sh",
 		"cs:install": "@composer install --working-dir=bin/dev/php-cs-fixer",
 		"cs:check": [
 			"@cs:install",
