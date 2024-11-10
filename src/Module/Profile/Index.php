@@ -57,12 +57,12 @@ class Index extends BaseModule
 	/** @var Mode */
 	private $mode;
 
-	public function __construct(Mode $mode, IManagePersonalConfigValues $pConfig, Conversation $conversation, DateTimeFormat $dateTimeFormat, ProfileField $profileField, Page $page, IManageConfigValues $config, IHandleUserSessions $session, AppHelper $app, Database $database, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(Mode $mode, IManagePersonalConfigValues $pConfig, Conversation $conversation, DateTimeFormat $dateTimeFormat, ProfileField $profileField, Page $page, IManageConfigValues $config, IHandleUserSessions $session, AppHelper $appHelper, Database $database, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
 		$this->database       = $database;
-		$this->app            = $app;
+		$this->appHelper      = $appHelper;
 		$this->session        = $session;
 		$this->config         = $config;
 		$this->page           = $page;
