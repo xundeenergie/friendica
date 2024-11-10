@@ -9,14 +9,14 @@
  *
  */
 
-use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\Core\System;
 use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Model\Post;
 use Friendica\Model\Contact;
 
-function update_contact_content(App $a)
+function update_contact_content(AppHelper $appHelper)
 {
 	if (!empty(DI::args()->get(1)) && !empty($_GET['force'])) {
 		$contact = DBA::selectFirst('account-user-view', ['pid', 'deleted'], ['id' => DI::args()->get(1)]);
