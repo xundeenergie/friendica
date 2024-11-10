@@ -7,10 +7,11 @@
 
 namespace Friendica\Console;
 
-use Friendica\App;
+use Friendica\App\Mode;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
 use Friendica\Core\L10n;
 use Friendica\Core\Update;
+use Friendica\DI;
 
 /**
  * Performs database post updates
@@ -20,7 +21,7 @@ class PostUpdate extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var App\Mode
+	 * @var Mode
 	 */
 	private $appMode;
 	/**
@@ -31,6 +32,10 @@ class PostUpdate extends \Asika\SimpleConsole\Console
 	 * @var L10n
 	 */
 	private $l10n;
+	/**
+	 * @var string
+	 */
+	private $basePath;
 
 	protected function getHelp()
 	{
@@ -46,19 +51,18 @@ HELP;
 		return $help;
 	}
 
-	public function __construct(App\Mode $appMode, IManageKeyValuePairs $keyValue, L10n $l10n, array $argv = null)
+	public function __construct(Mode $appMode, IManageKeyValuePairs $keyValue, L10n $l10n, array $argv = null)
 	{
 		parent::__construct($argv);
 
 		$this->appMode  = $appMode;
 		$this->keyValue = $keyValue;
 		$this->l10n     = $l10n;
+		$this->basePath = DI::apphelper()->getBasePath();
 	}
 
 	protected function doExecute(): int
 	{
-		$a = \Friendica\DI::app();
-
 		if ($this->getOption($this->helpOptions)) {
 			$this->out($this->getHelp());
 			return 0;
@@ -79,7 +83,7 @@ HELP;
 		}
 
 		echo $this->l10n->t('Check for pending update actions.') . "\n";
-		Update::run($a->getBasePath(), true, false, true, false);
+		Update::run($this->basePath, true, false, true, false);
 		echo $this->l10n->t('Done.') . "\n";
 
 		echo $this->l10n->t('Execute pending post updates.') . "\n";

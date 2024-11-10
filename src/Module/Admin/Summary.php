@@ -29,7 +29,7 @@ class Summary extends BaseAdmin
 	{
 		parent::content();
 
-		$a = DI::app();
+		$basePath = DI::apphelper()->getBasePath();
 
 		// are there MyISAM tables in the DB? If so, trigger a warning message
 		$warningtext = [];
@@ -120,7 +120,7 @@ class Summary extends BaseAdmin
 		}
 
 		// check legacy basepath settings
-		$configLoader = (new Config())->createConfigFileManager($a->getBasePath(), $_SERVER);
+		$configLoader = (new Config())->createConfigFileManager($basePath, $_SERVER);
 		$configCache = new Cache();
 		$configLoader->setupCache($configCache);
 		$confBasepath = $configCache->get('system', 'basepath');

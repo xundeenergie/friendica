@@ -19,7 +19,7 @@ class DBUpdate
 	{
 		// Just in case the last update wasn't failed
 		if (DI::config()->get('system', 'update', Update::SUCCESS) != Update::FAILED) {
-			Update::run(DI::app()->getBasePath());
+			Update::run(DI::apphelper()->getBasePath());
 		}
 	}
 }

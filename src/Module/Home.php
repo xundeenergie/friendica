@@ -32,7 +32,7 @@ class Home extends BaseModule
 
 	protected function content(array $request = []): string
 	{
-		$app = DI::app();
+		$basePath = DI::apphelper()->getBasePath();
 		$config = DI::config();
 
 		// currently no returned data is used
@@ -51,8 +51,8 @@ class Home extends BaseModule
 		$customHome = '';
 		$defaultHeader = ($config->get('config', 'sitename') ? DI::l10n()->t('Welcome to %s', $config->get('config', 'sitename')) : '');
 
-		$homeFilePath = $app->getBasePath() . '/home.html';
-		$cssFilePath = $app->getBasePath() . '/home.css';
+		$homeFilePath = $basePath . '/home.html';
+		$cssFilePath = $basePath . '/home.css';
 
 		if (file_exists($homeFilePath)) {
 			$customHome = $homeFilePath;
