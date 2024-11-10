@@ -7,15 +7,14 @@
 
 namespace Friendica\Module\Calendar\Event;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
-use Friendica\Content\Feature;
 use Friendica\Core\L10n;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
-use Friendica\Core\System;
 use Friendica\Model\Event;
-use Friendica\Model\User;
 use Friendica\Module\Response;
 use Friendica\Network\HTTPException;
 use Friendica\Util\Profiler;
@@ -28,15 +27,15 @@ class Show extends BaseModule
 {
 	/** @var IHandleUserSessions */
 	protected $session;
-	/** @var App */
-	private $app;
+	/** @var AppHelper */
+	protected $appHelper;
 
-	public function __construct(App $app, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IHandleUserSessions $session, array $server, array $parameters = [])
+	public function __construct(AppHelper $appHelper, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IHandleUserSessions $session, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
-		$this->session = $session;
-		$this->app     = $app;
+		$this->session   = $session;
+		$this->appHelper = $appHelper;
 	}
 
 	protected function rawContent(array $request = [])

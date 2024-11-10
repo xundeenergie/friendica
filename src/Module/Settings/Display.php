@@ -7,7 +7,10 @@
 
 namespace Friendica\Module\Settings;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\App\Page;
+use Friendica\AppHelper;
 use Friendica\Content\Conversation\Collection\Timelines;
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Conversation\Factory\Channel as ChannelFactory;
@@ -39,8 +42,8 @@ class Display extends BaseSettings
 	private $config;
 	/** @var IManagePersonalConfigValues */
 	private $pConfig;
-	/** @var App */
-	private $app;
+	/** @var AppHelper */
+	private $appHelper;
 	/** @var SystemMessages */
 	private $systemMessages;
 	/** @var ChannelFactory */
@@ -54,13 +57,13 @@ class Display extends BaseSettings
 	/** @var TimelineFactory */
 	protected $timeline;
 
-	public function __construct(Repository\UserDefinedChannel $userDefinedChannel, NetworkFactory $network, CommunityFactory $community, ChannelFactory $channel, TimelineFactory $timeline, SystemMessages $systemMessages, App $app, IManagePersonalConfigValues $pConfig, IManageConfigValues $config, IHandleUserSessions $session, App\Page $page, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(Repository\UserDefinedChannel $userDefinedChannel, NetworkFactory $network, CommunityFactory $community, ChannelFactory $channel, TimelineFactory $timeline, SystemMessages $systemMessages, AppHelper $appHelper, IManagePersonalConfigValues $pConfig, IManageConfigValues $config, IHandleUserSessions $session, Page $page, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($session, $page, $l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
 		$this->config             = $config;
 		$this->pConfig            = $pConfig;
-		$this->app                = $app;
+		$this->appHelper          = $appHelper;
 		$this->systemMessages     = $systemMessages;
 		$this->timeline           = $timeline;
 		$this->channel            = $channel;
@@ -160,7 +163,7 @@ class Display extends BaseSettings
 				// call theme_post only if theme has not been changed
 				if ($themeconfigfile = Theme::getConfigFile($theme)) {
 					require_once $themeconfigfile;
-					theme_post($this->app);
+					theme_post($this->appHelper);
 				}
 			} else {
 				User::update(['theme' => $theme], $uid);
@@ -286,7 +289,7 @@ class Display extends BaseSettings
 		$theme_config = '';
 		if ($themeconfigfile = Theme::getConfigFile($theme_selected)) {
 			require_once $themeconfigfile;
-			$theme_config = theme_content($this->app);
+			$theme_config = theme_content($this->appHelper);
 		}
 
 		$tpl = Renderer::getMarkupTemplate('settings/display.tpl');

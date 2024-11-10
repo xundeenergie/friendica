@@ -7,7 +7,9 @@
 
 namespace Friendica\Module\Api\Mastodon;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\Core\L10n;
 use Friendica\Factory\Api\Mastodon\Error;
 use Friendica\Factory\Api\Mastodon\Subscription as SubscriptionFactory;
@@ -26,9 +28,9 @@ class PushSubscription extends BaseApi
 	/** @var SubscriptionFactory */
 	protected $subscriptionFac;
 
-	public function __construct(\Friendica\Factory\Api\Mastodon\Error $errorFactory, App $app, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, ApiResponse $response, SubscriptionFactory $subscriptionFac, array $server, array $parameters = [])
+	public function __construct(Error $errorFactory, AppHelper $appHelper, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, ApiResponse $response, SubscriptionFactory $subscriptionFac, array $server, array $parameters = [])
 	{
-		parent::__construct($errorFactory, $app, $l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
+		parent::__construct($errorFactory, $appHelper, $l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
 		$this->subscriptionFac = $subscriptionFac;
 	}

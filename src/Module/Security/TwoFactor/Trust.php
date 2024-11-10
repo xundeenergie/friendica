@@ -7,7 +7,9 @@
 
 namespace Friendica\Module\Security\TwoFactor;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Core\L10n;
 use Friendica\Core\Renderer;
@@ -33,8 +35,8 @@ use Psr\Log\LoggerInterface;
  */
 class Trust extends BaseModule
 {
-	/** @var App  */
-	protected $app;
+	/** @var AppHelper */
+	protected $appHelper;
 	/** @var Authentication  */
 	protected $auth;
 	/** @var IHandleUserSessions  */
@@ -46,11 +48,11 @@ class Trust extends BaseModule
 	/** @var TwoFactor\Repository\TrustedBrowser  */
 	protected $trustedBrowserRepository;
 
-	public function __construct(App $app, Authentication $auth, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, IHandleUserSessions $session, Cookie $cookie, TwoFactor\Factory\TrustedBrowser $trustedBrowserFactory, TwoFactor\Repository\TrustedBrowser $trustedBrowserRepository, Response $response, array $server, array $parameters = [])
+	public function __construct(AppHelper $appHelper, Authentication $auth, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, IHandleUserSessions $session, Cookie $cookie, TwoFactor\Factory\TrustedBrowser $trustedBrowserFactory, TwoFactor\Repository\TrustedBrowser $trustedBrowserRepository, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
-		$this->app                      = $app;
+		$this->appHelper                = $appHelper;
 		$this->auth                     = $auth;
 		$this->session                  = $session;
 		$this->cookie                   = $cookie;

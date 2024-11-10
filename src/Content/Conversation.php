@@ -7,9 +7,11 @@
 
 namespace Friendica\Content;
 
-use Friendica\App;
 use Friendica\App\Arguments;
 use Friendica\App\BaseURL;
+use Friendica\App\Mode;
+use Friendica\App\Page;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Core\ACL;
 use Friendica\Core\Config\Capability\IManageConfigValues;
@@ -32,8 +34,7 @@ use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Object\Post as PostObject;
 use Friendica\Object\Thread;
 use Friendica\Protocol\Activity;
-use Friendica\User\Settings\Entity\UserGServer;
-use Friendica\User\Settings\Repository;
+use Friendica\User\Settings\Repository\UserGServer;
 use Friendica\Util\Crypto;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Profiler;
@@ -64,7 +65,7 @@ class Conversation
 	private $logger;
 	/** @var Item */
 	private $item;
-	/** @var App\Arguments */
+	/** @var Arguments */
 	private $args;
 	/** @var IManagePersonalConfigValues */
 	private $pConfig;
@@ -72,18 +73,18 @@ class Conversation
 	private $baseURL;
 	/** @var IManageConfigValues */
 	private $config;
-	/** @var App */
-	private $app;
-	/** @var App\Page */
+	/** @var AppHelper */
+	private $appHelper;
+	/** @var Page */
 	private $page;
-	/** @var App\Mode */
+	/** @var Mode */
 	private $mode;
 	/** @var IHandleUserSessions */
 	private $session;
-	/** @var Repository\UserGServer */
+	/** @var UserGServer */
 	private $userGServer;
 
-	public function __construct(Repository\UserGServer $userGServer, LoggerInterface $logger, Profiler $profiler, Activity $activity, L10n $l10n, Item $item, Arguments $args, BaseURL $baseURL, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, App\Page $page, App\Mode $mode, App $app, IHandleUserSessions $session)
+	public function __construct(UserGServer $userGServer, LoggerInterface $logger, Profiler $profiler, Activity $activity, L10n $l10n, Item $item, Arguments $args, BaseURL $baseURL, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, Page $page, Mode $mode, AppHelper $appHelper, IHandleUserSessions $session)
 	{
 		$this->activity    = $activity;
 		$this->item        = $item;
@@ -96,7 +97,7 @@ class Conversation
 		$this->args        = $args;
 		$this->pConfig     = $pConfig;
 		$this->page        = $page;
-		$this->app         = $app;
+		$this->appHelper   = $appHelper;
 		$this->session     = $session;
 		$this->userGServer = $userGServer;
 	}
@@ -1017,7 +1018,7 @@ class Conversation
 			$emojis[$count['uri-id']][$count['reaction']]['title'] = [];
 		}
 
-		// @todo The following code should be removed, once that we display activity authors on demand 
+		// @todo The following code should be removed, once that we display activity authors on demand
 		$activity_verbs = [
 			Activity::LIKE,
 			Activity::DISLIKE,

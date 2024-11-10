@@ -7,7 +7,9 @@
 
 namespace Friendica\Module\Profile;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Core\L10n;
 use Friendica\Core\Renderer;
@@ -19,19 +21,19 @@ use Psr\Log\LoggerInterface;
 
 class Restricted extends BaseModule
 {
-	/** @var App */
-	private $app;
+	/** @var AppHelper */
+	private $appHelper;
 
-	public function __construct(App $app, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(AppHelper $appHelper, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
-		$this->app = $app;
+		$this->appHelper = $appHelper;
 	}
 
 	protected function content(array $request = []): string
 	{
-		$profile = Profile::load($this->app, $this->parameters['nickname'] ?? '', false);
+		$profile = Profile::load($this->appHelper, $this->parameters['nickname'] ?? '', false);
 		if (!$profile) {
 			throw new HTTPException\NotFoundException($this->t('Profile not found.'));
 		}

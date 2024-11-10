@@ -7,7 +7,9 @@
 
 namespace Friendica\Module\Security\TwoFactor;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Core\L10n;
 use Friendica\Core\Renderer;
@@ -29,18 +31,18 @@ class Recovery extends BaseModule
 {
 	/** @var IHandleUserSessions */
 	protected $session;
-	/** @var App */
-	protected $app;
+	/** @var AppHelper */
+	protected $appHelper;
 	/** @var Authentication */
 	protected $auth;
 
-	public function __construct(App $app, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, Authentication $auth, IHandleUserSessions $session, array $server, array $parameters = [])
+	public function __construct(AppHelper $appHelper, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, Authentication $auth, IHandleUserSessions $session, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
-		$this->app     = $app;
-		$this->auth    = $auth;
-		$this->session = $session;
+		$this->appHelper = $appHelper;
+		$this->auth      = $auth;
+		$this->session   = $session;
 	}
 
 	protected function post(array $request = [])

@@ -7,16 +7,16 @@
 
 namespace Friendica\Module\Calendar;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Content\Feature;
 use Friendica\Core\L10n;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Model\Event;
 use Friendica\Model\Profile;
-use Friendica\Model\User;
 use Friendica\Module\Response;
-use Friendica\Module\Security\Login;
 use Friendica\Navigation\SystemMessages;
 use Friendica\Network\HTTPException;
 use Friendica\Util\Profiler;
@@ -36,16 +36,16 @@ class Export extends BaseModule
 	protected $session;
 	/** @var SystemMessages */
 	protected $sysMessages;
-	/** @var App */
-	protected $app;
+	/** @var AppHelper */
+	protected $appHelper;
 
-	public function __construct(App $app, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IHandleUserSessions $session, SystemMessages $sysMessages, array $server, array $parameters = [])
+	public function __construct(AppHelper $appHelper, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IHandleUserSessions $session, SystemMessages $sysMessages, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
 		$this->session     = $session;
 		$this->sysMessages = $sysMessages;
-		$this->app         = $app;
+		$this->appHelper   = $appHelper;
 	}
 
 	protected function rawContent(array $request = [])
@@ -55,7 +55,7 @@ class Export extends BaseModule
 			throw new HTTPException\BadRequestException();
 		}
 
-		$owner = Profile::load($this->app, $nickname, false);
+		$owner = Profile::load($this->appHelper, $nickname, false);
 		if (!$owner || $owner['account_expired'] || $owner['account_removed']) {
 			throw new HTTPException\NotFoundException($this->t('User not found.'));
 		}

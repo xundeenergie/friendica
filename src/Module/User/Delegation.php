@@ -7,7 +7,9 @@
 
 namespace Friendica\Module\User;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Contact\Introduction\Repository\Introduction;
 use Friendica\Core\Hook;
@@ -42,10 +44,10 @@ class Delegation extends BaseModule
 	private $notify;
 	/** @var Introduction */
 	private $intro;
-	/** @var App */
-	private $app;
+	/** @var AppHelper */
+	private $appHelper;
 
-	public function __construct(App $app, Introduction $intro, Notify $notify, SystemMessages $systemMessages, Authentication $auth, Database $db, IHandleUserSessions $session, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Util\Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(AppHelper $appHelper, Introduction $intro, Notify $notify, SystemMessages $systemMessages, Authentication $auth, Database $db, IHandleUserSessions $session, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Util\Profiler $profiler, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
@@ -55,7 +57,7 @@ class Delegation extends BaseModule
 		$this->systemMessages = $systemMessages;
 		$this->notify         = $notify;
 		$this->intro          = $intro;
-		$this->app            = $app;
+		$this->appHelper      = $appHelper;
 	}
 
 	protected function post(array $request = [])

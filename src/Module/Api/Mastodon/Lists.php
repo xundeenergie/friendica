@@ -7,7 +7,9 @@
 
 namespace Friendica\Module\Api\Mastodon;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\Core\L10n;
 use Friendica\DI;
 use Friendica\Content\Conversation\Factory\Channel as ChannelFactory;
@@ -29,9 +31,9 @@ class Lists extends BaseApi
 	/** @var Repository\UserDefinedChannel */
 	protected $userDefinedChannel;
 
-	public function __construct(Repository\UserDefinedChannel $userDefinedChannel, ChannelFactory $channel, \Friendica\Factory\Api\Mastodon\Error $errorFactory, App $app, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, ApiResponse $response, array $server, array $parameters = [])
+	public function __construct(Repository\UserDefinedChannel $userDefinedChannel, ChannelFactory $channel, \Friendica\Factory\Api\Mastodon\Error $errorFactory, AppHelper $appHelper, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, ApiResponse $response, array $server, array $parameters = [])
 	{
-		parent::__construct($errorFactory, $app, $l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
+		parent::__construct($errorFactory, $appHelper, $l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
 		$this->channel            = $channel;
 		$this->userDefinedChannel = $userDefinedChannel;

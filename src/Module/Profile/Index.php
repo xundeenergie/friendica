@@ -7,7 +7,11 @@
 
 namespace Friendica\Module\Profile;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\App\Mode;
+use Friendica\App\Page;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Content\Conversation;
 use Friendica\Core\Config\Capability\IManageConfigValues;
@@ -34,13 +38,13 @@ class Index extends BaseModule
 {
 	/** @var Database */
 	private $database;
-	/** @var App */
-	private $app;
+	/** @var AppHelper */
+	protected $appHelper;
 	/** @var IHandleUserSessions */
 	private $session;
 	/** @var IManageConfigValues */
 	private $config;
-	/** @var App\Page */
+	/** @var Page */
 	private $page;
 	/** @var ProfileField */
 	private $profileField;
@@ -50,10 +54,10 @@ class Index extends BaseModule
 	private $conversation;
 	/** @var IManagePersonalConfigValues */
 	private $pConfig;
-	/** @var App\Mode */
+	/** @var Mode */
 	private $mode;
 
-	public function __construct(App\Mode $mode, IManagePersonalConfigValues $pConfig, Conversation $conversation, DateTimeFormat $dateTimeFormat, ProfileField $profileField, App\Page $page, IManageConfigValues $config, IHandleUserSessions $session, App $app, Database $database, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(Mode $mode, IManagePersonalConfigValues $pConfig, Conversation $conversation, DateTimeFormat $dateTimeFormat, ProfileField $profileField, Page $page, IManageConfigValues $config, IHandleUserSessions $session, AppHelper $app, Database $database, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
@@ -71,11 +75,11 @@ class Index extends BaseModule
 
 	protected function rawContent(array $request = [])
 	{
-		(new Profile($this->profileField, $this->page, $this->config, $this->session, $this->app, $this->database, $this->l10n, $this->baseUrl, $this->args, $this->logger, $this->profiler, $this->response, $this->server, $this->parameters))->rawContent();
+		(new Profile($this->profileField, $this->page, $this->config, $this->session, $this->appHelper, $this->database, $this->l10n, $this->baseUrl, $this->args, $this->logger, $this->profiler, $this->response, $this->server, $this->parameters))->rawContent();
 	}
 
 	protected function content(array $request = []): string
 	{
-		return (new Conversations($this->mode, $this->pConfig, $this->conversation, $this->session, $this->config, $this->dateTimeFormat, $this->page, $this->app, $this->l10n, $this->baseUrl, $this->args, $this->logger, $this->profiler, $this->response, $this->server, $this->parameters))->content();
+		return (new Conversations($this->mode, $this->pConfig, $this->conversation, $this->session, $this->config, $this->dateTimeFormat, $this->page, $this->appHelper, $this->l10n, $this->baseUrl, $this->args, $this->logger, $this->profiler, $this->response, $this->server, $this->parameters))->content();
 	}
 }

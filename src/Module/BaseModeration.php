@@ -7,7 +7,10 @@
 
 namespace Friendica\Module;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\App\Page;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Core\L10n;
 use Friendica\Core\Renderer;
@@ -33,18 +36,18 @@ abstract class BaseModeration extends BaseModule
 	protected $session;
 	/** @var SystemMessages */
 	protected $systemMessages;
-	/** @var App */
-	protected $app;
-	/** @var App\Page */
+	/** @var AppHelper */
+	protected $appHelper;
+	/** @var Page */
 	protected $page;
 
-	public function __construct(App\Page $page, App $app, SystemMessages $systemMessages, IHandleUserSessions $session, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(Page $page, AppHelper $appHelper, SystemMessages $systemMessages, IHandleUserSessions $session, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
 		$this->session        = $session;
 		$this->systemMessages = $systemMessages;
-		$this->app            = $app;
+		$this->appHelper      = $appHelper;
 		$this->page           = $page;
 	}
 
