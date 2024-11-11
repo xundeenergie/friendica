@@ -235,7 +235,7 @@ class ContactSelector
 				'glitch-soc', 'gnusocial', 'gotosocial', 'guppe', 'hollo', 'hubzilla', 'iceshrimp', 'kbin',
 				'lemmy', 'loforo', 'loops', 'mastodon', 'mbin', 'microblog', 'minds', 'misskey', 'mobilizon',
 				'nextcloud', 'owncast', 'peertube', 'phanpy', 'pixelfed', 'pleroma', 'plume', 'rss', 'shark',
-				'soapbox', 'socialhome', 'streams', 'takahē', 'threads', 'wordpress', 'write.as',
+				'soapbox', 'socialhome', 'streams', 'takahē', 'threads', 'tumblr', 'wordpress', 'write.as',
 				'writefreely', 'xwiki', 'zap'];
 		}
 
