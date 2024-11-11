@@ -228,7 +228,7 @@ class ContactSelector
 			'takahē', 'takesama', 'threads', 'tumblr', 'vernissage', 'vervis', 'vidzy', 'vocata', 'wafrn',
 			'wildebeest', 'wordpress', 'write.as', 'writefreely', 'wxwclub', 'xwiki', 'zap'];
 
-		if ($platform_icon_style == self::SVG_WHITE) {
+		if (in_array($platform_icon_style,[self::SVG_WHITE, self::SVG_COLOR_WHITE])) {
 			$svg = ['activitypub', 'akkoma', 'andstatus', 'bluesky', 'bonfire', 'bookwyrm', 'bridgy_fed',
 				'calckey', 'castopod', 'diaspora', 'discourse', 'dolphin', 'drupal', 'email', 'firefish',
 				'flipboard', 'flohmarkt', 'forgejo', 'friendica', 'funkwhale', 'ghost', 'gitlab',
