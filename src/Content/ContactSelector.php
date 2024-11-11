@@ -18,6 +18,7 @@ use Friendica\Util\Strings;
  */
 class ContactSelector
 {
+	const SVG_DISABLED    = -1;
 	const SVG_COLOR_BLACK = 0;
 	const SVG_BLACK       = 1;
 	const SVG_COLOR_WHITE = 2;
@@ -182,6 +183,10 @@ class ContactSelector
 	public static function networkToSVG(string $network, int $gsid = null, string $platform = '', int $uid = 0): string
 	{
 		$platform_icon_style = $uid ? (DI::pConfig()->get($uid, 'accessibility', 'platform_icon_style') ?? self::SVG_COLOR_BLACK) : self::SVG_COLOR_BLACK;
+
+		if ($platform_icon_style == self::SVG_DISABLED) {
+			return '';
+		}
 
 		$nets = [
 			Protocol::ACTIVITYPUB => 'activitypub', // https://commons.wikimedia.org/wiki/File:ActivityPub-logo-symbol.svg
