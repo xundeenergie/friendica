@@ -253,6 +253,7 @@ class Display extends BaseSettings
 		$hide_custom_emojis      =  $this->pConfig->get($uid, 'accessibility', 'hide_custom_emojis', false);
 		$platform_icon_style     =  $this->pConfig->get($uid, 'accessibility', 'platform_icon_style', ContactSelector::SVG_COLOR_BLACK);
 		$platform_icon_styles = [
+			ContactSelector::SVG_DISABLED    => $this->t('Disabled'),
 			ContactSelector::SVG_COLOR_BLACK => $this->t('Color/Black'),
 			ContactSelector::SVG_BLACK       => $this->t('Black'),
 			ContactSelector::SVG_COLOR_WHITE => $this->t('Color/White'),
