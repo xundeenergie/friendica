@@ -8,8 +8,7 @@
 namespace Friendica\Console;
 
 use Console_Table;
-use Friendica\App;
-use Friendica\Content\Pager;
+use Friendica\App\Mode;
 use Friendica\Core\L10n;
 use Friendica\Core\Addon as AddonCore;
 use Friendica\Database\Database;
@@ -24,7 +23,7 @@ class Addon extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var App\Mode
+	 * @var Mode
 	 */
 	private $appMode;
 	/**
@@ -57,7 +56,7 @@ HELP;
 		return $help;
 	}
 
-	public function __construct(App\Mode $appMode, L10n $l10n, Database $dba, array $argv = null)
+	public function __construct(Mode $appMode, L10n $l10n, Database $dba, array $argv = null)
 	{
 		parent::__construct($argv);
 

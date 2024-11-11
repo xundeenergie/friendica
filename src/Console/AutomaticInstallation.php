@@ -9,8 +9,7 @@ namespace Friendica\Console;
 
 use Asika\SimpleConsole\Console;
 use Exception;
-use Friendica\App;
-use Friendica\App\BaseURL;
+use Friendica\App\Mode;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Core\Installer;
@@ -21,7 +20,7 @@ use RuntimeException;
 
 class AutomaticInstallation extends Console
 {
-	/** @var App\Mode */
+	/** @var Mode */
 	private $appMode;
 	/** @var \Friendica\Core\Config\ValueObject\Cache */
 	private $configCache;
@@ -87,7 +86,7 @@ Examples
 HELP;
 	}
 
-	public function __construct(App\Mode $appMode, Cache $configCache, IManageConfigValues $config, Database $dba, array $argv = null)
+	public function __construct(Mode $appMode, Cache $configCache, IManageConfigValues $config, Database $dba, array $argv = null)
 	{
 		parent::__construct($argv);
 

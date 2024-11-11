@@ -7,7 +7,6 @@
 
 namespace Friendica\Core;
 
-use Friendica\App;
 use Friendica\App\Mode;
 use Friendica\Database\DBA;
 use Friendica\Database\DBStructure;
@@ -29,7 +28,6 @@ class Update
 	 *
 	 * @param string   $basePath   The base path of this application
 	 * @param boolean  $via_worker Is the check run via the worker?
-	 * @param App\Mode $mode       The current app mode
 	 * @return void
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */

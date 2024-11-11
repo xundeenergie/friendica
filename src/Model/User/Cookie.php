@@ -7,7 +7,8 @@
 
 namespace Friendica\Model\User;
 
-use Friendica\App;
+use Friendica\App\BaseURL;
+use Friendica\App\Request;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 
 /**
@@ -38,12 +39,12 @@ class Cookie
 	private $data;
 
 	/**
-	 * @param App\Request         $request The current http request
+	 * @param Request             $request The current http request
 	 * @param IManageConfigValues $config
-	 * @param App\BaseURL         $baseURL
+	 * @param BaseURL             $baseURL
 	 * @param array               $COOKIE The $_COOKIE array
 	 */
-	public function __construct(App\Request $request, IManageConfigValues $config, App\BaseURL $baseURL, array $COOKIE = [])
+	public function __construct(Request $request, IManageConfigValues $config, BaseURL $baseURL, array $COOKIE = [])
 	{
 		$this->sslEnabled     = $baseURL->getScheme() === 'https';
 		$this->sitePrivateKey = $config->get('system', 'site_prvkey');

@@ -7,7 +7,8 @@
 
 namespace Friendica\Core\Session\Factory;
 
-use Friendica\App;
+use Friendica\App\BaseURL;
+use Friendica\App\Mode;
 use Friendica\Core\Cache\Factory\Cache;
 use Friendica\Core\Cache\Type\DatabaseCache;
 use Friendica\Core\Config\Capability\IManageConfigValues;
@@ -33,8 +34,8 @@ class Session
 	const HANDLER_DEFAULT = self::HANDLER_DATABASE;
 
 	/**
-	 * @param App\Mode            $mode
-	 * @param App\BaseURL         $baseURL
+	 * @param Mode                $mode
+	 * @param BaseURL             $baseURL
 	 * @param IManageConfigValues $config
 	 * @param Database            $dba
 	 * @param Cache               $cacheFactory
@@ -43,7 +44,7 @@ class Session
 	 * @param array               $server
 	 * @return IHandleSessions
 	 */
-	public function create(App\Mode $mode, App\BaseURL $baseURL, IManageConfigValues $config, Database $dba, Cache $cacheFactory, LoggerInterface $logger, Profiler $profiler, array $server = []): IHandleSessions
+	public function create(Mode $mode, BaseURL $baseURL, IManageConfigValues $config, Database $dba, Cache $cacheFactory, LoggerInterface $logger, Profiler $profiler, array $server = []): IHandleSessions
 	{
 		$profiler->startRecording('session');
 		$session_handler = $config->get('system', 'session_handler', self::HANDLER_DEFAULT);

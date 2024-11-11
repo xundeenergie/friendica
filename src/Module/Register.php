@@ -7,7 +7,8 @@
 
 namespace Friendica\Module;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
 use Friendica\BaseModule;
 use Friendica\Content\Text\BBCode;
 use Friendica\Core\Config\Capability\IManageConfigValues;
@@ -41,7 +42,7 @@ class Register extends BaseModule
 	/** @var IHandleUserSessions */
 	private $session;
 
-	public function __construct(IHandleUserSessions $session, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IManageConfigValues $config, array $server, array $parameters = [])
+	public function __construct(IHandleUserSessions $session, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IManageConfigValues $config, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
@@ -277,7 +278,7 @@ class Register extends BaseModule
 			$regdata = ['email' => $arr['email'], 'nickname' => $arr['nickname'], 'username' => $arr['username']];
 			DI::baseUrl()->redirect('register?' . http_build_query($regdata));
 		}
-		
+
 		//Check if nickname contains only US-ASCII and do not start with a digit
 		if (!preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/', $arr['nickname'])) {
         		if (is_numeric(substr($arr['nickname'], 0, 1))) {
@@ -289,7 +290,7 @@ class Register extends BaseModule
 			DI::baseUrl()->redirect('register?' . http_build_query($regdata));
 			return;
 		}
-		
+
 		$arr['blocked'] = $blocked;
 		$arr['verified'] = $verified;
 		$arr['language'] = L10n::detectLanguage($_SERVER, $_GET, DI::config()->get('system', 'language'));
@@ -433,6 +434,6 @@ class Register extends BaseModule
 				return intval(DI::config()->get('config', 'register_policy'));
 			}
 		}
-		return self::CLOSED;		
+		return self::CLOSED;
 	}
 }

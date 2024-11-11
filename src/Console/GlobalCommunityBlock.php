@@ -7,7 +7,7 @@
 
 namespace Friendica\Console;
 
-use Friendica\App;
+use Friendica\App\Mode;
 use Friendica\Core\L10n;
 use Friendica\Model\Contact;
 
@@ -22,7 +22,7 @@ class GlobalCommunityBlock extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var App\Mode
+	 * @var Mode
 	 */
 	private $appMode;
 	/**
@@ -48,7 +48,7 @@ HELP;
 		return $help;
 	}
 
-	public function __construct(App\Mode $appMode, L10n $l10n, $argv = null)
+	public function __construct(Mode $appMode, L10n $l10n, $argv = null)
 	{
 		parent::__construct($argv);
 

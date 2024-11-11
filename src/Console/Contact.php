@@ -8,7 +8,7 @@
 namespace Friendica\Console;
 
 use Console_Table;
-use Friendica\App;
+use Friendica\App\Mode;
 use Friendica\DI;
 use Friendica\Model\Contact as ContactModel;
 use Friendica\Model\User as UserModel;
@@ -25,7 +25,7 @@ class Contact extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var App\Mode
+	 * @var Mode
 	 */
 	private $appMode;
 	/**
@@ -55,7 +55,7 @@ HELP;
 		return $help;
 	}
 
-	public function __construct(App\Mode $appMode, array $argv = null)
+	public function __construct(Mode $appMode, array $argv = null)
 	{
 		parent::__construct($argv);
 
