@@ -229,11 +229,14 @@ class ContactSelector
 			'wildebeest', 'wordpress', 'write.as', 'writefreely', 'wxwclub', 'xwiki', 'zap'];
 
 		if ($platform_icon_style == self::SVG_WHITE) {
-			$svg = ['activitypub', 'akkoma', 'andstatus', 'bluesky', 'bonfire', 'bookwyrm', 'bridgy_fed', 
-				'calckey', 'diaspora', 'discourse', 'drupal', 'email', 'firefish', 'flipboard', 'forgejo',
-				'friendica', 'funkwhale', 'ghost', 'gitlab', 'gnusocial', 'gotosocial', 'kbin', 'lemmy',
-				'mastodon', 'microblog', 'minds', 'misskey', 'mobilizon', 'nextcloud', 'peertube',
-				'pixelfed', 'pleroma', 'rss', 'shark', 'threads', 'wordpress', 'xwiki'];
+			$svg = ['activitypub', 'akkoma', 'andstatus', 'bluesky', 'bonfire', 'bookwyrm', 'bridgy_fed',
+				'calckey', 'castopod', 'diaspora', 'discourse', 'dolphin', 'drupal', 'email', 'firefish',
+				'flipboard', 'flohmarkt', 'forgejo', 'friendica', 'funkwhale', 'ghost', 'gitlab',
+				'glitch-soc', 'gnusocial', 'gotosocial', 'guppe', 'hollo', 'hubzilla', 'iceshrimp', 'kbin',
+				'lemmy', 'loforo', 'loops', 'mastodon', 'mbin', 'microblog', 'minds', 'misskey', 'mobilizon',
+				'nextcloud', 'owncast', 'peertube', 'phanpy', 'pixelfed', 'pleroma', 'plume', 'rss', 'shark',
+				'soapbox', 'socialhome', 'streams', 'takahē', 'threads', 'wordpress', 'write.as',
+				'writefreely', 'xwiki', 'zap'];
 		}
 
 		if (!empty($platform)) {
