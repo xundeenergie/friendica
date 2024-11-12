@@ -241,6 +241,7 @@ class Plaintext
 		$parts     = [];
 		$part      = '';
 		$break_pos = 0;
+		$comma_pos = 0;
 
 		$limit = $baselimit;
 
@@ -269,24 +270,30 @@ class Plaintext
 			}
 
 			$break = mb_strrpos($word, "\n") !== false;
-			if (!$break && mb_strrpos($word, '. ') !== false) {
-				$next = mb_substr($message, 0, 1);
-				$break = IntlChar::isupper($next);
+			if (!$break && (mb_strrpos($word, '. ') !== false || mb_strrpos($word, '? ') !== false || mb_strrpos($word, '! ') !== false)) {
+				$break = IntlChar::isupper(mb_substr($message, 0, 1));
 			} 
-			if ($break) {
-				$break_pos = $pos + mb_strlen($part);
-			}
+
+			$comma = (mb_strrpos($word, ', ') !== false) && IntlChar::isalpha(mb_substr($message, 0, 1));
 
 			if ((mb_strlen($part . $word) > $limit - 8) && ($parts || (mb_strlen($part . $word . $message) > $limit))) {
 				if ($break_pos) {
 					$parts[] = trim(mb_substr($part, 0, $break_pos));
 					$part    = mb_substr($part, $break_pos);
+				} elseif ($comma_pos) {
+					$parts[] = trim(mb_substr($part, 0, $comma_pos));
+					$part    = mb_substr($part, $comma_pos);
 				} else {
 					$parts[] = trim($part);
 					$part    = '';
 				}
 				$limit     = $baselimit;
 				$break_pos = 0;
+				$comma_pos = 0;
+			} elseif ($break) {
+				$break_pos = $pos + mb_strlen($part);	
+			} elseif ($comma) {
+				$comma_pos = $pos + mb_strlen($part);
 			}
 			$part .= $word;
 		}
