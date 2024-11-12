@@ -2301,7 +2301,7 @@ class Contact
 			return;
 		}
 
-		if (!Network::isValidHttpUrl($avatar)) {
+		if (!empty($avatar) && !Network::isValidHttpUrl($avatar)) {
 			Logger::warning('Invalid avatar', ['cid' => $cid, 'avatar' => $avatar]);
 			$avatar = '';
 		}

@@ -877,10 +877,10 @@ class Processor
 	{
 		if (!empty($activity['mediatype']) && ($activity['mediatype'] == 'text/markdown')) {
 			$item['title'] = strip_tags($activity['name'] ?? '');
-			$content = Markdown::toBBCode($activity['content']);
+			$content = Markdown::toBBCode($activity['content'] ?? '');
 		} elseif (!empty($activity['mediatype']) && ($activity['mediatype'] == 'text/bbcode')) {
-			$item['title'] = $activity['name'];
-			$content = $activity['content'];
+			$item['title'] = $activity['name'] ?? '';
+			$content = $activity['content'] ?? '';
 		} else {
 			// By default assume "text/html"
 			$item['title'] = HTML::toBBCode($activity['name'] ?? '');
