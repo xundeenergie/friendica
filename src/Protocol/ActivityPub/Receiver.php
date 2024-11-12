@@ -1890,7 +1890,7 @@ class Receiver
 		$object_data['receiver_urls']  = self::getReceiverURL($object);
 		$object_data['receiver']       = $receivers;
 		$object_data['reception_type'] = $reception_types;
-		$object_data['unlisted'] = false;
+		$object_data['unlisted']       = false;
 
 		if (!empty($object['pixelfed:capabilities'])) {
 			$object_data['capabilities'] = self::getCapabilities($object);
