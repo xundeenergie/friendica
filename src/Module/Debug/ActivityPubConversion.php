@@ -25,6 +25,10 @@ class ActivityPubConversion extends BaseModule
 	{
 		$results = [];
 
+		$visible_whitespace = function (string $s): string {
+			return '<pre>' . htmlspecialchars($s) . '</pre>';
+		};
+
 		if (!empty($_REQUEST['source'])) {
 			try {
 				$source = json_decode($_REQUEST['source'], true);
@@ -39,11 +43,11 @@ class ActivityPubConversion extends BaseModule
 				$formatted = json_encode($source, JSON_PRETTY_PRINT);
 				$results[] = [
 					'title'   => DI::l10n()->t('Formatted'),
-					'content' => $this->visible_whitespace(trim(var_export($formatted, true), "'")),
+					'content' => $visible_whitespace(trim(var_export($formatted, true), "'")),
 				];
 				$results[] = [
 					'title'   => DI::l10n()->t('Source'),
-					'content' => $this->visible_whitespace(var_export($source, true))
+					'content' => $visible_whitespace(var_export($source, true))
 				];
 				$activity = JsonLD::compact($source);
 				if (!$activity) {
@@ -51,7 +55,7 @@ class ActivityPubConversion extends BaseModule
 				}
 				$results[] = [
 					'title'   => DI::l10n()->t('Activity'),
-					'content' => $this->visible_whitespace(var_export($activity, true))
+					'content' => $visible_whitespace(var_export($activity, true))
 				];
 
 				$type = JsonLD::fetchElement($activity, '@type');
@@ -99,14 +103,14 @@ class ActivityPubConversion extends BaseModule
 
 				$results[] = [
 					'title'   => DI::l10n()->t('Object data'),
-					'content' => $this->visible_whitespace(var_export($object_data, true))
+					'content' => $visible_whitespace(var_export($object_data, true))
 				];
 
 				$item = ActivityPub\Processor::createItem($object_data, true);
 
 				$results[] = [
 					'title'   => DI::l10n()->t('Result Item'),
-					'content' => $this->visible_whitespace(var_export($item, true))
+					'content' => $visible_whitespace(var_export($item, true))
 				];
 			} catch (\Throwable $e) {
 				$results[] = [
@@ -125,10 +129,5 @@ class ActivityPubConversion extends BaseModule
 		]);
 
 		return $o;
-	}
-
-	private function visible_whitespace(string $s): string
-	{
-		return '<pre>' . htmlspecialchars($s) . '</pre>';
 	}
 }
