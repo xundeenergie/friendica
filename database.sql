@@ -1,6 +1,6 @@
 -- ------------------------------------------
 -- Friendica 2024.09-rc (Yellow Archangel)
--- DB_UPDATE_VERSION 1575
+-- DB_UPDATE_VERSION 1576
 -- ------------------------------------------
 
 
@@ -3526,6 +3526,7 @@ CREATE VIEW `owner-view` AS SELECT
 	`contact`.`unsearchable` AS `unsearchable`,
 	`contact`.`sensitive` AS `sensitive`,
 	`contact`.`baseurl` AS `baseurl`,
+	`contact`.`gsid` AS `gsid`,
 	`contact`.`reason` AS `reason`,
 	`contact`.`info` AS `info`,
 	`contact`.`bdyear` AS `bdyear`,

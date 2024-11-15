@@ -1485,6 +1485,7 @@ return [
 			"unsearchable" => ["contact", "unsearchable"],
 			"sensitive" => ["contact", "sensitive"],
 			"baseurl" => ["contact", "baseurl"],
+			"gsid" => ["contact", "gsid"],
 			"reason" => ["contact", "reason"],
 			"info" => ["contact", "info"],
 			"bdyear" => ["contact", "bdyear"],
