@@ -617,7 +617,7 @@ class Contact extends BaseModule
 			'account_type' => Model\Contact::getAccountType($contact['contact-type']),
 			'sparkle'      => $sparkle,
 			'itemurl'      => ($contact['addr'] ?? '') ?: $contact['url'],
-			'network'      => ContactSelector::networkToName($contact['network'], $contact['url'], $contact['protocol'], $contact['gsid']),
+			'network'      => ContactSelector::networkToName($contact['network'], $contact['protocol'], $contact['gsid']),
 		];
 	}
 }

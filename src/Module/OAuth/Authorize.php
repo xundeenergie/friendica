@@ -36,17 +36,18 @@ class Authorize extends BaseApi
 		], $request);
 
 		if ($request['response_type'] != 'code') {
-			Logger::warning('Unsupported or missing response type', ['request' => $_REQUEST]);
+			Logger::warning('Unsupported or missing response type', ['request' => $request]);
 			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity($this->t('Unsupported or missing response type')));
 		}
 
 		if (empty($request['client_id']) || empty($request['redirect_uri'])) {
-			Logger::warning('Incomplete request data', ['request' => $_REQUEST]);
+			Logger::warning('Incomplete request data', ['request' => $request]);
 			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity($this->t('Incomplete request data')));
 		}
 
 		$application = OAuth::getApplication($request['client_id'], $request['client_secret'], $request['redirect_uri']);
 		if (empty($application)) {
+			Logger::warning('An application could not be fetched.', ['request' => $request]);
 			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
 		}
 

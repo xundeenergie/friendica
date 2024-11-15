@@ -38,8 +38,8 @@
             {{foreach $gservers as $gserver}}
 				<tr>
 					<td class="text-center">
-						<span class="network-label icon" alt="{{$gserver.network_name}}" title="{{$gserver.network_name}}">
-							<i class="fa fa-{{$gserver.network_icon}}"></i>
+						<span class="network-label icon">
+							<img class="network-svg" src="{{$gserver.network_svg}}" alt="{{$gserver.network_name}}" title="{{$gserver.network_name}}" loading="lazy"/>
 						</span>
 					</td>
 					<th>{{$gserver.site_name|default:$gserver.domain}}</th>

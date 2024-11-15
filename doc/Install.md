@@ -27,10 +27,10 @@ Due to the large variety of operating systems and PHP platforms in existence we 
 
 ### Requirements
 
-* Apache with mod-rewrite enabled and "Options All" so you can use a local `.htaccess` file
+* Apache with mod_rewrite enabled and "[AllowOverride All](https://httpd.apache.org/docs/2.4/mod/core.html#allowoverride)" so you can use a local `.htaccess` file
 * PHP 7.4+
   * PHP *command line* access with register_argc_argv set to true in the php.ini file
-  * Curl, GD, GMP, PDO, mbstrings, MySQLi, hash, xml, zip, IntlChar, IDN and OpenSSL extensions
+  * Curl, GD, GMP, PDO, mbstring, MySQLi, xml, zip, IntlChar, IDN and OpenSSL extensions
   * The POSIX module of PHP needs to be activated (e.g. [RHEL, CentOS](http://www.bigsoft.co.uk/blog/index.php/2014/12/08/posix-php-commands-not-working-under-centos-7) have disabled it)
   * Some form of email server or email gateway such that PHP mail() works.
     If you cannot set up your own email server, you can use the [phpmailer](https://github.com/friendica/friendica-addons/tree/develop/phpmailer) addon and use a remote SMTP server.
@@ -58,6 +58,7 @@ If this is nothing for you, you might be interested in the following:
 * [Tutorial: Creating a Friendica Server with Ubuntu 22.04](https://nequalsonelifestyle.com/2022/07/30/creating-friendica-server-ubuntu/)
   * [Setting Up Friendica Daemon as a Systemd Service Tutorial](https://nequalsonelifestyle.com/2022/08/04/setting-up-friendica-daemon-systemd-service/)
 * [Setting up Friendica on Unraid](https://www.jenovarain.com/2023/03/setting-up-friendica-on-unraid/) (NAS)
+* [Installing Friendica with Elastio](https://elest.io/open-source/friendica)
 
 ### Get Friendica
 

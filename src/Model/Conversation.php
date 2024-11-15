@@ -30,6 +30,7 @@ class Conversation
 	const PARCEL_ATOM03             = 15;
 	const PARCEL_OPML               = 16;
 	const PARCEL_TWITTER            = 67;
+	const PARCEL_CONNECTOR          = 68;
 	const PARCEL_UNKNOWN            = 255;
 
 	/**

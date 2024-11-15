@@ -8,6 +8,7 @@
 namespace Friendica\Model;
 
 use Friendica\Contact\LocalRelationship\Entity\LocalRelationship;
+use Friendica\Content\ContactSelector;
 use Friendica\Content\Image;
 use Friendica\Content\Post\Collection\PostMedias;
 use Friendica\Content\Post\Entity\PostMedia;
@@ -3375,7 +3376,7 @@ class Item
 			$item['body'] = preg_replace("#\s*\[attachment .*?].*?\[/attachment]\s*#ism", "\n", $item['body']);
 		}
 
-		$fields = ['uri-id', 'uri', 'body', 'title', 'author-name', 'author-link', 'author-avatar', 'guid', 'created', 'plink', 'network', 'has-media', 'quote-uri-id', 'post-type'];
+		$fields = ['uri-id', 'uri', 'body', 'title', 'author-name', 'author-link', 'author-avatar', 'author-gsid', 'guid', 'created', 'plink', 'network', 'has-media', 'quote-uri-id', 'post-type'];
 
 		$shared_uri_id      = 0;
 		$shared_links       = [];
@@ -3383,7 +3384,7 @@ class Item
 
 		$shared = DI::contentItem()->getSharedPost($item, $fields);
 		if (!empty($shared['post'])) {
-			$shared_item  = $shared['post'];
+			$shared_item = $shared['post'];
 			$shared_item['body'] = Post\Media::removeFromEndOfBody($shared_item['body']);
 			$shared_item['body'] = Post\Media::replaceImage($shared_item['body']);
 			$quote_uri_id = $shared['post']['uri-id'];
@@ -3470,6 +3471,10 @@ class Item
 			unset($hook_data);
 		}
 
+		if (!empty($shared_item['uri-id'])) {
+			$s = self::replacePlatformIcon($s, $shared_item, $uid);
+		}
+
 		$hook_data = [
 			'item' => $item,
 			'html' => $s,
@@ -3531,6 +3536,39 @@ class Item
 		$hook_data = ['item' => $item, 'html' => $s];
 		Hook::callAll('prepare_body_final', $hook_data);
 		return $hook_data['html'];
+	}
+
+	/**
+	 * Replace the platform icon with the icon in the style selected by the user
+	 *
+	 * @param string $html
+	 * @param array $item
+	 * @param integer $uid
+	 * @return string
+	 */
+	private static function replacePlatformIcon(string $html, array $item, int $uid): string
+	{
+		$dom = new \DOMDocument();
+		if (!@$dom->loadHTML($html)) {
+			return $html;
+		}
+
+		$svg = ContactSelector::networkToSVG($item['network'], $item['author-gsid'], '', $uid);
+		if (empty($svg)) {
+			return $html;
+		}
+
+		$xpath = new \DOMXPath($dom);
+		/** @var DOMElement $element */
+		foreach ($xpath->query("//img[@class='network-svg']") as $element) {
+			$src = $element->getAttributeNode('src')->nodeValue;
+			if ($src == $svg) {
+				continue;
+			}
+			$element_html = $element->ownerDocument->saveHTML($element);
+			$html = str_replace($element_html, str_replace($src, $svg, $element_html), $html);
+		}
+		return $html;
 	}
 
 	/**
@@ -3733,6 +3771,9 @@ class Item
 					continue;
 				}
 
+				if (empty($PostMedia->description) && DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'accessibility', 'hide_empty_descriptions')) {
+					continue;
+				}
 				$images[] = $PostMedia->withUrl(new Uri($src_url))->withPreview(new Uri($preview_url), $preview_size);
 			}
 		}
@@ -4152,6 +4193,10 @@ class Item
 
 		try {
 			$curlResult = DI::httpClient()->head($uri, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::JSON_AS, HttpClientOptions::REQUEST => HttpClientRequest::ACTIVITYPUB]);
+			if (!HTTPSignature::isValidContentType($curlResult->getContentType(), $uri) && (current(explode(';', $curlResult->getContentType())) == 'application/json')) {
+				// Issue 14126: Workaround for Mastodon servers that return "application/json" on a "head" request.
+				$curlResult = HTTPSignature::fetchRaw($uri, $uid);
+			}
 			if (HTTPSignature::isValidContentType($curlResult->getContentType(), $uri)) {
 				$fetched_uri = ActivityPub\Processor::fetchMissingActivity($uri, [], '', $completion, $uid);
 			}

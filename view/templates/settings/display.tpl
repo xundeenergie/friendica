@@ -28,7 +28,9 @@
 	{{include file="field_checkbox.tpl" field=$show_page_drop}}
 	{{include file="field_checkbox.tpl" field=$display_eventlist}}
 	{{include file="field_select.tpl" field=$preview_mode}}
-
+	{{include file="field_checkbox.tpl" field=$hide_empty_descriptions}}
+	{{include file="field_checkbox.tpl" field=$hide_custom_emojis}}
+	{{include file="field_select.tpl" field=$platform_icon_style}}
 	<h2>{{$timeline_title}}</h2>
 	{{$timeline_explanation}}
 	<table class="table table-condensed table-striped table-bordered">

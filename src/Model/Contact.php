@@ -1082,17 +1082,17 @@ class Contact
 	 */
 	public static function markForArchival(array $contact)
 	{
-		if (!isset($contact['url']) && !empty($contact['id'])) {
-			$fields = ['id', 'url', 'archive', 'self', 'term-date'];
+		if ((!isset($contact['uri-id']) || !isset($contact['url']) || !isset($contact['archive']) || !isset($contact['self']) || !isset($contact['term-date'])) && !empty($contact['id'])) {
+			$fields = ['id', 'uri-id', 'url', 'archive', 'self', 'term-date'];
 			$contact = DBA::selectFirst('contact', $fields, ['id' => $contact['id']]);
 			if (!DBA::isResult($contact)) {
 				return;
 			}
-		} elseif (!isset($contact['url'])) {
+		} elseif (!isset($contact['url']) || !isset($contact['uri-id'])) {
 			Logger::info('Empty contact', ['contact' => $contact]);
 		}
 
-		Logger::info('Contact is marked for archival', ['id' => $contact['id'], 'term-date' => $contact['term-date']]);
+		Logger::info('Contact is marked for archival', ['id' => $contact['id'], 'archive' => $contact['archive'], 'term-date' => $contact['term-date'], 'url' => $contact['url']]);
 
 		// Contact already archived or "self" contact? => nothing to do
 		if ($contact['archive'] || $contact['self']) {
@@ -1100,8 +1100,7 @@ class Contact
 		}
 
 		if ($contact['term-date'] <= DBA::NULL_DATETIME) {
-			self::update(['term-date' => DateTimeFormat::utcNow()], ['id' => $contact['id']]);
-			self::update(['term-date' => DateTimeFormat::utcNow()], ['`nurl` = ? AND `term-date` <= ? AND NOT `self`', Strings::normaliseLink($contact['url']), DBA::NULL_DATETIME]);
+			self::update(['term-date' => DateTimeFormat::utcNow()], ['uri-id' => $contact['uri-id'], 'self' => false]);
 		} else {
 			/* @todo
 			 * We really should send a notification to the owner after 2-3 weeks
@@ -1118,8 +1117,7 @@ class Contact
 				 * delete, though if the owner tries to unarchive them we'll start
 				 * the whole process over again.
 				 */
-				self::update(['archive' => true], ['id' => $contact['id']]);
-				self::update(['archive' => true], ['nurl' => Strings::normaliseLink($contact['url']), 'self' => false]);
+				self::update(['archive' => true], ['uri-id' => $contact['uri-id'], 'self' => false]);
 			}
 		}
 	}
@@ -1144,28 +1142,25 @@ class Contact
 			}
 		}
 
-		$condition = ['`id` = ? AND (`term-date` > ? OR `archive`)', $contact['id'], DBA::NULL_DATETIME];
-		$exists = DBA::exists('contact', $condition);
-
 		// We don't need to update, we never marked this contact for archival
-		if (!$exists) {
+		$condition = ['`id` = ? AND (`term-date` > ? OR `archive`)', $contact['id'], DBA::NULL_DATETIME];
+		if (!DBA::exists('contact', $condition)) {
 			return;
 		}
 
-		Logger::info('Contact is marked as vital again', ['id' => $contact['id'], 'term-date' => $contact['term-date']]);
-
-		if (!isset($contact['url']) && !empty($contact['id'])) {
-			$fields = ['id', 'url', 'batch'];
+		if ((!isset($contact['url']) || !isset($contact['uri-id'])) && !empty($contact['id'])) {
+			$fields = ['id', 'uri-id', 'url', 'batch', 'term-date'];
 			$contact = DBA::selectFirst('contact', $fields, ['id' => $contact['id']]);
 			if (!DBA::isResult($contact)) {
 				return;
 			}
 		}
 
+		Logger::info('Contact is marked as vital again', ['id' => $contact['id'], 'term-date' => $contact['term-date'], 'url' => $contact['url']]);
+
 		// It's a miracle. Our dead contact has inexplicably come back to life.
 		$fields = ['failed' => false, 'term-date' => DBA::NULL_DATETIME, 'archive' => false];
-		self::update($fields, ['id' => $contact['id']]);
-		self::update($fields, ['nurl' => Strings::normaliseLink($contact['url']), 'self' => false]);
+		self::update($fields, ['uri-id' => $contact['uri-id'], 'self' => false]);
 	}
 
 	/**
@@ -1225,7 +1220,7 @@ class Contact
 			if ($contact['uid'] && in_array($contact['rel'], [self::SHARING, self::FRIEND])) {
 				$unfollow_link = 'contact/unfollow?url=' . urlencode($contact['url']) . '&auto=1';
 			} elseif (!$contact['pending']) {
-				$follow_link = 'contact/follow?url=' . urlencode($contact['url']) . '&auto=1';
+				$follow_link = 'contact/follow?binurl=' . bin2hex($contact['url']) . '&auto=1';
 			}
 		}
 
@@ -1372,7 +1367,7 @@ class Contact
 				$personal_contact = DBA::selectFirst('contact', $fields, ["`nurl` = ? AND `uid` != 0", Strings::normaliseLink($url)]);
 			}
 
-			if (DBA::isResult($personal_contact)) {
+			if (DBA::isResult($personal_contact) && !Probe::isProbable($personal_contact['network'])) {
 				Logger::info('Take contact data from personal contact', ['url' => $url, 'update' => $update, 'contact' => $personal_contact]);
 				$data = $personal_contact;
 				$data['photo'] = $personal_contact['avatar'];
@@ -1590,9 +1585,13 @@ class Contact
 	 */
 	public static function getPostsFromId(int $cid, int $uid, bool $only_media = false, string $last_created = null): string
 	{
-		$contact = DBA::selectFirst('contact', ['contact-type', 'network'], ['id' => $cid]);
+		$contact = DBA::selectFirst('contact', ['contact-type', 'network', 'name', 'nick'], ['id' => $cid]);
 		if (!DBA::isResult($contact)) {
 			return '';
+		}
+
+		if (Contact\User::isIsBlocked($cid, $uid)) {
+			return DI::l10n()->t('%s has blocked you', $contact['name'] ?: $contact['nick']);
 		}
 
 		if (empty($contact["network"]) || in_array($contact["network"], Protocol::FEDERATED)) {
@@ -1658,9 +1657,13 @@ class Contact
 	 */
 	public static function getThreadsFromId(int $cid, int $uid, int $update = 0, int $parent = 0, string $last_created = ''): string
 	{
-		$contact = DBA::selectFirst('contact', ['contact-type', 'network'], ['id' => $cid]);
+		$contact = DBA::selectFirst('contact', ['contact-type', 'network', 'name', 'nick'], ['id' => $cid]);
 		if (!DBA::isResult($contact)) {
 			return '';
+		}
+
+		if (Contact\User::isIsBlocked($cid, $uid)) {
+			return DI::l10n()->t('%s has blocked you', $contact['name'] ?: $contact['nick']);
 		}
 
 		if (empty($contact["network"]) || in_array($contact["network"], Protocol::FEDERATED)) {
@@ -2298,7 +2301,7 @@ class Contact
 			return;
 		}
 
-		if (!Network::isValidHttpUrl($avatar)) {
+		if (!empty($avatar) && !Network::isValidHttpUrl($avatar)) {
 			Logger::warning('Invalid avatar', ['cid' => $cid, 'avatar' => $avatar]);
 			$avatar = '';
 		}

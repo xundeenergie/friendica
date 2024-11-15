@@ -8,6 +8,7 @@
 namespace Friendica\Module\Settings;
 
 use Friendica\App;
+use Friendica\Content\ContactSelector;
 use Friendica\Content\Conversation\Collection\Timelines;
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Conversation\Factory\Channel as ChannelFactory;
@@ -80,23 +81,26 @@ class Display extends BaseSettings
 
 		$user = User::getById($uid);
 
-		$theme                  = trim($request['theme']);
-		$mobile_theme           = trim($request['mobile_theme'] ?? '');
-		$enable_smile           = (bool)$request['enable_smile'];
-		$enable                 = (array)$request['enable'];
-		$bookmark               = (array)$request['bookmark'];
-		$channel_languages      = (array)$request['channel_languages'];
-		$first_day_of_week      = (bool)$request['first_day_of_week'];
-		$calendar_default_view  = trim($request['calendar_default_view']);
-		$infinite_scroll        = (bool)$request['infinite_scroll'];
-		$enable_smart_threading = (bool)$request['enable_smart_threading'];
-		$enable_dislike         = (bool)$request['enable_dislike'];
-		$display_resharer       = (bool)$request['display_resharer'];
-		$stay_local             = (bool)$request['stay_local'];
-		$show_page_drop         = (bool)$request['show_page_drop'];
-		$display_eventlist      = (bool)$request['display_eventlist'];
-		$preview_mode           = (int)$request['preview_mode'];
-		$browser_update         = (int)$request['browser_update'];
+		$theme                   = trim($request['theme']);
+		$mobile_theme            = trim($request['mobile_theme'] ?? '');
+		$enable_smile            = (bool)$request['enable_smile'];
+		$enable                  = (array)$request['enable'];
+		$bookmark                = (array)$request['bookmark'];
+		$channel_languages       = (array)$request['channel_languages'];
+		$first_day_of_week       = (int)$request['first_day_of_week'];
+		$calendar_default_view   = trim($request['calendar_default_view']);
+		$infinite_scroll         = (bool)$request['infinite_scroll'];
+		$enable_smart_threading  = (bool)$request['enable_smart_threading'];
+		$enable_dislike          = (bool)$request['enable_dislike'];
+		$display_resharer        = (bool)$request['display_resharer'];
+		$stay_local              = (bool)$request['stay_local'];
+		$hide_empty_descriptions = (bool)$request['hide_empty_descriptions'];
+		$hide_custom_emojis      = (bool)$request['hide_custom_emojis'];
+		$platform_icon_style     = (int)$request['platform_icon_style'];
+		$show_page_drop          = (bool)$request['show_page_drop'];
+		$display_eventlist       = (bool)$request['display_eventlist'];
+		$preview_mode            = (int)$request['preview_mode'];
+		$browser_update          = (int)$request['browser_update'];
 		if ($browser_update != -1) {
 			$browser_update = $browser_update * 1000;
 			if ($browser_update < 10000) {
@@ -135,25 +139,29 @@ class Display extends BaseSettings
 			$this->pConfig->set($uid, 'system', 'mobile_theme', $mobile_theme);
 		}
 
-		$this->pConfig->set($uid, 'system', 'itemspage_network'       , $itemspage_network);
+		$this->pConfig->set($uid, 'system', 'itemspage_network', $itemspage_network);
 		$this->pConfig->set($uid, 'system', 'itemspage_mobile_network', $itemspage_mobile_network);
-		$this->pConfig->set($uid, 'system', 'update_interval'         , $browser_update);
-		$this->pConfig->set($uid, 'system', 'no_smilies'              , !$enable_smile);
-		$this->pConfig->set($uid, 'system', 'infinite_scroll'         , $infinite_scroll);
-		$this->pConfig->set($uid, 'system', 'no_smart_threading'      , !$enable_smart_threading);
-		$this->pConfig->set($uid, 'system', 'hide_dislike'            , !$enable_dislike);
-		$this->pConfig->set($uid, 'system', 'display_resharer'        , $display_resharer);
-		$this->pConfig->set($uid, 'system', 'stay_local'              , $stay_local);
-		$this->pConfig->set($uid, 'system', 'show_page_drop'          , $show_page_drop);
-		$this->pConfig->set($uid, 'system', 'display_eventlist'       , $display_eventlist);
-		$this->pConfig->set($uid, 'system', 'preview_mode'            , $preview_mode);
+		$this->pConfig->set($uid, 'system', 'update_interval', $browser_update);
+		$this->pConfig->set($uid, 'system', 'no_smilies', !$enable_smile);
+		$this->pConfig->set($uid, 'system', 'infinite_scroll', $infinite_scroll);
+		$this->pConfig->set($uid, 'system', 'no_smart_threading', !$enable_smart_threading);
+		$this->pConfig->set($uid, 'system', 'hide_dislike', !$enable_dislike);
+		$this->pConfig->set($uid, 'system', 'display_resharer', $display_resharer);
+		$this->pConfig->set($uid, 'system', 'stay_local', $stay_local);
+		$this->pConfig->set($uid, 'system', 'show_page_drop', $show_page_drop);
+		$this->pConfig->set($uid, 'system', 'display_eventlist', $display_eventlist);
+		$this->pConfig->set($uid, 'system', 'preview_mode', $preview_mode);
 
-		$this->pConfig->set($uid, 'system', 'network_timelines'       , $network_timelines);
-		$this->pConfig->set($uid, 'system', 'enabled_timelines'       , $enabled_timelines);
-		$this->pConfig->set($uid, 'channel', 'languages'              , $channel_languages);
+		$this->pConfig->set($uid, 'system', 'network_timelines', $network_timelines);
+		$this->pConfig->set($uid, 'system', 'enabled_timelines', $enabled_timelines);
+		$this->pConfig->set($uid, 'channel', 'languages', $channel_languages);
 
-		$this->pConfig->set($uid, 'calendar', 'first_day_of_week'     , $first_day_of_week);
-		$this->pConfig->set($uid, 'calendar', 'default_view'          , $calendar_default_view);
+		$this->pConfig->set($uid, 'accessibility', 'hide_empty_descriptions', $hide_empty_descriptions);
+		$this->pConfig->set($uid, 'accessibility', 'hide_custom_emojis', $hide_custom_emojis);
+		$this->pConfig->set($uid, 'accessibility', 'platform_icon_style', $platform_icon_style);
+
+		$this->pConfig->set($uid, 'calendar', 'first_day_of_week', $first_day_of_week);
+		$this->pConfig->set($uid, 'calendar', 'default_view', $calendar_default_view);
 
 		if (in_array($theme, Theme::getAllowedList())) {
 			if ($theme == $user['theme']) {
@@ -241,6 +249,17 @@ class Display extends BaseSettings
 		$show_page_drop         =  $this->pConfig->get($uid, 'system', 'show_page_drop', true);
 		$display_eventlist      =  $this->pConfig->get($uid, 'system', 'display_eventlist', true);
 
+		$hide_empty_descriptions =  $this->pConfig->get($uid, 'accessibility', 'hide_empty_descriptions', false);
+		$hide_custom_emojis      =  $this->pConfig->get($uid, 'accessibility', 'hide_custom_emojis', false);
+		$platform_icon_style     =  $this->pConfig->get($uid, 'accessibility', 'platform_icon_style', ContactSelector::SVG_COLOR_BLACK);
+		$platform_icon_styles = [
+			ContactSelector::SVG_DISABLED    => $this->t('Disabled'),
+			ContactSelector::SVG_COLOR_BLACK => $this->t('Color/Black'),
+			ContactSelector::SVG_BLACK       => $this->t('Black'),
+			ContactSelector::SVG_COLOR_WHITE => $this->t('Color/White'),
+			ContactSelector::SVG_WHITE       => $this->t('White'),
+		];
+
 		$preview_mode  =  $this->pConfig->get($uid, 'system', 'preview_mode', BBCode::PREVIEW_LARGE);
 		$preview_modes = [
 			BBCode::PREVIEW_NONE     => $this->t('No preview'),
@@ -308,18 +327,21 @@ class Display extends BaseSettings
 			'$mobile_theme'	=> ['mobile_theme', $this->t('Mobile Theme:'), $mobile_theme_selected, '', $mobile_themes, false],
 			'$theme_config' => $theme_config,
 
-			'$itemspage_network'        => ['itemspage_network'       , $this->t('Number of items to display per page:'), $itemspage_network, $this->t('Maximum of 100 items')],
+			'$itemspage_network'        => ['itemspage_network', $this->t('Number of items to display per page:'), $itemspage_network, $this->t('Maximum of 100 items')],
 			'$itemspage_mobile_network' => ['itemspage_mobile_network', $this->t('Number of items to display per page when viewed from mobile device:'), $itemspage_mobile_network, $this->t('Maximum of 100 items')],
-			'$ajaxint'                  => ['browser_update'          , $this->t('Update browser every xx seconds'), $browser_update, $this->t('Minimum of 10 seconds. Enter -1 to disable it.')],
-			'$enable_smile'	            => ['enable_smile'            , $this->t('Display emoticons'), $enable_smile, $this->t('When enabled, emoticons are replaced with matching symbols.')],
-			'$infinite_scroll'          => ['infinite_scroll'         , $this->t('Infinite scroll'), $infinite_scroll, $this->t('Automatic fetch new items when reaching the page end.')],
-			'$enable_smart_threading'   => ['enable_smart_threading'  , $this->t('Enable Smart Threading'), $enable_smart_threading, $this->t('Enable the automatic suppression of extraneous thread indentation.')],
-			'$enable_dislike'           => ['enable_dislike'          , $this->t('Display the Dislike feature'), $enable_dislike, $this->t('Display the Dislike button and dislike reactions on posts and comments.')],
-			'$display_resharer'         => ['display_resharer'        , $this->t('Display the resharer'), $display_resharer, $this->t('Display the first resharer as icon and text on a reshared item.')],
-			'$stay_local'               => ['stay_local'              , $this->t('Stay local'), $stay_local, $this->t("Don't go to a remote system when following a contact link.")],
-			'$show_page_drop'           => ['show_page_drop'          , $this->t('Show the post deletion checkbox'), $show_page_drop, $this->t("Display the checkbox for the post deletion on the network page.")],
-			'$display_eventlist'        => ['display_eventlist'       , $this->t('DIsplay the event list'), $display_eventlist, $this->t("Display the birthday reminder and event list on the network page.")],
-			'$preview_mode'             => ['preview_mode'            , $this->t('Link preview mode'), $preview_mode, $this->t('Appearance of the link preview that is added to each post with a link.'), $preview_modes, false],
+			'$ajaxint'                  => ['browser_update', $this->t('Update browser every xx seconds'), $browser_update, $this->t('Minimum of 10 seconds. Enter -1 to disable it.')],
+			'$enable_smile'	            => ['enable_smile', $this->t('Display emoticons'), $enable_smile, $this->t('When enabled, emoticons are replaced with matching symbols.')],
+			'$infinite_scroll'          => ['infinite_scroll', $this->t('Infinite scroll'), $infinite_scroll, $this->t('Automatic fetch new items when reaching the page end.')],
+			'$enable_smart_threading'   => ['enable_smart_threading', $this->t('Enable Smart Threading'), $enable_smart_threading, $this->t('Enable the automatic suppression of extraneous thread indentation.')],
+			'$enable_dislike'           => ['enable_dislike', $this->t('Display the Dislike feature'), $enable_dislike, $this->t('Display the Dislike button and dislike reactions on posts and comments.')],
+			'$display_resharer'         => ['display_resharer', $this->t('Display the resharer'), $display_resharer, $this->t('Display the first resharer as icon and text on a reshared item.')],
+			'$stay_local'               => ['stay_local', $this->t('Stay local'), $stay_local, $this->t("Don't go to a remote system when following a contact link.")],
+			'$show_page_drop'           => ['show_page_drop', $this->t('Show the post deletion checkbox'), $show_page_drop, $this->t("Display the checkbox for the post deletion on the network page.")],
+			'$display_eventlist'        => ['display_eventlist', $this->t('DIsplay the event list'), $display_eventlist, $this->t("Display the birthday reminder and event list on the network page.")],
+			'$preview_mode'             => ['preview_mode', $this->t('Link preview mode'), $preview_mode, $this->t('Appearance of the link preview that is added to each post with a link.'), $preview_modes, false],
+			'$hide_empty_descriptions'  => ['hide_empty_descriptions', $this->t('Hide pictures with empty alternative text'), $hide_empty_descriptions, $this->t("Don't display pictures that are missing the alternative text.")],
+			'$hide_custom_emojis'       => ['hide_custom_emojis', $this->t('Hide custom emojis'), $hide_custom_emojis, $this->t("Don't display custom emojis.")],
+			'$platform_icon_style'      => ['platform_icon_style', $this->t('Platform icons style'), $platform_icon_style, $this->t('Style of the platform icons'), $platform_icon_styles, false],
 
 			'$timeline_label'       => $this->t('Label'),
 			'$timeline_descriptiom' => $this->t('Description'),
@@ -330,7 +352,7 @@ class Display extends BaseSettings
 
 			'$channel_languages' => ['channel_languages[]', $this->t('Channel languages:'), $channel_languages, $this->t('Select all languages that you want to see in your channels.'), $languages, 'multiple'],
 
-			'$first_day_of_week'     => ['first_day_of_week'    , $this->t('Beginning of week:')    , $first_day_of_week    , '', $weekdays     , false],
+			'$first_day_of_week'     => ['first_day_of_week', $this->t('Beginning of week:'), $first_day_of_week, '', $weekdays, false],
 			'$calendar_default_view' => ['calendar_default_view', $this->t('Default calendar view:'), $calendar_default_view, '', $calendarViews, false],
 		]);
 	}
