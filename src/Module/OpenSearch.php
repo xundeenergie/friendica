@@ -27,9 +27,6 @@ class OpenSearch extends BaseModule
 	/** @var IManageConfigValues */
 	private $config;
 
-	/** @var App\baseUrl */
-	protected $baseUrl;
-
 	/** @var string */
 	private $basePath;
 
@@ -39,7 +36,6 @@ class OpenSearch extends BaseModule
 
 		$this->config   = $config;
 		$this->basePath = $basePath->getPath();
-		$this->baseUrl  = $baseUrl;
 	}
 
 	/**
