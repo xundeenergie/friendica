@@ -122,7 +122,7 @@ HELP;
 			case 'search':
 				return $this->searchUser();
 			case 'config':
-				return $this->configUser();
+				return ($this->configUser()) ? 0 : 1;
 			default:
 				throw new \Asika\SimpleConsole\CommandArgsException('Wrong command.');
 		}
@@ -512,5 +512,7 @@ HELP;
 				$this->out($this->getHelp());
 				return false;
 		}
+
+		return true;
 	}
 }

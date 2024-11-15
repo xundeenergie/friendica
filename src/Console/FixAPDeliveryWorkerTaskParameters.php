@@ -7,12 +7,11 @@
 
 namespace Friendica\Console;
 
-use Friendica\App;
+use Asika\SimpleConsole\CommandArgsException;
+use Friendica\App\Mode;
+use Friendica\Core\L10n;
 use Friendica\Database\Database;
-use Friendica\Database\DBA;
-use Friendica\DI;
 use Friendica\Model\Contact;
-use Friendica\Util\Strings;
 use RuntimeException;
 
 /**
@@ -23,13 +22,17 @@ class FixAPDeliveryWorkerTaskParameters extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var App\Mode
+	 * @var Mode
 	 */
 	private $appMode;
 	/**
 	 * @var Database
 	 */
 	private $dba;
+	/**
+	 * @var L10n
+	 */
+	private $l10n;
 	/**
 	 * @var int
 	 */
@@ -53,7 +56,7 @@ Usage
 Description
 	During the 2020.12 RC period some worker task parameters have been corrupted, resulting in the impossibility to execute them.
 	This command restores their expected parameters.
-	If you didn't run Friendica during the 2020.12 RC period, you do not need to use this command. 
+	If you didn't run Friendica during the 2020.12 RC period, you do not need to use this command.
 
 Options
     -h|--help|-? Show help information
@@ -62,7 +65,7 @@ HELP;
 		return $help;
 	}
 
-	public function __construct(App\Mode $appMode, Database $dba, \Friendica\Core\L10n $l10n, array $argv = null)
+	public function __construct(Mode $appMode, Database $dba, L10n $l10n, array $argv = null)
 	{
 		parent::__construct($argv);
 
@@ -80,7 +83,7 @@ HELP;
 		}
 
 		if (count($this->args) > 0) {
-			throw new \Asika\SimpleConsole\CommandArgsException('Too many arguments');
+			throw new CommandArgsException('Too many arguments');
 		}
 
 		if ($this->appMode->isInstall()) {
