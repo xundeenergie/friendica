@@ -123,6 +123,11 @@ class StatusTest extends FixtureTest
 	 */
 	public function testApiFormatItems()
 	{
+		// FIXME: We are calling DI::app() here so Friendica\App::load() will be called.
+		// This will call Friendica\Core\Renderer::registerTemplateEngine() which is needed for this tests.
+		// This side effect MUST be eliminated.
+		DI::app();
+
 		$posts = DI::dba()->selectToArray('post-view', ['uri-id']);
 		foreach ($posts as $item) {
 			$status = $this->statusFactory
