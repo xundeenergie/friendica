@@ -66,7 +66,7 @@ class Context extends BaseApi
 			if (!empty($uid) && !$request['show_all']) {
 				$condition = DBA::mergeConditions(
 					$condition,
-					["NOT `author-id` IN (SELECT `cid` FROM `user-contact` WHERE `uid` = ? AND (`blocked` OR `ignored`))", $uid]
+					["NOT `author-id` IN (SELECT `cid` FROM `user-contact` WHERE `uid` = ? AND (`blocked` OR `ignored` OR `is-blocked`))", $uid]
 				);
 			}
 

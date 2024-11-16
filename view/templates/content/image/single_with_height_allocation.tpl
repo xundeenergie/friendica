@@ -14,10 +14,10 @@
 <figure class="img-allocated-height" style="width: {{$allocated_width|default:"auto"}}; padding-bottom: {{$allocated_height}}">
     {{if $image->preview}}
 		<a data-fancybox="uri-id-{{$image->uriId}}" href="{{$image->url}}">
-			<img src="{{$image->preview}}" alt="{{$image->description}}" title="{{$image->description}}" loading="lazy">
+			<img src="{{$image->preview}}" alt="{{$image->description}}" title="{{$image->description}}" {{if $image->description}}class="has-alt-description"{{else}}class="empty-description"{{/if}} loading="lazy">
 		</a>
     {{else}}
-		<img src="{{$image->url}}" alt="{{$image->description}}" title="{{$image->description}}" loading="lazy">
+		<img src="{{$image->url}}" alt="{{$image->description}}" title="{{$image->description}}" {{if $image->description}}class="has-alt-description"{{else}}class="empty-description"{{/if}} loading="lazy">
         {{if $image->description}}
 		    <figcaption>{{$image->description}}</figcaption>
         {{/if}}

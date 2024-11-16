@@ -76,7 +76,7 @@ class UpdateServerDirectory
 		}
 
 		$accounts = json_decode($result, true);
-		if (empty($accounts)) {
+		if (!is_array($accounts)) {
 			Logger::info('No contacts', ['url' => $gserver['url']]);
 			return;
 		}

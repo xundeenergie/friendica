@@ -87,7 +87,7 @@ class Install extends BaseModule
 		// so we may not have a css at all. Here we set a static css file for the install procedure pages
 		Renderer::$theme['stylesheet'] = $this->baseUrl . '/view/install/style.css';
 
-		$this->currentWizardStep = ($_POST['pass'] ?? '') ?: self::SYSTEM_CHECK;
+		$this->currentWizardStep = ($_REQUEST['pass'] ?? '') ?: self::SYSTEM_CHECK;
 	}
 
 	protected function post(array $request = [])
@@ -164,6 +164,7 @@ class Install extends BaseModule
 
 				break;
 		}
+		DI::baseUrl()->redirect('install?pass=' . $this->currentWizardStep);
 	}
 
 	protected function content(array $request = []): string

@@ -225,7 +225,7 @@ class Conversations extends BaseProfile
 			$items  = array_merge($items, $pinned);
 		}
 
-		$o .= $this->conversation->render($items, Conversation::MODE_PROFILE, false, false, 'pinned_received', $profile['uid']);
+		$o .= $this->conversation->render($items, Conversation::MODE_PROFILE, false, false, 'pinned_received', $this->session->getLocalUserId());
 
 		$o .= $pager->renderMinimal(count($items));
 
