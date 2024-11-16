@@ -64,23 +64,19 @@ class Summary extends BaseAdmin
 
 		// Check if github.com/friendica/stable/VERSION is higher then
 		// the local version of Friendica. Check is opt-in, source may be stable or develop branch
-		if (DI::config()->get('system', 'check_new_version_url', 'none') != 'none') {
-			$gitversion = DI::keyValue()->get('git_friendica_version') ?? '';
-
-			if (version_compare(App::VERSION, $gitversion) < 0) {
-				$warningtext[] = DI::l10n()->t('There is a new version of Friendica available for download. Your current version is %1$s, upstream version is %2$s', App::VERSION, $gitversion);
-			}
+		if (Update::isAvailable()) {
+			$warningtext[] = DI::l10n()->t('There is a new version of Friendica available for download. Your current version is %1$s, upstream version is %2$s', App::VERSION, Update::getAvailableVersion());
 		}
 
-		if (DI::config()->get('system', 'dbupdate', DBStructure::UPDATE_NOT_CHECKED) == DBStructure::UPDATE_NOT_CHECKED) {
+		if (DBStructure::getUpdateStatus() == DBStructure::UPDATE_NOT_CHECKED) {
 			DBStructure::performUpdate();
 		}
 
-		if (DI::config()->get('system', 'dbupdate') == DBStructure::UPDATE_FAILED) {
+		if (DBStructure::getUpdateStatus() == DBStructure::UPDATE_FAILED) {
 			$warningtext[] = DI::l10n()->t('The database update failed. Please run "php bin/console.php dbstructure update" from the command line and have a look at the errors that might appear.');
 		}
 
-		if (DI::config()->get('system', 'update') == Update::FAILED) {
+		if (Update::getStatus() == Update::FAILED) {
 			$warningtext[] = DI::l10n()->t('The last update failed. Please run "php bin/console.php dbstructure update" from the command line and have a look at the errors that might appear. (Some of the errors are possibly inside the logfile.)');
 		}
 
@@ -160,9 +156,6 @@ class Summary extends BaseAdmin
 		// We can do better, but this is a quick queue status
 		$queues = ['label' => DI::l10n()->t('Message queues'), 'deferred' => $deferred, 'workerq' => $workerqueue];
 
-		$variables = DBA::toArray(DBA::p('SHOW variables LIKE "max_allowed_packet"'));
-		$max_allowed_packet = $variables ? $variables[0]['Value'] : 0;
-
 		$server_settings = [
 			'label' => DI::l10n()->t('Server Settings'),
 			'php'   => [
@@ -173,7 +166,7 @@ class Summary extends BaseAdmin
 				'memory_limit'        => ini_get('memory_limit')
 			],
 			'mysql' => [
-				'max_allowed_packet' => $max_allowed_packet
+				'max_allowed_packet' => DBA::getVariable('max_allowed_packet'),
 			]
 		];
 

@@ -2158,6 +2158,13 @@ wall-item-comment-wrapper.well hr {
 	text-align: left;
 }
 
+.network-svg {
+	width: 18px;
+	height: 18px;
+	border-radius: 4px;
+	padding: 2px;
+}
+
 /*
 * Comment Box
 */
@@ -3792,7 +3799,6 @@ section .profile-match-wrapper {
 	color: $font_color;
 	font-size: 13px;
 }
-
 
 .generic-page-wrapper.contact-follow-wrapper {
 	min-height: auto;

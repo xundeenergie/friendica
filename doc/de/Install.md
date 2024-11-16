@@ -45,6 +45,10 @@ Falls du an automatischen Möglichkeiten interesse hast, wirf doch einen Blick a
 
 * das [Docker image für Friendica](https://github.com/friendica/docker) oder
 * die [Installation von Friendica auf YunoHost](https://github.com/YunoHost-Apps/friendica_ynh).
+* [Tutorial: Creating a Friendica Server with Ubuntu 22.04](https://nequalsonelifestyle.com/2022/07/30/creating-friendica-server-ubuntu/)
+  * [Setting Up Friendica Daemon as a Systemd Service Tutorial](https://nequalsonelifestyle.com/2022/08/04/setting-up-friendica-daemon-systemd-service/)
+* [Setting up Friendica on Unraid](https://www.jenovarain.com/2023/03/setting-up-friendica-on-unraid/) (NAS)
+* [Installing Friendica with Elastio](https://elest.io/open-source/friendica)
 
 ### Friendica
 

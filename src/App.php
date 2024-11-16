@@ -52,7 +52,7 @@ class App implements AppHelper
 {
 	const PLATFORM = 'Friendica';
 	const CODENAME = 'Yellow Archangel';
-	const VERSION  = '2024.09-dev';
+	const VERSION  = '2024.12-dev';
 
 	/**
 	 * @var Mode The Mode of the Application

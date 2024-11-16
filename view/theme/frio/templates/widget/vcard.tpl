@@ -105,7 +105,11 @@
 
 		{{if $network_link}}
 		<div class="network detail">
-			<span class="network-label icon"><i class="fa fa-{{$network_avatar}}"></i></span>
+			{{if $network_svg}}
+				<span class="network-label icon"><img class="network-svg" src="{{$network_svg}}" loading="lazy" aria-hidden="true"/></span>
+			{{else}}
+				<span class="network-label icon"><i class="fa fa-{{$network_avatar}}"></i></span>
+			{{/if}}
 			<span class="x-network">{{$network_link nofilter}}</span>
 		</div>
 		{{/if}}

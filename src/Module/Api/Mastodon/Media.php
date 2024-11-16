@@ -42,38 +42,37 @@ class Media extends BaseApi
 
 		$type = Post\Media::getType($request['file']['type']);
 
-		if (in_array($type, [Post\Media::IMAGE, Post\Media::UNKNOWN])) {
+		if (in_array($type, [Post\Media::IMAGE, Post\Media::UNKNOWN, Post\Media::APPLICATION])) {
 			$media = Photo::upload($uid, $request['file'], '', null, null, '', '', $request['description']);
-			if (empty($media)) {
-				$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
+			if (!empty($media)) {
+				Logger::info('Uploaded photo', ['media' => $media]);
+				$this->jsonExit(DI::mstdnAttachment()->createFromPhoto($media['id']));
+			} elseif ($type == Post\Media::IMAGE) {
+				$this->jsonExit(DI::mstdnAttachment()->createFromPhoto($media['id']));
 			}
-
-			Logger::info('Uploaded photo', ['media' => $media]);
-
-			$this->jsonExit(DI::mstdnAttachment()->createFromPhoto($media['id']));
-		} else {
-			$tempFileName = $request['file']['tmp_name'];
-			$fileName     = basename($request['file']['name']);
-			$fileSize     = intval($request['file']['size']);
-			$maxFileSize  = Strings::getBytesFromShorthand(DI::config()->get('system', 'maxfilesize'));
-
-			if ($fileSize <= 0) {
-				Logger::notice('Filesize is invalid', ['size' => $fileSize, 'request' => $request]);
-				@unlink($tempFileName);
-				$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
-			}
-
-			if ($maxFileSize && $fileSize > $maxFileSize) {
-				Logger::notice('Filesize is too large', ['size' => $fileSize, 'max' => $maxFileSize, 'request' => $request]);
-				@unlink($tempFileName);
-				$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
-			}
-
-			$id = Attach::storeFile($tempFileName, self::getCurrentUserID(), $fileName, $request['file']['type'], '<' . Contact::getPublicIdByUserId(self::getCurrentUserID()) . '>');
-			@unlink($tempFileName);
-			Logger::info('Uploaded media', ['id' => $id]);
-			$this->jsonExit(DI::mstdnAttachment()->createFromAttach($id));
 		}
+
+		$tempFileName = $request['file']['tmp_name'];
+		$fileName     = basename($request['file']['name']);
+		$fileSize     = intval($request['file']['size']);
+		$maxFileSize  = Strings::getBytesFromShorthand(DI::config()->get('system', 'maxfilesize'));
+
+		if ($fileSize <= 0) {
+			Logger::notice('Filesize is invalid', ['size' => $fileSize, 'request' => $request]);
+			@unlink($tempFileName);
+			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
+		}
+
+		if ($maxFileSize && $fileSize > $maxFileSize) {
+			Logger::notice('Filesize is too large', ['size' => $fileSize, 'max' => $maxFileSize, 'request' => $request]);
+			@unlink($tempFileName);
+			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
+		}
+
+		$id = Attach::storeFile($tempFileName, self::getCurrentUserID(), $fileName, $request['file']['type'], '<' . Contact::getPublicIdByUserId(self::getCurrentUserID()) . '>');
+		@unlink($tempFileName);
+		Logger::info('Uploaded media', ['id' => $id]);
+		$this->jsonExit(DI::mstdnAttachment()->createFromAttach($id));
 	}
 
 	public function put(array $request = [])

@@ -131,7 +131,7 @@ class User extends BaseDataTransferObject
 		$this->name                    = $publicContact['name'] ?: $publicContact['nick'];
 		$this->screen_name             = $publicContact['nick'] ?: $publicContact['name'];
 		$this->location                = $publicContact['location'] ?:
-			ContactSelector::networkToName($publicContact['network'], $publicContact['url'], $publicContact['protocol']);
+			ContactSelector::networkToName($publicContact['network'], $publicContact['protocol'], $publicContact['gsid']);
 		$this->derived                 = [];
 		$this->url                     = $publicContact['url'];
 		// No entities needed since we don't perform any shortening in the URL or description
