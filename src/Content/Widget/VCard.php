@@ -41,10 +41,10 @@ class VCard
 
 		if ($contact['network'] != '') {
 			$network_link   = Strings::formatNetworkName($contact['network'], $contact_url);
-			$network_avatar = ContactSelector::networkToIcon($contact['network'], $contact_url);
+			$network_svg    = ContactSelector::networkToSVG($contact['network'], $contact['gsid'], '', DI::userSession()->getLocalUserId());
 		} else {
 			$network_link   = '';
-			$network_avatar = '';
+			$network_svg    = '';
 		}
 
 		$follow_link      = '';
@@ -57,6 +57,11 @@ class VCard
 		$photo   = Contact::getPhoto($contact);
 
 		if (DI::userSession()->getLocalUserId()) {
+			if (Contact\User::isIsBlocked($contact['id'], DI::userSession()->getLocalUserId())) {
+				$hide_follow  = true;
+				$hide_mention = true;
+			}
+		
 			if ($contact['uid']) {
 				$id      = $contact['id'];
 				$rel     = $contact['rel'];
@@ -77,7 +82,7 @@ class VCard
 				if (in_array($rel, [Contact::SHARING, Contact::FRIEND])) {
 					$unfollow_link = 'contact/unfollow?url=' . urlencode($contact_url) . '&auto=1';
 				} elseif (!$pending) {
-					$follow_link = 'contact/follow?url=' . urlencode($contact_url) . '&auto=1';
+					$follow_link = 'contact/follow?binurl=' . bin2hex($contact_url) . '&auto=1';
 				}
 			}
 
@@ -106,7 +111,7 @@ class VCard
 			'$matrix'           => DI::l10n()->t('Matrix:'),
 			'$location'         => DI::l10n()->t('Location:'),
 			'$network_link'     => $network_link,
-			'$network_avatar'   => $network_avatar,
+			'$network_svg'      => $network_svg,
 			'$network'          => DI::l10n()->t('Network:'),
 			'$account_type'     => Contact::getAccountType($contact['contact-type']),
 			'$follow'           => DI::l10n()->t('Follow'),

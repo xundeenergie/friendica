@@ -129,7 +129,10 @@ SPDX-FileCopyrightText = "2010-2024 The Friendica Project"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "view/lang/**/strings.php"
+path = [
+     "view/lang/**/strings.php",
+     "view/lang/**/messages.po"
+     ]
 SPDX-FileCopyrightText = "2010-2024 The Friendica Project"
 SPDX-License-Identifier = "AGPL-3.0-or-later"
 

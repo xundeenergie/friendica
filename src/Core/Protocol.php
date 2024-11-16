@@ -11,6 +11,7 @@ use Friendica\Database\DBA;
 use Friendica\Model\User;
 use Friendica\Network\HTTPException;
 use Friendica\Protocol\ActivityPub;
+use Friendica\Protocol\ActivityPub\Transmitter;
 use Friendica\Protocol\Diaspora;
 
 /**
@@ -32,26 +33,26 @@ class Protocol
 	const SUPPORT_PRIVATE = [self::DFRN, self::DIASPORA, self::MAIL, self::ACTIVITYPUB, self::PUMPIO];
 
 	// Supported through a connector
-	const DIASPORA2 = 'dspc';    // Diaspora connector
-	const PUMPIO    = 'pump';    // pump.io
-	const TWITTER   = 'twit';    // Twitter
-	const DISCOURSE = 'dscs';    // Discourse
-	const TUMBLR    = 'tmbl';    // Tumblr
 	const BLUESKY   = 'bsky';    // Bluesky
+	const DIASPORA2 = 'dspc';    // Diaspora connector
+	const DISCOURSE = 'dscs';    // Discourse
+	const PNUT      = 'pnut';    // pnut.io
+	const PUMPIO    = 'pump';    // pump.io
+	const TUMBLR    = 'tmbl';    // Tumblr
+	const TWITTER   = 'twit';    // Twitter
 
 	// Dead protocols
-	const OSTATUS   = 'stat';    // GNU Social and other OStatus implementations
-	const STATUSNET = 'stac';    // Statusnet connector
 	const APPNET    = 'apdn';    // app.net - Dead protocol
 	const FACEBOOK  = 'face';    // Facebook API - Not working anymore, API is closed
 	const GPLUS     = 'goog';    // Google+ - Dead in 2019
+	const OSTATUS   = 'stat';    // GNU Social and other OStatus implementations
+	const STATUSNET = 'stac';    // Statusnet connector
 
 	// Currently unsupported
 	const ICALENDAR = 'ical';    // iCalendar
-	const MYSPACE   = 'mysp';    // MySpace
 	const LINKEDIN  = 'lnkd';    // LinkedIn
+	const MYSPACE   = 'mysp';    // MySpace
 	const NEWS      = 'nntp';    // Network News Transfer Protocol
-	const PNUT      = 'pnut';    // pnut.io
 	const XMPP      = 'xmpp';    // XMPP
 	const ZOT       = 'zot!';    // Zot!
 
@@ -211,7 +212,7 @@ class Protocol
 	}
 
 	/**
-	 * Send a block message to a remote server. Only useful for connector addons.
+	 * Send a block message to a remote server.
 	 *
 	 * @param array $contact Public contact record to block
 	 * @param int   $uid     User issuing the block
@@ -220,6 +221,23 @@ class Protocol
 	 */
 	public static function block(array $contact, int $uid): ?bool
 	{
+		if (empty($contact['network'])) {
+			throw new \InvalidArgumentException('Missing network key in contact array');
+		}
+
+		$protocol = $contact['network'];
+		if ($protocol == self::DFRN && !empty($contact['protocol'])) {
+			$protocol = $contact['protocol'];
+		}
+
+		if ($protocol == self::ACTIVITYPUB) {
+			$activity_id = Transmitter::activityIDFromContact($contact['id'], $uid);
+			if (empty($activity_id)) {
+				return false;
+			}
+			return ActivityPub\Transmitter::sendActivity('Block', $contact['url'], $uid, $activity_id);
+		}
+
 		// Catch-all hook for connector addons
 		$hook_data = [
 			'contact' => $contact,
@@ -232,7 +250,7 @@ class Protocol
 	}
 
 	/**
-	 * Send an unblock message to a remote server. Only useful for connector addons.
+	 * Send an unblock message to a remote server.
 	 *
 	 * @param array $contact Public contact record to unblock
 	 * @param int   $uid     User revoking the block
@@ -241,6 +259,24 @@ class Protocol
 	 */
 	public static function unblock(array $contact, int $uid): ?bool
 	{
+		$owner = User::getOwnerDataById($uid);
+		if (!DBA::isResult($owner)) {
+			return false;
+		}
+
+		if (empty($contact['network'])) {
+			throw new \InvalidArgumentException('Missing network key in contact array');
+		}
+
+		$protocol = $contact['network'];
+		if ($protocol == self::DFRN && !empty($contact['protocol'])) {
+			$protocol = $contact['protocol'];
+		}
+
+		if ($protocol == self::ACTIVITYPUB) {
+			return ActivityPub\Transmitter::sendContactUnblock($contact['url'], $contact['id'], $owner);
+		}
+
 		// Catch-all hook for connector addons
 		$hook_data = [
 			'contact' => $contact,

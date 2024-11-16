@@ -297,7 +297,9 @@ class HTTPSignature
 
 		self::setInboxStatus($target, ($return_code >= 200) && ($return_code <= 299));
 
-		Item::incrementOutbound(Protocol::ACTIVITYPUB);
+		if (($return_code >= 200) && ($return_code <= 299)) {
+			Item::incrementOutbound(Protocol::ACTIVITYPUB);
+		}
 
 		return $postResult;
 	}
@@ -761,9 +763,9 @@ class HTTPSignature
 		}
 
 		if (in_array('(expires)', $sig_block['headers']) && !empty($sig_block['expires'])) {
-			$expired = min($sig_block['expires'], $created + 300);
+			$expired = min($sig_block['expires'], $created + 3600);
 		} else {
-			$expired = $created + 300;
+			$expired = $created + 3600;
 		}
 
 		//  Check if the signed date field is in an acceptable range

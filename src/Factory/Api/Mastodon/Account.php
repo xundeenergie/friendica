@@ -10,8 +10,10 @@ namespace Friendica\Factory\Api\Mastodon;
 use Friendica\App\BaseURL;
 use Friendica\BaseFactory;
 use Friendica\Collection\Api\Mastodon\Fields;
+use Friendica\Content\Widget;
 use Friendica\Database\DBA;
 use Friendica\Model\Contact;
+use Friendica\Model\User;
 use Friendica\Network\HTTPException;
 use Friendica\Profile\ProfileField\Repository\ProfileField as ProfileFieldRepository;
 use ImagickException;
@@ -75,10 +77,15 @@ class Account extends BaseFactory
 		$fields = new Fields();
 
 		if (Contact::isLocal($account['url'])) {
-			$self_contact = Contact::selectFirst(['uid'], ['nurl' => $account['nurl'], 'self' => true]);
-			if (!empty($self_contact['uid'])) {
-				$profileFields = $this->profileFieldRepo->selectPublicFieldsByUserId($self_contact['uid']);
+			$profile_uid = User::getIdForContactId($account['id']);
+			if ($profile_uid) {
+				$profileFields = $this->profileFieldRepo->selectPublicFieldsByUserId($profile_uid);
 				$fields        = $this->mstdnFieldFactory->createFromProfileFields($profileFields);
+
+				if ($profile_uid == $uid) {
+					$account['ap-followers_count'] = $this->getContactRelationCountForUid($uid, [Contact::FOLLOWER, Contact::FRIEND]);
+					$account['ap-following_count'] = $this->getContactRelationCountForUid($uid, [Contact::SHARING, Contact::FRIEND]);
+				}
 			}
 		}
 
@@ -97,5 +104,21 @@ class Account extends BaseFactory
 		$fields        = $this->mstdnFieldFactory->createFromProfileFields($profileFields);
 
 		return new \Friendica\Object\Api\Mastodon\Account($this->baseUrl, $account, $fields);
+	}
+
+	private function getContactRelationCountForUid(int $uid, array $rel): int
+	{
+		$condition = [
+			'uid' => $uid,
+			'rel' => $rel,
+			'self' => false,
+			'deleted' => false,
+			'archive' => false,
+			'pending' => false,
+			'blocked' => false,
+			'network' => Widget::availableNetworks(),
+		];
+
+		return DBA::count('contact', $condition);
 	}
 }
