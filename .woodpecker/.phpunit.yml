@@ -77,6 +77,9 @@ steps:
         else
           phpunit --configuration tests/phpunit.xml -d memory_limit=-1;
         fi
+      - if [ "${PHP_MAJOR_VERSION}" = "8.2" ]; then
+          bin/composer.phar run phpstan
+        fi
   codecov:
     image: friendicaci/codecov
     when:
