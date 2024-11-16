@@ -57,6 +57,9 @@ class FriendicaExtension extends BaseDataTransferObject
 	 */
 	protected $visibility;
 
+	/** @var string|null */
+	protected $content;
+
 	/**
 	 * Creates a FriendicaExtension object
 	 *
@@ -86,7 +89,8 @@ class FriendicaExtension extends BaseDataTransferObject
 		?string $version,
 		?string $sitename,
 		?FriendicaDeliveryData $delivery_data,
-		?FriendicaVisibility $visibility
+		?FriendicaVisibility $visibility,
+		?string $content
 	) {
 		$this->title          = $title;
 		$this->changed_at     = $changed_at ? DateTimeFormat::utc($changed_at, DateTimeFormat::JSON) : null;
@@ -100,6 +104,7 @@ class FriendicaExtension extends BaseDataTransferObject
 		$this->version        = $version;
 		$this->sitename       = $sitename;
 		$this->visibility     = $visibility;
+		$this->content        = $content;
 	}
 
 	/**

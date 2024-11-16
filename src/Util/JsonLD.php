@@ -58,6 +58,9 @@ class JsonLD
 			case 'http://joinmastodon.org/ns':
 				$url = DI::basePath() . '/static/joinmastodon.jsonld';
 				break;
+			case 'https://purl.archive.org/socialweb/webfinger':
+				$url = DI::basePath() . '/static/socialweb-webfinger.jsonld';
+				break;
 			default:
 				switch (parse_url($url, PHP_URL_PATH)) {
 					case '/schemas/litepub-0.1.jsonld';

@@ -297,7 +297,7 @@ class Profile extends BaseModule
 
 		$poll_enabled = in_array($contact['network'], [Protocol::DFRN, Protocol::FEED, Protocol::MAIL]);
 
-		$nettype = $this->t('Network type: %s', ContactSelector::networkToName($contact['network'], $contact['url'], $contact['protocol'], $contact['gsid']));
+		$nettype = $this->t('Network type: %s', ContactSelector::networkToName($contact['network'], $contact['protocol'], $contact['gsid']));
 
 		// tabs
 		$tab_str = Module\Contact::getTabsHTML($contact, Module\Contact::TAB_PROFILE);
@@ -355,6 +355,11 @@ class Profile extends BaseModule
 		}
 
 		$contact_actions = $this->getContactActions($contact, $localRelationship);
+
+		if (Contact\User::isIsBlocked($contact['id'], $this->session->getLocalUserId())) {
+			$relation_text = $this->t('%s has blocked you', $contact['name'] ?: $contact['nick']);
+			unset($contact_actions['follow']);
+		}
 
 		if ($localRelationship->rel !== Contact::NOTHING) {
 			$lbl_info1              = $this->t('Contact Information / Notes');
@@ -477,7 +482,7 @@ class Profile extends BaseModule
 		} else {
 			$contact_actions['follow'] = [
 				'label' => $this->t('Follow'),
-				'url'   => 'contact/follow?url=' . urlencode($contact['url']) . '&auto=1',
+				'url'   => 'contact/follow?binurl=' . bin2hex($contact['url']) . '&auto=1',
 				'title' => '',
 				'sel'   => '',
 				'id'    => 'follow',
