@@ -30,6 +30,11 @@ class Babel extends BaseModule
 	protected function content(array $request = []): string
 	{
 		$results = [];
+
+		$visible_whitespace = function (string $s): string {
+			return '<pre>' . htmlspecialchars($s) . '</pre>';
+		};
+
 		if (!empty($request['text'])) {
 			self::checkFormSecurityTokenForbiddenOnError('babel');
 			switch (($request['type'] ?? '') ?: 'bbcode') {
@@ -37,24 +42,24 @@ class Babel extends BaseModule
 					$bbcode = $request['text'];
 					$results[] = [
 						'title'   => DI::l10n()->t('Source input'),
-						'content' => $this->visible_whitespace($bbcode)
+						'content' => $visible_whitespace($bbcode)
 					];
 
 					$plain = Text\BBCode::toPlaintext($bbcode, false);
 					$results[] = [
 						'title'   => DI::l10n()->t('BBCode::toPlaintext'),
-						'content' => $this->visible_whitespace($plain)
+						'content' => $visible_whitespace($plain)
 					];
 
 					$html = Text\BBCode::convertForUriId(0, $bbcode);
 					$results[] = [
 						'title'   => DI::l10n()->t('BBCode::convert (raw HTML)'),
-						'content' => $this->visible_whitespace($html)
+						'content' => $visible_whitespace($html)
 					];
 
 					$results[] = [
 						'title'   => DI::l10n()->t('BBCode::convert (hex)'),
-						'content' => $this->visible_whitespace(bin2hex($html)),
+						'content' => $visible_whitespace(bin2hex($html)),
 					];
 
 					$results[] = [
@@ -65,19 +70,19 @@ class Babel extends BaseModule
 					$bbcode2 = Text\HTML::toBBCode($html);
 					$results[] = [
 						'title'   => DI::l10n()->t('BBCode::convert => HTML::toBBCode'),
-						'content' => $this->visible_whitespace($bbcode2)
+						'content' => $visible_whitespace($bbcode2)
 					];
 
 					$markdown = Text\BBCode::toMarkdown($bbcode);
 					$results[] = [
 						'title'   => DI::l10n()->t('BBCode::toMarkdown'),
-						'content' => $this->visible_whitespace($markdown)
+						'content' => $visible_whitespace($markdown)
 					];
 
 					$html2 = Text\Markdown::convert($markdown);
 					$results[] = [
 						'title'   => DI::l10n()->t('BBCode::toMarkdown => Markdown::convert (raw HTML)'),
-						'content' => $this->visible_whitespace($html2)
+						'content' => $visible_whitespace($html2)
 					];
 					$results[] = [
 						'title'   => DI::l10n()->t('BBCode::toMarkdown => Markdown::convert'),
@@ -87,13 +92,13 @@ class Babel extends BaseModule
 					$bbcode3 = Text\Markdown::toBBCode($markdown);
 					$results[] = [
 						'title'   => DI::l10n()->t('BBCode::toMarkdown => Markdown::toBBCode'),
-						'content' => $this->visible_whitespace($bbcode3)
+						'content' => $visible_whitespace($bbcode3)
 					];
 
 					$bbcode4 = Text\HTML::toBBCode($html2);
 					$results[] = [
 						'title'   => DI::l10n()->t('BBCode::toMarkdown =>  Markdown::convert => HTML::toBBCode'),
-						'content' => $this->visible_whitespace($bbcode4)
+						'content' => $visible_whitespace($bbcode4)
 					];
 
 					$tags = Text\BBCode::getTags($bbcode);
@@ -101,22 +106,22 @@ class Babel extends BaseModule
 					$body = Item::setHashtags($bbcode);
 					$results[] = [
 						'title'   => DI::l10n()->t('Item Body'),
-						'content' => $this->visible_whitespace($body)
+						'content' => $visible_whitespace($body)
 					];
 					$results[] = [
 						'title'   => DI::l10n()->t('Item Tags'),
-						'content' => $this->visible_whitespace(var_export($tags, true)),
+						'content' => $visible_whitespace(var_export($tags, true)),
 					];
 
 					$body2 = PageInfo::searchAndAppendToBody($bbcode, true);
 					$results[] = [
 						'title'   => DI::l10n()->t('PageInfo::appendToBody'),
-						'content' => $this->visible_whitespace($body2)
+						'content' => $visible_whitespace($body2)
 					];
 					$html3 = Text\BBCode::convertForUriId(0, $body2);
 					$results[] = [
 						'title'   => DI::l10n()->t('PageInfo::appendToBody => BBCode::convert (raw HTML)'),
-						'content' => $this->visible_whitespace($html3)
+						'content' => $visible_whitespace($html3)
 					];
 					$results[] = [
 						'title'   => DI::l10n()->t('PageInfo::appendToBody => BBCode::convert'),
@@ -127,7 +132,7 @@ class Babel extends BaseModule
 					$diaspora = trim($request['text']);
 					$results[] = [
 						'title'   => DI::l10n()->t('Source input (Diaspora format)'),
-						'content' => $this->visible_whitespace($diaspora),
+						'content' => $visible_whitespace($diaspora),
 					];
 
 					$markdown = XML::unescape($diaspora);
@@ -136,13 +141,13 @@ class Babel extends BaseModule
 
 					$results[] = [
 						'title'   => DI::l10n()->t('Source input (Markdown)'),
-						'content' => $this->visible_whitespace($markdown),
+						'content' => $visible_whitespace($markdown),
 					];
 
 					$html = Text\Markdown::convert($markdown);
 					$results[] = [
 						'title'   => DI::l10n()->t('Markdown::convert (raw HTML)'),
-						'content' => $this->visible_whitespace($html),
+						'content' => $visible_whitespace($html),
 					];
 
 					$results[] = [
@@ -153,14 +158,14 @@ class Babel extends BaseModule
 					$bbcode = Text\Markdown::toBBCode($markdown);
 					$results[] = [
 						'title'   => DI::l10n()->t('Markdown::toBBCode'),
-						'content' => $this->visible_whitespace($bbcode),
+						'content' => $visible_whitespace($bbcode),
 					];
 					break;
 				case 'html' :
 					$html = trim($request['text']);
 					$results[] = [
 						'title'   => DI::l10n()->t('Raw HTML input'),
-						'content' => $this->visible_whitespace($html),
+						'content' => $visible_whitespace($html),
 					];
 
 					$results[] = [
@@ -172,12 +177,12 @@ class Babel extends BaseModule
 
 					$results[] = [
 						'title'   => DI::l10n()->t('HTML Purified (raw)'),
-						'content' => $this->visible_whitespace($purified),
+						'content' => $visible_whitespace($purified),
 					];
 
 					$results[] = [
 						'title'   => DI::l10n()->t('HTML Purified (hex)'),
-						'content' => $this->visible_whitespace(bin2hex($purified)),
+						'content' => $visible_whitespace(bin2hex($purified)),
 					];
 
 					$results[] = [
@@ -188,7 +193,7 @@ class Babel extends BaseModule
 					$bbcode = Text\HTML::toBBCode($html);
 					$results[] = [
 						'title'   => DI::l10n()->t('HTML::toBBCode'),
-						'content' => $this->visible_whitespace($bbcode)
+						'content' => $visible_whitespace($bbcode)
 					];
 
 					$html2 = Text\BBCode::convertForUriId(0, $bbcode);
@@ -205,25 +210,25 @@ class Babel extends BaseModule
 					$bbcode2plain = Text\BBCode::toPlaintext($bbcode);
 					$results[] = [
 						'title'   => DI::l10n()->t('HTML::toBBCode => BBCode::toPlaintext'),
-						'content' => $this->visible_whitespace($bbcode2plain),
+						'content' => $visible_whitespace($bbcode2plain),
 					];
 
 					$markdown = Text\HTML::toMarkdown($html);
 					$results[] = [
 						'title'   => DI::l10n()->t('HTML::toMarkdown'),
-						'content' => $this->visible_whitespace($markdown)
+						'content' => $visible_whitespace($markdown)
 					];
 
 					$text = Text\HTML::toPlaintext($html, 0);
 					$results[] = [
 						'title'   => DI::l10n()->t('HTML::toPlaintext'),
-						'content' => $this->visible_whitespace($text),
+						'content' => $visible_whitespace($text),
 					];
 
 					$text = Text\HTML::toPlaintext($html, 0, true);
 					$results[] = [
 						'title'   => DI::l10n()->t('HTML::toPlaintext (compact)'),
-						'content' => $this->visible_whitespace($text),
+						'content' => $visible_whitespace($text),
 					];
 					break;
 				case 'twitter':
@@ -236,7 +241,7 @@ class Babel extends BaseModule
 
 						$results[] = [
 							'title'   => DI::l10n()->t('Decoded post'),
-							'content' => $this->visible_whitespace(var_export($status, true)),
+							'content' => $visible_whitespace(var_export($status, true)),
 						];
 
 						$postarray = [];
@@ -255,7 +260,7 @@ class Babel extends BaseModule
 
 						$results[] = [
 							'title'   => DI::l10n()->t('Post array before expand entities'),
-							'content' => $this->visible_whitespace(var_export($postarray, true)),
+							'content' => $visible_whitespace(var_export($postarray, true)),
 						];
 					} else {
 						$results[] = [
@@ -284,10 +289,5 @@ class Babel extends BaseModule
 		]);
 
 		return $o;
-	}
-
-	private function visible_whitespace($s): string
-	{
-		return '<pre>' . htmlspecialchars($s) . '</pre>';
 	}
 }
