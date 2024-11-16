@@ -10,5 +10,9 @@ parameters:
 
     scanDirectories:
         - mod
+        - static
         - vendor
         - view
+
+    dynamicConstantNames:
+        - DB_UPDATE_VERSION
