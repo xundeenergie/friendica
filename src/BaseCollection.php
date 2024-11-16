@@ -89,7 +89,9 @@ class BaseCollection extends \ArrayIterator
 	 */
 	public function map(callable $callback): BaseCollection
 	{
-		return new static(array_map($callback, $this->getArrayCopy()), $this->getTotalCount());
+		$class = get_class($this);
+
+		return new $class(array_map($callback, $this->getArrayCopy()), $this->getTotalCount());
 	}
 
 	/**
@@ -102,7 +104,9 @@ class BaseCollection extends \ArrayIterator
 	 */
 	public function filter(callable $callback = null, int $flag = 0): BaseCollection
 	{
-		return new static(array_filter($this->getArrayCopy(), $callback, $flag));
+		$class = get_class($this);
+
+		return new $class(array_filter($this->getArrayCopy(), $callback, $flag));
 	}
 
 	/**
@@ -112,7 +116,9 @@ class BaseCollection extends \ArrayIterator
 	 */
 	public function reverse(): BaseCollection
 	{
-		return new static(array_reverse($this->getArrayCopy()), $this->getTotalCount());
+		$class = get_class($this);
+
+		return new $class(array_reverse($this->getArrayCopy()), $this->getTotalCount());
 	}
 
 	/**
@@ -128,7 +134,9 @@ class BaseCollection extends \ArrayIterator
 		}
 
 		return array_map(function ($array) {
-			return new static($array);
+			$class = get_class($this);
+
+			return new $class($array);
 		}, array_chunk($this->getArrayCopy(), $length));
 	}
 

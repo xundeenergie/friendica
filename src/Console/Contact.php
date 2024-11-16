@@ -158,9 +158,10 @@ HELP;
 
 		if ($result['success']) {
 			$this->out('User ' . $user['nickname'] . ' now connected to ' . $url . ', contact ID ' . $result['cid']);
-		} else {
-			throw new RuntimeException($result['message']);
+			return true;
 		}
+
+		throw new RuntimeException($result['message']);
 	}
 
 	/**

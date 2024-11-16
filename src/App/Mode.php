@@ -210,7 +210,7 @@ class Mode
 	public function isInstall(): bool
 	{
 		return !$this->has(Mode::LOCALCONFIGPRESENT) ||
-		       !$this->has(MODE::DBAVAILABLE);
+		       !$this->has(Mode::DBAVAILABLE);
 	}
 
 	/**

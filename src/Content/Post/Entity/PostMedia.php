@@ -228,7 +228,7 @@ class PostMedia extends BaseEntity
 			$newHeight = $dimensionts['height'];
 		}
 
-		return new static(
+		return new self(
 			$this->uriId,
 			$this->url,
 			$this->type,
@@ -255,7 +255,7 @@ class PostMedia extends BaseEntity
 
 	public function withUrl(\GuzzleHttp\Psr7\Uri $url): self
 	{
-		return new static(
+		return new self(
 			$this->uriId,
 			$url,
 			$this->type,

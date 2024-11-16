@@ -41,11 +41,8 @@ class APCuCache extends AbstractCache implements ICanCacheInMemory
 		$ns = $this->getCacheKey($prefix ?? '');
 		$ns = preg_quote($ns, '/');
 
-		if (class_exists('\APCIterator')) {
-			$iterator = new \APCIterator('user', '/^' . $ns. '/', APC_ITER_KEY);
-		} else {
-			$iterator = new \APCUIterator('/^' . $ns . '/', APC_ITER_KEY);
-		}
+		/** @phpstan-ignore-next-line see https://github.com/friendica/friendica-addons/pull/1363 */
+		$iterator = new \APCUIterator('/^' . $ns . '/', APC_ITER_KEY);
 
 		$keys = [];
 		foreach ($iterator as $item) {
@@ -122,11 +119,8 @@ class APCuCache extends AbstractCache implements ICanCacheInMemory
 			$prefix = $this->getPrefix();
 			$prefix = preg_quote($prefix, '/');
 
-			if (class_exists('\APCIterator')) {
-				$iterator = new \APCIterator('user', '/^' . $prefix . '/', APC_ITER_KEY);
-			} else {
-				$iterator = new \APCUIterator('/^' . $prefix . '/', APC_ITER_KEY);
-			}
+			/** @phpstan-ignore-next-line see https://github.com/friendica/friendica-addons/pull/1363 */
+			$iterator = new \APCUIterator('/^' . $prefix . '/', APC_ITER_KEY);
 
 			return apcu_delete($iterator);
 		}
@@ -149,10 +143,7 @@ class APCuCache extends AbstractCache implements ICanCacheInMemory
 			return false;
 		} elseif (!ini_get('apc.enabled') && !ini_get('apc.enable_cli')) {
 			return false;
-		} elseif (
-			version_compare(phpversion('apc') ?: '0.0.0', '4.0.6') === -1 &&
-			version_compare(phpversion('apcu') ?: '0.0.0', '5.1.0') === -1
-		) {
+		} elseif (version_compare(phpversion('apcu') ?: '0.0.0', '5.1.0', '<')) {
 			return false;
 		}
 

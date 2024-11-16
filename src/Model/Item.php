@@ -3199,10 +3199,10 @@ class Item
 		} elseif ($remote_user) {
 			// Authenticated visitor - fetch the matching permissionsets
 			$permissionSets = DI::permissionSet()->selectByContactId($remote_user, $owner_id);
-			if (!empty($set)) {
+			if (!empty($permissionSets)) {
 				$condition = [
 					"(`private` != ? OR (`private` = ? AND `wall`
-					AND `psid` IN (" . implode(', ', array_fill(0, count($set), '?')) . ")))",
+					AND `psid` IN (" . implode(', ', array_fill(0, count($permissionSets), '?')) . ")))",
 					self::PRIVATE, self::PRIVATE
 				];
 				$condition = array_merge($condition, $permissionSets->column('id'));
@@ -3248,7 +3248,7 @@ class Item
 			 */
 			$permissionSets = DI::permissionSet()->selectByContactId($remote_user, $owner_id);
 
-			if (!empty($set)) {
+			if (!empty($permissionSets)) {
 				$sql_set = sprintf(" OR (" . $table . "`private` = %d AND " . $table . "`wall` AND " . $table . "`psid` IN (", self::PRIVATE) . implode(',', $permissionSets->column('id')) . "))";
 			} else {
 				$sql_set = '';

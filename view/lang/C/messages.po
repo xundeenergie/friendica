@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.09-rc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-15 06:54+0000\n"
+"POT-Creation-Date: 2024-11-16 08:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,8 +39,8 @@ msgid "Empty post discarded."
 msgstr ""
 
 #: mod/item.php:425 src/Module/Admin/Themes/Details.php:31
-#: src/Module/Admin/Themes/Index.php:51 src/Module/Debug/ItemBody.php:28
-#: src/Module/Debug/ItemBody.php:43 src/Module/Item/Feed.php:66
+#: src/Module/Admin/Themes/Index.php:51 src/Module/Debug/ItemBody.php:34
+#: src/Module/Debug/ItemBody.php:42 src/Module/Item/Feed.php:66
 msgid "Item not found."
 msgstr ""
 
@@ -292,8 +292,8 @@ msgstr ""
 #: mod/photos.php:1152 mod/photos.php:1232
 #: src/Module/Calendar/Event/Form.php:236 src/Module/Contact/Advanced.php:118
 #: src/Module/Contact/Profile.php:376
-#: src/Module/Debug/ActivityPubConversion.php:132
-#: src/Module/Debug/Babel.php:307 src/Module/Debug/Localtime.php:50
+#: src/Module/Debug/ActivityPubConversion.php:128
+#: src/Module/Debug/Babel.php:288 src/Module/Debug/Localtime.php:50
 #: src/Module/Debug/Probe.php:40 src/Module/Debug/WebFinger.php:37
 #: src/Module/FriendSuggest.php:131 src/Module/Install.php:221
 #: src/Module/Install.php:261 src/Module/Install.php:296
@@ -792,15 +792,15 @@ msgstr ""
 msgid "Common"
 msgstr ""
 
-#: src/Console/Addon.php:161 src/Console/Addon.php:185
+#: src/Console/Addon.php:163 src/Console/Addon.php:187
 msgid "Addon not found"
 msgstr ""
 
-#: src/Console/Addon.php:165
+#: src/Console/Addon.php:167
 msgid "Addon already enabled"
 msgstr ""
 
-#: src/Console/Addon.php:189
+#: src/Console/Addon.php:191
 msgid "Addon already disabled"
 msgstr ""
 
@@ -1065,7 +1065,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: src/Content/ContactSelector.php:122 src/Module/Debug/Babel.php:301
+#: src/Content/ContactSelector.php:122 src/Module/Debug/Babel.php:282
 msgid "Diaspora"
 msgstr ""
 
@@ -1365,7 +1365,7 @@ msgstr ""
 msgid "Public post"
 msgstr ""
 
-#: src/Content/Conversation.php:410 src/Content/Widget/VCard.php:122
+#: src/Content/Conversation.php:410 src/Content/Widget/VCard.php:121
 #: src/Model/Profile.php:462 src/Module/Admin/Logs/View.php:80
 #: src/Module/Post/Edit.php:167
 msgid "Message"
@@ -2273,7 +2273,7 @@ msgstr ""
 msgid "The end"
 msgstr ""
 
-#: src/Content/Text/HTML.php:847 src/Content/Widget/VCard.php:118
+#: src/Content/Text/HTML.php:847 src/Content/Widget/VCard.php:117
 #: src/Model/Profile.php:456 src/Module/Contact/Profile.php:484
 msgid "Follow"
 msgstr ""
@@ -2416,18 +2416,18 @@ msgstr ""
 msgid "Export calendar as csv"
 msgstr ""
 
-#: src/Content/Widget/ContactBlock.php:65
+#: src/Content/Widget/ContactBlock.php:64
 msgid "No contacts"
 msgstr ""
 
-#: src/Content/Widget/ContactBlock.php:96
+#: src/Content/Widget/ContactBlock.php:95
 #, php-format
 msgid "%d Contact"
 msgid_plural "%d Contacts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Content/Widget/ContactBlock.php:113
+#: src/Content/Widget/ContactBlock.php:112
 msgid "View Contacts"
 msgstr ""
 
@@ -2446,27 +2446,27 @@ msgstr[1] ""
 msgid "More Trending Tags"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:96 src/Model/Contact.php:1207
+#: src/Content/Widget/VCard.php:95 src/Model/Contact.php:1207
 #: src/Model/Profile.php:441
 msgid "Post to group"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:101 src/Model/Contact.php:1211
+#: src/Content/Widget/VCard.php:100 src/Model/Contact.php:1211
 #: src/Model/Profile.php:445 src/Module/Moderation/Item/Source.php:77
 msgid "Mention"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:111 src/Model/Profile.php:360
+#: src/Content/Widget/VCard.php:110 src/Model/Profile.php:360
 #: src/Module/Contact/Profile.php:420 src/Module/Profile/Profile.php:187
 msgid "XMPP:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:112 src/Model/Profile.php:361
+#: src/Content/Widget/VCard.php:111 src/Model/Profile.php:361
 #: src/Module/Contact/Profile.php:422 src/Module/Profile/Profile.php:191
 msgid "Matrix:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:113 src/Model/Event.php:68
+#: src/Content/Widget/VCard.php:112 src/Model/Event.php:68
 #: src/Model/Event.php:95 src/Model/Event.php:457 src/Model/Event.php:946
 #: src/Model/Profile.php:355 src/Module/Contact/Profile.php:418
 #: src/Module/Directory.php:134 src/Module/Notifications/Introductions.php:180
@@ -2474,18 +2474,18 @@ msgstr ""
 msgid "Location:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:116 src/Model/Profile.php:469
+#: src/Content/Widget/VCard.php:115 src/Model/Profile.php:469
 #: src/Module/Notifications/Introductions.php:194
 msgid "Network:"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:120 src/Model/Contact.php:1239
+#: src/Content/Widget/VCard.php:119 src/Model/Contact.php:1239
 #: src/Model/Contact.php:1251 src/Model/Profile.php:458
 #: src/Module/Contact/Profile.php:476
 msgid "Unfollow"
 msgstr ""
 
-#: src/Content/Widget/VCard.php:126 src/Model/Contact.php:1209
+#: src/Content/Widget/VCard.php:125 src/Model/Contact.php:1209
 #: src/Model/Profile.php:443
 msgid "View group"
 msgstr ""
@@ -5630,7 +5630,7 @@ msgstr ""
 msgid "Babel"
 msgstr ""
 
-#: src/Module/BaseAdmin.php:97 src/Module/Debug/ActivityPubConversion.php:129
+#: src/Module/BaseAdmin.php:97 src/Module/Debug/ActivityPubConversion.php:125
 msgid "ActivityPub Conversion"
 msgstr ""
 
@@ -6248,7 +6248,7 @@ msgstr[1] ""
 
 #: src/Module/Contact/Follow.php:56 src/Module/Contact/Redir.php:45
 #: src/Module/Contact/Redir.php:206 src/Module/Conversation/Community.php:154
-#: src/Module/Debug/ItemBody.php:24 src/Module/Diaspora/Receive.php:45
+#: src/Module/Debug/ItemBody.php:30 src/Module/Diaspora/Receive.php:45
 #: src/Module/Item/Display.php:82 src/Module/Item/Feed.php:45
 #: src/Module/Item/Follow.php:27 src/Module/Item/Ignore.php:27
 #: src/Module/Item/Language.php:39 src/Module/Item/Pin.php:27
@@ -6732,23 +6732,23 @@ msgstr ""
 msgid "Activity"
 msgstr ""
 
-#: src/Module/Debug/ActivityPubConversion.php:109
+#: src/Module/Debug/ActivityPubConversion.php:105
 msgid "Object data"
 msgstr ""
 
-#: src/Module/Debug/ActivityPubConversion.php:116
+#: src/Module/Debug/ActivityPubConversion.php:112
 msgid "Result Item"
 msgstr ""
 
-#: src/Module/Debug/ActivityPubConversion.php:121
-#: src/Module/Debug/Babel.php:286 src/Module/Moderation/Item/Source.php:79
+#: src/Module/Debug/ActivityPubConversion.php:117
+#: src/Module/Debug/Babel.php:267 src/Module/Moderation/Item/Source.php:79
 #: src/Module/Security/TwoFactor/Verify.php:84
 msgid "Error"
 msgid_plural "Errors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Module/Debug/ActivityPubConversion.php:130
+#: src/Module/Debug/ActivityPubConversion.php:126
 msgid "Source activity"
 msgstr ""
 
@@ -6884,47 +6884,39 @@ msgstr ""
 msgid "HTML::toPlaintext (compact)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:248
+#: src/Module/Debug/Babel.php:243
 msgid "Decoded post"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:269
+#: src/Module/Debug/Babel.php:262
 msgid "Post array before expand entities"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:276
-msgid "Post converted"
-msgstr ""
-
-#: src/Module/Debug/Babel.php:281
-msgid "Converted body"
-msgstr ""
-
-#: src/Module/Debug/Babel.php:287
+#: src/Module/Debug/Babel.php:268
 msgid "Twitter addon is absent from the addon/ folder."
 msgstr ""
 
-#: src/Module/Debug/Babel.php:297
+#: src/Module/Debug/Babel.php:278
 msgid "Babel Diagnostic"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:299
+#: src/Module/Debug/Babel.php:280
 msgid "Source text"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:300
+#: src/Module/Debug/Babel.php:281
 msgid "BBCode"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:302
+#: src/Module/Debug/Babel.php:283
 msgid "Markdown"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:303
+#: src/Module/Debug/Babel.php:284
 msgid "HTML"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:305
+#: src/Module/Debug/Babel.php:286
 msgid "Twitter Source / Tweet URL (requires API key)"
 msgstr ""
 

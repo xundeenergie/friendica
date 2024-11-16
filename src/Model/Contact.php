@@ -2709,8 +2709,6 @@ class Contact
 	 *
 	 * @param int   $id
 	 * @param array $contact
-	 *
-	 * @return boolean
 	 */
 	private static function hasLocalData(int $id, array $contact): bool
 	{
@@ -2770,6 +2768,8 @@ class Contact
 			'network', 'alias', 'baseurl', 'gsid', 'forum', 'prv', 'contact-type', 'pubkey', 'last-item', 'xmpp', 'matrix',
 			'created', 'last-update'
 		];
+
+		/** @var array<string,mixed> */
 		$contact = DBA::selectFirst('contact', $fields, ['id' => $id]);
 		if (!DBA::isResult($contact)) {
 			return false;
@@ -2795,22 +2795,22 @@ class Contact
 
 		$has_local_data = self::hasLocalData($id, $contact);
 
-		$uid = $contact['uid'];
+		$uid = $contact['uid'] ?? null;
 		unset($contact['uid']);
 
-		$uriid = $contact['uri-id'];
+		$uriid = $contact['uri-id'] ?? null;
 		unset($contact['uri-id']);
 
-		$pubkey = $contact['pubkey'];
+		$pubkey = $contact['pubkey'] ?? null;
 		unset($contact['pubkey']);
 
-		$created = $contact['created'];
+		$created = $contact['created'] ?? '';
 		unset($contact['created']);
 
-		$last_update = $contact['last-update'];
+		$last_update = $contact['last-update'] ?? '';
 		unset($contact['last-update']);
 
-		$contact['photo'] = $contact['avatar'];
+		$contact['photo'] = $contact['avatar'] ?? null;
 		unset($contact['avatar']);
 
 		$updated = DateTimeFormat::utcNow();

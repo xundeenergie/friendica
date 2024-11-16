@@ -359,6 +359,8 @@ class Temporal
 				return sprintf($format, $r, (($r == 1) ? $str[0] : $str[1]));
 			}
 		}
+
+		return '';
 	}
 
 	/**
