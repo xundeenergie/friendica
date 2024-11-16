@@ -55,6 +55,13 @@ steps:
         - '.composer'
     volumes:
       - /tmp/drone-cache:/tmp/cache
+  phpstan:
+    image: friendicaci/php${PHP_MAJOR_VERSION}:php${PHP_VERSION}
+    when:
+      matrix:
+        PHP_MAJOR_VERSION: 8.2
+    commands:
+      - bin/composer.phar run phpstan;
   test:
     image: friendicaci/php${PHP_MAJOR_VERSION}:php${PHP_VERSION}
     environment:
@@ -67,9 +74,6 @@ steps:
       MEMCACHED_HOST: "memcached"
       MEMCACHE_HOST: "memcached"
     commands:
-      - if [ "${PHP_MAJOR_VERSION}" = "8.2" ]; then
-          bin/composer.phar run phpstan;
-        fi
       - cp config/local-sample.config.php config/local.config.php
       - if ! bin/wait-for-connection $MYSQL_HOST $MYSQL_PORT 300; then echo "[ERROR] Waited 300 seconds, no response" >&2; exit 1; fi
       - mysql -h$MYSQL_HOST -P$MYSQL_PORT -p$MYSQL_PASSWORD -u$MYSQL_USER $MYSQL_DATABASE < database.sql
