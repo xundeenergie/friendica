@@ -7,6 +7,7 @@
 
 namespace Friendica\Test\src\Factory\Api\Twitter;
 
+use Friendica\Core\Renderer;
 use Friendica\DI;
 use Friendica\Factory\Api\Friendica\Activities;
 use Friendica\Factory\Api\Twitter\Attachment;
@@ -123,10 +124,8 @@ class StatusTest extends FixtureTest
 	 */
 	public function testApiFormatItems()
 	{
-		// FIXME: We are calling DI::app() here so Friendica\App::load() will be called.
-		// This will call Friendica\Core\Renderer::registerTemplateEngine() which is needed for this tests.
-		// This side effect MUST be eliminated.
-		DI::app();
+		// This call is needed for this test
+		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
 
 		$posts = DI::dba()->selectToArray('post-view', ['uri-id']);
 		foreach ($posts as $item) {
