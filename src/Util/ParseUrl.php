@@ -1087,7 +1087,7 @@ class ParseUrl
 		$content = JsonLD::fetchElement($jsonld, 'logo', 'url', '@type', 'ImageObject');
 		if (!empty($content) && is_string($content)) {
 			$jsonldinfo['publisher_img'] = trim($content);
-		} elseif (!empty($content) && is_array($content)) {
+		} elseif (is_array($content) && array_key_exists(0, $content)) {
 			$jsonldinfo['publisher_img'] = trim($content[0]);
 		}
 

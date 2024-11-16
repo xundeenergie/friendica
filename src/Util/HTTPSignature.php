@@ -478,10 +478,6 @@ class HTTPSignature
 			return [];
 		}
 
-		if (empty($curlResult)) {
-			return [];
-		}
-
 		if (!$curlResult->isSuccess() || empty($curlResult->getBodyString())) {
 			Logger::debug('Fetching was unsuccessful', ['url' => $request, 'return-code' => $curlResult->getReturnCode(), 'error-number' => $curlResult->getErrorNumber(), 'error' => $curlResult->getError()]);
 			return [];

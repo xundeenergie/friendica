@@ -308,13 +308,13 @@ class Images
 
 		$data = DI::cache()->get($cacheKey);
 
-		if (empty($data) || !is_array($data)) {
+		if (!is_array($data)) {
 			$data = self::getInfoFromURL($url, $ocr);
 
 			DI::cache()->set($cacheKey, $data);
 		}
 
-		return $data ?? [];
+		return $data;
 	}
 
 	/**
@@ -370,7 +370,7 @@ class Images
 
 		if ($image->isValid()) {
 			$data['blurhash'] = $image->getBlurHash();
-			
+
 			if ($ocr) {
 				$media = ['img_str' => $img_str];
 				Hook::callAll('ocr-detection', $media);
