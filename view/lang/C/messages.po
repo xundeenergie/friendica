@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.09-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-10 07:44+0000\n"
+"POT-Creation-Date: 2024-11-16 12:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -292,8 +292,8 @@ msgstr ""
 #: mod/photos.php:1152 mod/photos.php:1232
 #: src/Module/Calendar/Event/Form.php:236 src/Module/Contact/Advanced.php:118
 #: src/Module/Contact/Profile.php:371
-#: src/Module/Debug/ActivityPubConversion.php:124
-#: src/Module/Debug/Babel.php:283 src/Module/Debug/Localtime.php:50
+#: src/Module/Debug/ActivityPubConversion.php:128
+#: src/Module/Debug/Babel.php:279 src/Module/Debug/Localtime.php:50
 #: src/Module/Debug/Probe.php:40 src/Module/Debug/WebFinger.php:37
 #: src/Module/FriendSuggest.php:131 src/Module/Install.php:220
 #: src/Module/Install.php:260 src/Module/Install.php:295
@@ -1065,7 +1065,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: src/Content/ContactSelector.php:116 src/Module/Debug/Babel.php:277
+#: src/Content/ContactSelector.php:116 src/Module/Debug/Babel.php:273
 msgid "Diaspora"
 msgstr ""
 
@@ -4198,7 +4198,7 @@ msgid "Data"
 msgstr ""
 
 #: src/Module/Admin/Logs/View.php:86
-#: src/Module/Debug/ActivityPubConversion.php:45
+#: src/Module/Debug/ActivityPubConversion.php:49
 msgid "Source"
 msgstr ""
 
@@ -5628,7 +5628,7 @@ msgstr ""
 msgid "Babel"
 msgstr ""
 
-#: src/Module/BaseAdmin.php:97 src/Module/Debug/ActivityPubConversion.php:121
+#: src/Module/BaseAdmin.php:97 src/Module/Debug/ActivityPubConversion.php:125
 msgid "ActivityPub Conversion"
 msgstr ""
 
@@ -6722,199 +6722,195 @@ msgstr ""
 msgid "Friendica is a community project, that would not be possible without the help of many people. Here is a list of those who have contributed to the code or the translation of Friendica. Thank you all!"
 msgstr ""
 
-#: src/Module/Debug/ActivityPubConversion.php:41
+#: src/Module/Debug/ActivityPubConversion.php:45
 msgid "Formatted"
 msgstr ""
 
-#: src/Module/Debug/ActivityPubConversion.php:53
+#: src/Module/Debug/ActivityPubConversion.php:57
 msgid "Activity"
 msgstr ""
 
-#: src/Module/Debug/ActivityPubConversion.php:101
+#: src/Module/Debug/ActivityPubConversion.php:105
 msgid "Object data"
 msgstr ""
 
-#: src/Module/Debug/ActivityPubConversion.php:108
+#: src/Module/Debug/ActivityPubConversion.php:112
 msgid "Result Item"
 msgstr ""
 
-#: src/Module/Debug/ActivityPubConversion.php:113
-#: src/Module/Debug/Babel.php:262 src/Module/Moderation/Item/Source.php:79
+#: src/Module/Debug/ActivityPubConversion.php:117
+#: src/Module/Moderation/Item/Source.php:79
 #: src/Module/Security/TwoFactor/Verify.php:84
 msgid "Error"
 msgid_plural "Errors"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Module/Debug/ActivityPubConversion.php:122
+#: src/Module/Debug/ActivityPubConversion.php:126
 msgid "Source activity"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:39
+#: src/Module/Debug/Babel.php:44
 msgid "Source input"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:45
+#: src/Module/Debug/Babel.php:50
 msgid "BBCode::toPlaintext"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:51
+#: src/Module/Debug/Babel.php:56
 msgid "BBCode::convert (raw HTML)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:56
+#: src/Module/Debug/Babel.php:61
 msgid "BBCode::convert (hex)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:61
+#: src/Module/Debug/Babel.php:66
 msgid "BBCode::convert"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:67
+#: src/Module/Debug/Babel.php:72
 msgid "BBCode::convert => HTML::toBBCode"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:73
+#: src/Module/Debug/Babel.php:78
 msgid "BBCode::toMarkdown"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:79
+#: src/Module/Debug/Babel.php:84
 msgid "BBCode::toMarkdown => Markdown::convert (raw HTML)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:83
+#: src/Module/Debug/Babel.php:88
 msgid "BBCode::toMarkdown => Markdown::convert"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:89
+#: src/Module/Debug/Babel.php:94
 msgid "BBCode::toMarkdown => Markdown::toBBCode"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:95
+#: src/Module/Debug/Babel.php:100
 msgid "BBCode::toMarkdown =>  Markdown::convert => HTML::toBBCode"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:103
+#: src/Module/Debug/Babel.php:108
 msgid "Item Body"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:107
+#: src/Module/Debug/Babel.php:112
 msgid "Item Tags"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:113
+#: src/Module/Debug/Babel.php:118
 msgid "PageInfo::appendToBody"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:118
+#: src/Module/Debug/Babel.php:123
 msgid "PageInfo::appendToBody => BBCode::convert (raw HTML)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:122
+#: src/Module/Debug/Babel.php:127
 msgid "PageInfo::appendToBody => BBCode::convert"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:129
+#: src/Module/Debug/Babel.php:134
 msgid "Source input (Diaspora format)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:138
+#: src/Module/Debug/Babel.php:143
 msgid "Source input (Markdown)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:144
+#: src/Module/Debug/Babel.php:149
 msgid "Markdown::convert (raw HTML)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:149
+#: src/Module/Debug/Babel.php:154
 msgid "Markdown::convert"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:155
+#: src/Module/Debug/Babel.php:160
 msgid "Markdown::toBBCode"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:162
+#: src/Module/Debug/Babel.php:167
 msgid "Raw HTML input"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:167
+#: src/Module/Debug/Babel.php:172
 msgid "HTML Input"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:174
+#: src/Module/Debug/Babel.php:179
 msgid "HTML Purified (raw)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:179
+#: src/Module/Debug/Babel.php:184
 msgid "HTML Purified (hex)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:184
+#: src/Module/Debug/Babel.php:189
 msgid "HTML Purified"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:190
+#: src/Module/Debug/Babel.php:195
 msgid "HTML::toBBCode"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:196
+#: src/Module/Debug/Babel.php:201
 msgid "HTML::toBBCode => BBCode::convert"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:201
+#: src/Module/Debug/Babel.php:206
 msgid "HTML::toBBCode => BBCode::convert (raw HTML)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:207
+#: src/Module/Debug/Babel.php:212
 msgid "HTML::toBBCode => BBCode::toPlaintext"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:213
+#: src/Module/Debug/Babel.php:218
 msgid "HTML::toMarkdown"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:219
+#: src/Module/Debug/Babel.php:224
 msgid "HTML::toPlaintext"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:225
+#: src/Module/Debug/Babel.php:230
 msgid "HTML::toPlaintext (compact)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:238
+#: src/Module/Debug/Babel.php:240
 msgid "Decoded post"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:257
+#: src/Module/Debug/Babel.php:259
 msgid "Post array before expand entities"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:263
-msgid "Twitter addon is absent from the addon/ folder."
-msgstr ""
-
-#: src/Module/Debug/Babel.php:273
+#: src/Module/Debug/Babel.php:269
 msgid "Babel Diagnostic"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:275
+#: src/Module/Debug/Babel.php:271
 msgid "Source text"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:276
+#: src/Module/Debug/Babel.php:272
 msgid "BBCode"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:278
+#: src/Module/Debug/Babel.php:274
 msgid "Markdown"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:279
+#: src/Module/Debug/Babel.php:275
 msgid "HTML"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:281
+#: src/Module/Debug/Babel.php:277
 msgid "Twitter Source / Tweet URL (requires API key)"
 msgstr ""
 
