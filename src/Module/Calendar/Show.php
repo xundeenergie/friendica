@@ -41,14 +41,14 @@ class Show extends BaseModule
 	/** @var AppHelper */
 	protected $appHelper;
 
-	public function __construct(L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IHandleUserSessions $session, SystemMessages $sysMessages, Page $page, AppHelper $app, array $server, array $parameters = [])
+	public function __construct(L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IHandleUserSessions $session, SystemMessages $sysMessages, Page $page, AppHelper $appHelper, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
 		$this->session     = $session;
 		$this->sysMessages = $sysMessages;
 		$this->page        = $page;
-		$this->app         = $app;
+		$this->appHelper   = $appHelper;
 	}
 
 	protected function content(array $request = []): string

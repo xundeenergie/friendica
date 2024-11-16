@@ -319,7 +319,7 @@ class Notifier
 			$recipients = $recipients_followup;
 		}
 
-		$apdelivery = self::activityPubDelivery($cmd, $target_item, $parent, $thr_parent, $a->getQueueValue('priority'), $a->getQueueValue('created'), $recipients);
+		$apdelivery = self::activityPubDelivery($cmd, $target_item, $parent, $thr_parent, $appHelper->getQueueValue('priority'), $appHelper->getQueueValue('created'), $recipients);
 		$ap_contacts = $apdelivery['contacts'];
 		$delivery_queue_count += $apdelivery['count'];
 

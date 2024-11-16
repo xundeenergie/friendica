@@ -7,6 +7,7 @@
 
 namespace Friendica\Core;
 
+use Friendica\App;
 use Friendica\App\Mode;
 use Friendica\Database\DBA;
 use Friendica\Database\DBStructure;
