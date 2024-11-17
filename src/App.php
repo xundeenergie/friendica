@@ -105,6 +105,35 @@ class App implements AppHelper
 	 */
 	private $appHelper;
 
+	public function __construct(
+		Request $request,
+		Authentication $auth,
+		IManageConfigValues $config,
+		Mode $mode,
+		BaseURL $baseURL,
+		LoggerInterface $logger,
+		Profiler $profiler,
+		L10n $l10n,
+		Arguments $args,
+		IHandleUserSessions $session,
+		DbaDefinition $dbaDefinition,
+		ViewDefinition $viewDefinition
+	) {
+		$this->requestId = $request->getRequestId();
+		$this->auth      = $auth;
+		$this->config    = $config;
+		$this->mode      = $mode;
+		$this->baseURL   = $baseURL;
+		$this->profiler  = $profiler;
+		$this->logger    = $logger;
+		$this->l10n      = $l10n;
+		$this->args      = $args;
+		$this->session   = $session;
+		$this->appHelper = DI::apphelper();
+
+		$this->load($dbaDefinition, $viewDefinition);
+	}
+
 	/**
 	 * Set the profile owner ID
 	 *
@@ -262,35 +291,6 @@ class App implements AppHelper
 	public function getBasePath(): string
 	{
 		return $this->appHelper->getBasePath();
-	}
-
-	public function __construct(
-		Request $request,
-		Authentication $auth,
-		IManageConfigValues $config,
-		Mode $mode,
-		BaseURL $baseURL,
-		LoggerInterface $logger,
-		Profiler $profiler,
-		L10n $l10n,
-		Arguments $args,
-		IHandleUserSessions $session,
-		DbaDefinition $dbaDefinition,
-		ViewDefinition $viewDefinition
-	) {
-		$this->requestId = $request->getRequestId();
-		$this->auth      = $auth;
-		$this->config    = $config;
-		$this->mode      = $mode;
-		$this->baseURL   = $baseURL;
-		$this->profiler  = $profiler;
-		$this->logger    = $logger;
-		$this->l10n      = $l10n;
-		$this->args      = $args;
-		$this->session   = $session;
-		$this->appHelper = DI::apphelper();
-
-		$this->load($dbaDefinition, $viewDefinition);
 	}
 
 	/**
