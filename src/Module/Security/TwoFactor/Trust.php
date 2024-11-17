@@ -94,7 +94,7 @@ class Trust extends BaseModule
 				// exception wanted!
 				throw $e;
 			} catch (\Exception $e) {
-				$this->logger->warning('Unexpected error during authentication.', ['user' => $this->session->getLocalUserId(), 'exception' => $exception]);
+				$this->logger->warning('Unexpected error during authentication.', ['user' => $this->session->getLocalUserId(), 'exception' => $e]);
 			}
 		}
 	}

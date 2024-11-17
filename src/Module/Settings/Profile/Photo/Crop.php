@@ -46,9 +46,6 @@ class Crop extends BaseSettings
 		$base_image = Photo::selectFirst([], ['resource-id' => $resource_id, 'uid' => DI::userSession()->getLocalUserId(), 'scale' => $scale]);
 		if (DBA::isResult($base_image)) {
 			$Image = Photo::getImageForPhoto($base_image);
-			if (empty($Image)) {
-				throw new HTTPException\InternalServerErrorException();
-			}
 
 			if ($Image->isValid()) {
 				// If setting for the default profile, unset the profile photo flag from any other photos I own
@@ -185,9 +182,6 @@ class Crop extends BaseSettings
 		}
 
 		$Image = Photo::getImageForPhoto($photos[0]);
-		if (empty($Image)) {
-			throw new HTTPException\InternalServerErrorException();
-		}
 
 		$imagecrop = [
 			'resource-id' => $resource_id,

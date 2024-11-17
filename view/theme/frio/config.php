@@ -92,7 +92,7 @@ function theme_admin_post()
 	}
 }
 
-function theme_content(): string
+function theme_content(App $a): string
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		return '';
