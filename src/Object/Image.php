@@ -771,7 +771,7 @@ class Image
 	public function getBlurHash(): string
 	{
 		$image = New Image($this->asString(), $this->getType(), $this->filename, false);
-		if (empty($image) || !$this->isValid()) {
+		if (!$this->isValid()) {
 			return '';
 		}
 
@@ -827,6 +827,7 @@ class Image
 	{
 		$scaled = Images::getScalingDimensions($width, $height, 90);
 		$pixels = Blurhash::decode($blurhash, $scaled['width'], $scaled['height']);
+		$draw   = null;
 
 		if ($this->isImagick()) {
 			$this->image = new Imagick();
@@ -839,7 +840,7 @@ class Image
 		for ($y = 0; $y < $scaled['height']; ++$y) {
 			for ($x = 0; $x < $scaled['width']; ++$x) {
 				[$r, $g, $b] = $pixels[$y][$x];
-				if ($this->isImagick()) {
+				if ($draw !== null) {
 					$draw->setFillColor("rgb($r, $g, $b)");
 					$draw->point($x, $y);
 				} else {
@@ -848,7 +849,7 @@ class Image
 			}
 		}
 
-		if ($this->isImagick()) {
+		if ($draw !== null) {
 			$this->image->drawImage($draw);
 			$this->width  = $this->image->getImageWidth();
 			$this->height = $this->image->getImageHeight();
