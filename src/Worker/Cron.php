@@ -21,7 +21,7 @@ class Cron
 {
 	public static function execute()
 	{
-		$basepath = DI::apphelper()->getBasePath();
+		$basepath = DI::appHelper()->getBasePath();
 
 		$last = DI::keyValue()->get('last_cron');
 

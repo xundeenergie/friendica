@@ -114,7 +114,7 @@ class OpenWebAuth
 	 */
 	public static function init(string $token)
 	{
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		// Clean old OpenWebAuthToken entries.
 		OpenWebAuthToken::purge('owt', '3 MINUTE');
@@ -160,7 +160,7 @@ class OpenWebAuth
 	 */
 	public static function addVisitorCookieForHandle(string $handle): array
 	{
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		// Try to find the public contact entry of the visitor.
 		$cid = Contact::getIdForURL($handle);

@@ -26,7 +26,7 @@ class Acknowledge extends BaseApi
 	protected function post(array $request = [])
 	{
 		DI::session()->set('oauth_acknowledge', true);
-		DI::apphelper()->redirect(DI::session()->get('return_path'));
+		DI::appHelper()->redirect(DI::session()->get('return_path'));
 	}
 
 	protected function content(array $request = []): string

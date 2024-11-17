@@ -32,7 +32,7 @@ class Home extends BaseModule
 
 	protected function content(array $request = []): string
 	{
-		$basePath = DI::apphelper()->getBasePath();
+		$basePath = DI::appHelper()->getBasePath();
 		$config = DI::config();
 
 		// currently no returned data is used

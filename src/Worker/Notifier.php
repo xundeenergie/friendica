@@ -42,7 +42,7 @@ class Notifier
 {
 	public static function execute(string $cmd, int $post_uriid, int $sender_uid = 0)
 	{
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		Logger::info('Invoked', ['cmd' => $cmd, 'target' => $post_uriid, 'sender_uid' => $sender_uid]);
 
@@ -414,7 +414,7 @@ class Notifier
 	 */
 	private static function delivery(string $cmd, int $post_uriid, int $sender_uid, array $target_item, array $parent, array $thr_parent, array $owner, bool $batch_delivery, bool $in_batch, array $contacts, array $ap_contacts, array $conversants = []): int
 	{
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 		$delivery_queue_count = 0;
 
 		if (!empty($target_item['verb']) && ($target_item['verb'] == Activity::ANNOUNCE)) {

@@ -29,7 +29,7 @@ class Summary extends BaseAdmin
 	{
 		parent::content();
 
-		$basePath = DI::apphelper()->getBasePath();
+		$basePath = DI::appHelper()->getBasePath();
 
 		// are there MyISAM tables in the DB? If so, trigger a warning message
 		$warningtext = [];

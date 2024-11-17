@@ -1926,7 +1926,7 @@ class BBCode
 
 	private static function convertVideoPlatformsToHtml(string $text, bool $try_oembed): string
 	{
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		$text = self::normalizeVideoLinks($text);
 

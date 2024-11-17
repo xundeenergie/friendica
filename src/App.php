@@ -129,7 +129,7 @@ class App implements AppHelper
 		$this->l10n      = $l10n;
 		$this->args      = $args;
 		$this->session   = $session;
-		$this->appHelper = DI::apphelper();
+		$this->appHelper = DI::appHelper();
 
 		$this->load($dbaDefinition, $viewDefinition);
 	}

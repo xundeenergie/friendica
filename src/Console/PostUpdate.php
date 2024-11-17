@@ -58,7 +58,7 @@ HELP;
 		$this->appMode  = $appMode;
 		$this->keyValue = $keyValue;
 		$this->l10n     = $l10n;
-		$this->basePath = DI::apphelper()->getBasePath();
+		$this->basePath = DI::appHelper()->getBasePath();
 	}
 
 	protected function doExecute(): int

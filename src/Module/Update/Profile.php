@@ -23,7 +23,7 @@ class Profile extends BaseModule
 {
 	protected function rawContent(array $request = [])
 	{
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		// Ensure we've got a profile owner if updating.
 		$appHelper->setProfileOwner((int)($request['p'] ?? 0));

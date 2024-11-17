@@ -30,7 +30,7 @@ class ProfileUpdate {
 			return;
 		}
 
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		$inboxes = ActivityPub\Transmitter::fetchTargetInboxesforUser($uid);
 

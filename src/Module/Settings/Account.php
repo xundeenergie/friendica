@@ -109,7 +109,7 @@ class Account extends BaseSettings
 			}
 
 			if (strlen($timezone) && $timezone != $user['timezone']) {
-				DI::apphelper()->setTimeZone($timezone);
+				DI::appHelper()->setTimeZone($timezone);
 			}
 
 			$fields = [
@@ -400,7 +400,7 @@ class Account extends BaseSettings
 		$expire_network_only = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'expire', 'network_only', false);
 
 		if (!strlen($user['timezone'])) {
-			$timezone = DI::apphelper()->getTimeZone();
+			$timezone = DI::appHelper()->getTimeZone();
 		}
 
 		// Set the account type to "Community" when the page is a community page but the account type doesn't fit

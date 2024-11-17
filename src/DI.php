@@ -71,7 +71,7 @@ abstract class DI
 	//
 
 	/**
-	 * @deprecated 2024.12 use DI::apphelper() instead
+	 * @deprecated 2024.12 use DI::appHelper() instead
 	 *
 	 * @return App
 	 */
@@ -80,7 +80,7 @@ abstract class DI
 		return self::$dice->create(App::class);
 	}
 
-	public static function apphelper(): AppHelper
+	public static function appHelper(): AppHelper
 	{
 		return self::$dice->create(AppHelper::class);
 	}

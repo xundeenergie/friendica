@@ -208,7 +208,7 @@ class Theme
 	 */
 	public static function getPathForFile(string $file): string
 	{
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		$theme = $appHelper->getCurrentTheme();
 
@@ -245,7 +245,7 @@ class Theme
 			return 'view/theme/' . $theme . '/style.css';
 		}
 
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		$query_params = [];
 
@@ -267,7 +267,7 @@ class Theme
 	{
 		$theme = Strings::sanitizeFilePathItem($theme);
 
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 		$base_theme = $appHelper->getThemeInfoValue('extends') ?? '';
 
 		if (file_exists("view/theme/$theme/config.php")) {

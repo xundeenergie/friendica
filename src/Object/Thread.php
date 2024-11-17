@@ -57,7 +57,7 @@ class Thread
 			return;
 		}
 
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		switch ($mode) {
 			case Conversation::MODE_NETWORK:

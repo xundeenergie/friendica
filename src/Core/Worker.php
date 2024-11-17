@@ -533,7 +533,7 @@ class Worker
 	 */
 	private static function execFunction(array $queue, string $funcname, array $argv, bool $method_call)
 	{
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		self::coolDown();
 
@@ -1371,7 +1371,7 @@ class Worker
 	 */
 	public static function getRetrial(): int
 	{
-		$queue = DI::apphelper()->getQueue();
+		$queue = DI::appHelper()->getQueue();
 		return $queue['retrial'] ?? 0;
 	}
 
@@ -1384,7 +1384,7 @@ class Worker
 	 */
 	public static function defer(int $worker_defer_limit = 0): bool
 	{
-		$queue = DI::apphelper()->getQueue();
+		$queue = DI::appHelper()->getQueue();
 
 		if (empty($queue)) {
 			return false;

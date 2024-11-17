@@ -3348,7 +3348,7 @@ class Item
 	 */
 	public static function prepareBody(array &$item, bool $attach = false, bool $is_preview = false, bool $only_cache = false): string
 	{
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 		$uid = DI::userSession()->getLocalUserId();
 		Hook::callAll('prepare_body_init', $item);
 

@@ -18,7 +18,7 @@ class RandomProfile extends BaseModule
 {
 	protected function content(array $request = []): string
 	{
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		$contact = Contact::getRandomContact();
 

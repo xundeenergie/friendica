@@ -21,7 +21,7 @@ class Expire
 {
 	public static function execute($param = '', $hook_function = '')
 	{
-		$appHelper = DI::apphelper();
+		$appHelper = DI::appHelper();
 
 		Hook::loadHooks();
 

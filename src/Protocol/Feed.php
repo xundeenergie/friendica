@@ -1014,7 +1014,7 @@ class Feed
 
 		// Display events in the user's timezone
 		if (strlen($owner['timezone'])) {
-			DI::apphelper()->setTimeZone($owner['timezone']);
+			DI::appHelper()->setTimeZone($owner['timezone']);
 		}
 
 		$previous_created = $last_update;
