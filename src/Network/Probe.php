@@ -220,14 +220,16 @@ class Probe
 			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
 			return [];
 		}
+
 		$ssl_connection_error = ($curlResult->getErrorNumber() == CURLE_COULDNT_CONNECT) || ($curlResult->getReturnCode() == 0);
+
+		$host_url = $host;
+
 		if ($curlResult->isSuccess()) {
 			$xml = $curlResult->getBodyString();
 			$xrd = XML::parseString($xml, true);
 			if (!empty($url)) {
 				$host_url = 'https://' . $host;
-			} else {
-				$host_url = $host;
 			}
 		} elseif ($curlResult->isTimeout()) {
 			Logger::info('Probing timeout', ['url' => $ssl_url]);
@@ -550,6 +552,7 @@ class Probe
 	public static function getWebfingerArray(string $uri): array
 	{
 		$parts = parse_url($uri);
+		$lrdd  = [];
 
 		if (!empty($parts['scheme']) && !empty($parts['host'])) {
 			$host = $parts['host'];
@@ -563,7 +566,7 @@ class Probe
 			$addr = '';
 
 			$path_parts = explode('/', trim($parts['path'] ?? '', '/'));
-			if (!empty($path_parts)) {
+			if (is_array($path_parts)) {
 				$nick = ltrim(end($path_parts), '@');
 				$addr = $nick . '@' . $host;
 			}
@@ -668,8 +671,10 @@ class Probe
 			return null;
 		}
 
+		$detected = '';
+
 		// First try the address because this is the primary purpose of webfinger
-		if (!empty($addr)) {
+		if ($addr !== '') {
 			$detected = $addr;
 			$path = str_replace('{uri}', urlencode('acct:' . $addr), $template);
 			$webfinger = self::webfinger($path, $type);
@@ -823,13 +828,15 @@ class Probe
 	 */
 	private static function zot(array $webfinger, array $data): array
 	{
+		$zot_url = '';
+
 		foreach ($webfinger['links'] as $link) {
 			if (($link['rel'] == 'http://purl.org/zot/protocol/6.0') && !empty($link['href'])) {
 				$zot_url = $link['href'];
 			}
 		}
 
-		if (empty($zot_url)) {
+		if ($zot_url === '') {
 			return $data;
 		}
 
@@ -871,7 +878,7 @@ class Probe
 				$data['url'] = $link['href'];
 			}
 		}
-		
+
 		$data = self::pollZot($zot_url, $data);
 
 		if (!empty($data['url']) && !empty($webfinger['aliases']) && is_array($webfinger['aliases'])) {
@@ -1429,7 +1436,7 @@ class Probe
 			&& !empty($data['guid'])
 			&& !empty($data['baseurl'])
 			&& !empty($data['pubkey'])
-			&& !empty($hcard_url)
+			&& $hcard_url !== ''
 		) {
 			$data['network'] = Protocol::DIASPORA;
 			$data['manually-approve'] = false;
@@ -1776,7 +1783,7 @@ class Probe
 		$password = '';
 		openssl_private_decrypt(hex2bin($mailacct['pass']), $password, $user['prvkey']);
 		$mbox = Email::connect($mailbox, $mailacct['user'], $password);
-		if (!$mbox) {
+		if ($mbox === false) {
 			return [];
 		}
 
@@ -1828,7 +1835,7 @@ class Probe
 			}
 		}
 
-		if (!empty($mbox)) {
+		if ($mbox !== false) {
 			imap_close($mbox);
 		}
 
