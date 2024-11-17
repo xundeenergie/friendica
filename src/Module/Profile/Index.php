@@ -39,7 +39,7 @@ class Index extends BaseModule
 	/** @var Database */
 	private $database;
 	/** @var AppHelper */
-	protected $appHelper;
+	private $appHelper;
 	/** @var IHandleUserSessions */
 	private $session;
 	/** @var IManageConfigValues */

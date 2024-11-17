@@ -45,7 +45,7 @@ class Photos extends \Friendica\Module\BaseProfile
 	/** @var IManageConfigValues */
 	private $config;
 	/** @var AppHelper */
-	protected $appHelper;
+	private $appHelper;
 	/** @var Database */
 	private $database;
 	/** @var SystemMessages */
