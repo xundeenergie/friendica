@@ -22,7 +22,6 @@ use Friendica\Core\Renderer;
 use Friendica\Core\Session\Model\UserSession;
 use Friendica\Core\System;
 use Friendica\Core\Theme;
-use Friendica\Module\Response;
 use Friendica\Network\HTTPException;
 use Friendica\Util\Images;
 use Friendica\Util\Network;
@@ -177,7 +176,6 @@ class Page implements ArrayAccess
 	 * - Infinite scroll data
 	 * - head.tpl template
 	 *
-	 * @param AppHelper                   $appHelper The Friendica App instance
 	 * @param Arguments                   $args      The Friendica App Arguments
 	 * @param L10n                        $l10n      The l10n language instance
 	 * @param IManageConfigValues         $config    The Friendica configuration
@@ -186,8 +184,14 @@ class Page implements ArrayAccess
 	 *
 	 * @throws HTTPException\InternalServerErrorException
 	 */
-	private function initHead(AppHelper $appHelper, Arguments $args, L10n $l10n, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, int $localUID)
-	{
+	private function initHead(
+		AppHelper $appHelper,
+		Arguments $args,
+		L10n $l10n,
+		IManageConfigValues $config,
+		IManagePersonalConfigValues $pConfig,
+		int $localUID
+	) {
 		$interval = ($localUID ? $pConfig->get($localUID, 'system', 'update_interval') : 40000);
 
 		// If the update is 'deactivated' set it to the highest integer number (~24 days)
@@ -399,7 +403,6 @@ class Page implements ArrayAccess
 	/**
 	 * Executes the creation of the current page and prints it to the screen
 	 *
-	 * @param AppHelper                   $appHelper The Friendica App
 	 * @param BaseURL                     $baseURL   The Friendica Base URL
 	 * @param Arguments                   $args      The Friendica App arguments
 	 * @param Mode                        $mode      The current node mode
@@ -414,8 +417,20 @@ class Page implements ArrayAccess
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws HTTPException\ServiceUnavailableException
 	 */
-	public function run(AppHelper $appHelper, UserSession $session, BaseURL $baseURL, Arguments $args, Mode $mode, ResponseInterface $response, L10n $l10n, Profiler $profiler, IManageConfigValues $config, IManagePersonalConfigValues $pconfig, Nav $nav, int $localUID)
-	{
+	public function run(
+		AppHelper $appHelper,
+		UserSession $session,
+		BaseURL $baseURL,
+		Arguments $args,
+		Mode $mode,
+		ResponseInterface $response,
+		L10n $l10n,
+		Profiler $profiler,
+		IManageConfigValues $config,
+		IManagePersonalConfigValues $pconfig,
+		Nav $nav,
+		int $localUID
+	) {
 		$moduleName = $args->getModuleName();
 
 		$this->command = $moduleName;
