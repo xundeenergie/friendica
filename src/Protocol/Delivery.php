@@ -12,7 +12,6 @@ use Friendica\Contact\FriendSuggest\Exception\FriendSuggestNotFoundException;
 use Friendica\Core\Logger;
 use Friendica\Core\Protocol;
 use Friendica\Core\Worker;
-use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Model\Contact;
@@ -48,6 +47,8 @@ class Delivery
 		$top_level      = false;
 		$followup       = false;
 		$public_message = false;
+		$parent         = false;
+		$thr_parent     = false;
 
 		$items = [];
 		if ($cmd == self::MAIL) {

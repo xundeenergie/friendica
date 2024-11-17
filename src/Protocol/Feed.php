@@ -556,7 +556,7 @@ class Feed
 				Logger::info('Feed is too old', ['created' => $item['created'], 'uid' => $item['uid'], 'uri' => $item['uri']]);
 				continue;
 			}
-			
+
 			if (!empty($item['plink'])) {
 				$fetch_further_information = $contact['fetch_further_information'] ?? LocalRelationship::FFI_NONE;
 			} else {
@@ -736,7 +736,7 @@ class Feed
 				$publish_at = date(DateTimeFormat::MYSQL, $publish_time);
 
 				if (Post\Delayed::add($posting['item']['uri'], $posting['item'], $posting['notify'], Post\Delayed::PREPARED, $publish_at, $posting['taglist'], $posting['attachments'])) {
-					DI::pConfig()->set($item['uid'], 'system', 'last_publish', $publish_time);
+					DI::pConfig()->set($posting['item']['uid'], 'system', 'last_publish', $publish_time);
 				}
 			}
 		}
@@ -1407,7 +1407,7 @@ class Feed
 
 				$contact = Contact::getByURL($item['author-link']) ?: $owner;
 				$contact['nickname'] = $contact['nickname'] ?? $contact['nick'];
-				$author = self::addAuthor($doc, $contact, false);
+				$author = self::addAuthor($doc, $contact);
 				$entry->appendChild($author);
 			}
 		} else {

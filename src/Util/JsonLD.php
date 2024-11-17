@@ -286,7 +286,7 @@ class JsonLD
 	 * @param $type
 	 * @param $type_value
 	 *
-	 * @return string fetched element
+	 * @return string|null fetched element
 	 */
 	public static function fetchElement($array, $element, $key = '@id', $type = null, $type_value = null)
 	{

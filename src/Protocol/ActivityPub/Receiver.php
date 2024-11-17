@@ -304,9 +304,10 @@ class Receiver
 	 */
 	public static function prepareObjectData(array $activity, int $uid, bool $push, bool &$trust_source, string $original_actor = ''): array
 	{
-		$id        = JsonLD::fetchElement($activity, '@id');
-		$type      = JsonLD::fetchElement($activity, '@type');
-		$object_id = JsonLD::fetchElement($activity, 'as:object', '@id');
+		$id          = JsonLD::fetchElement($activity, '@id');
+		$type        = JsonLD::fetchElement($activity, '@type');
+		$object_id   = JsonLD::fetchElement($activity, 'as:object', '@id');
+		$object_type = '';
 
 		if (!empty($object_id) && in_array($type, ['as:Create', 'as:Update'])) {
 			$fetch_id = $object_id;
@@ -630,7 +631,7 @@ class Receiver
 			$id            = JsonLD::fetchElement($activity, '@id');
 			$object_id     = JsonLD::fetchElement($activity, 'as:object', '@id');
 
-			if (!empty($published) && !empty($object_id) && in_array($type, ['as:Create', 'as:Update']) && in_array($object_type, self::CONTENT_TYPES)
+			if (!empty($published) && $object_id !== null && in_array($type, ['as:Create', 'as:Update']) && in_array($object_type, self::CONTENT_TYPES)
 				&& ($push || ($completion != self::COMPLETION_MANUAL)) && DI::contentItem()->isTooOld($published) && !Post::exists(['uri' => $object_id])) {
 				Logger::debug('Activity is too old. It will not be processed', ['push' => $push, 'completion' => $completion, 'type' =>  $type,  'object-type' => $object_type, 'published' => $published, 'id' => $id, 'object-id' => $object_id]);
 				return true;
@@ -641,7 +642,7 @@ class Receiver
 
 		// Test the provided signatures against the actor and "attributedTo"
 		if ($trust_source) {
-			if (!empty($attributed_to) && !empty($actor)) {
+			if (!empty($attributed_to) && $actor !== null) {
 				$trust_source = (in_array($actor, $signer) && in_array($attributed_to, $signer));
 			} else {
 				$trust_source = in_array($actor, $signer);
@@ -1185,6 +1186,8 @@ class Receiver
 		}
 
 		$parent_followers = '';
+		$parent_profile   = [];
+
 		$parent = Post::selectFirstPost(['parent-author-link'], ['uri' => $reply]);
 		if (!empty($parent['parent-author-link'])) {
 			$parent_profile = APContact::getByURL($parent['parent-author-link']);

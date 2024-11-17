@@ -520,7 +520,7 @@ class Processor
 		if (!DI::config()->get('system', 'decoupled_receiver')) {
 			return;
 		}
-		
+
 		$replies = [$item['thr-parent']];
 		if (!empty($item['parent-uri'])) {
 			$replies[] = $item['parent-uri'];
@@ -561,7 +561,7 @@ class Processor
 		if (in_array($activity['reply-to-id'], $activity['children'] ?? [])) {
 			Logger::notice('reply-to-id is already in the list of children', ['id' => $activity['reply-to-id'], 'children' => $activity['children'], 'depth' => count($activity['children'])]);
 			return '';
-		} 
+		}
 
 		self::addActivityId($activity['reply-to-id']);
 
@@ -1361,6 +1361,7 @@ class Processor
 			}
 
 			$hash = substr($tag['name'], 0, 1);
+			$type = 0;
 
 			if ($tag['type'] == 'Mention') {
 				if (in_array($hash, [Tag::TAG_CHARACTER[Tag::MENTION],
@@ -1616,7 +1617,7 @@ class Processor
 			return [];
 		}
 
-		if (!self::isValidObject($object, $url)) {
+		if (!self::isValidObject($object)) {
 			return [];
 		}
 
@@ -1657,10 +1658,6 @@ class Processor
 			return '';
 		}
 
-		if (empty($curlResult)) {
-			return '';
-		}
-
 		$body = $curlResult->getBodyString();
 		if (!$curlResult->isSuccess() || empty($body)) {
 			if (in_array($curlResult->getReturnCode(), [403, 404, 406, 410])) {
@@ -1680,7 +1677,7 @@ class Processor
 			return null;
 		}
 
-		if (!self::isValidObject($object, $url)) {
+		if (!self::isValidObject($object)) {
 			return null;
 		}
 
@@ -1747,7 +1744,7 @@ class Processor
 		$ldactivity['children']        = $child['children'] ?? [];
 		$ldactivity['callstack']       = $child['callstack'] ?? [];
 		// This check is mostly superfluous, since there are similar checks before. This covers the case, when the fetched id doesn't match the url
-		if (in_array($activity['id'], $ldactivity['children'])) {			
+		if (in_array($activity['id'], $ldactivity['children'])) {
 			Logger::notice('Fetched id is already in the list of children. It will not be processed.', ['id' => $activity['id'], 'children' => $ldactivity['children'], 'depth' => count($ldactivity['children'])]);
 			return null;
 		}
@@ -1829,6 +1826,8 @@ class Processor
 		Logger::notice('Fetch replies - start', ['replies' => $url, 'callstack' => $child['callstack'], 'system' => $callstack]);
 		$fetched = 0;
 		foreach ($replies as $reply) {
+			$id = '';
+
 			if (is_array($reply)) {
 				$ldobject = JsonLD::compact($reply);
 				$id = JsonLD::fetchElement($ldobject, '@id');
@@ -2120,9 +2119,8 @@ class Processor
 			self::transmitPendingEvents($cid, $owner['uid']);
 		}
 
-		if (empty($contact)) {
-			Contact::update(['hub-verify' => $activity['id'], 'protocol' => Protocol::ACTIVITYPUB], ['id' => $cid]);
-		}
+		Contact::update(['hub-verify' => $activity['id'], 'protocol' => Protocol::ACTIVITYPUB], ['id' => $cid]);
+
 		Logger::notice('Follow user ' . $uid . ' from contact ' . $cid . ' with id ' . $activity['id']);
 		Queue::remove($activity);
 	}
@@ -2334,6 +2332,8 @@ class Processor
 	 */
 	public static function acceptFollowUser(array $activity)
 	{
+		$check_id = false;
+
 		if (!empty($activity['object_actor'])) {
 			$uid      = User::getIdForURL($activity['object_actor']);
 			$check_id = false;
