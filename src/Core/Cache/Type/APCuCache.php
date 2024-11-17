@@ -41,7 +41,6 @@ class APCuCache extends AbstractCache implements ICanCacheInMemory
 		$ns = $this->getCacheKey($prefix ?? '');
 		$ns = preg_quote($ns, '/');
 
-		/** @phpstan-ignore-next-line see https://github.com/friendica/friendica-addons/pull/1363 */
 		$iterator = new \APCUIterator('/^' . $ns . '/', APC_ITER_KEY);
 
 		$keys = [];
@@ -119,7 +118,6 @@ class APCuCache extends AbstractCache implements ICanCacheInMemory
 			$prefix = $this->getPrefix();
 			$prefix = preg_quote($prefix, '/');
 
-			/** @phpstan-ignore-next-line see https://github.com/friendica/friendica-addons/pull/1363 */
 			$iterator = new \APCUIterator('/^' . $prefix . '/', APC_ITER_KEY);
 
 			return apcu_delete($iterator);
