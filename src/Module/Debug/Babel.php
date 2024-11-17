@@ -234,40 +234,31 @@ class Babel extends BaseModule
 				case 'twitter':
 					$json = trim($request['text']);
 
-					if (file_exists('addon/twitter/twitter.php')) {
-						require_once 'addon/twitter/twitter.php';
+					$status = json_decode($json);
 
-						$status = json_decode($json);
+					$results[] = [
+						'title'   => DI::l10n()->t('Decoded post'),
+						'content' => $visible_whitespace(var_export($status, true)),
+					];
 
-						$results[] = [
-							'title'   => DI::l10n()->t('Decoded post'),
-							'content' => $visible_whitespace(var_export($status, true)),
-						];
+					$postarray = [];
+					$postarray['object-type'] = Activity\ObjectType::NOTE;
 
-						$postarray = [];
-						$postarray['object-type'] = Activity\ObjectType::NOTE;
-
-						if (!empty($status->full_text)) {
-							$postarray['body'] = $status->full_text;
-						} else {
-							$postarray['body'] = $status->text;
-						}
-
-						// When the post contains links then use the correct object type
-						if (count($status->entities->urls) > 0) {
-							$postarray['object-type'] = Activity\ObjectType::BOOKMARK;
-						}
-
-						$results[] = [
-							'title'   => DI::l10n()->t('Post array before expand entities'),
-							'content' => $visible_whitespace(var_export($postarray, true)),
-						];
+					if (!empty($status->full_text)) {
+						$postarray['body'] = $status->full_text;
 					} else {
-						$results[] = [
-							'title'   => DI::l10n()->tt('Error', 'Errors', 1),
-							'content' => DI::l10n()->t('Twitter addon is absent from the addon/ folder.'),
-						];
+						$postarray['body'] = $status->text;
 					}
+
+					// When the post contains links then use the correct object type
+					if (count($status->entities->urls) > 0) {
+						$postarray['object-type'] = Activity\ObjectType::BOOKMARK;
+					}
+
+					$results[] = [
+						'title'   => DI::l10n()->t('Post array before expand entities'),
+						'content' => $visible_whitespace(var_export($postarray, true)),
+					];
 
 					break;
 			}

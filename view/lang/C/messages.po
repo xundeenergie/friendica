@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.12-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-16 08:36+0000\n"
+"POT-Creation-Date: 2024-11-16 18:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -293,7 +293,7 @@ msgstr ""
 #: src/Module/Calendar/Event/Form.php:236 src/Module/Contact/Advanced.php:118
 #: src/Module/Contact/Profile.php:376
 #: src/Module/Debug/ActivityPubConversion.php:128
-#: src/Module/Debug/Babel.php:288 src/Module/Debug/Localtime.php:50
+#: src/Module/Debug/Babel.php:279 src/Module/Debug/Localtime.php:50
 #: src/Module/Debug/Probe.php:40 src/Module/Debug/WebFinger.php:37
 #: src/Module/FriendSuggest.php:131 src/Module/Install.php:221
 #: src/Module/Install.php:261 src/Module/Install.php:296
@@ -1065,7 +1065,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: src/Content/ContactSelector.php:122 src/Module/Debug/Babel.php:282
+#: src/Content/ContactSelector.php:122 src/Module/Debug/Babel.php:273
 msgid "Diaspora"
 msgstr ""
 
@@ -6741,7 +6741,7 @@ msgid "Result Item"
 msgstr ""
 
 #: src/Module/Debug/ActivityPubConversion.php:117
-#: src/Module/Debug/Babel.php:267 src/Module/Moderation/Item/Source.php:79
+#: src/Module/Moderation/Item/Source.php:79
 #: src/Module/Security/TwoFactor/Verify.php:84
 msgid "Error"
 msgid_plural "Errors"
@@ -6884,39 +6884,35 @@ msgstr ""
 msgid "HTML::toPlaintext (compact)"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:243
+#: src/Module/Debug/Babel.php:240
 msgid "Decoded post"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:262
+#: src/Module/Debug/Babel.php:259
 msgid "Post array before expand entities"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:268
-msgid "Twitter addon is absent from the addon/ folder."
-msgstr ""
-
-#: src/Module/Debug/Babel.php:278
+#: src/Module/Debug/Babel.php:269
 msgid "Babel Diagnostic"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:280
+#: src/Module/Debug/Babel.php:271
 msgid "Source text"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:281
+#: src/Module/Debug/Babel.php:272
 msgid "BBCode"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:283
+#: src/Module/Debug/Babel.php:274
 msgid "Markdown"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:284
+#: src/Module/Debug/Babel.php:275
 msgid "HTML"
 msgstr ""
 
-#: src/Module/Debug/Babel.php:286
+#: src/Module/Debug/Babel.php:277
 msgid "Twitter Source / Tweet URL (requires API key)"
 msgstr ""
 
