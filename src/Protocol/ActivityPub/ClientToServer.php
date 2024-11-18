@@ -323,7 +323,7 @@ class ClientToServer
 			$requester_id = Contact::getIdForURL($requester, $owner['uid']);
 			if (!empty($requester_id)) {
 				$permissionSets = DI::permissionSet()->selectByContactId($requester_id, $owner['uid']);
-				if ($permissionSets->getTotalCount() > 0) {
+				if (count($permissionSets)) {
 					$condition = ['psid' => array_merge($permissionSets->column('id'),
 						[DI::permissionSet()->selectPublicForUser($owner['uid'])])];
 				}
