@@ -565,8 +565,9 @@ class Probe
 			$nick = '';
 			$addr = '';
 
-			$path_parts = explode('/', trim($parts['path'] ?? '', '/'));
-			if (is_array($path_parts)) {
+			if (array_key_exists('path', $parts) && strval($parts['path']) !== '') {
+				$path_parts = explode('/', trim($parts['path'], '/'));
+
 				$nick = ltrim(end($path_parts), '@');
 				$addr = $nick . '@' . $host;
 			}
