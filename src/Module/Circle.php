@@ -70,6 +70,8 @@ class Circle extends BaseModule
 				throw new \Exception(DI::l10n()->t('Permission denied.'), 403);
 			}
 
+			$message = '';
+
 			if (isset($this->parameters['command'])) {
 				$circle_id = $this->parameters['circle'];
 				$contact_id = $this->parameters['contact'];
@@ -169,7 +171,9 @@ class Circle extends BaseModule
 			]);
 		}
 
-		$nocircle = false;
+		$nocircle    = false;
+		$members     = [];
+		$preselected = [];
 
 		// @TODO: Replace with parameter from router
 		if ((DI::args()->getArgc() == 2) && (DI::args()->getArgv()[1] === 'none') ||
@@ -180,9 +184,6 @@ class Circle extends BaseModule
 				'id' => $id,
 				'name' => DI::l10n()->t('Contacts not in any circle'),
 			];
-
-			$members = [];
-			$preselected = [];
 
 			$context = $context + [
 				'$title' => $circle['name'],
