@@ -165,12 +165,13 @@ class Display extends BaseModule
 	 */
 	protected function displaySidebar(array $item)
 	{
+		$author = [];
 		$shared = $this->contentItem->getSharedPost($item, ['author-link']);
-		if (!empty($shared) && empty($shared['comment'])) {
+		if (count($shared) > 0 && !array_key_exists('comment', $shared)) {
 			$author = Contact::getByURLForUser($shared['post']['author-link'], $this->session->getLocalUserId());
 		}
 
-		if (empty($contact)) {
+		if ($author === []) {
 			$author = Contact::getById($item['author-id']);
 		}
 
