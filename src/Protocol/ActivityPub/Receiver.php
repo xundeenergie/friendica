@@ -619,7 +619,7 @@ class Receiver
 		}
 
 		$actor = JsonLD::fetchElement($activity, 'as:actor', '@id');
-		if (empty($actor)) {
+		if ($actor === null || $actor === '') {
 			Logger::info('Empty actor', ['activity' => $activity]);
 			return true;
 		}
@@ -642,7 +642,7 @@ class Receiver
 
 		// Test the provided signatures against the actor and "attributedTo"
 		if ($trust_source) {
-			if (!empty($attributed_to) && $actor !== null) {
+			if ($attributed_to !== false && $attributed_to !== '') {
 				$trust_source = (in_array($actor, $signer) && in_array($attributed_to, $signer));
 			} else {
 				$trust_source = in_array($actor, $signer);
