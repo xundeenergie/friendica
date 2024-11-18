@@ -63,31 +63,27 @@ class Magic extends BaseModule
 
 		$this->logger->debug('Invoked', ['request' => $request]);
 
-		$addr     = $request['addr'] ?? '';
-		$bdest    = $request['bdest'] ?? '';
-		$dest     = $request['dest'] ?? '';
-		$rev      = intval($request['rev'] ?? 0);
+		$addr     = (string) $request['addr'] ?? '';
+		$bdest    = (string) $request['bdest'] ?? '';
+		$dest     = (string) $request['dest'] ?? '';
 		$owa      = intval($request['owa'] ?? 0);
-		$delegate = $request['delegate'] ?? '';
 
 		// bdest is preferred as it is hex-encoded and can survive url rewrite and argument parsing
-		if (!empty($bdest)) {
+		if ($bdest !== '') {
 			$dest = hex2bin($bdest);
 			$this->logger->debug('bdest detected', ['dest' => $dest]);
 		}
 
 		$target = $dest ?: $addr;
 
-		if ($addr ?: $dest) {
-			$contact = Contact::getByURL($addr ?: $dest);
+		$contact = Contact::getByURL($addr ?: $dest);
+		if ($contact === [] && $owa === 0) {
+			# code...
+			$this->logger->info('No contact record found, no oWA, redirecting to destination.', ['request' => $request, 'server' => $_SERVER, 'dest' => $dest]);
+			$this->app->redirect($dest);
 		}
 
-		if (empty($contact)) {
-			if (!$owa) {
-				$this->logger->info('No contact record found, no oWA, redirecting to destination.', ['request' => $request, 'server' => $_SERVER, 'dest' => $dest]);
-				$this->app->redirect($dest);
-			}
-		} else {
+		if ($contact !== []) {
 			// Redirect if the contact is already authenticated on this site.
 			if ($this->app->getContactId() && strpos($contact['nurl'], Strings::normaliseLink($this->baseUrl)) !== false) {
 				$this->logger->info('Contact is already authenticated, redirecting to destination.', ['dest' => $dest]);
@@ -97,14 +93,14 @@ class Magic extends BaseModule
 			$this->logger->debug('Contact found', ['url' => $contact['url']]);
 		}
 
-		if (!$this->userSession->getLocalUserId() || !$owa) {
+		if (!$this->userSession->getLocalUserId() || $owa === 0) {
 			$this->logger->notice('Not logged in or not OWA, redirecting to destination.', ['uid' => $this->userSession->getLocalUserId(), 'owa' => $owa, 'dest' => $dest]);
 			$this->app->redirect($dest);
 		}
 
 		$dest = Network::removeUrlParameter($dest, 'zid');
 		$dest = Network::removeUrlParameter($dest, 'f');
-		
+
 		// OpenWebAuth
 		$owner = User::getOwnerDataById($this->userSession->getLocalUserId());
 
