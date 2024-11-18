@@ -8,6 +8,7 @@
 namespace Friendica\Module\Item;
 
 use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Content\Conversation;
 use Friendica\Content\Item as ContentItem;
@@ -46,8 +47,8 @@ class Display extends BaseModule
 	protected $pConfig;
 	/** @var IHandleUserSessions */
 	protected $session;
-	/** @var App */
-	protected $app;
+	/** @var AppHelper */
+	protected $appHelper;
 	/** @var ContentItem */
 	protected $contentItem;
 	/** @var Conversation */
@@ -57,7 +58,7 @@ class Display extends BaseModule
 	/** @var Notify */
 	protected $notify;
 
-	public function __construct(L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, IHandleUserSessions $session, App $app, App\Page $page, ContentItem $contentItem, Conversation $conversation, Notification $notification, Notify $notify, array $server, array $parameters = [])
+	public function __construct(L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, IHandleUserSessions $session, AppHelper $appHelper, App\Page $page, ContentItem $contentItem, Conversation $conversation, Notification $notification, Notify $notify, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
@@ -65,7 +66,7 @@ class Display extends BaseModule
 		$this->config       = $config;
 		$this->pConfig      = $pConfig;
 		$this->session      = $session;
-		$this->app          = $app;
+		$this->appHelper    = $appHelper;
 		$this->contentItem  = $contentItem;
 		$this->conversation = $conversation;
 		$this->notification = $notification;
@@ -175,12 +176,12 @@ class Display extends BaseModule
 		}
 
 		if ($this->baseUrl->isLocalUrl($author['url'])) {
-			Profile::load($this->app, $author['nick'], false);
+			Profile::load($this->appHelper, $author['nick'], false);
 		} else {
 			$this->page['aside'] = Widget\VCard::getHTML($author);
 		}
 
-		$this->app->setProfileOwner($item['uid']);
+		$this->appHelper->setProfileOwner($item['uid']);
 	}
 
 	protected function getDisplayData(array $item, bool $update = false, int $updateUid = 0, bool $force = false): string

@@ -8,7 +8,7 @@
 namespace Friendica\Console;
 
 use Console_Table;
-use Friendica\App;
+use Friendica\App\Mode;
 use Friendica\Content\Pager;
 use Friendica\Core\L10n;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
@@ -26,7 +26,7 @@ class User extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var App\Mode
+	 * @var Mode
 	 */
 	private $appMode;
 	/**
@@ -74,7 +74,7 @@ HELP;
 		return $help;
 	}
 
-	public function __construct(App\Mode $appMode, L10n $l10n, IManagePersonalConfigValues $pConfig, array $argv = null)
+	public function __construct(Mode $appMode, L10n $l10n, IManagePersonalConfigValues $pConfig, array $argv = null)
 	{
 		parent::__construct($argv);
 

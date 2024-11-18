@@ -7,7 +7,7 @@
  *
  */
 
-use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\Content\ContactSelector;
 use Friendica\Core\Renderer;
 use Friendica\DI;
@@ -15,7 +15,7 @@ use Friendica\DI;
 require_once 'view/theme/frio/php/Image.php';
 require_once 'view/theme/frio/php/scheme.php';
 
-function theme_post(App $a)
+function theme_post(AppHelper $appHelper)
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		return;

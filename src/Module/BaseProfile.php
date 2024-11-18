@@ -7,7 +7,6 @@
 
 namespace Friendica\Module;
 
-use Friendica\App;
 use Friendica\BaseModule;
 use Friendica\Content\Feature;
 use Friendica\Core\Hook;

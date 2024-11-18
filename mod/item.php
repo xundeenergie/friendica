@@ -16,7 +16,7 @@
  * information.
  */
 
-use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\Content\Conversation;
 use Friendica\Content\Text\BBCode;
 use Friendica\Core\Hook;
@@ -284,7 +284,7 @@ function item_process(array $post, array $request, bool $preview, string $return
 	unset($post['api_source']);
 
 	if (!empty($request['scheduled_at'])) {
-		$scheduled_at = DateTimeFormat::convert($request['scheduled_at'], 'UTC', DI::app()->getTimeZone());
+		$scheduled_at = DateTimeFormat::convert($request['scheduled_at'], 'UTC', DI::appHelper()->getTimeZone());
 		if ($scheduled_at > DateTimeFormat::utcNow()) {
 			unset($post['created']);
 			unset($post['edited']);
@@ -330,7 +330,7 @@ function item_post_return($baseurl, $return_path)
 	System::jsonExit($json);
 }
 
-function item_content(App $a)
+function item_content(AppHelper $appHelper)
 {
 	if (!DI::userSession()->isAuthenticated()) {
 		throw new HTTPException\UnauthorizedException();

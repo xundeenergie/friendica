@@ -9,6 +9,9 @@ namespace Friendica\Module\Api\Mastodon;
 
 use Exception;
 use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\Contact\Header;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
@@ -41,10 +44,10 @@ class InstanceV2 extends BaseApi
 
 	public function __construct(
 		\Friendica\Factory\Api\Mastodon\Error $errorFactory,
-		App $app,
+		AppHelper $appHelper,
 		L10n $l10n,
-		App\BaseURL $baseUrl,
-		App\Arguments $args,
+		BaseURL $baseUrl,
+		Arguments $args,
 		LoggerInterface $logger,
 		Profiler $profiler,
 		ApiResponse $response,
@@ -53,7 +56,7 @@ class InstanceV2 extends BaseApi
 		array $server,
 		array $parameters = []
 	) {
-		parent::__construct($errorFactory, $app, $l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
+		parent::__construct($errorFactory, $appHelper, $l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
 		$this->database      = $database;
 		$this->config        = $config;

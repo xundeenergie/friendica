@@ -8,6 +8,11 @@
 namespace Friendica\Module\Post;
 
 use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\App\Mode;
+use Friendica\App\Page;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Content\Feature;
 use Friendica\Core\Hook;
@@ -37,12 +42,12 @@ class Edit extends BaseModule
 	protected $page;
 	/** @var App\Mode */
 	protected $mode;
-	/** @var App */
-	protected $app;
+	/** @var AppHelper */
+	protected $appHelper;
 	/** @var bool */
 	protected $isModal = false;
 
-	public function __construct(L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IHandleUserSessions $session, SystemMessages $sysMessages, App\Page $page, App\Mode $mode, App $app, array $server, array $parameters = [])
+	public function __construct(L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IHandleUserSessions $session, SystemMessages $sysMessages, Page $page, Mode $mode, AppHelper $appHelper, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
@@ -50,7 +55,7 @@ class Edit extends BaseModule
 		$this->sysMessages = $sysMessages;
 		$this->page        = $page;
 		$this->mode        = $mode;
-		$this->app         = $app;
+		$this->appHelper   = $appHelper;
 	}
 
 

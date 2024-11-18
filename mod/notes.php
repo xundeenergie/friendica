@@ -7,7 +7,7 @@
  *
  */
 
-use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\Content\Conversation;
 use Friendica\Content\Nav;
 use Friendica\Content\Pager;
@@ -17,7 +17,7 @@ use Friendica\Model\Item;
 use Friendica\Model\Post;
 use Friendica\Module\BaseProfile;
 
-function notes_init(App $a)
+function notes_init(AppHelper $appHelper)
 {
 	if (! DI::userSession()->getLocalUserId()) {
 		return;
@@ -27,7 +27,7 @@ function notes_init(App $a)
 }
 
 
-function notes_content(App $a, bool $update = false)
+function notes_content(AppHelper $appHelper, bool $update = false)
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		DI::sysmsg()->addNotice(DI::l10n()->t('Permission denied.'));
@@ -46,11 +46,11 @@ function notes_content(App $a, bool $update = false)
 			'acl_data' => '',
 		];
 
-		$o .= DI::conversation()->statusEditor($x, $a->getContactId());
+		$o .= DI::conversation()->statusEditor($x, $appHelper->getContactId());
 	}
 
 	$condition = ['uid' => DI::userSession()->getLocalUserId(), 'post-type' => Item::PT_PERSONAL_NOTE, 'gravity' => Item::GRAVITY_PARENT,
-		'contact-id'=> $a->getContactId()];
+		'contact-id'=> $appHelper->getContactId()];
 
 	if (DI::mode()->isMobile()) {
 		$itemsPerPage = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'system', 'itemspage_mobile_network',

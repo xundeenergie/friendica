@@ -8,7 +8,10 @@
 namespace Friendica\Module\Item;
 
 use DateTime;
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\App\Page;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Content\Feature;
 use Friendica\Core\ACL;
@@ -41,7 +44,7 @@ class Compose extends BaseModule
 	/** @var ACLFormatter */
 	private $ACLFormatter;
 
-	/** @var App\Page */
+	/** @var Page */
 	private $page;
 
 	/** @var IManagePersonalConfigValues */
@@ -53,11 +56,11 @@ class Compose extends BaseModule
 	/** @var UserSession */
 	private $session;
 
-	/** @var App */
-	private $app;
+	/** @var AppHelper */
+	private $appHelper;
 
 
-	public function __construct(App $app, UserSession $session, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, App\Page $page, ACLFormatter $ACLFormatter, SystemMessages $systemMessages, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(AppHelper $appHelper, UserSession $session, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, Page $page, ACLFormatter $ACLFormatter, SystemMessages $systemMessages, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
@@ -67,7 +70,7 @@ class Compose extends BaseModule
 		$this->pConfig        = $pConfig;
 		$this->config         = $config;
 		$this->session        = $session;
-		$this->app            = $app;
+		$this->appHelper      = $appHelper;
 	}
 
 	protected function post(array $request = [])
@@ -87,7 +90,7 @@ class Compose extends BaseModule
 			return Login::form('compose');
 		}
 
-		if ($this->app->getCurrentTheme() !== 'frio') {
+		if ($this->appHelper->getCurrentTheme() !== 'frio') {
 			throw new NotImplementedException($this->l10n->t('This feature is only available with the frio theme.'));
 		}
 
@@ -115,7 +118,7 @@ class Compose extends BaseModule
 				$compose_title = $this->l10n->t('Compose new personal note');
 				$type = 'note';
 				$doesFederate = false;
-				$contact_allow_list = [$this->app->getContactId()];
+				$contact_allow_list = [$this->appHelper->getContactId()];
 				$circle_allow_list = [];
 				$contact_deny_list = [];
 				$circle_deny_list = [];
@@ -158,12 +161,12 @@ class Compose extends BaseModule
 		$this->page->registerFooterScript(Theme::getPathForFile('js/linkPreview.js'));
 		$this->page->registerFooterScript(Theme::getPathForFile('js/compose.js'));
 
-		$contact = Contact::getById($this->app->getContactId());
+		$contact = Contact::getById($this->appHelper->getContactId());
 
 		if ($this->pConfig->get($this->session->getLocalUserId(), 'system', 'set_creation_date')) {
 			$created_at = Temporal::getDateTimeField(
-				new \DateTime(DBA::NULL_DATETIME),
-				new \DateTime('now'),
+				new DateTime(DBA::NULL_DATETIME),
+				new DateTime('now'),
 				null,
 				$this->l10n->t('Created at'),
 				'created_at'

@@ -12,14 +12,14 @@
  * Maintainer: Tobias <https://diekershoff.homeunix.net/friendica/profile/tobias>
  */
 
-use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\DI;
 
 /*
  * This script can be included even when the app is in maintenance mode which requires us to avoid any config call
  */
 
-function quattro_init(App $a) {
+function quattro_init(AppHelper $appHelper) {
 	DI::page()['htmlhead'] .= '<script src="'.DI::baseUrl().'/view/theme/quattro/tinycon.min.js"></script>';
 	DI::page()['htmlhead'] .= '<script src="'.DI::baseUrl().'/view/theme/quattro/js/quattro.js"></script>';;
 }

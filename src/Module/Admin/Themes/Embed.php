@@ -7,7 +7,10 @@
 
 namespace Friendica\Module\Admin\Themes;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\App\Mode;
+use Friendica\AppHelper;
 use Friendica\Core\L10n;
 use Friendica\Core\Renderer;
 use Friendica\DI;
@@ -19,21 +22,21 @@ use Psr\Log\LoggerInterface;
 
 class Embed extends BaseAdmin
 {
-	/** @var App */
-	protected $app;
-	/** @var App\Mode */
+	/** @var AppHelper */
+	protected $appHelper;
+	/** @var Mode */
 	protected $mode;
 
-	public function __construct(App $app, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, App\Mode $mode, array $server, array $parameters = [])
+	public function __construct(AppHelper $appHelper, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, Mode $mode, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
-		$this->app  = $app;
-		$this->mode = $mode;
+		$this->appHelper = $appHelper;
+		$this->mode      = $mode;
 
 		$theme = Strings::sanitizeFilePathItem($this->parameters['theme']);
 		if (is_file("view/theme/$theme/config.php")) {
-			$this->app->setCurrentTheme($theme);
+			$this->appHelper->setCurrentTheme($theme);
 		}
 	}
 
@@ -46,7 +49,7 @@ class Embed extends BaseAdmin
 			require_once "view/theme/$theme/config.php";
 			if (function_exists('theme_admin_post')) {
 				self::checkFormSecurityTokenRedirectOnError('/admin/themes/' . $theme . '/embed?mode=minimal', 'admin_theme_settings');
-				theme_admin_post($this->app);
+				theme_admin_post($this->appHelper);
 			}
 		}
 
@@ -72,7 +75,7 @@ class Embed extends BaseAdmin
 			require_once "view/theme/$theme/config.php";
 
 			if (function_exists('theme_admin')) {
-				$admin_form = theme_admin($this->app);
+				$admin_form = theme_admin($this->appHelper);
 			}
 		}
 

@@ -503,7 +503,7 @@ class App implements AppHelper
 			}
 
 			if (!$this->mode->isBackend()) {
-				$auth->withSession($this);
+				$auth->withSession();
 			}
 
 			if ($this->session->isUnauthenticated()) {

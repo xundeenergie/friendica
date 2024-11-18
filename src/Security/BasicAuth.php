@@ -169,7 +169,7 @@ class BasicAuth
 			throw new UnauthorizedException("This API requires login");
 		}
 
-		DI::auth()->setForUser($a, $record, false, false, false);
+		DI::auth()->setForUser($record, false, false, false);
 
 		Hook::callAll('logged_in', $record);
 
