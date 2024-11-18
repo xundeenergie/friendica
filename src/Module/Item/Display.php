@@ -167,7 +167,7 @@ class Display extends BaseModule
 	{
 		$author = [];
 		$shared = $this->contentItem->getSharedPost($item, ['author-link']);
-		if (count($shared) > 0 && !array_key_exists('comment', $shared)) {
+		if (array_key_exists('comment', $shared) && !$shared['comment']) {
 			$author = Contact::getByURLForUser($shared['post']['author-link'], $this->session->getLocalUserId());
 		}
 
