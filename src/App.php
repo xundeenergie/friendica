@@ -314,13 +314,6 @@ class App implements AppHelper
 		// Ensure that all "strtotime" operations do run timezone independent
 		date_default_timezone_set('UTC');
 
-		set_include_path(
-			get_include_path() . PATH_SEPARATOR
-			. $this->appHelper->getBasePath() . DIRECTORY_SEPARATOR . 'include' . PATH_SEPARATOR
-			. $this->appHelper->getBasePath() . DIRECTORY_SEPARATOR . 'library' . PATH_SEPARATOR
-			. $this->appHelper->getBasePath()
-		);
-
 		$this->profiler->reset();
 
 		if ($this->mode->has(Mode::DBAVAILABLE)) {
