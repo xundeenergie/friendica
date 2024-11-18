@@ -7,8 +7,8 @@
 
 namespace Friendica\Content;
 
-use Friendica\App;
 use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Text\BBCode\Video;
 use Friendica\Content\Text\HTML;
@@ -66,10 +66,10 @@ class Item
 	private $baseURL;
 	/** @var Emailer */
 	private $emailer;
-	/** @var App */
-	private $app;
+	/** @var AppHelper */
+	private $appHelper;
 
-	public function __construct(Profiler $profiler, Activity $activity, L10n $l10n, IHandleUserSessions $userSession, Video $bbCodeVideo, ACLFormatter $aclFormatter, IManagePersonalConfigValues $pConfig, BaseURL $baseURL, Emailer $emailer, App $app)
+	public function __construct(Profiler $profiler, Activity $activity, L10n $l10n, IHandleUserSessions $userSession, Video $bbCodeVideo, ACLFormatter $aclFormatter, IManagePersonalConfigValues $pConfig, BaseURL $baseURL, Emailer $emailer, AppHelper $appHelper)
 	{
 		$this->profiler     = $profiler;
 		$this->activity     = $activity;
@@ -80,7 +80,7 @@ class Item
 		$this->baseURL      = $baseURL;
 		$this->pConfig      = $pConfig;
 		$this->emailer      = $emailer;
-		$this->app          = $app;
+		$this->appHelper    = $appHelper;
 	}
 
 	/**

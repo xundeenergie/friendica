@@ -8,7 +8,7 @@
 namespace Friendica\Console;
 
 use Asika\SimpleConsole\CommandArgsException;
-use Friendica\App;
+use Friendica\App\Mode;
 use Friendica\Core\Cache\Enum\Duration;
 use Friendica\Core\Cache\Capability\ICanCache;
 use RuntimeException;
@@ -25,7 +25,7 @@ class Cache extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var App\Mode
+	 * @var Mode
 	 */
 	private $appMode;
 
@@ -68,7 +68,7 @@ HELP;
 		return $help;
 	}
 
-	public function __construct(App\Mode $appMode, ICanCache $cache, array $argv = null)
+	public function __construct(Mode $appMode, ICanCache $cache, array $argv = null)
 	{
 		parent::__construct($argv);
 
@@ -85,7 +85,7 @@ HELP;
 			$this->out('Options: ' . var_export($this->options, true));
 		}
 
-		if (!$this->appMode->has(App\Mode::DBAVAILABLE)) {
+		if (!$this->appMode->has(Mode::DBAVAILABLE)) {
 			$this->out('Database isn\'t ready or populated yet, database cache won\'t be available');
 		}
 

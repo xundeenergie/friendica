@@ -7,7 +7,7 @@
  *
  */
 
-use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\Core\Renderer;
 use Friendica\Database\DBA;
 use Friendica\DI;
@@ -15,7 +15,7 @@ use Friendica\Model\User;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Strings;
 
-function lostpass_post(App $a)
+function lostpass_post(AppHelper $a)
 {
 	$loginame = trim($_POST['login-name']);
 	if (!$loginame) {
@@ -78,7 +78,7 @@ function lostpass_post(App $a)
 	DI::baseUrl()->redirect();
 }
 
-function lostpass_content(App $a)
+function lostpass_content(AppHelper $appHelper)
 {
 	if (DI::args()->getArgc() > 1) {
 		$pwdreset_token = DI::args()->getArgv()[1];

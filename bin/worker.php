@@ -15,7 +15,6 @@ if (php_sapi_name() !== 'cli') {
 }
 
 use Dice\Dice;
-use Friendica\App;
 use Friendica\App\Mode;
 use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Core\Update;
@@ -57,7 +56,7 @@ DI::mode()->setExecutor(Mode::WORKER);
 Update::check(DI::basePath(), true);
 
 // Quit when in maintenance
-if (!DI::mode()->has(App\Mode::MAINTENANCEDISABLED)) {
+if (!DI::mode()->has(Mode::MAINTENANCEDISABLED)) {
 	return;
 }
 

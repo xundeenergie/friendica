@@ -7,7 +7,7 @@
 
 namespace Friendica\Core\Session\Type;
 
-use Friendica\App;
+use Friendica\App\BaseURL;
 use Friendica\Core\Session\Capability\IHandleSessions;
 use Friendica\Model\User\Cookie;
 use SessionHandlerInterface;
@@ -17,7 +17,7 @@ use SessionHandlerInterface;
  */
 class Native extends AbstractSession implements IHandleSessions
 {
-	public function __construct(App\BaseURL $baseURL, SessionHandlerInterface $handler = null)
+	public function __construct(BaseURL $baseURL, SessionHandlerInterface $handler = null)
 	{
 		ini_set('session.gc_probability', 50);
 		ini_set('session.use_only_cookies', 1);

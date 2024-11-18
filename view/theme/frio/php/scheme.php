@@ -29,7 +29,7 @@ require_once 'view/theme/frio/theme.php';
 
 function get_scheme_info($scheme)
 {
-	$theme = DI::app()->getCurrentTheme();
+	$theme = DI::appHelper()->getCurrentTheme();
 	$themepath = 'view/theme/' . $theme . '/';
 	$scheme = Strings::sanitizeFilePathItem($scheme) ?: FRIO_DEFAULT_SCHEME;
 

@@ -7,7 +7,8 @@
 
 namespace Friendica\Module;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
 use Friendica\BaseModule;
 use Friendica\Core\L10n;
 use Friendica\Core\Protocol;
@@ -35,7 +36,7 @@ class FriendSuggest extends BaseModule
 	/** @var \Friendica\Contact\FriendSuggest\Factory\FriendSuggest */
 	protected $friendSuggestFac;
 
-	public function __construct(L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, Database $dba, \Friendica\Contact\FriendSuggest\Repository\FriendSuggest $friendSuggestRepo, \Friendica\Contact\FriendSuggest\Factory\FriendSuggest $friendSuggestFac, array $server, array $parameters = [])
+	public function __construct(L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, Database $dba, \Friendica\Contact\FriendSuggest\Repository\FriendSuggest $friendSuggestRepo, \Friendica\Contact\FriendSuggest\Factory\FriendSuggest $friendSuggestFac, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
@@ -97,14 +98,14 @@ class FriendSuggest extends BaseModule
 		}
 
 		$suggestableContacts = ContactModel::selectToArray(['id', 'name'], [
-			'`uid` = ? 
-			AND `id` != ? 
-			AND `network` = ? 
-			AND NOT `self` 
-			AND NOT `blocked` 
-			AND NOT `pending` 
-			AND NOT `archive` 
-			AND NOT `deleted` 
+			'`uid` = ?
+			AND `id` != ?
+			AND `network` = ?
+			AND NOT `self`
+			AND NOT `blocked`
+			AND NOT `pending`
+			AND NOT `archive`
+			AND NOT `deleted`
 			AND `notify` != ""',
 			DI::userSession()->getLocalUserId(),
 			$cid,

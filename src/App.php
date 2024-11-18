@@ -10,7 +10,10 @@ namespace Friendica;
 use Exception;
 use Friendica\App\Arguments;
 use Friendica\App\BaseURL;
+use Friendica\App\Mode;
+use Friendica\App\Page;
 use Friendica\App\Request;
+use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Content\Nav;
 use Friendica\Core\Config\Factory\Config;
@@ -18,14 +21,13 @@ use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
 use Friendica\Module\Maintenance;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Security\Authentication;
 use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\L10n;
 use Friendica\Core\System;
-use Friendica\Core\Theme;
-use Friendica\Database\Database;
 use Friendica\Module\Special\HTTPException as ModuleHTTPException;
 use Friendica\Network\HTTPException;
 use Friendica\Protocol\ATProtocol\DID;
@@ -34,7 +36,6 @@ use Friendica\Util\DateTimeFormat;
 use Friendica\Util\HTTPInputData;
 use Friendica\Util\HTTPSignature;
 use Friendica\Util\Profiler;
-use Friendica\Util\Strings;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -47,26 +48,14 @@ use Psr\Log\LoggerInterface;
  * before we spit the page out.
  *
  */
-class App
+class App implements AppHelper
 {
 	const PLATFORM = 'Friendica';
 	const CODENAME = 'Yellow Archangel';
 	const VERSION  = '2024.12-dev';
 
-	// Allow themes to control internal parameters
-	// by changing App values in theme.php
-	private $theme_info = [
-		'videowidth'        => 425,
-		'videoheight'       => 350,
-	];
-
-	private $timezone      = '';
-	private $profile_owner = 0;
-	private $contact_id    = 0;
-	private $queue         = [];
-
 	/**
-	 * @var App\Mode The Mode of the Application
+	 * @var Mode The Mode of the Application
 	 */
 	private $mode;
 
@@ -74,11 +63,6 @@ class App
 	 * @var BaseURL
 	 */
 	private $baseURL;
-
-	/** @var string The name of the current theme */
-	private $currentTheme;
-	/** @var string The name of the current mobile theme */
-	private $currentMobileTheme;
 
 	/** @var string */
 	private $requestId;
@@ -102,11 +86,6 @@ class App
 	private $profiler;
 
 	/**
-	 * @var Database The Friendica database connection
-	 */
-	private $database;
-
-	/**
 	 * @var L10n The translator
 	 */
 	private $l10n;
@@ -117,176 +96,201 @@ class App
 	private $args;
 
 	/**
-	 * @var IManagePersonalConfigValues
-	 */
-	private $pConfig;
-
-	/**
 	 * @var IHandleUserSessions
 	 */
 	private $session;
 
 	/**
+	 * @var AppHelper $appHelper
+	 */
+	private $appHelper;
+
+	public function __construct(
+		Request $request,
+		Authentication $auth,
+		IManageConfigValues $config,
+		Mode $mode,
+		BaseURL $baseURL,
+		LoggerInterface $logger,
+		Profiler $profiler,
+		L10n $l10n,
+		Arguments $args,
+		IHandleUserSessions $session,
+		DbaDefinition $dbaDefinition,
+		ViewDefinition $viewDefinition
+	) {
+		$this->requestId = $request->getRequestId();
+		$this->auth      = $auth;
+		$this->config    = $config;
+		$this->mode      = $mode;
+		$this->baseURL   = $baseURL;
+		$this->profiler  = $profiler;
+		$this->logger    = $logger;
+		$this->l10n      = $l10n;
+		$this->args      = $args;
+		$this->session   = $session;
+		$this->appHelper = DI::appHelper();
+
+		$this->load($dbaDefinition, $viewDefinition);
+	}
+
+	/**
 	 * Set the profile owner ID
+	 *
+	 * @deprecated 2024.12 Use AppHelper::setProfileOwner() instead
 	 *
 	 * @param int $owner_id
 	 * @return void
 	 */
 	public function setProfileOwner(int $owner_id)
 	{
-		$this->profile_owner = $owner_id;
+		$this->appHelper->setProfileOwner($owner_id);
 	}
 
 	/**
 	 * Get the profile owner ID
 	 *
+	 * @deprecated 2024.12 Use AppHelper::getProfileOwner() instead
+	 *
 	 * @return int
 	 */
 	public function getProfileOwner(): int
 	{
-		return $this->profile_owner;
+		return $this->appHelper->getProfileOwner();
 	}
 
 	/**
 	 * Set the contact ID
+	 *
+	 * @deprecated 2024.12 Use AppHelper::setContactId() instead
 	 *
 	 * @param int $contact_id
 	 * @return void
 	 */
 	public function setContactId(int $contact_id)
 	{
-		$this->contact_id = $contact_id;
+		$this->appHelper->setContactId($contact_id);
 	}
 
 	/**
 	 * Get the contact ID
 	 *
+	 * @deprecated 2024.12 Use AppHelper::getContactId() instead
+	 *
 	 * @return int
 	 */
 	public function getContactId(): int
 	{
-		return $this->contact_id;
+		return $this->appHelper->getContactId();
 	}
 
 	/**
 	 * Set the timezone
+	 *
+	 * @deprecated 2024.12 Use AppHelper::setTimeZone() instead
 	 *
 	 * @param string $timezone A valid time zone identifier, see https://www.php.net/manual/en/timezones.php
 	 * @return void
 	 */
 	public function setTimeZone(string $timezone)
 	{
-		$this->timezone = (new \DateTimeZone($timezone))->getName();
-		DateTimeFormat::setLocalTimeZone($this->timezone);
+		$this->appHelper->setTimeZone($timezone);
 	}
 
 	/**
 	 * Get the timezone
 	 *
-	 * @return int
+	 * @deprecated 2024.12 Use AppHelper::getTimeZone() instead
 	 */
 	public function getTimeZone(): string
 	{
-		return $this->timezone;
+		return $this->appHelper->getTimeZone();
 	}
 
 	/**
 	 * Set workerqueue information
+	 *
+	 * @deprecated 2024.12 Use AppHelper::setQueue() instead
 	 *
 	 * @param array $queue
 	 * @return void
 	 */
 	public function setQueue(array $queue)
 	{
-		$this->queue = $queue;
+		$this->appHelper->setQueue($queue);
 	}
 
 	/**
 	 * Fetch workerqueue information
 	 *
+	 * @deprecated 2024.12 Use AppHelper::getQueue() instead
+	 *
 	 * @return array Worker queue
 	 */
 	public function getQueue(): array
 	{
-		return $this->queue ?? [];
+		return $this->appHelper->getQueue();
 	}
 
 	/**
 	 * Fetch a specific workerqueue field
+	 *
+	 * @deprecated 2024.12 Use AppHelper::getQueueValue() instead
 	 *
 	 * @param string $index Work queue record to fetch
 	 * @return mixed Work queue item or NULL if not found
 	 */
 	public function getQueueValue(string $index)
 	{
-		return $this->queue[$index] ?? null;
+		return $this->appHelper->getQueueValue($index);
 	}
 
+	/**
+	 * @deprecated 2024.12 Use AppHelper::setThemeInfoValue() instead
+	 */
 	public function setThemeInfoValue(string $index, $value)
 	{
-		$this->theme_info[$index] = $value;
+		$this->appHelper->setThemeInfoValue($index, $value);
 	}
 
+	/**
+	 * @deprecated 2024.12 Use AppHelper::getThemeInfo() instead
+	 */
 	public function getThemeInfo()
 	{
-		return $this->theme_info;
+		return $this->appHelper->getThemeInfo();
 	}
 
+	/**
+	 * @deprecated 2024.12 Use AppHelper::getThemeInfoValue() instead
+	 */
 	public function getThemeInfoValue(string $index, $default = null)
 	{
-		return $this->theme_info[$index] ?? $default;
+		return $this->appHelper->getThemeInfoValue($index, $default);
 	}
 
 	/**
 	 * Returns the current config cache of this node
 	 *
+	 * @deprecated 2024.12 Use AppHelper::getConfigCache() instead
+	 *
 	 * @return Cache
 	 */
 	public function getConfigCache()
 	{
-		return $this->config->getCache();
+		return $this->appHelper->getConfigCache();
 	}
 
 	/**
 	 * The basepath of this app
 	 *
+	 * @deprecated 2024.12 Use AppHelper::getBasePath() instead
+	 *
 	 * @return string Base path from configuration
 	 */
 	public function getBasePath(): string
 	{
-		return $this->config->get('system', 'basepath');
-	}
-
-	/**
-	 * @param Database                    $database The Friendica Database
-	 * @param IManageConfigValues         $config   The Configuration
-	 * @param App\Mode                    $mode     The mode of this Friendica app
-	 * @param BaseURL                     $baseURL  The full base URL of this Friendica app
-	 * @param LoggerInterface             $logger   The current app logger
-	 * @param Profiler                    $profiler The profiler of this application
-	 * @param L10n                        $l10n     The translator instance
-	 * @param App\Arguments               $args     The Friendica Arguments of the call
-	 * @param IManagePersonalConfigValues $pConfig  Personal configuration
-	 * @param IHandleUserSessions         $session  The (User)Session handler
-	 * @param DbaDefinition               $dbaDefinition
-	 * @param ViewDefinition              $viewDefinition
-	 */
-	public function __construct(Request $request, Authentication $auth, Database $database, IManageConfigValues $config, App\Mode $mode, BaseURL $baseURL, LoggerInterface $logger, Profiler $profiler, L10n $l10n, Arguments $args, IManagePersonalConfigValues $pConfig, IHandleUserSessions $session, DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
-	{
-		$this->requestId      = $request->getRequestId();
-		$this->auth           = $auth;
-		$this->database       = $database;
-		$this->config         = $config;
-		$this->mode           = $mode;
-		$this->baseURL        = $baseURL;
-		$this->profiler       = $profiler;
-		$this->logger         = $logger;
-		$this->l10n           = $l10n;
-		$this->args           = $args;
-		$this->pConfig        = $pConfig;
-		$this->session        = $session;
-
-		$this->load($dbaDefinition, $viewDefinition);
+		return $this->appHelper->getBasePath();
 	}
 
 	/**
@@ -310,17 +314,11 @@ class App
 		// Ensure that all "strtotime" operations do run timezone independent
 		date_default_timezone_set('UTC');
 
-		set_include_path(
-			get_include_path() . PATH_SEPARATOR
-			. $this->getBasePath() . DIRECTORY_SEPARATOR . 'include' . PATH_SEPARATOR
-			. $this->getBasePath() . DIRECTORY_SEPARATOR . 'library' . PATH_SEPARATOR
-			. $this->getBasePath());
-
 		$this->profiler->reset();
 
-		if ($this->mode->has(App\Mode::DBAVAILABLE)) {
+		if ($this->mode->has(Mode::DBAVAILABLE)) {
 			Core\Hook::loadHooks();
-			$loader = (new Config())->createConfigFileManager($this->getBasePath(), $_SERVER);
+			$loader = (new Config())->createConfigFileManager($this->appHelper->getBasePath(), $_SERVER);
 			Core\Hook::callAll('load_config', $loader);
 
 			// Hooks are now working, reload the whole definitions with hook enabled
@@ -349,157 +347,70 @@ class App
 			$timezone = $default_timezone ?? '' ?: 'UTC';
 		}
 
-		$this->setTimeZone($timezone);
+		$this->appHelper->setTimeZone($timezone);
 	}
 
 	/**
 	 * Returns the current theme name. May be overridden by the mobile theme name.
+	 *
+	 * @deprecated 2024.12 Use AppHelper::getCurrentTheme() instead
 	 *
 	 * @return string Current theme name or empty string in installation phase
 	 * @throws Exception
 	 */
 	public function getCurrentTheme(): string
 	{
-		if ($this->mode->isInstall()) {
-			return '';
-		}
-
-		// Specific mobile theme override
-		if (($this->mode->isMobile() || $this->mode->isTablet()) && $this->session->get('show-mobile', true)) {
-			$user_mobile_theme = $this->getCurrentMobileTheme();
-
-			// --- means same mobile theme as desktop
-			if (!empty($user_mobile_theme) && $user_mobile_theme !== '---') {
-				return $user_mobile_theme;
-			}
-		}
-
-		if (!$this->currentTheme) {
-			$this->computeCurrentTheme();
-		}
-
-		return $this->currentTheme;
+		return $this->appHelper->getCurrentTheme();
 	}
 
 	/**
 	 * Returns the current mobile theme name.
+	 *
+	 * @deprecated 2024.12 Use AppHelper::getCurrentMobileTheme() instead
 	 *
 	 * @return string Mobile theme name or empty string if installer
 	 * @throws Exception
 	 */
 	public function getCurrentMobileTheme(): string
 	{
-		if ($this->mode->isInstall()) {
-			return '';
-		}
-
-		if (is_null($this->currentMobileTheme)) {
-			$this->computeCurrentMobileTheme();
-		}
-
-		return $this->currentMobileTheme;
+		return $this->appHelper->getCurrentMobileTheme();
 	}
 
 	/**
 	 * Setter for current theme name
 	 *
+	 * @deprecated 2024.12 Use AppHelper::setCurrentTheme() instead
+	 *
 	 * @param string $theme Name of current theme
 	 */
 	public function setCurrentTheme(string $theme)
 	{
-		$this->currentTheme = $theme;
+		$this->appHelper->setCurrentTheme($theme);
 	}
 
 	/**
 	 * Setter for current mobile theme name
 	 *
+	 * @deprecated 2024.12 Use AppHelper::setCurrentMobileTheme() instead
+	 *
 	 * @param string $theme Name of current mobile theme
 	 */
 	public function setCurrentMobileTheme(string $theme)
 	{
-		$this->currentMobileTheme = $theme;
-	}
-
-	/**
-	 * Computes the current theme name based on the node settings, the page owner settings and the user settings
-	 *
-	 * @throws Exception
-	 */
-	private function computeCurrentTheme()
-	{
-		$system_theme = $this->config->get('system', 'theme');
-		if (!$system_theme) {
-			throw new Exception($this->l10n->t('No system theme config value set.'));
-		}
-
-		// Sane default
-		$this->setCurrentTheme($system_theme);
-
-		$page_theme = null;
-		// Find the theme that belongs to the user whose stuff we are looking at
-		if (!empty($this->profile_owner) && ($this->profile_owner != $this->session->getLocalUserId())) {
-			// Allow folks to override user themes and always use their own on their own site.
-			// This works only if the user is on the same server
-			$user = $this->database->selectFirst('user', ['theme'], ['uid' => $this->profile_owner]);
-			if ($this->database->isResult($user) && !$this->session->getLocalUserId()) {
-				$page_theme = $user['theme'];
-			}
-		}
-
-		$theme_name = $page_theme ?: $this->session->get('theme', $system_theme);
-
-		$theme_name = Strings::sanitizeFilePathItem($theme_name);
-		if ($theme_name
-		    && in_array($theme_name, Theme::getAllowedList())
-		    && (file_exists('view/theme/' . $theme_name . '/style.css')
-		        || file_exists('view/theme/' . $theme_name . '/style.php'))
-		) {
-			$this->setCurrentTheme($theme_name);
-		}
-	}
-
-	/**
-	 * Computes the current mobile theme name based on the node settings, the page owner settings and the user settings
-	 */
-	private function computeCurrentMobileTheme()
-	{
-		$system_mobile_theme = $this->config->get('system', 'mobile-theme', '');
-
-		// Sane default
-		$this->setCurrentMobileTheme($system_mobile_theme);
-
-		$page_mobile_theme = null;
-		// Find the theme that belongs to the user whose stuff we are looking at
-		if (!empty($this->profile_owner) && ($this->profile_owner != $this->session->getLocalUserId())) {
-			// Allow folks to override user themes and always use their own on their own site.
-			// This works only if the user is on the same server
-			if (!$this->session->getLocalUserId()) {
-				$page_mobile_theme = $this->pConfig->get($this->profile_owner, 'system', 'mobile-theme');
-			}
-		}
-
-		$mobile_theme_name = $page_mobile_theme ?: $this->session->get('mobile-theme', $system_mobile_theme);
-
-		$mobile_theme_name = Strings::sanitizeFilePathItem($mobile_theme_name);
-		if ($mobile_theme_name == '---'
-			||
-			in_array($mobile_theme_name, Theme::getAllowedList())
-			&& (file_exists('view/theme/' . $mobile_theme_name . '/style.css')
-				|| file_exists('view/theme/' . $mobile_theme_name . '/style.php'))
-		) {
-			$this->setCurrentMobileTheme($mobile_theme_name);
-		}
+		$this->appHelper->setCurrentMobileTheme($theme);
 	}
 
 	/**
 	 * Provide a sane default if nothing is chosen or the specified theme does not exist.
+	 *
+	 * @deprecated 2024.12 Use AppHelper::getCurrentThemeStylesheetPath() instead
 	 *
 	 * @return string Current theme's stylesheet path
 	 * @throws Exception
 	 */
 	public function getCurrentThemeStylesheetPath(): string
 	{
-		return Core\Theme::getStylesheetPath($this->getCurrentTheme());
+		return $this->appHelper->getCurrentThemeStylesheetPath();
 	}
 
 	/**
@@ -510,10 +421,10 @@ class App
 	 *
 	 * This probably should change to limit the size of this monster method.
 	 *
-	 * @param App\Router                  $router
+	 * @param Router                      $router
 	 * @param IManagePersonalConfigValues $pconfig
 	 * @param Authentication              $auth       The Authentication backend of the node
-	 * @param App\Page                    $page       The Friendica page printing container
+	 * @param Page                        $page       The Friendica page printing container
 	 * @param ModuleHTTPException         $httpException The possible HTTP Exception container
 	 * @param HTTPInputData               $httpInput  A library for processing PHP input streams
 	 * @param float                       $start_time The start time of the overall script execution
@@ -522,8 +433,17 @@ class App
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public function runFrontend(App\Router $router, IManagePersonalConfigValues $pconfig, Authentication $auth, App\Page $page, Nav $nav, ModuleHTTPException $httpException, HTTPInputData $httpInput, float $start_time, array $server)
-	{
+	public function runFrontend(
+		Router $router,
+		IManagePersonalConfigValues $pconfig,
+		Authentication $auth,
+		Page $page,
+		Nav $nav,
+		ModuleHTTPException $httpException,
+		HTTPInputData $httpInput,
+		float $start_time,
+		array $server
+	) {
 		$requeststring = ($server['REQUEST_METHOD'] ?? '') . ' ' . ($server['REQUEST_URI'] ?? '') . ' ' . ($server['SERVER_PROTOCOL'] ?? '');
 		$this->logger->debug('Request received', ['address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '']);
 		$request_start = microtime(true);
@@ -536,7 +456,7 @@ class App
 
 		try {
 			// Missing DB connection: ERROR
-			if ($this->mode->has(App\Mode::LOCALCONFIGPRESENT) && !$this->mode->has(App\Mode::DBAVAILABLE)) {
+			if ($this->mode->has(Mode::LOCALCONFIGPRESENT) && !$this->mode->has(Mode::DBAVAILABLE)) {
 				throw new HTTPException\InternalServerErrorException($this->l10n->t('Apologies but the website is unavailable at the moment.'));
 			}
 
@@ -583,7 +503,7 @@ class App
 			}
 
 			if (!$this->mode->isBackend()) {
-				$auth->withSession($this);
+				$auth->withSession();
 			}
 
 			if ($this->session->isUnauthenticated()) {
@@ -601,7 +521,7 @@ class App
 			if ($this->mode->isInstall() && $moduleName !== 'install') {
 				$this->baseURL->redirect('install');
 			} else {
-				Core\Update::check($this->getBasePath(), false);
+				Core\Update::check($this->appHelper->getBasePath(), false);
 				Core\Addon::loadAddons();
 				Core\Hook::loadHooks();
 			}
@@ -648,7 +568,7 @@ class App
 			$page['page_title'] = $moduleName;
 
 			// The "view" module is required to show the theme CSS
-			if (!$this->mode->isInstall() && !$this->mode->has(App\Mode::MAINTENANCEDISABLED) && $moduleName !== 'view') {
+			if (!$this->mode->isInstall() && !$this->mode->has(Mode::MAINTENANCEDISABLED) && $moduleName !== 'view') {
 				$module = $router->getModule(Maintenance::class);
 			} else {
 				// determine the module class and save it to the module instance
@@ -665,7 +585,7 @@ class App
 
 			// Let the module run its internal process (init, get, post, ...)
 			$timestamp = microtime(true);
-			$response = $module->run($httpException, $input);
+			$response  = $module->run($httpException, $input);
 			$this->profiler->set(microtime(true) - $timestamp, 'content');
 
 			// Wrapping HTML responses in the theme template
@@ -688,17 +608,15 @@ class App
 	 * Automatically redirects to relative or absolute URL
 	 * Should only be used if it isn't clear if the URL is either internal or external
 	 *
+	 * @deprecated 2024.12 Use AppHelper::redirect() instead
+	 *
 	 * @param string $toUrl The target URL
 	 *
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public function redirect(string $toUrl)
 	{
-		if (!empty(parse_url($toUrl, PHP_URL_SCHEME))) {
-			Core\System::externalRedirect($toUrl);
-		} else {
-			$this->baseURL->redirect($toUrl);
-		}
+		$this->appHelper->redirect($toUrl);
 	}
 
 	/**

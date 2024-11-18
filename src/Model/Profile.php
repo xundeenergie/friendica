@@ -7,8 +7,8 @@
 
 namespace Friendica\Model;
 
-use Friendica\App;
 use Friendica\App\Mode;
+use Friendica\AppHelper;
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Widget\ContactBlock;
 use Friendica\Core\Cache\Enum\Duration;
@@ -190,7 +190,6 @@ class Profile
 	 *      the theme is chosen before the _init() function of a theme is run, which will usually
 	 *      load a lot of theme-specific content
 	 *
-	 * @param App    $a
 	 * @param string $nickname string
 	 * @param bool   $show_contacts
 	 *
@@ -199,7 +198,7 @@ class Profile
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public static function load(App $a, string $nickname, bool $show_contacts = true): array
+	public static function load(AppHelper $appHelper, string $nickname, bool $show_contacts = true): array
 	{
 		$profile = User::getOwnerDataByNick($nickname);
 		if (!isset($profile['account_removed']) || $profile['account_removed']) {
@@ -213,13 +212,13 @@ class Profile
 			throw new HTTPException\NotFoundException(DI::l10n()->t('User not found.'));
 		}
 
-		$a->setProfileOwner($profile['uid']);
+		$appHelper->setProfileOwner($profile['uid']);
 
 		DI::page()['title'] = $profile['name'] . ' @ ' . DI::config()->get('config', 'sitename');
 
 		if (!DI::userSession()->getLocalUserId()) {
-			$a->setCurrentTheme($profile['theme']);
-			$a->setCurrentMobileTheme(DI::pConfig()->get($a->getProfileOwner(), 'system', 'mobile_theme') ?? '');
+			$appHelper->setCurrentTheme($profile['theme']);
+			$appHelper->setCurrentMobileTheme(DI::pConfig()->get($appHelper->getProfileOwner(), 'system', 'mobile_theme') ?? '');
 		}
 
 		/*
@@ -228,7 +227,7 @@ class Profile
 
 		Renderer::setActiveTemplateEngine(); // reset the template engine to the default in case the user's theme doesn't specify one
 
-		$theme_info_file = 'view/theme/' . $a->getCurrentTheme() . '/theme.php';
+		$theme_info_file = 'view/theme/' . $appHelper->getCurrentTheme() . '/theme.php';
 		if (file_exists($theme_info_file)) {
 			require_once $theme_info_file;
 		}
@@ -687,15 +686,13 @@ class Profile
 	 * settings take precedence; unless a local user is logged in which means they don't
 	 * want to see anybody else's theme settings except their own while on this site.
 	 *
-	 * @param App $a
-	 *
 	 * @return int user ID
 	 *
 	 * @note Returns local_user instead of user ID if "always_my_theme" is set to true
 	 */
-	public static function getThemeUid(App $a): int
+	public static function getThemeUid(AppHelper $appHelper): int
 	{
-		return DI::userSession()->getLocalUserId() ?: $a->getProfileOwner();
+		return DI::userSession()->getLocalUserId() ?: $appHelper->getProfileOwner();
 	}
 
 	/**

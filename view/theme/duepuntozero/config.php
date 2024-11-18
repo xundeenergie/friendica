@@ -7,11 +7,11 @@
  *
  */
 
-use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\Core\Renderer;
 use Friendica\DI;
 
-function theme_content(App $a)
+function theme_content(AppHelper $appHelper)
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		return;
@@ -20,10 +20,10 @@ function theme_content(App $a)
 	$colorset = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'duepuntozero', 'colorset');
 	$user = true;
 
-	return clean_form($a, $colorset, $user);
+	return clean_form($appHelper, $colorset, $user);
 }
 
-function theme_post(App $a)
+function theme_post(AppHelper $appHelper)
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		return;
@@ -34,23 +34,23 @@ function theme_post(App $a)
 	}
 }
 
-function theme_admin(App $a)
+function theme_admin(AppHelper $appHelper)
 {
 	$colorset = DI::config()->get('duepuntozero', 'colorset');
 	$user = false;
 
-	return clean_form($a, $colorset, $user);
+	return clean_form($appHelper, $colorset, $user);
 }
 
-function theme_admin_post(App $a)
+function theme_admin_post(AppHelper $appHelper)
 {
 	if (isset($_POST['duepuntozero-settings-submit'])) {
 		DI::config()->set('duepuntozero', 'colorset', $_POST['duepuntozero_colorset']);
 	}
 }
 
-/// @TODO $a is no longer used
-function clean_form(App $a, &$colorset, $user)
+/// @TODO $appHelper is no longer used
+function clean_form(AppHelper $appHelper, &$colorset, $user)
 {
 	$colorset = [
 		'default'     => DI::l10n()->t('default'),
