@@ -509,7 +509,7 @@ class BaseApi extends BaseModule
 	/**
 	 * @param int   $errorno
 	 * @param Error $error
-	 * @return void
+	 * @return never
 	 * @throws HTTPException\InternalServerErrorException
 	 */
 	protected function logAndJsonError(int $errorno, Error $error)

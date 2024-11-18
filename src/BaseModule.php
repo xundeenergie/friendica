@@ -456,7 +456,7 @@ abstract class BaseModule implements ICanHandleRequests
 	 * @param string      $content
 	 * @param string      $type
 	 * @param string|null $content_type
-	 * @return void
+	 * @return never
 	 * @throws HTTPException\InternalServerErrorException
 	 */
 	public function httpExit(string $content, string $type = Response::TYPE_HTML, ?string $content_type = null)
@@ -493,7 +493,7 @@ abstract class BaseModule implements ICanHandleRequests
 	 * @param mixed  $content
 	 * @param string $content_type
 	 * @param int    $options A combination of json_encode() binary flags
-	 * @return void
+	 * @return never
 	 * @throws HTTPException\InternalServerErrorException
 	 * @see json_encode()
 	 */
@@ -508,7 +508,7 @@ abstract class BaseModule implements ICanHandleRequests
 	 * @param int    $httpCode
 	 * @param mixed  $content
 	 * @param string $content_type
-	 * @return void
+	 * @return never
 	 * @throws HTTPException\InternalServerErrorException
 	 */
 	public function jsonError(int $httpCode, $content, string $content_type = 'application/json')
