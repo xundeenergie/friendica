@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.12-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-16 18:59+0000\n"
+"POT-Creation-Date: 2024-11-17 20:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -644,11 +644,7 @@ msgstr ""
 msgid "Map"
 msgstr ""
 
-#: src/App.php:432
-msgid "No system theme config value set."
-msgstr ""
-
-#: src/App.php:540
+#: src/App.php:467
 msgid "Apologies but the website is unavailable at the moment."
 msgstr ""
 
@@ -761,6 +757,10 @@ msgstr ""
 
 #: src/App/Router.php:309
 msgid "You must be logged in to use addons. "
+msgstr ""
+
+#: src/AppLegacy.php:317
+msgid "No system theme config value set."
 msgstr ""
 
 #: src/BaseModule.php:393
