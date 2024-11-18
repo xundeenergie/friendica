@@ -2336,7 +2336,6 @@ class Processor
 
 		if (!empty($activity['object_actor'])) {
 			$uid      = User::getIdForURL($activity['object_actor']);
-			$check_id = false;
 		} elseif (!empty($activity['receiver']) && (count($activity['receiver']) == 1)) {
 			$uid      = array_shift($activity['receiver']);
 			$check_id = true;
