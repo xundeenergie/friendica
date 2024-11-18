@@ -78,7 +78,6 @@ class Magic extends BaseModule
 
 		$contact = Contact::getByURL($addr ?: $dest);
 		if ($contact === [] && $owa === 0) {
-			# code...
 			$this->logger->info('No contact record found, no oWA, redirecting to destination.', ['request' => $request, 'server' => $_SERVER, 'dest' => $dest]);
 			$this->app->redirect($dest);
 		}

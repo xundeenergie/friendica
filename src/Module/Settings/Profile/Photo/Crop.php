@@ -182,6 +182,9 @@ class Crop extends BaseSettings
 		}
 
 		$Image = Photo::getImageForPhoto($photos[0]);
+		if (!$Image->isValid()) {
+			throw new HTTPException\InternalServerErrorException();
+		}
 
 		$imagecrop = [
 			'resource-id' => $resource_id,
