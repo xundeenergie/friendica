@@ -565,6 +565,8 @@ class Probe
 			$nick = '';
 			$addr = '';
 
+			$path_parts = [];
+
 			if (array_key_exists('path', $parts) && trim(strval($parts['path']), '/') !== '') {
 				$path_parts = explode('/', trim($parts['path'], '/'));
 
@@ -578,7 +580,7 @@ class Probe
 			}
 
 			if (empty($webfinger) && empty($lrdd)) {
-				while (empty($lrdd) && empty($webfinger) && (sizeof($path_parts) > 1)) {
+				while (empty($lrdd) && empty($webfinger) && (count($path_parts) > 1)) {
 					$host    .= '/' . array_shift($path_parts);
 					$baseurl = $parts['scheme'] . '://' . $host;
 
