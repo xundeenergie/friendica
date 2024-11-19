@@ -244,13 +244,12 @@ class Plaintext
 		$part      = '';
 		$break_pos = 0;
 		$comma_pos = 0;
+		$pos       = 0;
+		$word      = '';
 
 		$limit = $baselimit;
 
 		while ($message) {
-			$word     = $message;
-			$message  = '';
-			$pos      = 0;
 			$pos_word = mb_strpos($message, ' ');
 			$pos_paragraph = mb_strpos($message, "\n");
 
@@ -260,6 +259,9 @@ class Plaintext
 				$pos = $pos_word + 1;
 			} elseif ($pos_paragraph !== false) {
 				$pos = $pos_paragraph + 1;
+			} else {
+				$word     = $message;
+				$message  = '';
 			}
 
 			if (trim($message)) {
