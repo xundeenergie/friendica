@@ -2419,7 +2419,7 @@ class GServer
 
 				if (in_array($attr['content'], array_keys($grouped_platforms['ap_platforms']))) {
 					$serverdata['network'] = Protocol::ACTIVITYPUB;
-				} elseif (in_array($attr['content'], array_values($platforms['zap_platforms']))) {
+				} elseif (in_array($attr['content'], array_values($grouped_platforms['zap_platforms']))) {
 					$serverdata['network'] = Protocol::ZOT;
 				}
 			}
