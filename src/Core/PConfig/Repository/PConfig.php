@@ -60,7 +60,11 @@ class PConfig
 			} else {
 				$configs = $this->db->select(static::$table_name, ['cat', 'v', 'k'], ['cat' => $cat, 'uid' => $uid]);
 			}
+		} catch (\Exception $exception) {
+			throw new PConfigPersistenceException(sprintf('Cannot load config category "%s" for user %d', $cat, $uid), $exception);
+		}
 
+		try {
 			while ($config = $this->db->fetch($configs)) {
 				$key   = $config['k'];
 				$value = ValueConversion::toConfigValue($config['v']);
@@ -71,7 +75,7 @@ class PConfig
 				}
 			}
 		} catch (\Exception $exception) {
-			throw new PConfigPersistenceException(sprintf('Cannot load config category %s for user %d', $cat, $uid), $exception);
+			throw new PConfigPersistenceException(sprintf('Cannot load config category "%s" for user %d', $cat, $uid), $exception);
 		} finally {
 			$this->db->close($configs);
 		}
