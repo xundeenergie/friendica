@@ -142,17 +142,18 @@ class ContactSelector
 		$replace = array_values($nets);
 
 		$networkname = str_replace($search, $replace, $network);
+		$platform    = '';
 
 		if (in_array($network, Protocol::FEDERATED) && !empty($gsid)) {
 			$gserver = self::getServerForId($gsid);
 
 			if (!empty($gserver['platform'])) {
-				$platform = $gserver['platform'];
+				$platform = (string) $gserver['platform'];
 			} elseif (!empty($gserver['network']) && ($gserver['network'] != Protocol::ACTIVITYPUB)) {
 				$platform = self::networkToName($gserver['network']);
 			}
 
-			if (!empty($platform)) {
+			if ($platform !== '') {
 				$networkname = $platform;
 			}
 		}
@@ -161,7 +162,7 @@ class ContactSelector
 			$networkname = DI::l10n()->t('%s (via %s)', $networkname, self::networkToName($protocol));
 		} elseif (in_array($network, ['', $protocol]) && ($network == Protocol::DFRN)) {
 			$networkname .= ' (DFRN)';
-		} elseif (in_array($network, ['', $protocol]) && ($network == Protocol::DIASPORA) && ($platform != 'diaspora')) {
+		} elseif (in_array($network, ['', $protocol]) && ($network == Protocol::DIASPORA) && ($platform !== 'diaspora')) {
 			$networkname .= ' (Diaspora)';
 		}
 
@@ -191,7 +192,7 @@ class ContactSelector
 		$nets = [
 			Protocol::ACTIVITYPUB => 'activitypub', // https://commons.wikimedia.org/wiki/File:ActivityPub-logo-symbol.svg
 			Protocol::BLUESKY     => 'bluesky', // https://commons.wikimedia.org/wiki/File:Bluesky_Logo.svg
-			Protocol::DFRN        => 'friendica', 
+			Protocol::DFRN        => 'friendica',
 			Protocol::DIASPORA    => 'diaspora', // https://www.svgrepo.com/svg/362315/diaspora
 			Protocol::DIASPORA2   => 'diaspora', // https://www.svgrepo.com/svg/362315/diaspora
 			Protocol::DISCOURSE   => 'discourse', // https://commons.wikimedia.org/wiki/File:Discourse_icon.svg

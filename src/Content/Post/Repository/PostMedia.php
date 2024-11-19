@@ -116,9 +116,10 @@ class PostMedia extends BaseRepository
 			return $attachments;
 		}
 
-		$heights = [];
+		$heights  = [];
 		$selected = '';
 		$previews = [];
+		$video    = [];
 
 		foreach ($PostMedias as $PostMedia) {
 			foreach ($links as $link) {

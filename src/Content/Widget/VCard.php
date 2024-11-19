@@ -34,7 +34,7 @@ class VCard
 	public static function getHTML(array $contact, bool $hide_mention = false, bool $hide_follow = false): string
 	{
 		if (!isset($contact['network']) || !isset($contact['id'])) {
-			Logger::warning('Incomplete contact', ['contact' => $contact ?? []]);
+			Logger::warning('Incomplete contact', ['contact' => $contact]);
 		}
 
 		$contact_url = Contact::getProfileLink($contact);
@@ -61,7 +61,7 @@ class VCard
 				$hide_follow  = true;
 				$hide_mention = true;
 			}
-		
+
 			if ($contact['uid']) {
 				$id      = $contact['id'];
 				$rel     = $contact['rel'];
