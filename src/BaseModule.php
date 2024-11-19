@@ -269,7 +269,7 @@ abstract class BaseModule implements ICanHandleRequests
 			$request[$parameter] = $this->getRequestValue($input, $parameter, $defaultvalue);
 		}
 
-		foreach ($input ?? [] as $parameter => $value) {
+		foreach ($input as $parameter => $value) {
 			if ($parameter == 'pagename') {
 				continue;
 			}
