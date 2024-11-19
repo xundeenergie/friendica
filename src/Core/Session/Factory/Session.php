@@ -76,15 +76,21 @@ class Session
 				default:
 					$handler = null;
 			}
-
-			$session = new Native($baseURL, $handler);
-
 		} catch (Throwable $e) {
 			$logger->notice('Unable to create session', ['mode' => $mode, 'session_handler' => $session_handler, 'exception' => $e]);
 			$session = new Memory();
-		} finally {
 			$profiler->stopRecording();
 			return $session;
 		}
+
+		try {
+			$session = new Native($baseURL, $handler);
+		} catch (Throwable $e) {
+			$logger->notice('Unable to create session', ['mode' => $mode, 'session_handler' => $session_handler, 'exception' => $e]);
+			$session = new Memory();
+		}
+
+		$profiler->stopRecording();
+		return $session;
 	}
 }
