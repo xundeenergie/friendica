@@ -13,11 +13,14 @@ use Friendica\Core\Cache\Factory\Cache;
 use Friendica\Core\Cache\Type\DatabaseCache;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Session\Capability\IHandleSessions;
-use Friendica\Core\Session\Type;
-use Friendica\Core\Session\Handler;
+use Friendica\Core\Session\Handler\Cache as CacheHandler;
+use Friendica\Core\Session\Handler\Database as DatabaseHandler;
+use Friendica\Core\Session\Type\Memory;
+use Friendica\Core\Session\Type\Native;
 use Friendica\Database\Database;
 use Friendica\Util\Profiler;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 /**
  * Factory for creating a valid Session for this run
@@ -49,33 +52,36 @@ class Session
 		$profiler->startRecording('session');
 		$session_handler = $config->get('system', 'session_handler', self::HANDLER_DEFAULT);
 
+		if ($mode->isInstall() || $mode->isBackend()) {
+			$session = new Memory();
+			$profiler->stopRecording();
+			return $session;
+		}
+
 		try {
-			if ($mode->isInstall() || $mode->isBackend()) {
-				$session = new Type\Memory();
-			} else {
-				switch ($session_handler) {
-					case self::HANDLER_DATABASE:
-						$handler = new Handler\Database($dba, $logger, $server);
-						break;
-					case self::HANDLER_CACHE:
-						$cache = $cacheFactory->createDistributed();
+			switch ($session_handler) {
+				case self::HANDLER_DATABASE:
+					$handler = new DatabaseHandler($dba, $logger, $server);
+					break;
+				case self::HANDLER_CACHE:
+					$cache = $cacheFactory->createDistributed();
 
-						// In case we're using the db as cache driver, use the native db session, not the cache
-						if ($config->get('system', 'cache_driver') === DatabaseCache::NAME) {
-							$handler = new Handler\Database($dba, $logger, $server);
-						} else {
-							$handler = new Handler\Cache($cache, $logger);
-						}
-						break;
-					default:
-						$handler = null;
-				}
-
-				$session = new Type\Native($baseURL, $handler);
+					// In case we're using the db as cache driver, use the native db session, not the cache
+					if ($config->get('system', 'cache_driver') === DatabaseCache::NAME) {
+						$handler = new DatabaseHandler($dba, $logger, $server);
+					} else {
+						$handler = new CacheHandler($cache, $logger);
+					}
+					break;
+				default:
+					$handler = null;
 			}
-		} catch (\Throwable $e) {
+
+			$session = new Native($baseURL, $handler);
+
+		} catch (Throwable $e) {
 			$logger->notice('Unable to create session', ['mode' => $mode, 'session_handler' => $session_handler, 'exception' => $e]);
-			$session = new Type\Memory();
+			$session = new Memory();
 		} finally {
 			$profiler->stopRecording();
 			return $session;
