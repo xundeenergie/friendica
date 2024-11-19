@@ -284,7 +284,7 @@ class PostUpdate
 		}
 
 		while ($item = DBA::fetch($items)) {
-			Tag::storeFromBody($item['uri-id'], $item['body'], '#!@', false);
+			Tag::storeFromBody($item['uri-id'], $item['body'], '#!@');
 			$id = $item['uri-id'];
 			++$rows;
 			if ($rows % 1000 == 0) {
@@ -775,11 +775,8 @@ class PostUpdate
 
 		while ($photo = DBA::fetch($photos)) {
 			$img = Photo::getImageForPhoto($photo);
-			if (!empty($img)) {
-				$md5 = md5($img->asString());
-			} else {
-				$md5 = '';
-			}
+			$md5 = md5($img->asString());
+
 			DBA::update('photo', ['hash' => $md5], ['id' => $photo['id']]);
 			++$rows;
 		}
@@ -1220,7 +1217,7 @@ class PostUpdate
 			$parts = parse_url($contact['url']);
 			unset($parts['path']);
 			$server = (string)Uri::fromParts($parts);
-		
+
 			DBA::update('contact',
 				['gsid' => GServer::getID($server, true), 'baseurl' => GServer::cleanURL($server)],
 				['id' => $contact['id']]);
