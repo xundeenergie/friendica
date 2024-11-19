@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Content;
+namespace Friendica\Test\src\Content\Text;
 
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Text\Plaintext;
