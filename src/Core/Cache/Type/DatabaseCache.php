@@ -47,17 +47,21 @@ class DatabaseCache extends AbstractCache implements ICanCache
 			}
 
 			$stmt = $this->dba->select('cache', ['k'], $where);
+		} catch (\Exception $exception) {
+			throw new CachePersistenceException(sprintf('Cannot fetch all keys with prefix %s', $prefix), $exception);
+		}
 
+		try {
 			$keys = [];
 			while ($key = $this->dba->fetch($stmt)) {
 				array_push($keys, $key['k']);
 			}
 		} catch (\Exception $exception) {
-			throw new CachePersistenceException(sprintf('Cannot fetch all keys with prefix %s', $prefix), $exception);
-		} finally {
 			$this->dba->close($stmt);
+			throw new CachePersistenceException(sprintf('Cannot fetch all keys with prefix %s', $prefix), $exception);
 		}
 
+		$this->dba->close($stmt);
 		return $keys;
 	}
 
