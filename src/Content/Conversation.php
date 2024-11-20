@@ -34,7 +34,8 @@ use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Object\Post as PostObject;
 use Friendica\Object\Thread;
 use Friendica\Protocol\Activity;
-use Friendica\User\Settings\Repository\UserGServer;
+use Friendica\User\Settings\Entity\UserGServer as UserGServerEntity;
+use Friendica\User\Settings\Repository\UserGServer as UserGServerRepository;
 use Friendica\Util\Crypto;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Profiler;
@@ -81,10 +82,10 @@ class Conversation
 	private $mode;
 	/** @var IHandleUserSessions */
 	private $session;
-	/** @var UserGServer */
+	/** @var UserGServerRepository */
 	private $userGServer;
 
-	public function __construct(UserGServer $userGServer, LoggerInterface $logger, Profiler $profiler, Activity $activity, L10n $l10n, Item $item, Arguments $args, BaseURL $baseURL, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, Page $page, Mode $mode, AppHelper $appHelper, IHandleUserSessions $session)
+	public function __construct(UserGServerRepository $userGServer, LoggerInterface $logger, Profiler $profiler, Activity $activity, L10n $l10n, Item $item, Arguments $args, BaseURL $baseURL, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, Page $page, Mode $mode, AppHelper $appHelper, IHandleUserSessions $session)
 	{
 		$this->activity    = $activity;
 		$this->item        = $item;
@@ -455,7 +456,7 @@ class Conversation
 
 		$userGservers = $this->userGServer->listIgnoredByUser($this->session->getLocalUserId());
 
-		$ignoredGsids = array_map(function (UserGServer $userGServer) {
+		$ignoredGsids = array_map(function (UserGServerEntity $userGServer) {
 			return $userGServer->gsid;
 		}, $userGservers->getArrayCopy());
 
