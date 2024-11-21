@@ -77,7 +77,6 @@ class Remove extends \Friendica\BaseModule
 
 		$tag_text = Tag::getCSVByURIId($item['uri-id']);
 
-		$tags = explode(',', $tag_text);
 		if ($tag_text === '') {
 			$this->baseUrl->redirect($returnUrl);
 		}
