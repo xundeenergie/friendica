@@ -846,7 +846,7 @@ class Media
 	}
 
 	/**
-	 * Update post-media entries
+	 * Update post-media entries by id
 	 *
 	 * @param array $fields
 	 * @param int $id
@@ -855,6 +855,18 @@ class Media
 	public static function updateById(array $fields, int $id): bool
 	{
 		return DBA::update('post-media', $fields, ['id' => $id]);
+	}
+
+	/**
+	 * Update post-media entries
+	 *
+	 * @param array $fields
+	 * @param array $condition
+	 * @return boolean
+	 */
+	public static function update(array $fields, array $condition): bool
+	{
+		return DBA::update('post-media', $fields, $condition);
 	}
 
 	/**
