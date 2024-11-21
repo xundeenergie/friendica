@@ -49,7 +49,7 @@ function photos_init()
 	Nav::setSelected('home');
 
 	if (DI::args()->getArgc() > 1) {
-		$owner = Profile::load(DI::app(), DI::args()->getArgv()[1], false);
+		$owner = Profile::load(DI::appHelper(), DI::args()->getArgv()[1], false);
 		if (!isset($owner['account_removed']) || $owner['account_removed']) {
 			throw new HTTPException\NotFoundException(DI::l10n()->t('User not found.'));
 		}
