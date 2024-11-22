@@ -192,10 +192,11 @@ class DatabaseLock extends AbstractLock
 				array_push($keys, $key['name']);
 			}
 		} catch (\Exception $exception) {
-			throw new LockPersistenceException(sprintf('Cannot get lock with prefix %s', $prefix), $exception);
-		} finally {
 			$this->dba->close($stmt);
+			throw new LockPersistenceException(sprintf('Cannot get lock with prefix %s', $prefix), $exception);
 		}
+
+		$this->dba->close($stmt);
 
 		return $keys;
 	}
