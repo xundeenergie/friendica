@@ -334,17 +334,17 @@ class Router
 
 		$stamp = microtime(true);
 
-		try {
-			/** @var ICanHandleRequests $module */
-			return $this->dice->create($moduleClass, $this->parameters);
-		} finally {
-			if ($this->dice_profiler_threshold > 0) {
-				$dur = floatval(microtime(true) - $stamp);
-				if ($dur >= $this->dice_profiler_threshold) {
-					$this->logger->notice('Dice module creation lasts too long.', ['duration' => round($dur, 3), 'module' => $moduleClass, 'parameters' => $this->parameters]);
-				}
+		/** @var ICanHandleRequests $module */
+		$module = $this->dice->create($moduleClass, $this->parameters);
+
+		if ($this->dice_profiler_threshold > 0) {
+			$dur = floatval(microtime(true) - $stamp);
+			if ($dur >= $this->dice_profiler_threshold) {
+				$this->logger->notice('Dice module creation lasts too long.', ['duration' => round($dur, 3), 'module' => $moduleClass, 'parameters' => $this->parameters]);
 			}
 		}
+
+		return $module;
 	}
 
 	/**
