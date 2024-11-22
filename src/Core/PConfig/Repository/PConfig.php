@@ -75,10 +75,11 @@ class PConfig
 				}
 			}
 		} catch (\Exception $exception) {
-			throw new PConfigPersistenceException(sprintf('Cannot load config category "%s" for user %d', $cat, $uid), $exception);
-		} finally {
 			$this->db->close($configs);
+			throw new PConfigPersistenceException(sprintf('Cannot load config category "%s" for user %d', $cat, $uid), $exception);
 		}
+
+		$this->db->close($configs);
 
 		return $return;
 	}
