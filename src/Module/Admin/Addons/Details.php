@@ -31,7 +31,7 @@ class Details extends BaseAdmin
 				self::checkFormSecurityTokenRedirectOnError($redirect, 'admin_addons_details');
 
 				$func = $addon . '_addon_admin_post';
-				$func(DI::app());
+				$func();
 			}
 		}
 
