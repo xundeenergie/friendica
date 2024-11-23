@@ -107,7 +107,6 @@ class BasicAuth
 	 */
 	private static function getUserIdByAuth(bool $do_login = true):int
 	{
-		$a = DI::app();
 		self::$current_user_id = 0;
 
 		// workaround for HTTP-auth in CGI mode
