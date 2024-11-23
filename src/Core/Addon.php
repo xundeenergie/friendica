@@ -155,7 +155,12 @@ class Addon
 		@include_once($addon_file_path);
 		if (function_exists($addon . '_install')) {
 			$func = $addon . '_install';
-			$func(DI::app());
+
+			// Addon webdav_storage has an unused but required parameter.
+			// @TODO: Remove $param after the required parameter is removed.
+			// See https://github.com/friendica/friendica-addons/pull/1364
+			$param = null;
+			$func($param);
 		}
 
 		DI::config()->set('addons', $addon, [
