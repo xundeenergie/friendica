@@ -9,6 +9,10 @@ parameters:
         - addon/
         - src/
 
+    excludePaths:
+        analyse:
+            - addon/*/vendor/*
+
     scanDirectories:
         - mod
         - vendor
