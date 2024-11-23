@@ -6,6 +6,7 @@ parameters:
     level: 0
 
     paths:
+        - addon/
         - src/
 
     scanDirectories:
