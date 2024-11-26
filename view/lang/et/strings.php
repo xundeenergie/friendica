@@ -244,7 +244,6 @@ $a->strings['first'] = 'esimene';
 $a->strings['prev'] = 'eelm';
 $a->strings['next'] = 'järgmine';
 $a->strings['last'] = 'viimane';
-$a->strings['Image/photo'] = 'pilt/foto';
 $a->strings['Click to open/close'] = 'Klõpsa ava/sulge';
 $a->strings['Encrypted content'] = 'Krüptitud sisu';
 $a->strings['The end'] = 'Lõpp';

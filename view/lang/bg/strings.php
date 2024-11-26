@@ -200,7 +200,6 @@ $a->strings['first'] = 'Първа';
 $a->strings['prev'] = 'Пред.';
 $a->strings['next'] = 'следващ';
 $a->strings['last'] = 'Дата на последния одит. ';
-$a->strings['Image/photo'] = 'Изображение / снимка';
 $a->strings['Click to open/close'] = 'Кликнете за отваряне / затваряне';
 $a->strings['$1 wrote:'] = '$ 1 пише:';
 $a->strings['Encrypted content'] = 'Шифрирано съдържание';
