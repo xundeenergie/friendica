@@ -13,6 +13,7 @@ use Friendica\Core\Logger\Util\LoggerSettingsCheck;
 use Friendica\Core\Session\Capability\IHandleSessions;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Navigation\SystemMessages;
+use Friendica\Protocol\ATProtocol;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -141,6 +142,34 @@ abstract class DI
 	public static function router()
 	{
 		return self::$dice->create(App\Router::class);
+	}
+
+	//
+	// "AtProtocol" namespace instances
+	//
+
+	/**
+	 * @return AtProtocol
+	 */
+	public static function atProtocol()
+	{
+		return self::$dice->create(ATProtocol::class);
+	}
+
+	/**
+	 * @return AtProtocol\Arguments
+	 */
+	public static function atpActor()
+	{
+		return self::$dice->create(ATProtocol\Actor::class);
+	}
+
+	/**
+	 * @return AtProtocol\Processor
+	 */
+	public static function atpProcessor()
+	{
+		return self::$dice->create(ATProtocol\Processor::class);
 	}
 
 	//
