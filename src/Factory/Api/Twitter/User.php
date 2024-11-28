@@ -57,7 +57,7 @@ class User extends BaseFactory
 				['author-id' => $publicContact['id'], 'gravity' => [Item::GRAVITY_COMMENT, Item::GRAVITY_PARENT], 'private'  => [Item::PUBLIC, Item::UNLISTED]],
 				['order' => ['uri-id' => true]]);
 			if (!empty($post['uri-id'])) {
-				$status = $this->status->createFromUriId($post['uri-id'], $uid)->toArray();
+				$status = $this->status->createFromUriId($post['uri-id'], $uid);
 			}
 		}
 
