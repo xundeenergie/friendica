@@ -37,7 +37,7 @@ steps:
         PHP_MAJOR_VERSION: 8.2
     commands:
       - bin/composer.phar run phpstan;
-  check:
+  codestyle:
     image: friendicaci/php-cs
     commands:
       - if [ ! -z "$${CI_COMMIT_PULL_REQUEST}" ]; then
