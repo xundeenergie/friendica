@@ -125,13 +125,14 @@ class User
 	/**
 	 * Block contact id for user id
 	 *
-	 * @param int     $cid     Either public contact id or user's contact id
-	 * @param int     $uid     User ID
-	 * @param boolean $blocked Is the contact blocked or unblocked?
+	 * @param int     $cid      Either public contact id or user's contact id
+	 * @param int     $uid      User ID
+	 * @param boolean $blocked  Is the contact blocked or unblocked?
+	 * @param boolean $only_set Only set the block flag, don't execute any block transmission
 	 * @return void
 	 * @throws \Exception
 	 */
-	public static function setBlocked(int $cid, int $uid, bool $blocked)
+	public static function setBlocked(int $cid, int $uid, bool $blocked, bool $only_set = false)
 	{
 		$cdata = Contact::getPublicAndUserContactID($cid, $uid);
 		if (empty($cdata)) {
@@ -139,10 +140,13 @@ class User
 		}
 
 		$contact = Contact::getById($cdata['public']);
-		if ($blocked) {
-			Worker::add(Worker::PRIORITY_HIGH, 'Contact\Block', $cid, $uid);
-		} else {
-			Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unblock', $cid, $uid);
+
+		if (!$only_set) {
+			if ($blocked) {
+				Worker::add(Worker::PRIORITY_HIGH, 'Contact\Block', $cid, $uid);
+			} else {
+				Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unblock', $cid, $uid);
+			}
 		}
 
 		if ($cdata['user'] != 0) {
