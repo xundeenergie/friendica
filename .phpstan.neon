@@ -11,6 +11,7 @@ parameters:
 
     excludePaths:
         analyse:
+            - addon/*/lang/*
             - addon/*/vendor/*
 
     scanDirectories:
