@@ -30,14 +30,7 @@ steps:
         - '.composer'
     volumes:
       - /tmp/drone-cache:/tmp/cache
-  phpstan:
-    image: friendicaci/php${PHP_MAJOR_VERSION}:php${PHP_VERSION}
-    when:
-      matrix:
-        PHP_MAJOR_VERSION: 8.2
-    commands:
-      - bin/composer.phar run phpstan;
-  codestyle:
+  check:
     image: friendicaci/php-cs
     commands:
       - if [ ! -z "$${CI_COMMIT_PULL_REQUEST}" ]; then
