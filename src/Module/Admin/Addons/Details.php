@@ -42,8 +42,6 @@ class Details extends BaseAdmin
 	{
 		parent::content();
 
-		$a = DI::app();
-
 		$addons_admin = Addon::getAdminList();
 
 		$addon = Strings::sanitizeFilePathItem($this->parameters['addon']);
