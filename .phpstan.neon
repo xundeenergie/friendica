@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
 parameters:
-    level: 0
+    level: 1
 
     paths:
         - addon/
@@ -16,5 +16,9 @@ parameters:
 
     scanDirectories:
         - mod
+        - static
         - vendor
         - view
+
+    dynamicConstantNames:
+        - DB_UPDATE_VERSION

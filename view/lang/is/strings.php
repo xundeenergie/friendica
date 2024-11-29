@@ -244,7 +244,6 @@ $a->strings['first'] = 'fremsta';
 $a->strings['prev'] = 'á undan';
 $a->strings['next'] = 'næsta';
 $a->strings['last'] = 'síðasta';
-$a->strings['Image/photo'] = 'Mynd';
 $a->strings['Click to open/close'] = 'Smelltu til að opna/loka';
 $a->strings['$1 wrote:'] = '$1 skrifaði:';
 $a->strings['Encrypted content'] = 'Dulritað efni';

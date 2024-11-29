@@ -12,7 +12,6 @@ use Friendica\Contact\Avatar;
 use Friendica\Core\L10n;
 use Friendica\Model\Contact;
 use Friendica\Model\Photo;
-use Friendica\Util\Images;
 use Friendica\Object\Image;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Protocol;
@@ -115,6 +114,10 @@ HELP;
 
 	private function storeAvatar(string $resourceid, array $contact, bool $quit_on_invalid)
 	{
+		$photo   = false;
+		$imgdata = false;
+		$image   = null;
+
 		$valid = !empty($resourceid);
 		if ($valid) {
 			$this->out('1', false);
@@ -143,7 +146,7 @@ HELP;
 			}
 		}
 
-		if ($valid) {
+		if ($valid && $image instanceof Image) {
 			$this->out('4', false);
 			$fields = Avatar::storeAvatarByImage($contact, $image);
 		} else {

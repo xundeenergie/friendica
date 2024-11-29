@@ -25,11 +25,11 @@ class View
 		foreach (['post-view', 'post-thread-view'] as $view) {
 			if (self::isView($view)) {
 				$sql = sprintf("DROP VIEW IF EXISTS `%s`", DBA::escape($view));
-				if (!empty($sql) && $verbose) {
+				if ($verbose) {
 					echo $sql . ";\n";
 				}
 
-				if (!empty($sql) && $action) {
+				if ($action) {
 					DBA::e($sql);
 				}
 			}

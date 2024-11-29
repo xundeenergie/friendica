@@ -699,7 +699,7 @@ class Media
 		if (preg_match_all("/\[url\](https?:.*?)\[\/url\]/ism", $body, $matches)) {
 			foreach ($matches[1] as $url) {
 				Logger::info('Got page url (link without description)', ['uri-id' => $uriid, 'url' => $url]);
-				$result = self::insert(['uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $url], false, $network);
+				$result = self::insert(['uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $url], false);
 				if ($result && !in_array($network, [Protocol::ACTIVITYPUB, Protocol::DIASPORA])) {
 					self::revertHTMLType($uriid, $url, $fullbody);
 					Logger::debug('Revert HTML type', ['uri-id' => $uriid, 'url' => $url]);
@@ -715,7 +715,7 @@ class Media
 		if (preg_match_all("/\[url\=(https?:.*?)\].*?\[\/url\]/ism", $body, $matches)) {
 			foreach ($matches[1] as $url) {
 				Logger::info('Got page url (link with description)', ['uri-id' => $uriid, 'url' => $url]);
-				$result = self::insert(['uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $url], false, $network);
+				$result = self::insert(['uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $url], false);
 				if ($result && !in_array($network, [Protocol::ACTIVITYPUB, Protocol::DIASPORA])) {
 					self::revertHTMLType($uriid, $url, $fullbody);
 					Logger::debug('Revert HTML type', ['uri-id' => $uriid, 'url' => $url]);
@@ -846,7 +846,7 @@ class Media
 	}
 
 	/**
-	 * Update post-media entries
+	 * Update post-media entries by id
 	 *
 	 * @param array $fields
 	 * @param int $id
@@ -855,6 +855,18 @@ class Media
 	public static function updateById(array $fields, int $id): bool
 	{
 		return DBA::update('post-media', $fields, ['id' => $id]);
+	}
+
+	/**
+	 * Update post-media entries
+	 *
+	 * @param array $fields
+	 * @param array $condition
+	 * @return boolean
+	 */
+	public static function update(array $fields, array $condition): bool
+	{
+		return DBA::update('post-media', $fields, $condition);
 	}
 
 	/**

@@ -28,12 +28,12 @@ class Show extends ContactEndpoint
 		$target_cid = BaseApi::getContactIDForSearchterm($this->getRequestValue($request, 'target_screen_name', ''), '', $this->getRequestValue($request, 'target_id', 0), $uid);
 
 		$source = Contact::getById($source_cid);
-		if (empty($source)) {
+		if ($source === false) {
 			throw new NotFoundException('Source not found');
 		}
 
 		$target = Contact::getById($target_cid);
-		if (empty($source)) {
+		if ($target === false) {
 			throw new NotFoundException('Target not found');
 		}
 

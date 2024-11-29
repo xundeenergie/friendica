@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Content;
+namespace Friendica\Test\src\Content\Text;
 
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Text\Plaintext;
@@ -32,17 +32,17 @@ class PlaintextTest extends FixtureTest
 					'Ich ignoriere auch Anfragen, wenn sie von Accounts kommen, die ggf. tausenden von anderen Accounts folgen, da ich davon ausgehe, (5/6)',
 					'dass da niemand ernsthaft so vielen Accounts folgen kann. (6/6)'
 				],
-				'test-2' => [
-					'data'     => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-					'expected' => [
-						'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, (1/6)',
-						'sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. (2/6)',
-						'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. (3/6)',
-						'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, (4/6)',
-						'sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. (5/6)',
-						'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. (6/6)'
-					],
-				]
+			],
+			'test-2' => [
+				'data'     => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+				'expected' => [
+					'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, (1/6)',
+					'sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. (2/6)',
+					'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. (3/6)',
+					'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, (4/6)',
+					'sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. (5/6)',
+					'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. (6/6)'
+				],
 			],
 		];
 	}

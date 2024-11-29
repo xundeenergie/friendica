@@ -127,7 +127,11 @@ class Photos extends \Friendica\Module\BaseProfile
 			$visible = 0;
 		}
 
-		$ret = ['src' => '', 'filename' => '', 'filesize' => 0, 'type' => ''];
+		$ret      = ['src' => '', 'filename' => '', 'filesize' => 0, 'type' => ''];
+		$src      = null;
+		$filename = '';
+		$filesize = 0;
+		$type     = '';
 
 		Hook::callAll('photo_post_file', $ret);
 
@@ -167,7 +171,11 @@ class Photos extends \Friendica\Module\BaseProfile
 					$this->systemMessages->addNotice($this->t('Server can\'t accept new file upload at this time, please contact your administrator'));
 					break;
 			}
-			@unlink($src);
+
+			if ($src !== null) {
+				@unlink($src);
+			}
+
 			$foo = 0;
 			Hook::callAll('photo_post_end', $foo);
 			return;

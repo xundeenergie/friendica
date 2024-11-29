@@ -333,7 +333,7 @@ class Event
 		$item['uri']           = $event['uri'];
 		$item['uri-id']        = ItemURI::getIdByURI($event['uri']);
 		$item['guid']          = $event['guid'];
-		$item['plink']         = $arr['plink'] ?? '';
+		$item['plink']         = '';
 		$item['post-type']     = Item::PT_EVENT;
 		$item['wall']          = $event['cid'] ? 0 : 1;
 		$item['contact-id']    = $contact['id'];

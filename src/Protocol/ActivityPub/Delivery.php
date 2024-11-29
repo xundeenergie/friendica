@@ -42,6 +42,8 @@ class Delivery
 				continue;
 			}
 
+			$result = [];
+
 			if (!$serverfail) {
 				$result = self::deliverToInbox($post['command'], 0, $inbox, $owner, $post['receivers'], $post['uri-id']);
 
@@ -121,11 +123,12 @@ class Delivery
 					$serverfail = $response->isTimeout();
 				} catch (\Throwable $th) {
 					Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
+					$response   = null;
 					$success    = false;
 					$serverfail = true;
 				}
 				$runtime = microtime(true) - $timestamp;
-				if (!$success) {
+				if ($success === false) {
 					// 5xx errors are problems on the server. We don't need to continue delivery then.
 					if (!$serverfail && ($response->getReturnCode() >= 500) && ($response->getReturnCode() <= 599)) {
 						$serverfail = true;

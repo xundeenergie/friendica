@@ -447,6 +447,7 @@ class App implements AppHelper
 		$requeststring = ($server['REQUEST_METHOD'] ?? '') . ' ' . ($server['REQUEST_URI'] ?? '') . ' ' . ($server['SERVER_PROTOCOL'] ?? '');
 		$this->logger->debug('Request received', ['address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '']);
 		$request_start = microtime(true);
+		$request = $_REQUEST;
 
 		$this->profiler->set($start_time, 'start');
 		$this->profiler->set(microtime(true), 'classinit');
@@ -581,7 +582,7 @@ class App implements AppHelper
 
 			// Processes data from GET requests
 			$httpinput = $httpInput->process();
-			$input     = array_merge($httpinput['variables'], $httpinput['files'], $request ?? $_REQUEST);
+			$input     = array_merge($httpinput['variables'], $httpinput['files'], $request);
 
 			// Let the module run its internal process (init, get, post, ...)
 			$timestamp = microtime(true);

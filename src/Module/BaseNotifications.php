@@ -131,7 +131,7 @@ abstract class BaseNotifications extends BaseModule
 
 		$notif_tpl = Renderer::getMarkupTemplate('notifications/notifications.tpl');
 		return Renderer::replaceMacros($notif_tpl, [
-			'$header'        => $header ?? $this->t('Notifications'),
+			'$header'        => $header ?: $this->t('Notifications'),
 			'$tabs'          => $tabs,
 			'$notifications' => $notifications,
 			'$noContent'     => $noContent,

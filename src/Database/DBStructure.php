@@ -275,7 +275,7 @@ class DBStructure
 			$is_new_table = false;
 			$sql3         = "";
 			if (!isset($database[$name])) {
-				$sql = DbaDefinitionSqlWriter::createTable($name, $structure, $verbose, $action);
+				$sql = DbaDefinitionSqlWriter::createTable($name, $structure);
 				if ($verbose) {
 					echo $sql;
 				}

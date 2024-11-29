@@ -402,7 +402,7 @@ class Widget
 			return '';
 		}
 
-		$commonContacts = Contact\Relation::listCommon($localPCid, $visitorPCid, $condition, 0, 5, true);
+		$commonContacts = Contact\Relation::listCommon($localPCid, $visitorPCid, $condition, 0, 5);
 		if (!DBA::isResult($commonContacts)) {
 			return '';
 		}
@@ -479,6 +479,10 @@ class Widget
 			DI::cache()->set($cachekey, $dthen, Duration::HOUR);
 		}
 
+		$cutoffday = '';
+		$thisday   = '';
+		$nextday   = '';
+
 		if ($dthen) {
 			// Set the start and end date to the beginning of the month
 			$cutoffday = $dthen;
@@ -512,7 +516,6 @@ class Widget
 		if (!DBA::isResult($ret)) {
 			return $o;
 		}
-
 
 		$cutoff_year = intval(DateTimeFormat::localNow('Y')) - $visible_years;
 		$cutoff = array_key_exists($cutoff_year, $ret);

@@ -543,6 +543,8 @@ class NPF
 			return $npf;
 		}
 
+		$block = [];
+
 		$media = Post\Media::getByURL($uri_id, $attributes['src'], [Post\Media::AUDIO, Post\Media::VIDEO]);
 		if (!empty($media)) {
 			switch ($media['type']) {

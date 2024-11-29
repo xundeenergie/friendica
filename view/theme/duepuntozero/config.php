@@ -42,7 +42,7 @@ function theme_admin(AppHelper $appHelper)
 	return clean_form($appHelper, $colorset, $user);
 }
 
-function theme_admin_post(AppHelper $appHelper)
+function theme_admin_post()
 {
 	if (isset($_POST['duepuntozero-settings-submit'])) {
 		DI::config()->set('duepuntozero', 'colorset', $_POST['duepuntozero_colorset']);

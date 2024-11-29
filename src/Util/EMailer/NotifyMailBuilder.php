@@ -109,9 +109,9 @@ class NotifyMailBuilder extends MailBuilder
 	public function withPhoto(string $image, string $link, string $name)
 	{
 		$this->photo = [
-			'image' => $image ?? '',
-			'link'  => $link ?? '',
-			'name'  => $name ?? '',
+			'image' => $image,
+			'link'  => $link,
+			'name'  => $name,
 		];
 
 		return $this;
