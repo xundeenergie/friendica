@@ -1475,6 +1475,12 @@ class Item
 			return false;
 		}
 
+		// We only have to apply restrictions if the post originates from our server or is federated.
+		// Every other time we can trust the remote system.
+		if (!in_array($item['network'], Protocol::FEDERATED) && !$item['origin']) {
+			return false;
+		}
+
 		if (($restrictions & self::CANT_REPLY) && ($item['verb'] == Activity::POST)) {
 			return true;
 		}
@@ -1799,7 +1805,7 @@ class Item
 			}
 		}
 
-		if (($source_uid == 0) && (($item['private'] == self::PRIVATE) || !in_array($item['network'], Protocol::FEDERATED))) {
+		if (($source_uid == 0) && (($item['private'] == self::PRIVATE) || !in_array($item['network'], array_merge(Protocol::FEDERATED, [Protocol::BLUESKY])))) {
 			Logger::notice('Item is private or not from a federated network. It will not be stored for the user.', ['uri-id' => $uri_id, 'uid' => $uid, 'private' => $item['private'], 'network' => $item['network']]);
 			return 0;
 		}
