@@ -158,7 +158,7 @@ class User extends BaseDataTransferObject
 		if ($status === null) {
 			unset($this->status);
 		} else {
-			$this->status = $status->toArray();
+			$this->status = $status;
 		}
 
 		//  Unused optional fields
