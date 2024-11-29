@@ -7,7 +7,9 @@
 
 namespace Friendica\Module\Profile;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\Core\L10n;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\DI;
@@ -22,22 +24,36 @@ use Psr\Log\LoggerInterface;
 class Media extends BaseProfile
 {
 	/**
+	 * @var AppHelper
+	 */
+	private $appHelper;
+
+	/**
 	 * @var IHandleUserSessions
 	 */
 	private $userSession;
 
-	public function __construct(L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, IHandleUserSessions $userSession, $server, array $parameters = [])
-	{
+	public function __construct(
+		L10n $l10n,
+		BaseURL $baseUrl,
+		Arguments $args,
+		AppHelper $appHelper,
+		LoggerInterface $logger,
+		Profiler $profiler,
+		Response $response,
+		IHandleUserSessions $userSession,
+		$server,
+		array $parameters = []
+	) {
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
+		$this->appHelper = $appHelper;
 		$this->userSession = $userSession;
 	}
 
 	protected function content(array $request = []): string
 	{
-		$a = DI::app();
-
-		$profile = ProfileModel::load($a, $this->parameters['nickname']);
+		$profile = ProfileModel::load($this->appHelper, $this->parameters['nickname']);
 		if (empty($profile)) {
 			throw new HTTPException\NotFoundException(DI::l10n()->t('User not found.'));
 		}

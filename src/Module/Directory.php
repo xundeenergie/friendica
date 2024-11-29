@@ -27,7 +27,6 @@ class Directory extends BaseModule
 {
 	protected function content(array $request = []): string
 	{
-		$app = DI::app();
 		$config = DI::config();
 
 		if (($config->get('system', 'block_public') && !DI::userSession()->isAuthenticated()) ||
