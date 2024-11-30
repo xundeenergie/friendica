@@ -726,7 +726,7 @@ class Post
 					$title = DI::l10n()->t('Commented by: %s', $actors);
 					$icon  = ['fa' => 'fa-commenting', 'icon' => 'icon-commenting'];
 					break;
-	
+
 				default:
 					$title = DI::l10n()->t('Reacted with %s by: %s', $element['emoji'], $actors);
 					$icon  = [];
@@ -1180,7 +1180,6 @@ class Post
 	 */
 	protected function checkWallToWall()
 	{
-		$a = DI::app();
 		$conv = $this->getThread();
 		$this->wall_to_wall = false;
 

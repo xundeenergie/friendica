@@ -20,8 +20,6 @@ class DBSync extends BaseAdmin
 	{
 		parent::content();
 
-		$a = DI::app();
-
 		$action = $this->parameters['action'] ?? '';
 		$update = $this->parameters['update'] ?? 0;
 
