@@ -357,7 +357,6 @@ $a->strings['first'] = 'första';
 $a->strings['prev'] = 'föreg';
 $a->strings['next'] = 'nästa';
 $a->strings['last'] = 'sista';
-$a->strings['Image/photo'] = 'Bild/foto';
 $a->strings['<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a> %3$s'] = '<a href="%1$s" target="_blank" rel="noopener noreferrer">%2$s</a> %3$s';
 $a->strings['Link to source'] = 'Länk till källa';
 $a->strings['Click to open/close'] = 'Klicka för att öppna/stänga';

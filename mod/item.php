@@ -16,7 +16,6 @@
  * information.
  */
 
-use Friendica\AppHelper;
 use Friendica\Content\Conversation;
 use Friendica\Content\Text\BBCode;
 use Friendica\Core\Hook;
@@ -330,7 +329,7 @@ function item_post_return($baseurl, $return_path)
 	System::jsonExit($json);
 }
 
-function item_content(AppHelper $appHelper)
+function item_content()
 {
 	if (!DI::userSession()->isAuthenticated()) {
 		throw new HTTPException\UnauthorizedException();

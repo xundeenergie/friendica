@@ -31,7 +31,7 @@ class Details extends BaseAdmin
 				self::checkFormSecurityTokenRedirectOnError($redirect, 'admin_addons_details');
 
 				$func = $addon . '_addon_admin_post';
-				$func(DI::app());
+				$func();
 			}
 		}
 
@@ -41,8 +41,6 @@ class Details extends BaseAdmin
 	protected function content(array $request = []): string
 	{
 		parent::content();
-
-		$a = DI::app();
 
 		$addons_admin = Addon::getAdminList();
 

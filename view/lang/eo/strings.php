@@ -203,7 +203,6 @@ $a->strings['first'] = 'unua';
 $a->strings['prev'] = 'antaŭa';
 $a->strings['next'] = 'sekvanta';
 $a->strings['last'] = 'lasta';
-$a->strings['Image/photo'] = 'Bildo';
 $a->strings['Click to open/close'] = 'Klaku por malfermi/fermi';
 $a->strings['$1 wrote:'] = '$1 skribis:';
 $a->strings['Add New Contact'] = 'Aldonu Novan Kontakton';
