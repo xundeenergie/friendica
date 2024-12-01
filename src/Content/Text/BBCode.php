@@ -824,11 +824,6 @@ class BBCode
 
 	/**
 	 * Convert complex IMG and ZMG elements
-	 *
-	 * @param [type] $text
-	 * @param integer $simplehtml
-	 * @param integer $uriid
-	 * @return string
 	 */
 	private static function convertImages(string $text, int $simplehtml, int $uriid = 0): string
 	{
@@ -1113,7 +1108,7 @@ class BBCode
 	/**
 	 * Removes links
 	 *
-	 * @param string $text HTML/BBCode string
+	 * @param string $bbcode HTML/BBCode string
 	 * @return string Cleaned HTML/BBCode
 	 */
 	public static function removeLinks(string $bbcode): string

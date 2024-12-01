@@ -165,7 +165,7 @@ class PostMedia extends BaseEntity
 	 * Get preview path for given media id relative to the base URL
 	 *
 	 * @param string  $size     One of the Proxy::SIZE_* constants
-	 * @param bool     $vlurred If "true", the preview will be blurred
+	 * @param bool    $blurred  If "true", the preview will be blurred
 	 * @return string preview link
 	 */
 	public function getPreviewPath(string $size = '', bool $blurred = false): string

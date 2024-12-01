@@ -41,6 +41,7 @@ use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Profiler;
 use Friendica\Util\Strings;
 use Friendica\Util\Temporal;
+use ImagickException;
 use Psr\Log\LoggerInterface;
 
 class Conversation
@@ -112,7 +113,7 @@ class Conversation
 	 * @param array &$conv_responses (already created with builtin activity structure)
 	 * @return void
 	 * @throws ImagickException
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public function builtinActivityPuller(array $activity, array &$conv_responses)
 	{
@@ -598,7 +599,7 @@ class Conversation
 	 * @param string $formSecurityToken A 'contact_action' form security token
 	 * @return array
 	 * @throws InternalServerErrorException
-	 * @throws \ImagickException
+	 * @throws ImagickException
 	 */
 	public function getThreadList(array $items, string $mode, bool $preview, bool $pagedrop, string $formSecurityToken): array
 	{

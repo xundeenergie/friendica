@@ -32,6 +32,7 @@ use Friendica\Model\Post;
 use Friendica\Model\Tag;
 use Friendica\Model\User;
 use Friendica\Network\HTTPException;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Object\EMail\ItemCCEMail;
 use Friendica\Protocol\Activity;
 use Friendica\Util\ACLFormatter;
@@ -42,6 +43,7 @@ use Friendica\Util\Profiler;
 use Friendica\Util\Proxy;
 use Friendica\Util\XML;
 use GuzzleHttp\Psr7\Uri;
+use ImagickException;
 
 /**
  * A content helper class for displaying items
@@ -174,8 +176,8 @@ class Item
 	 * @param string $network     The network of the post
 	 *
 	 * @return array|bool ['replaced' => $replaced, 'contact' => $contact] or "false" on if already replaced
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
-	 * @throws \ImagickException
+	 * @throws InternalServerErrorException
+	 * @throws ImagickException
 	 */
 	public static function replaceTag(string &$body, int $profile_uid, string $tag, string $network = '')
 	{
@@ -275,7 +277,7 @@ class Item
 	 * @param array $item
 	 * @return void
 	 * @throws ImagickException
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public function localize(array &$item)
 	{
@@ -645,11 +647,6 @@ class Item
 
 	/**
 	 * Add a share block for the given guid
-	 *
-	 * @param string $guid
-	 * @param integer $uid
-	 * @param bool $add_media
-	 * @return string
 	 */
 	private function createSharedPostByGuid(string $guid, bool $add_media): string
 	{
