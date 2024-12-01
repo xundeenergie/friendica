@@ -19,7 +19,7 @@ class MergeContacts extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var $dba Database
+	 * @var Database
 	 */
 	private $dba;
 
