@@ -15,7 +15,7 @@ use Psr\Log\LoggerInterface;
  * The Model classes inheriting from this abstract class are meant to represent a single database record.
  * The associated table name has to be provided in the child class, and the table is expected to have a unique `id` field.
  *
- * @property int id
+ * @property int $id
  */
 abstract class BaseModel extends BaseDataTransferObject
 {
@@ -41,8 +41,6 @@ abstract class BaseModel extends BaseDataTransferObject
     private $originalData = [];
 
 	/**
-	 * @param Database        $dba
-	 * @param LoggerInterface $logger
 	 * @param array           $data   Table row attributes
 	 */
 	public function __construct(Database $dba, LoggerInterface $logger, array $data = [])
