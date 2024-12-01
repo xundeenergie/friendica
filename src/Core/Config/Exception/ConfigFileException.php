@@ -11,8 +11,8 @@ use Throwable;
 
 class ConfigFileException extends \RuntimeException
 {
-	public function __construct($message = "", $code = 0, Throwable $previous = null)
+	public function __construct($message = "")
 	{
-		parent::__construct($message, 500, $previous);
+		parent::__construct($message, 500);
 	}
 }

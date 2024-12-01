@@ -66,32 +66,52 @@ class Token extends BaseApi
 			$this->logAndJsonError(401, $this->errorFactory->Unauthorized('invalid_client', $this->t('Invalid data or unknown client')));
 		}
 
-		if ($request['grant_type'] == 'client_credentials') {
-			// the "client_credentials" are used as a token for the application itself.
-			// see https://aaronparecki.com/oauth-2-simplified/#client-credentials
-			$token = OAuth::createTokenForUser($application, 0, '');
-			$me = null;
-		} elseif ($request['grant_type'] == 'authorization_code') {
-			// For security reasons only allow freshly created tokens
-			$redirect_uri = strtok($request['redirect_uri'],'?');
-			$condition = [
-				"`redirect_uri` LIKE ? AND `id` = ? AND `code` = ? AND `created_at` > ?",
-				$redirect_uri, $application['id'], $request['code'], DateTimeFormat::utc('now - 5 minutes')
-			];
+		$grant_type = (string) $request['grant_type'];
 
-			$token = DBA::selectFirst('application-view', ['access_token', 'created_at', 'uid'], $condition);
-			if (!DBA::isResult($token)) {
-				$this->logger->notice('Token not found or outdated', $condition);
-				$this->logAndJsonError(401, $this->errorFactory->Unauthorized());
-			}
-			$owner = User::getOwnerDataById($token['uid']);
-			$me = $owner['url'];
-		} else {
+		if (!in_array($grant_type, ['client_credentials', 'authorization_code'])) {
 			Logger::warning('Unsupported or missing grant type', ['request' => $_REQUEST]);
 			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity($this->t('Unsupported or missing grant type')));
 		}
 
-		$object = new \Friendica\Object\Api\Mastodon\Token($token['access_token'], 'Bearer', $application['scopes'], $token['created_at'], $me);
+		if ($grant_type === 'client_credentials') {
+			// the "client_credentials" are used as a token for the application itself.
+			// see https://aaronparecki.com/oauth-2-simplified/#client-credentials
+			$token = OAuth::createTokenForUser($application, 0, '');
+
+			$object = new \Friendica\Object\Api\Mastodon\Token(
+				$token['access_token'],
+				'Bearer',
+				$application['scopes'],
+				$token['created_at'],
+				null
+			);
+
+			$this->jsonExit($object->toArray());
+		}
+
+		// now check for $grant_type === 'authorization_code'
+		// For security reasons only allow freshly created tokens
+		$redirect_uri = strtok($request['redirect_uri'],'?');
+		$condition = [
+			"`redirect_uri` LIKE ? AND `id` = ? AND `code` = ? AND `created_at` > ?",
+			$redirect_uri, $application['id'], $request['code'], DateTimeFormat::utc('now - 5 minutes')
+		];
+
+		$token = DBA::selectFirst('application-view', ['access_token', 'created_at', 'uid'], $condition);
+		if (!DBA::isResult($token)) {
+			$this->logger->notice('Token not found or outdated', $condition);
+			$this->logAndJsonError(401, $this->errorFactory->Unauthorized());
+		}
+
+		$owner = User::getOwnerDataById($token['uid']);
+
+		$object = new \Friendica\Object\Api\Mastodon\Token(
+			$token['access_token'],
+			'Bearer',
+			$application['scopes'],
+			$token['created_at'],
+			$owner['url']
+		);
 
 		$this->jsonExit($object->toArray());
 	}

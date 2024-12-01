@@ -180,6 +180,7 @@ class Item
 	public static function replaceTag(string &$body, int $profile_uid, string $tag, string $network = '')
 	{
 		$replaced = false;
+		$contact  = [];
 
 		//is it a person tag?
 		if (Tag::isType($tag, Tag::MENTION, Tag::IMPLICIT_MENTION, Tag::EXCLUSIVE_MENTION)) {
@@ -246,6 +247,8 @@ class Item
 					$contact = DBA::selectFirst('contact', $fields, $condition);
 				}
 			}
+
+			$newname = '';
 
 			// Check if $contact has been successfully loaded
 			if (DBA::isResult($contact)) {

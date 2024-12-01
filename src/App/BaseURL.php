@@ -103,6 +103,8 @@ class BaseURL extends Uri implements UriInterface
 	 * @throws HTTPException\TemporaryRedirectException
 	 *
 	 * @throws HTTPException\InternalServerErrorException In Case the given URL is not relative to the Friendica node
+	 *
+	 * @return never
 	 */
 	public function redirect(string $toUrl = '', bool $ssl = false)
 	{

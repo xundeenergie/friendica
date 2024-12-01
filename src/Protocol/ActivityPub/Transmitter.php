@@ -573,11 +573,12 @@ class Transmitter
 		$exclusive  = false;
 		$mention    = false;
 		$audience   = [];
+		$owner      = false;
 
 		// Check if we should always deliver our stuff via BCC
 		if (!empty($item['uid'])) {
 			$owner = User::getOwnerDataById($item['uid']);
-			if (!empty($owner)) {
+			if (is_array($owner)) {
 				$always_bcc = $owner['hide-friends'];
 				$is_group   = ($owner['account-type'] == User::ACCOUNT_TYPE_COMMUNITY);
 
@@ -1399,7 +1400,7 @@ class Transmitter
 		$type = self::getTypeOfItem($item);
 
 		if (!$object_mode) {
-			$data = ['@context' => $context ?? ActivityPub::CONTEXT];
+			$data = ['@context' => ActivityPub::CONTEXT];
 
 			if ($item['deleted'] && ($item['gravity'] == Item::GRAVITY_ACTIVITY)) {
 				$type = 'Undo';
@@ -1750,6 +1751,7 @@ class Transmitter
 
 		$title   = $item['title'];
 		$summary = $item['content-warning'] ?: BBCode::toPlaintext(BBCode::getAbstract($item['body'], Protocol::ACTIVITYPUB));
+		$type    = '';
 
 		if ($item['event-type'] == 'event') {
 			$type = 'Event';

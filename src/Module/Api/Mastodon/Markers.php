@@ -31,7 +31,7 @@ class Markers extends BaseApi
 			}
 		}
 
-		if (empty($timeline) || empty($last_read_id) || empty($application['id'])) {
+		if ($timeline === '' || $last_read_id === '' || empty($application['id'])) {
 			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
 		}
 

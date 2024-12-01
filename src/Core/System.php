@@ -393,6 +393,8 @@ class System
 
 	/**
 	 * Exit the program execution.
+	 *
+	 * @return never
 	 */
 	public static function exit()
 	{
@@ -506,6 +508,8 @@ class System
 	 * @throws TemporaryRedirectException
 	 *
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 *
+	 * @return never
 	 */
 	public static function externalRedirect($url, $code = 302)
 	{

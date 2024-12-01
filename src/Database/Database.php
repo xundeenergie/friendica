@@ -534,6 +534,8 @@ class Database
 			throw new ServiceUnavailableException('The Connection is empty, although connected is set true.');
 		}
 
+		$retval = false;
+
 		switch ($this->driver) {
 			case self::PDO:
 				// If there are no arguments we use "query"
@@ -1074,6 +1076,8 @@ class Database
 	 */
 	public function lastInsertId(): int
 	{
+		$id = 0;
+
 		switch ($this->driver) {
 			case self::PDO:
 				$id = $this->connection->lastInsertId();
@@ -1681,6 +1685,8 @@ class Database
 			return false;
 		}
 
+		$ret = false;
+
 		switch ($this->driver) {
 			case self::PDO:
 				$ret = $stmt->closeCursor();
@@ -1695,8 +1701,6 @@ class Database
 				} elseif ($stmt instanceof mysqli_result) {
 					$stmt->free();
 					$ret = true;
-				} else {
-					$ret = false;
 				}
 				break;
 		}
@@ -1770,8 +1774,8 @@ class Database
 	/**
 	 * Acquire a lock to prevent a table optimization
 	 *
-	 * @return bool 
-	 * @throws LockPersistenceException 
+	 * @return bool
+	 * @throws LockPersistenceException
 	 */
 	public function acquireOptimizeLock(): bool
 	{
@@ -1781,8 +1785,8 @@ class Database
 	/**
 	 * Release the table optimization lock
 	 *
-	 * @return bool 
-	 * @throws LockPersistenceException 
+	 * @return bool
+	 * @throws LockPersistenceException
 	 */
 	public function releaseOptimizeLock(): bool
 	{

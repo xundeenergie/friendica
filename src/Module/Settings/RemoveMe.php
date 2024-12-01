@@ -92,8 +92,6 @@ class RemoveMe extends BaseSettings
 			$this->baseUrl->redirect();
 		} catch (\RuntimeException $e) {
 			$this->systemMessages->addNotice($e->getMessage());
-		} finally {
-			return;
 		}
 	}
 

@@ -193,6 +193,7 @@ class Item
 			$fields['vid'] = Verb::getID($fields['verb']);
 		}
 
+		$previous = [];
 		if (!empty($fields['edited'])) {
 			$previous = Post::selectFirst(['edited'], $condition);
 		}
@@ -855,6 +856,8 @@ class Item
 		$orig_item = $item;
 
 		$priority = Worker::PRIORITY_HIGH;
+
+		$copy_permissions = false;
 
 		// If it is a posting where users should get notifications, then define it as wall posting
 		if ($notify) {
@@ -3205,7 +3208,7 @@ class Item
 		} elseif ($remote_user) {
 			// Authenticated visitor - fetch the matching permissionsets
 			$permissionSets = DI::permissionSet()->selectByContactId($remote_user, $owner_id);
-			if (!empty($permissionSets)) {
+			if (count($permissionSets) > 0) {
 				$condition = [
 					"(`private` != ? OR (`private` = ? AND `wall`
 					AND `psid` IN (" . implode(', ', array_fill(0, count($permissionSets), '?')) . ")))",
@@ -3234,17 +3237,12 @@ class Item
 			$table = DBA::quoteIdentifier($table) . '.';
 		}
 
-		/*
-		 * Construct permissions
-		 *
-		 * default permissions - anonymous user
-		 */
-		$sql = sprintf(" AND " . $table . "`private` != %d", self::PRIVATE);
-
 		// Profile owner - everything is visible
 		if ($local_user && ($local_user == $owner_id)) {
-			$sql = '';
-		} elseif ($remote_user) {
+			return '';
+		}
+
+		if ($remote_user) {
 			/*
 			 * Authenticated visitor. Unless pre-verified,
 			 * check that the contact belongs to this $owner_id
@@ -3254,16 +3252,21 @@ class Item
 			 */
 			$permissionSets = DI::permissionSet()->selectByContactId($remote_user, $owner_id);
 
-			if (!empty($permissionSets)) {
+			$sql_set = '';
+
+			if (count($permissionSets) > 0) {
 				$sql_set = sprintf(" OR (" . $table . "`private` = %d AND " . $table . "`wall` AND " . $table . "`psid` IN (", self::PRIVATE) . implode(',', $permissionSets->column('id')) . "))";
-			} else {
-				$sql_set = '';
 			}
 
-			$sql = sprintf(" AND (" . $table . "`private` != %d", self::PRIVATE) . $sql_set . ")";
+			return sprintf(" AND (" . $table . "`private` != %d", self::PRIVATE) . $sql_set . ")";
 		}
 
-		return $sql;
+		/*
+		 * Construct permissions
+		 *
+		 * default permissions - anonymous user
+		 */
+		return sprintf(" AND " . $table . "`private` != %d", self::PRIVATE);
 	}
 
 	/**
@@ -3387,6 +3390,7 @@ class Item
 		$shared_uri_id      = 0;
 		$shared_links       = [];
 		$quote_shared_links = [];
+		$shared_item        = [];
 
 		$shared = DI::contentItem()->getSharedPost($item, $fields);
 		if (!empty($shared['post'])) {
@@ -3429,6 +3433,8 @@ class Item
 				DI::logger()->warning('Missing plink in shared item', ['item' => $item, 'shared' => $shared, 'quote_uri_id' => $quote_uri_id, 'shared_item' => $shared_item]);
 			}
 		}
+
+		$sharedSplitAttachments = [];
 
 		if (!empty($shared_item['uri-id'])) {
 			$shared_uri_id = $shared_item['uri-id'];
@@ -3503,7 +3509,7 @@ class Item
 			$s = self::addGallery($s, $sharedSplitAttachments['visual']);
 			$s = self::addVisualAttachments($sharedSplitAttachments['visual'], $shared_item, $s, true);
 			$s = self::addLinkAttachment($shared_uri_id ?: $item['uri-id'], $sharedSplitAttachments, $body, $s, true, $quote_shared_links);
-			$s = self::addNonVisualAttachments($sharedSplitAttachments['additional'], $item, $s, true);
+			$s = self::addNonVisualAttachments($sharedSplitAttachments['additional'], $item, $s);
 			$body = BBCode::removeSharedData($body);
 		}
 
@@ -3516,7 +3522,7 @@ class Item
 		$s = self::addGallery($s, $itemSplitAttachments['visual']);
 		$s = self::addVisualAttachments($itemSplitAttachments['visual'], $item, $s, false);
 		$s = self::addLinkAttachment($item['uri-id'], $itemSplitAttachments, $body, $s, false, $shared_links);
-		$s = self::addNonVisualAttachments($itemSplitAttachments['additional'], $item, $s, false);
+		$s = self::addNonVisualAttachments($itemSplitAttachments['additional'], $item, $s);
 		$s = self::addQuestions($item, $s);
 
 		// Map.

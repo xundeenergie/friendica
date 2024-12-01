@@ -48,6 +48,9 @@ class DirectMessage extends BaseFactory
 			throw new HTTPException\NotFoundException('Direct message with ID ' . $mail . ' not found.');
 		}
 
+		$title = '';
+		$text  = '';
+
 		if (!empty($text_mode)) {
 			$title = $mail['title'];
 			if ($text_mode == 'html') {
@@ -56,7 +59,6 @@ class DirectMessage extends BaseFactory
 				$text = HTML::toPlaintext(BBCode::convertForUriId($mail['uri-id'], $mail['body'], BBCode::TWITTER_API), 0);
 			}
 		} else {
-			$title = '';
 			$text  = $mail['title'] . "\n" . HTML::toPlaintext(BBCode::convertForUriId($mail['uri-id'], $mail['body'], BBCode::TWITTER_API), 0);
 		}
 
