@@ -699,7 +699,7 @@ class Media
 		if (preg_match_all("/\[url\](https?:.*?)\[\/url\]/ism", $body, $matches)) {
 			foreach ($matches[1] as $url) {
 				Logger::info('Got page url (link without description)', ['uri-id' => $uriid, 'url' => $url]);
-				$result = self::insert(['uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $url], false, $network);
+				$result = self::insert(['uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $url], false);
 				if ($result && !in_array($network, [Protocol::ACTIVITYPUB, Protocol::DIASPORA])) {
 					self::revertHTMLType($uriid, $url, $fullbody);
 					Logger::debug('Revert HTML type', ['uri-id' => $uriid, 'url' => $url]);
@@ -715,7 +715,7 @@ class Media
 		if (preg_match_all("/\[url\=(https?:.*?)\].*?\[\/url\]/ism", $body, $matches)) {
 			foreach ($matches[1] as $url) {
 				Logger::info('Got page url (link with description)', ['uri-id' => $uriid, 'url' => $url]);
-				$result = self::insert(['uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $url], false, $network);
+				$result = self::insert(['uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $url], false);
 				if ($result && !in_array($network, [Protocol::ACTIVITYPUB, Protocol::DIASPORA])) {
 					self::revertHTMLType($uriid, $url, $fullbody);
 					Logger::debug('Revert HTML type', ['uri-id' => $uriid, 'url' => $url]);

@@ -25,7 +25,7 @@ class Email
 	 * @param string $mailbox  The mailbox name
 	 * @param string $username The username
 	 * @param string $password The password
-	 * @return Connection|resource|bool
+	 * @return Connection|false
 	 * @throws \Exception
 	 */
 	public static function connect(string $mailbox, string $username, string $password)

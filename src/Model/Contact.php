@@ -2364,6 +2364,8 @@ class Contact
 			$cache_avatar = !DBA::exists('contact', ['nurl' => $contact['nurl'], 'self' => true]);
 		}
 
+		$fields = [];
+
 		if (in_array($contact['network'], [Protocol::FEED, Protocol::MAIL]) || $cache_avatar) {
 			if (Avatar::deleteCache($contact)) {
 				$force = true;
@@ -2379,6 +2381,8 @@ class Contact
 				];
 				Logger::debug('Use default avatar', ['id' => $cid, 'uid' => $uid]);
 			}
+
+			$local_uid = 0;
 
 			// Use the data from the self account
 			if (empty($fields)) {
@@ -2411,8 +2415,15 @@ class Contact
 				if ($update) {
 					$photos = Photo::importProfilePhoto($avatar, $uid, $cid, true);
 					if ($photos) {
-						$fields = ['avatar' => $avatar, 'photo' => $photos[0], 'thumb' => $photos[1], 'micro' => $photos[2], 'blurhash' => $photos[3], 'avatar-date' => DateTimeFormat::utcNow()];
-						$update = !empty($fields);
+						$fields = [
+							'avatar' => $avatar,
+							'photo' => $photos[0],
+							'thumb' => $photos[1],
+							'micro' => $photos[2],
+							'blurhash' => $photos[3],
+							'avatar-date' => DateTimeFormat::utcNow(),
+						];
+						$update = true;
 						Logger::debug('Created new cached avatars', ['id' => $cid, 'uid' => $uid, 'owner-uid' => $local_uid]);
 					} else {
 						$update = false;

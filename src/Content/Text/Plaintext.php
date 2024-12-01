@@ -114,6 +114,8 @@ class Plaintext
 			$post['text'] = trim($item['title']);
 		}
 
+		$abstract = '';
+
 		// Fetch the abstract from the given target network
 		switch ($htmlmode) {
 			case BBCode::TWITTER:
@@ -123,7 +125,7 @@ class Plaintext
 			case BBCode::BLUESKY:
 				$abstract = BBCode::getAbstract($item['body'], Protocol::BLUESKY);
 				break;
-	
+
 			default: // We don't know the exact target.
 				// We fetch an abstract since there is a posting limit.
 				if ($limit > 0) {
@@ -242,6 +244,8 @@ class Plaintext
 		$part      = '';
 		$break_pos = 0;
 		$comma_pos = 0;
+		$pos       = 0;
+		$word      = '';
 
 		$limit = $baselimit;
 
@@ -256,8 +260,8 @@ class Plaintext
 			} elseif ($pos_paragraph !== false) {
 				$pos = $pos_paragraph + 1;
 			} else {
-				$word = $message;
-				$message = '';
+				$word     = $message;
+				$message  = '';
 			}
 
 			if (trim($message)) {
@@ -272,7 +276,7 @@ class Plaintext
 			$break = mb_strrpos($word, "\n") !== false;
 			if (!$break && (mb_strrpos($word, '. ') !== false || mb_strrpos($word, '? ') !== false || mb_strrpos($word, '! ') !== false)) {
 				$break = IntlChar::isupper(mb_substr($message, 0, 1));
-			} 
+			}
 
 			$comma = (mb_strrpos($word, ', ') !== false) && IntlChar::isalpha(mb_substr($message, 0, 1));
 
@@ -291,7 +295,7 @@ class Plaintext
 				$break_pos = 0;
 				$comma_pos = 0;
 			} elseif ($break) {
-				$break_pos = $pos + mb_strlen($part);	
+				$break_pos = $pos + mb_strlen($part);
 			} elseif ($comma) {
 				$comma_pos = $pos + mb_strlen($part);
 			}

@@ -41,13 +41,13 @@ class FormattedNotify extends BaseDataTransferObject
 
 	public function __construct(string $label, string $link, string $image, string $url, string $text, string $when, string $ago, bool $seen)
 	{
-		$this->label = $label ?? '';
-		$this->link  = $link  ?? '';
-		$this->image = $image ?? '';
-		$this->url   = $url   ?? '';
-		$this->text  = $text  ?? '';
-		$this->when  = $when  ?? '';
-		$this->ago   = $ago   ?? '';
-		$this->seen  = $seen  ?? false;
+		$this->label = $label;
+		$this->link  = $link;
+		$this->image = $image;
+		$this->url   = $url;
+		$this->text  = $text;
+		$this->when  = $when;
+		$this->ago   = $ago;
+		$this->seen  = $seen;
 	}
 }

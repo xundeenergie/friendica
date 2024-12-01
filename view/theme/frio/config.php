@@ -92,7 +92,7 @@ function theme_admin_post()
 	}
 }
 
-function theme_content(): string
+function theme_content(AppHelper $appHelper): string
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		return '';
@@ -115,7 +115,7 @@ function theme_content(): string
 	return frio_form($arr);
 }
 
-function theme_admin(): string
+function theme_admin(AppHelper $appHelper): string
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		return '';

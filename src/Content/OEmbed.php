@@ -178,7 +178,7 @@ class OEmbed
 			$oembed->thumbnail_height = $data['images'][0]['height'];
 		}
 
-		Hook::callAll('oembed_fetch_url', $embedurl, $oembed);
+		Hook::callAll('oembed_fetch_url', $embedurl);
 
 		return $oembed;
 	}

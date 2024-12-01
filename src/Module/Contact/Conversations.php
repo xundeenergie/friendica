@@ -7,18 +7,19 @@
 
 namespace Friendica\Module\Contact;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\App\Page;
 use Friendica\BaseModule;
 use Friendica\Contact\LocalRelationship\Repository\LocalRelationship;
 use Friendica\Content\Conversation;
 use Friendica\Content\Nav;
-use Friendica\Content\Widget;
+use Friendica\Content\Widget\VCard;
 use Friendica\Core\ACL;
 use Friendica\Core\L10n;
 use Friendica\Core\Protocol;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Core\Theme;
-use Friendica\Model;
 use Friendica\Model\Contact as ModelContact;
 use Friendica\Module\Contact;
 use Friendica\Module\Response;
@@ -33,7 +34,7 @@ use Psr\Log\LoggerInterface;
 class Conversations extends BaseModule
 {
 	/**
-	 * @var App\Page
+	 * @var Page
 	 */
 	private $page;
 	/**
@@ -49,7 +50,7 @@ class Conversations extends BaseModule
 	 */
 	private $userSession;
 
-	public function __construct(L10n $l10n, LocalRelationship $localRelationship, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, App\Page $page, Conversation $conversation, IHandleUserSessions $userSession, $server, array $parameters = [])
+	public function __construct(L10n $l10n, LocalRelationship $localRelationship, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, Page $page, Conversation $conversation, IHandleUserSessions $userSession, $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
@@ -67,12 +68,12 @@ class Conversations extends BaseModule
 
 		// Backward compatibility: Ensure to use the public contact when the user contact is provided
 		// Remove by version 2022.03
-		$pcid = Model\Contact::getPublicContactId(intval($this->parameters['id']), $this->userSession->getLocalUserId());
+		$pcid = ModelContact::getPublicContactId(intval($this->parameters['id']), $this->userSession->getLocalUserId());
 		if (!$pcid) {
 			throw new NotFoundException($this->t('Contact not found.'));
 		}
 
-		$contact = Model\Contact::getAccountById($pcid);
+		$contact = ModelContact::getAccountById($pcid);
 		if (empty($contact)) {
 			throw new NotFoundException($this->t('Contact not found.'));
 		}
@@ -83,7 +84,7 @@ class Conversations extends BaseModule
 		}
 
 		$localRelationship = $this->localRelationship->getForUserContact($this->userSession->getLocalUserId(), $contact['id']);
-		if ($localRelationship->rel === Model\Contact::SELF) {
+		if ($localRelationship->rel === ModelContact::SELF) {
 			$this->baseUrl->redirect('profile/' . $contact['nick']);
 		}
 
@@ -93,9 +94,11 @@ class Conversations extends BaseModule
 		$this->page->registerStylesheet(Theme::getPathForFile('js/friendica-tagsinput/friendica-tagsinput.css'));
 		$this->page->registerStylesheet(Theme::getPathForFile('js/friendica-tagsinput/friendica-tagsinput-typeahead.css'));
 
-		$this->page['aside'] .= Widget\VCard::getHTML($contact, true);
+		$this->page['aside'] .= VCard::getHTML($contact, true);
 
 		Nav::setSelected('contact');
+
+		$output = '';
 
 		if (!$contact['ap-posting-restricted']) {
 			$options = [
@@ -104,12 +107,12 @@ class Conversations extends BaseModule
 				'bang' => '',
 				'content' => ($contact['contact-type'] == ModelContact::TYPE_COMMUNITY ? '!' : '@') . ($contact['addr'] ?: $contact['url']),
 			];
-			$o = $this->conversation->statusEditor($options);
+			$output = $this->conversation->statusEditor($options);
 		}
 
-		$o .= Contact::getTabsHTML($contact, Contact::TAB_CONVERSATIONS);
-		$o .= Model\Contact::getThreadsFromId($contact['id'], $this->userSession->getLocalUserId(), 0, 0, $request['last_created'] ?? '');
+		$output .= Contact::getTabsHTML($contact, Contact::TAB_CONVERSATIONS);
+		$output .= ModelContact::getThreadsFromId($contact['id'], $this->userSession->getLocalUserId(), 0, 0, $request['last_created'] ?? '');
 
-		return $o;
+		return $output;
 	}
 }

@@ -129,3 +129,10 @@ $zap_platforms = [
 	'hubzilla' => 'hubzilla',
 	'osada' => 'osada',
 ];
+
+return [
+	'ap_platforms'   => $ap_platforms,
+	'dfrn_platforms' => $dfrn_platforms,
+	'zap_platforms'  => $zap_platforms,
+	'platforms'      => $platforms,
+];

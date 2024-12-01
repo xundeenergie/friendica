@@ -142,7 +142,9 @@ class Photo extends BaseApi
 
 		$cacheable = ($photo['allow_cid'] . $photo['allow_gid'] . $photo['deny_cid'] . $photo['deny_gid'] === '') && (isset($photo['cacheable']) ? $photo['cacheable'] : true);
 
-		$stamp = microtime(true);
+		$stamp    = microtime(true);
+		$imgdata  = '';
+		$mimetype = false;
 
 		if (empty($request['blur']) || empty($photo['blurhash'])) {
 			$imgdata  = MPhoto::getImageDataForPhoto($photo);
@@ -150,7 +152,9 @@ class Photo extends BaseApi
 		}
 		if (empty($imgdata) && empty($photo['blurhash'])) {
 			throw new HTTPException\NotFoundException();
-		} elseif (empty($imgdata) && !empty($photo['blurhash'])) {
+		}
+
+		if (empty($imgdata) && !empty($photo['blurhash'])) {
 			$image = new Image('', image_type_to_mime_type(IMAGETYPE_WEBP));
 			$image->getFromBlurHash($photo['blurhash'], $photo['width'], $photo['height']);
 			$imgdata  = $image->asString();
@@ -376,6 +380,9 @@ class Photo extends BaseApi
 						Logger::debug('Expected Content-Type', ['mime' => $mimetext, 'url' => $url]);
 					}
 				}
+
+				$url = '';
+
 				if (empty($mimetext) && !empty($contact['blurhash'])) {
 					$image = new Image('', image_type_to_mime_type(IMAGETYPE_WEBP));
 					$image->getFromBlurHash($contact['blurhash'], $customsize, $customsize);

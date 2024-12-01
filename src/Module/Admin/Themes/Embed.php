@@ -49,7 +49,7 @@ class Embed extends BaseAdmin
 			require_once "view/theme/$theme/config.php";
 			if (function_exists('theme_admin_post')) {
 				self::checkFormSecurityTokenRedirectOnError('/admin/themes/' . $theme . '/embed?mode=minimal', 'admin_theme_settings');
-				theme_admin_post($this->appHelper);
+				theme_admin_post();
 			}
 		}
 

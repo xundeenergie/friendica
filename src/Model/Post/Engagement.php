@@ -128,7 +128,7 @@ class Engagement
 		return ($ret && !$exists) ? $engagement['uri-id'] : 0;
 	}
 
-	public static function getContentSize(array $item): int 
+	public static function getContentSize(array $item): int
 	{
 		$body = ' ' . $item['title'] . ' ' . $item['content-warning'] . ' ' . $item['body'];
 		$body = BBCode::removeAttachment($body);
@@ -318,6 +318,8 @@ class Engagement
 		$result = Post::selectPosts(['author-addr', 'author-nick', 'author-contact-type'],
 			['thr-parent-id' => $uri_id, 'gravity' => Item::GRAVITY_ACTIVITY, 'verb' => Activity::ANNOUNCE, 'author-contact-type' => [Contact::TYPE_RELAY, Contact::TYPE_COMMUNITY]]);
 		while ($reshare = Post::fetch($result)) {
+			$prefix = '';
+
 			switch ($reshare['author-contact-type']) {
 				case Contact::TYPE_RELAY:
 					$prefix = ' application_';

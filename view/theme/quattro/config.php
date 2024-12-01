@@ -46,7 +46,7 @@ function theme_admin(AppHelper $appHelper) {
 	return quattro_form($appHelper,$align, $color, $tfs, $pfs);
 }
 
-function theme_admin_post(AppHelper $appHelper) {
+function theme_admin_post() {
 	if (isset($_POST['quattro-settings-submit'])){
 		DI::config()->set('quattro', 'align', $_POST['quattro_align']);
 		DI::config()->set('quattro', 'color', $_POST['quattro_color']);

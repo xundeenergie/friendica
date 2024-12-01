@@ -113,9 +113,6 @@ class Link
 
 		try {
 			$curlResult = HTTPSignature::fetchRaw($url, 0, [HttpClientOptions::TIMEOUT => $timeout, HttpClientOptions::ACCEPT_CONTENT => $accept]);
-			if (empty($curlResult) || !$curlResult->isSuccess()) {
-				return [];
-			}
 		} catch (\Exception $exception) {
 			Logger::notice('Error fetching url', ['url' => $url, 'exception' => $exception]);
 			return [];

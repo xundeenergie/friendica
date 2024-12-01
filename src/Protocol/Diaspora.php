@@ -623,22 +623,21 @@ class Diaspora
 	 */
 	private static function validPosting(array $msg)
 	{
-		$data = XML::parseString($msg['message']);
+		$element = XML::parseString($msg['message']);
 
-		if (!is_object($data)) {
+		if (!is_object($element)) {
 			Logger::info('No valid XML', ['message' => $msg['message']]);
 			return false;
 		}
 
+		$oldXML = false;
+
 		// Is this the new or the old version?
-		if ($data->getName() == 'XML') {
+		if ($element->getName() === 'XML') {
 			$oldXML = true;
-			foreach ($data->post->children() as $child) {
+			foreach ($element->post->children() as $child) {
 				$element = $child;
 			}
-		} else {
-			$oldXML = false;
-			$element = $data;
 		}
 
 		$type = $element->getName();
@@ -1460,7 +1459,7 @@ class Diaspora
 		 */
 
 		foreach ($matches as $match) {
-			if (empty($match)) {
+			if ($match === '') {
 				continue;
 			}
 
@@ -3030,7 +3029,7 @@ class Diaspora
 			// The "addr" field should always be filled.
 			// If this isn't the case, it will raise a notice some lines later.
 			// And in the log we will see where it came from, and we can handle it there.
-			Logger::notice('Empty addr', ['contact' => $contact ?? []]);
+			Logger::notice('Empty addr', ['contact' => $contact]);
 		}
 
 		$envelope = self::buildMessage($msg, $owner, $contact, $owner['uprvkey'], $pubkey ?? '', $public_batch);
@@ -3655,6 +3654,8 @@ class Diaspora
 	 */
 	public static function sendFollowup(array $item, array $owner, array $contact, bool $public_batch = false): int
 	{
+		$type = '';
+
 		if (in_array($item['verb'], [Activity::ATTEND, Activity::ATTENDNO, Activity::ATTENDMAYBE])) {
 			$message = self::constructAttend($item, $owner);
 			$type = 'event_participation';
