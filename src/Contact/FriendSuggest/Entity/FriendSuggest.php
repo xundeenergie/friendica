@@ -19,7 +19,7 @@ use Friendica\BaseEntity;
  * @property-read string $request
  * @property-read string $photo
  * @property-read string $note
- * @property-read \DateTime created
+ * @property-read \DateTime $created
  * @property-read int|null $id
  */
 class FriendSuggest extends BaseEntity

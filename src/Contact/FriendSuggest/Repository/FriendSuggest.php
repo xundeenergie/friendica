@@ -9,7 +9,7 @@ namespace Friendica\Contact\FriendSuggest\Repository;
 
 use Friendica\BaseRepository;
 use Friendica\Contact\FriendSuggest\Collection;
-use Friendica\Contact\FriendSuggest\Entity;
+use Friendica\Contact\FriendSuggest\Entity\FriendSuggest as EntityFriendSuggest;
 use Friendica\Contact\FriendSuggest\Exception\FriendSuggestNotFoundException;
 use Friendica\Contact\FriendSuggest\Exception\FriendSuggestPersistenceException;
 use Friendica\Contact\FriendSuggest\Factory;
@@ -30,7 +30,7 @@ class FriendSuggest extends BaseRepository
 		parent::__construct($database, $logger, $factory);
 	}
 
-	private function convertToTableRow(Entity\FriendSuggest $fsuggest): array
+	private function convertToTableRow(EntityFriendSuggest $fsuggest): array
 	{
 		return [
 			'uid'     => $fsuggest->uid,
@@ -45,14 +45,9 @@ class FriendSuggest extends BaseRepository
 	}
 
 	/**
-	 * @param array $condition
-	 * @param array $params
-	 *
-	 * @return Entity\FriendSuggest
-	 *
 	 * @throws NotFoundException The underlying exception if there's no FriendSuggest with the given conditions
 	 */
-	private function selectOne(array $condition, array $params = []): Entity\FriendSuggest
+	private function selectOne(array $condition, array $params = []): EntityFriendSuggest
 	{
 		return parent::_selectOne($condition, $params);
 	}
@@ -71,13 +66,9 @@ class FriendSuggest extends BaseRepository
 	}
 
 	/**
-	 * @param int $id
-	 *
-	 * @return Entity\FriendSuggest
-	 *
 	 * @throws FriendSuggestNotFoundException in case there's no suggestion for this id
 	 */
-	public function selectOneById(int $id): Entity\FriendSuggest
+	public function selectOneById(int $id): EntityFriendSuggest
 	{
 		try {
 			return $this->selectOne(['id' => $id]);
@@ -103,13 +94,9 @@ class FriendSuggest extends BaseRepository
 	}
 
 	/**
-	 * @param Entity\FriendSuggest $fsuggest
-	 *
-	 * @return Entity\FriendSuggest
-	 *
 	 * @throws FriendSuggestNotFoundException in case the underlying storage cannot save the suggestion
 	 */
-	public function save(Entity\FriendSuggest $fsuggest): Entity\FriendSuggest
+	public function save(EntityFriendSuggest $fsuggest): EntityFriendSuggest
 	{
 		try {
 			$fields = $this->convertToTableRow($fsuggest);

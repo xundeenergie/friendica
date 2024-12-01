@@ -235,9 +235,6 @@ class Avatar
 
 	/**
 	 * Delete locally cached avatar pictures of a contact
-	 *
-	 * @param string $avatar
-	 * @return bool
 	 */
 	public static function deleteCache(array $contact): bool
 	{
