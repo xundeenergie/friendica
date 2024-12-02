@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
 parameters:
-    level: 1
+    level: 0
 
     paths:
         - addon/
