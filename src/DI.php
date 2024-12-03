@@ -312,7 +312,7 @@ abstract class DI
 	}
 
 	/**
-	 * @return LoggerInterface
+	 * @return \Friendica\Core\Logger\Type\WorkerLogger
 	 */
 	public static function workerLogger()
 	{

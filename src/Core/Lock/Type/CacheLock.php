@@ -16,12 +16,14 @@ use Friendica\Core\Lock\Exception\LockPersistenceException;
 class CacheLock extends AbstractLock
 {
 	/**
-	 * @var string The static prefix of all locks inside the cache
+	 * The static prefix of all locks inside the cache
+	 *
+	 * @var string
 	 */
 	const CACHE_PREFIX = 'lock:';
 
 	/**
-	 * @var ICanCache;
+	 * @var ICanCacheInMemory
 	 */
 	private $cache;
 

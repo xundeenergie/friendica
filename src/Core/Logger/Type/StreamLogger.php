@@ -55,7 +55,7 @@ class StreamLogger extends AbstractLogger
 
 	/**
 	 * {@inheritdoc}
-	 * @param string          $level  The minimum loglevel at which this logger will be triggered
+	 * @param int $logLevel The minimum loglevel at which this logger will be triggered
 	 *
 	 * @throws LoggerException
 	 */

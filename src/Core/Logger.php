@@ -18,20 +18,24 @@ use Psr\Log\LogLevel;
 class Logger
 {
 	/**
-	 * @var LoggerInterface The default Logger type
+	 * LoggerInterface The default Logger type
+	 *
+	 * @var string
 	 */
 	const TYPE_LOGGER = LoggerInterface::class;
 	/**
-	 * @var WorkerLogger A specific worker logger type, which can be enabled
+	 * WorkerLogger A specific worker logger type, which can be enabled
+	 *
+	 * @var string
 	 */
 	const TYPE_WORKER = WorkerLogger::class;
 	/**
-	 * @var LoggerInterface The current logger type
+	 * @var string $type LoggerInterface The current logger type
 	 */
 	private static $type = self::TYPE_LOGGER;
 
 	/**
-	 * @return LoggerInterface
+	 * @return LoggerInterface|WorkerLogger
 	 */
 	private static function getInstance()
 	{
@@ -52,7 +56,7 @@ class Logger
 	public static function enableWorker(string $functionName)
 	{
 		self::$type = self::TYPE_WORKER;
-		self::getInstance()->setFunctionName($functionName);
+		DI::workerLogger()->setFunctionName($functionName);
 	}
 
 	/**
