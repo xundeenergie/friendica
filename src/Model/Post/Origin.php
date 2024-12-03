@@ -65,15 +65,12 @@ class Origin
 	 * Delete a row from the post-origin table
 	 *
 	 * @param array        $conditions Field condition(s)
-	 * @param array        $options
-	 *                           - cascade: If true we delete records in other tables that depend on the one we're deleting through
-	 *                           relations (default: true)
 	 *
 	 * @return boolean was the delete successful?
 	 * @throws \Exception
 	 */
-	public static function delete(array $conditions, array $options = [])
+	public static function delete(array $conditions)
 	{
-		return DBA::delete('post-origin', $conditions, $options);
+		return DBA::delete('post-origin', $conditions);
 	}
 }

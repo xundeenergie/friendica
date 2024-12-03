@@ -774,8 +774,8 @@ class Post
 	 * @return boolean was the delete successful?
 	 * @throws \Exception
 	 */
-	public static function delete(array $conditions, array $options = []): bool
+	public static function delete(array $conditions): bool
 	{
-		return DBA::delete('post', $conditions, $options);
+		return DBA::delete('post', $conditions);
 	}
 }

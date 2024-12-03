@@ -299,7 +299,7 @@ class Attach
 	 * @throws \Exception
 	 * @see   \Friendica\Database\DBA::delete
 	 */
-	public static function delete(array $conditions, array $options = []): bool
+	public static function delete(array $conditions): bool
 	{
 		// get items to delete data info
 		$items = self::selectToArray(['backend-class', 'backend-ref'], $conditions);
@@ -315,7 +315,7 @@ class Attach
 			}
 		}
 
-		return DBA::delete('attach', $conditions, $options);
+		return DBA::delete('attach', $conditions);
 	}
 
 	public static function setPermissionFromBody(array $post)

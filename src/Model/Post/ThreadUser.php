@@ -79,9 +79,9 @@ class ThreadUser
 	 * @return boolean was the delete successful?
 	 * @throws \Exception
 	 */
-	public static function delete(array $conditions, array $options = [])
+	public static function delete(array $conditions)
 	{
-		return DBA::delete('post-thread-user', $conditions, $options);
+		return DBA::delete('post-thread-user', $conditions);
 	}
 
 	/**
