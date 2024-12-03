@@ -12,11 +12,11 @@ use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Core\Storage\Exception\InvalidClassStorageException;
 use Friendica\Core\Storage\Exception\ReferenceStorageException;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Object\Image;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Mimetype;
 use Friendica\Security\Security;
-use Friendica\Util\Network;
 
 /**
  * Class to handle attach database table
@@ -183,7 +183,7 @@ class Attach
 	 * @param string  $deny_gid  Permissions, denied circle. optional, default = ''
 	 *
 	 * @return boolean|integer Row id on success, False on errors
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public static function store(string $data, int $uid, string $filename, string $filetype = '', int $filesize = null, string $allow_cid = '', string $allow_gid = '', string $deny_cid = '', string $deny_gid = '')
 	{
@@ -237,7 +237,7 @@ class Attach
 	 * @param string $deny_cid
 	 * @param string $deny_gid
 	 * @return boolean|int Insert id or false on failure
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public static function storeFile(string $src, int $uid, string $filename = '', string $filetype = '', string $allow_cid = '', string $allow_gid = '', string $deny_cid = '', string $deny_gid = '')
 	{
@@ -257,11 +257,11 @@ class Attach
 	 * @param array         $fields     Contains the fields that are updated
 	 * @param array         $conditions Condition array with the key values
 	 * @param Image         $img        Image data to update. Optional, default null.
-	 * @param array|boolean $old_fields Array with the old field values that are about to be replaced (true = update on duplicate)
+	 * @param array         $old_fields Array with the old field values that are about to be replaced (true = update on duplicate)
 	 *
 	 * @return boolean  Was the update successful?
 	 *
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @see   \Friendica\Database\DBA::update
 	 */
 	public static function update(array $fields, array $conditions, Image $img = null, array $old_fields = []): bool
@@ -287,12 +287,10 @@ class Attach
 		return DBA::update('attach', $fields, $conditions, $old_fields);
 	}
 
-
 	/**
 	 * Delete info from table and data from storage
 	 *
 	 * @param array $conditions Field condition(s)
-	 * @param array $options    Options array, Optional
 	 *
 	 * @return boolean
 	 *
