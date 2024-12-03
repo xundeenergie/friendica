@@ -525,7 +525,7 @@ abstract class DI
 	//
 
 	/**
-	 * @return Contact\FriendSuggest\Repository\FriendSuggest;
+	 * @return Contact\FriendSuggest\Repository\FriendSuggest
 	 */
 	public static function fsuggest()
 	{
@@ -533,7 +533,7 @@ abstract class DI
 	}
 
 	/**
-	 * @return Contact\FriendSuggest\Factory\FriendSuggest;
+	 * @return Contact\FriendSuggest\Factory\FriendSuggest
 	 */
 	public static function fsuggestFactory()
 	{

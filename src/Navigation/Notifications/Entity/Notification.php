@@ -11,16 +11,16 @@ use DateTime;
 use Friendica\BaseEntity;
 
 /**
- * @property-read $id
- * @property-read $uid
- * @property-read $verb
- * @property-read $type
- * @property-read $actorId
- * @property-read $targetUriId
- * @property-read $parentUriId
- * @property-read $created
- * @property-read $seen
- * @property-read $dismissed
+ * @property-read int $id
+ * @property-read int $uid
+ * @property-read string $verb
+ * @property-read int $type
+ * @property-read int $actorId
+ * @property-read int $targetUriId
+ * @property-read int $parentUriId
+ * @property-read DateTime $created
+ * @property-read bool $seen
+ * @property-read bool $dismissed
  */
 class Notification extends BaseEntity
 {
@@ -31,7 +31,7 @@ class Notification extends BaseEntity
 	/** @var string */
 	protected $verb;
 	/**
-	 * @var int One of the \Friendica\Model\Post\UserNotification::TYPE_* constant values
+	 * @var int $type One of the \Friendica\Model\Post\UserNotification::TYPE_* constant values
 	 * @see \Friendica\Model\Post\UserNotification
 	 */
 	protected $type;

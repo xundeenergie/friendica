@@ -11,6 +11,8 @@ namespace Friendica\Object\Api\Mastodon\Status;
  * Class Counts
  *
  * @see https://docs.joinmastodon.org/entities/status
+ *
+ * @property-read int $dislikes
  */
 class Counts
 {

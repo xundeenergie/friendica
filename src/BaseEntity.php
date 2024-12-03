@@ -7,7 +7,7 @@
 
 namespace Friendica;
 
-use Friendica\Network\HTTPException;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 
 /**
  * The Entity classes directly inheriting from this abstract class are meant to represent a single business entity.
@@ -23,18 +23,29 @@ use Friendica\Network\HTTPException;
  *
  * Since these objects aren't meant to be using any dependency, including logging, unit tests can and must be
  * written for each and all of their methods
+ *
+ * @property-read int $id
+ * @property-read int $uid
+ * @property-read string $verb
+ * @property-read int $type
+ * @property-read int $actorId
+ * @property-read int $targetUriId
+ * @property-read int $parentUriId
+ * @property-read \DateTime $created
+ * @property-read bool $seen
+ * @property-read bool $dismissed
  */
 abstract class BaseEntity extends BaseDataTransferObject
 {
 	/**
 	 * @param string $name
 	 * @return mixed
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public function __get(string $name)
 	{
 		if (!property_exists($this, $name)) {
-			throw new HTTPException\InternalServerErrorException('Unknown property ' . $name . ' in Entity ' . static::class);
+			throw new InternalServerErrorException('Unknown property ' . $name . ' in Entity ' . static::class);
 		}
 
 		return $this->$name;
@@ -43,12 +54,12 @@ abstract class BaseEntity extends BaseDataTransferObject
 	/**
 	 * @param mixed $name
 	 * @return bool
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public function __isset($name): bool
 	{
 		if (!property_exists($this, $name)) {
-			throw new HTTPException\InternalServerErrorException('Unknown property ' . $name . ' of type ' . gettype($name) . ' in Entity ' . static::class);
+			throw new InternalServerErrorException('Unknown property ' . $name . ' of type ' . gettype($name) . ' in Entity ' . static::class);
 		}
 
 		return !empty($this->$name);
