@@ -1214,7 +1214,7 @@ class User
 				$_SESSION['openid'] = $openid_url;
 
 				$openid = new LightOpenID(DI::baseUrl()->getHost());
-				// $openid->identity is private and cannot be set
+				/** @phpstan-ignore-next-line $openid->identity is private, but will be set via magic setter */
 				$openid->identity = $openid_url;
 				$openid->returnUrl = DI::baseUrl() . '/openid';
 				$openid->required = ['namePerson/friendly', 'contact/email', 'namePerson'];
