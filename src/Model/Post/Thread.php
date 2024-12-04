@@ -10,7 +10,6 @@ namespace Friendica\Model\Post;
 use \BadMethodCallException;
 use Friendica\Database\Database;
 use Friendica\Database\DBA;
-use Friendica\Database\DBStructure;
 use Friendica\DI;
 
 class Thread
@@ -18,8 +17,6 @@ class Thread
 	/**
 	 * Insert a new post-thread entry
 	 *
-	 * @param integer $uri_id
-	 * @param array   $fields
 	 * @return bool   success
 	 * @throws \Exception
 	 */

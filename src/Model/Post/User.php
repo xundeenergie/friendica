@@ -7,9 +7,9 @@
 
 namespace Friendica\Model\Post;
 
-use Friendica\Database\DBA;
-use \BadMethodCallException;
+use BadMethodCallException;
 use Friendica\Database\Database;
+use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Model\Item;
 use Friendica\Protocol\Activity;
@@ -19,9 +19,6 @@ class User
 	/**
 	 * Insert a new post user entry
 	 *
-	 * @param integer $uri_id
-	 * @param integer $uid
-	 * @param array   $fields
 	 * @return int    ID of inserted post-user
 	 * @throws \Exception
 	 */

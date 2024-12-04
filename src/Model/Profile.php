@@ -33,7 +33,7 @@ class Profile
 	/**
 	 * Returns default profile for a given user id
 	 *
-	 * @param integer User ID
+	 * @param int $uid User ID
 	 *
 	 * @return array|bool Profile data or false on error
 	 * @throws \Exception
@@ -61,8 +61,8 @@ class Profile
 	/**
 	 * Returns profile data for the contact owner
 	 *
-	 * @param int $uid The User ID
-	 * @param array|bool $fields The fields to retrieve or false on error
+	 * @param int   $uid    The User ID
+	 * @param array $fields The fields to retrieve or false on error
 	 *
 	 * @return array Array of profile data
 	 * @throws \Exception

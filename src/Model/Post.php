@@ -19,8 +19,6 @@ class Post
 	/**
 	 * Insert a new post entry
 	 *
-	 * @param integer $uri_id
-	 * @param array   $fields
 	 * @return bool   Success of the insert process
 	 * @throws \Exception
 	 */
@@ -184,10 +182,6 @@ class Post
 	/**
 	 * Retrieve a single record from the post-user-view view and returns it in an associative array
 	 *
-	 * @param array $fields
-	 * @param array $condition
-	 * @param array $params
-	 * @param bool  $user_mode true = post-user-view, false = post-view
 	 * @return bool|array
 	 * @throws \Exception
 	 * @see   DBA::select
@@ -212,10 +206,6 @@ class Post
 	 * When the requested record is a reshare activity, the system fetches the reshared original post.
 	 * Otherwise the function reacts similar to selectFirst
 	 *
-	 * @param array $fields
-	 * @param array $condition
-	 * @param array $params
-	 * @param bool  $user_mode true = post-user-view, false = post-view
 	 * @return bool|array
 	 * @throws \Exception
 	 * @see   DBA::select
@@ -300,7 +290,7 @@ class Post
 	/**
 	 * Select rows from the post-user-view view and returns them as an array
 	 *
-	 * @param array $selected  Array of selected fields, empty for all
+	 * @param array $fields    Array of selected fields, empty for all
 	 * @param array $condition Array of fields for condition
 	 * @param array $params    Array of several parameters
 	 *
@@ -767,9 +757,6 @@ class Post
 	 * Delete a row from the post table
 	 *
 	 * @param array        $conditions Field condition(s)
-	 * @param array        $options
-	 *                           - cascade: If true we delete records in other tables that depend on the one we're deleting through
-	 *                           relations (default: true)
 	 *
 	 * @return boolean was the delete successful?
 	 * @throws \Exception

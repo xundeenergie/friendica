@@ -11,7 +11,6 @@ use \BadMethodCallException;
 use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\DI;
-use Friendica\Model\Item;
 use Friendica\Model\Post;
 
 class Content
@@ -19,8 +18,6 @@ class Content
 	/**
 	 * Insert a new post-content entry
 	 *
-	 * @param integer $uri_id
-	 * @param array   $fields
 	 * @return bool   success
 	 * @throws \Exception
 	 */

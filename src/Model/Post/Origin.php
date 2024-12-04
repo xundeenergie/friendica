@@ -17,7 +17,6 @@ class Origin
 	/**
 	 * Insert a new post origin entry
 	 *
-	 * @param array    $fields
 	 * @return boolean was the insert successful?
 	 * @throws \Exception
 	 */

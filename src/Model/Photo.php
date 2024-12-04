@@ -489,9 +489,6 @@ class Photo
 	 * Delete info from table and data from storage
 	 *
 	 * @param array $conditions Field condition(s)
-	 * @param array $options    Options array, Optional
-	 *
-	 * @return boolean
 	 *
 	 * @throws \Exception
 	 * @see   \Friendica\Database\DBA::delete
