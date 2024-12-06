@@ -220,6 +220,7 @@ class Authentication
 		// Otherwise it's probably an openid.
 		try {
 			$openid           = new LightOpenID($this->baseUrl->getHost());
+			/** @phpstan-ignore-next-line $openid->identity is private, but will be set via magic setter */
 			$openid->identity = $openid_url;
 			$this->session->set('openid', $openid_url);
 			$this->session->set('remember', $remember);

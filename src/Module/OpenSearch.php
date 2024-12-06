@@ -9,7 +9,8 @@ namespace Friendica\Module;
 
 use DOMDocument;
 use DOMElement;
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
 use Friendica\BaseModule;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
@@ -30,7 +31,7 @@ class OpenSearch extends BaseModule
 	/** @var string */
 	private $basePath;
 
-	public function __construct(BasePath $basePath, IManageConfigValues $config, L10n $l10n, App\baseUrl $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(BasePath $basePath, IManageConfigValues $config, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
@@ -43,20 +44,23 @@ class OpenSearch extends BaseModule
 	 */
 	protected function rawContent(array $request = [])
 	{
-		/** @var DOMDocument $xml */
-		XML::fromArray([
-			'OpenSearchDescription' => [
-				'@attributes' => [
-					'xmlns' => 'http://a9.com/-/spec/opensearch/1.1/',
+		XML::fromArray(
+			[
+				'OpenSearchDescription' => [
+					'@attributes' => [
+						'xmlns' => 'http://a9.com/-/spec/opensearch/1.1/',
+					],
+					'ShortName'      => $this->baseUrl->getHost(),
+					'Description'    => $this->l10n->t('Search in Friendica %s', $this->baseUrl->getHost()),
+					'Contact'        => 'https://github.com/friendica/friendica/issues',
+					'InputEncoding'  => 'UTF-8',
+					'OutputEncoding' => 'UTF-8',
+					'Developer'      => 'Friendica Developer Team',
 				],
-				'ShortName'      => $this->baseUrl->getHost(),
-				'Description'    => $this->l10n->t('Search in Friendica %s', $this->baseUrl->getHost()),
-				'Contact'        => 'https://github.com/friendica/friendica/issues',
-				'InputEncoding'  => 'UTF-8',
-				'OutputEncoding' => 'UTF-8',
-				'Developer'      => 'Friendica Developer Team',
 			],
-		], $xml);
+			/** @var DOMDocument $xml */
+			$xml
+		);
 
 		/** @var DOMElement $parent */
 		$parent = $xml->getElementsByTagName('OpenSearchDescription')[0];

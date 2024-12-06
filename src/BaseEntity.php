@@ -7,7 +7,9 @@
 
 namespace Friendica;
 
+use DateTime;
 use Friendica\Network\HTTPException\InternalServerErrorException;
+use Psr\Http\Message\UriInterface;
 
 /**
  * The Entity classes directly inheriting from this abstract class are meant to represent a single business entity.
@@ -24,16 +26,32 @@ use Friendica\Network\HTTPException\InternalServerErrorException;
  * Since these objects aren't meant to be using any dependency, including logging, unit tests can and must be
  * written for each and all of their methods
  *
- * @property-read int $id
+ * @property-read int|null $id
  * @property-read int $uid
  * @property-read string $verb
- * @property-read int $type
+ * @property-read int|string $type
  * @property-read int $actorId
  * @property-read int $targetUriId
- * @property-read int $parentUriId
- * @property-read \DateTime $created
+ * @property-read int|null $parentUriId
+ * @property-read \DateTime|string $created
  * @property-read bool $seen
  * @property-read bool $dismissed
+ * @property-read string $name
+ * @property-read UriInterface $url
+ * @property-read UriInterface $photo
+ * @property-read DateTime $date
+ * @property-read string|null $msg
+ * @property-read UriInterface $link
+ * @property-read int|null $itemId
+ * @property-read int|null $parent
+ * @property-read string|null $otype
+ * @property-read string|null $name_cache
+ * @property-read string|null $msg_cache
+ * @property-read int|null $uriId
+ * @property-read string $cookie_hash
+ * @property-read string $user_agent
+ * @property-read bool $trusted
+ * @property-read string|null $last_used
  */
 abstract class BaseEntity extends BaseDataTransferObject
 {

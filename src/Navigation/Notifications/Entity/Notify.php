@@ -14,24 +14,24 @@ use Friendica\Core\Renderer;
 use Psr\Http\Message\UriInterface;
 
 /**
- * @property-read $type
- * @property-read $name
- * @property-read $url
- * @property-read $photo
- * @property-read $date
- * @property-read $msg
- * @property-read $uid
- * @property-read $link
- * @property-read $itemId
- * @property-read $parent
- * @property-read $seen
- * @property-read $verb
- * @property-read $otype
- * @property-read $name_cache
- * @property-read $msg_cache
- * @property-read $uriId
- * @property-read $parentUriId
- * @property-read $id
+ * @property-read string $type
+ * @property-read string $name
+ * @property-read UriInterface $url
+ * @property-read UriInterface $photo
+ * @property-read DateTime $date
+ * @property-read string|null $msg
+ * @property-read int $uid
+ * @property-read UriInterface $link
+ * @property-read int|null $itemId
+ * @property-read int|null $parent
+ * @property-read bool $seen
+ * @property-read string $verb
+ * @property-read string|null $otype
+ * @property-read string|null $name_cache
+ * @property-read string|null $msg_cache
+ * @property-read int|null $uriId
+ * @property-read int|null $parentUriId
+ * @property-read int|null $id
  *
  * @deprecated since 2022.05 Use \Friendica\Navigation\Notifications\Entity\Notification instead
  */

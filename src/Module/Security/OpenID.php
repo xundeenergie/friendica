@@ -69,7 +69,9 @@ class OpenID extends BaseModule
 
 				// Detect the server URL
 				$open_id_obj = new LightOpenID(DI::baseUrl()->getHost());
+				/** @phpstan-ignore-next-line $openid->identity is private, but will be set via magic setter */
 				$open_id_obj->identity = $authId;
+				/** @phpstan-ignore-next-line $openid->identity is private, but will be set via magic setter */
 				$session->set('openid_server', $open_id_obj->discover($open_id_obj->identity));
 
 				if (\Friendica\Module\Register::getPolicy() === \Friendica\Module\Register::CLOSED) {
