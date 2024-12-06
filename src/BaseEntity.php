@@ -52,6 +52,26 @@ use Psr\Http\Message\UriInterface;
  * @property-read string $user_agent
  * @property-read bool $trusted
  * @property-read string|null $last_used
+ * @property-read string $guid
+ * @property-read string $addr
+ * @property-read UriInterface $alias
+ * @property-read string $nick
+ * @property-read string $givenName
+ * @property-read string $familyName
+ * @property-read UriInterface $photoMedium
+ * @property-read UriInterface $photoSmall
+ * @property-read UriInterface $batch
+ * @property-read UriInterface $notify
+ * @property-read UriInterface $poll
+ * @property-read string $subscribe
+ * @property-read bool $searchable
+ * @property-read string $pubKey
+ * @property-read UriInterface $baseurl
+ * @property-read int $gsid
+ * @property-read \DateTime $updated
+ * @property-read int $interacting_count
+ * @property-read int $interacted_count
+ * @property-read int $post_count
  */
 abstract class BaseEntity extends BaseDataTransferObject
 {

@@ -266,7 +266,7 @@ class DiasporaContact extends BaseRepository
 	/**
 	 * get a url (scheme://domain.tld/u/user) from a given contact guid
 	 *
-	 * @param mixed $guid Hexadecimal string guid
+	 * @param string $guid Hexadecimal string guid
 	 *
 	 * @return string the contact url or null
 	 * @throws \Exception

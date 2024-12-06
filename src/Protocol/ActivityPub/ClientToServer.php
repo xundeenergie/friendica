@@ -307,7 +307,6 @@ class ClientToServer
 	 * @param integer $page      Page number
 	 * @param integer $max_id    Maximum ID
 	 * @param string  $requester URL of requesting account
-	 * @param boolean $nocache   Wether to bypass caching
 	 * @return array of posts
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException

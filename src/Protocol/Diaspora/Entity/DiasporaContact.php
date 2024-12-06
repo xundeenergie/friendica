@@ -10,31 +10,31 @@ namespace Friendica\Protocol\Diaspora\Entity;
 use Psr\Http\Message\UriInterface;
 
 /**
- * @property-read $uriId
- * @property-read $url
- * @property-read $guid
- * @property-read $addr
- * @property-read $alias
- * @property-read $nick
- * @property-read $name
- * @property-read $givenName
- * @property-read $familyName
- * @property-read $photo
- * @property-read $photoMedium
- * @property-read $photoSmall
- * @property-read $batch
- * @property-read $notify
- * @property-read $poll
- * @property-read $subscribe
- * @property-read $searchable
- * @property-read $pubKey
- * @property-read $baseurl
- * @property-read $gsid
- * @property-read $created
- * @property-read $updated
- * @property-read $interacting_count
- * @property-read $interacted_count
- * @property-read $post_count
+ * @property-read int $uriId
+ * @property-read UriInterface $url
+ * @property-read string $guid
+ * @property-read string $addr
+ * @property-read UriInterface $alias
+ * @property-read string $nick
+ * @property-read string $name
+ * @property-read string $givenName
+ * @property-read string $familyName
+ * @property-read UriInterface $photo
+ * @property-read UriInterface $photoMedium
+ * @property-read UriInterface $photoSmall
+ * @property-read UriInterface $batch
+ * @property-read UriInterface $notify
+ * @property-read UriInterface $poll
+ * @property-read string $subscribe
+ * @property-read bool $searchable
+ * @property-read string $pubKey
+ * @property-read UriInterface $baseurl
+ * @property-read int $gsid
+ * @property-read \DateTime $created
+ * @property-read \DateTime $updated
+ * @property-read int $interacting_count
+ * @property-read int $interacted_count
+ * @property-read int $post_count
  */
 class DiasporaContact extends \Friendica\BaseEntity
 {

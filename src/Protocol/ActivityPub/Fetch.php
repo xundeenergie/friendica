@@ -29,8 +29,6 @@ class Fetch
 	/**
 	 * Set the worker id for the queue entry
 	 *
-	 * @param array $activity
-	 * @param int   $wid
 	 * @return void
 	 */
 	public static function setWorkerId(string $url, int $wid)
@@ -45,9 +43,6 @@ class Fetch
 
 	/**
 	 * Check if there is an assigned worker task
-	 *
-	 * @param array $activity
-	 * @return bool
 	 */
 	public static function hasWorker(string $url): bool
 	{
