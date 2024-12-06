@@ -45,10 +45,6 @@ class Preferences extends BaseDataTransferObject
 	/**
 	 * Creates a preferences record.
 	 *
-	 * @param BaseURL $baseUrl
-	 * @param array   $publicContact Full contact table record with uid = 0
-	 * @param array   $apcontact     Optional full apcontact table record
-	 * @param array   $userContact   Optional full contact table record with uid != 0
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
 	public function __construct(string $visibility, bool $sensitive, string $language, string $media, bool $spoilers)

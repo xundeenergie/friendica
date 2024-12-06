@@ -28,7 +28,6 @@ class Activity extends BaseDataTransferObject
 	/**
 	 * Creates an activity
 	 *
-	 * @param array   $item
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
 	public function __construct(int $week, int $statuses, int $logins, int $registrations)

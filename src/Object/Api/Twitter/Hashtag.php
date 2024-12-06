@@ -24,7 +24,6 @@ class Hashtag extends BaseDataTransferObject
 	/**
 	 * Creates a hashtag
 	 *
-	 * @param array $attachment
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
 	public function __construct(string $name, array $indices)

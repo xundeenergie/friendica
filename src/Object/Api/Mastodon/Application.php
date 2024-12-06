@@ -34,7 +34,6 @@ class Application extends BaseDataTransferObject
 	/**
 	 * Creates an application entry
 	 *
-	 * @param array   $item
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
 	public function __construct(string $name, string $client_id = null, string $client_secret = null, int $id = null, string $redirect_uri = null, string $website = null, string $vapid_key = null)

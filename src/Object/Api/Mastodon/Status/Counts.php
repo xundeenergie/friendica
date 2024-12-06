@@ -12,6 +12,9 @@ namespace Friendica\Object\Api\Mastodon\Status;
  *
  * @see https://docs.joinmastodon.org/entities/status
  *
+ * @property-read int $replies
+ * @property-read int $reblogs
+ * @property-read int $favourites
  * @property-read int $dislikes
  */
 class Counts

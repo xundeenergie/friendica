@@ -10,6 +10,12 @@ namespace Friendica\Object\Api\Mastodon\Status;
 /**
  * Class UserAttributes
  *
+ * @property-read bool $favourited
+ * @property-read bool $reblogged
+ * @property-read bool $muted
+ * @property-read bool $bookmarked
+ * @property-read bool $pinned
+ *
  * @see https://docs.joinmastodon.org/entities/status
  */
 class UserAttributes

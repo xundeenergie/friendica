@@ -23,9 +23,6 @@ class Error extends BaseDataTransferObject
 
 	/**
 	 * Creates an error record
-	 *
-	 * @param string $error
-	 * @param string error_description
 	 */
 	public function __construct(string $error, string $error_description)
 	{

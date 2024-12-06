@@ -41,7 +41,6 @@ class Media extends BaseDataTransferObject
 	/**
 	 * Creates a media entity array
 	 *
-	 * @param array $attachment
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
 	public function __construct(array $media, string $url, array $indices)
