@@ -6,7 +6,7 @@ parameters:
     level: 2
 
     paths:
-        # - addon/
+        - addon/
         - src/
 
     excludePaths:
