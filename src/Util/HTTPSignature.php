@@ -520,7 +520,6 @@ class HTTPSignature
 	 *
 	 * @param string  $request request url
 	 * @param integer $uid     User id of the requester
-	 * @param boolean $binary  TRUE if asked to return binary results (file download) (default is "false")
 	 * @param array   $opts    (optional parameters) associative array with:
 	 *                         'accept_content' => supply Accept: header with 'accept_content' as the value
 	 *                         'timeout' => int Timeout in seconds, default system config value or 60 seconds

@@ -7,7 +7,7 @@
 
 namespace Friendica\Util;
 
-use Friendica\App;
+use Friendica\App\BaseURL;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Hook;
 use Friendica\Core\L10n;
@@ -30,7 +30,7 @@ class Emailer
 	private $pConfig;
 	/** @var LoggerInterface */
 	private $logger;
-	/** @var App\BaseURL */
+	/** @var BaseURL */
 	private $baseUrl;
 	/** @var L10n */
 	private $l10n;
@@ -40,7 +40,7 @@ class Emailer
 	/** @var string */
 	private $siteEmailName;
 
-	public function __construct(IManageConfigValues $config, IManagePersonalConfigValues $pConfig, App\BaseURL $baseURL, LoggerInterface $logger,
+	public function __construct(IManageConfigValues $config, IManagePersonalConfigValues $pConfig, BaseURL $baseURL, LoggerInterface $logger,
 	                            L10n $defaultLang)
 	{
 		$this->config      = $config;
@@ -116,7 +116,7 @@ class Emailer
 	{
 		Hook::callAll('emailer_send_prepare', $email);
 
-		if (empty($email)) {
+		if (! $email instanceof IEmail) {
 			return true;
 		}
 

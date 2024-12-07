@@ -119,7 +119,7 @@ class LDSignature
 	/**
 	 * Hashes normalized object
 	 *
-	 * @param ??? $obj
+	 * @param array $obj
 	 * @return string SHA256 hash
 	 */
 	private static function hash($obj): string

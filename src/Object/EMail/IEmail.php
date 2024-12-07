@@ -7,7 +7,6 @@
 
 namespace Friendica\Object\EMail;
 
-use Friendica\Util\Emailer;
 use JsonSerializable;
 
 /**
