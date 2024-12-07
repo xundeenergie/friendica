@@ -13,6 +13,7 @@ parameters:
         analyse:
             - addon/*/lang/*
             - addon/*/vendor/*
+            - addon/convert/UnitConvertor.php
             - addon/pumpio/oauth/*
 
     scanDirectories:
