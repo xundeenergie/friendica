@@ -23,3 +23,9 @@ parameters:
 
     dynamicConstantNames:
         - DB_UPDATE_VERSION
+
+    ignoreErrors:
+        -
+            # Ignore missing GdImage class in PHP 7.4
+            message: '(^Property .+ has unknown class GdImage as its type\.$)'
+            path: src

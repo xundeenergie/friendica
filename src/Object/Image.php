@@ -13,6 +13,7 @@ use Friendica\Util\Images;
 use Imagick;
 use ImagickDraw;
 use ImagickPixel;
+use GdImage;
 use kornrunner\Blurhash\Blurhash;
 
 /**
@@ -20,7 +21,7 @@ use kornrunner\Blurhash\Blurhash;
  */
 class Image
 {
-	/** @var Imagick|resource */
+	/** @var GdImage|Imagick|resource */
 	private $image;
 
 	/*
