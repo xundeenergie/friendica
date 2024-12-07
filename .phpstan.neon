@@ -26,6 +26,16 @@ parameters:
 
     ignoreErrors:
         -
-            # Ignore missing GdImage class in PHP 7.4
+            # Ignore missing GdImage class in PHP <= 7.4
             message: '(^Property .+ has unknown class GdImage as its type\.$)'
+            path: src
+
+        -
+            # Ignore missing IMAP\Connection class in PHP <= 8.0
+            message: '(^Method .+ has invalid return type IMAP\\Connection\.$)'
+            path: src
+
+        -
+            # Ignore missing IMAP\Connection class in PHP <= 8.0
+            message: '(^Parameter .+ has invalid type IMAP\\Connection\.$)'
             path: src
