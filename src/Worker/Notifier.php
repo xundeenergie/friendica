@@ -7,6 +7,7 @@
 
 namespace Friendica\Worker;
 
+use Exception;
 use Friendica\Core\Hook;
 use Friendica\Core\Logger;
 use Friendica\Core\Protocol;
@@ -21,6 +22,7 @@ use Friendica\Model\Item;
 use Friendica\Model\Post;
 use Friendica\Model\Tag;
 use Friendica\Model\User;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Protocol\Activity;
 use Friendica\Protocol\ActivityPub;
 use Friendica\Protocol\ActivityPub\Transmitter;
