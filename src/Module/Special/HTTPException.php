@@ -16,6 +16,7 @@ use Friendica\Core\System;
 use Friendica\Module\Response;
 use Friendica\Network\HTTPException as NetworkHTTPException;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 /**
  * This special module displays HTTPException when they are thrown in modules.
@@ -87,7 +88,7 @@ class HTTPException
 			try {
 				$tpl     = Renderer::getMarkupTemplate('http_status.tpl');
 				$content = Renderer::replaceMacros($tpl, $vars);
-			} catch (\Exception $e) {
+			} catch (Throwable) {
 				$vars = array_map('htmlentities', $vars);
 				$content = "<h1>{$vars['$title']}</h1><p>{$vars['$message']}</p>";
 				if ($this->isSiteAdmin) {
@@ -99,9 +100,8 @@ class HTTPException
 
 		// We can't use a constructor parameter for this response object because we
 		// are in an Exception context where we don't want an existing Response.
-		$reason = ($e instanceof NetworkHTTPException) ? $e->getDescription() : $e->getMessage();
 		$response = new Response();
-		$response->setStatus($e->getCode(), $reason);
+		$response->setStatus($e->getCode(), $e->getDescription());
 		$response->addContent($content);
 		System::echoResponse($response->generate());
 		System::exit();
