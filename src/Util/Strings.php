@@ -530,8 +530,12 @@ class Strings
 	{
 		$shorthand = trim($shorthand);
 
-		if (is_numeric($shorthand)) {
-			return $shorthand;
+		if (ctype_digit($shorthand)) {
+			return (int) $shorthand;
+		}
+
+		if ($shorthand === '') {
+			return 0;
 		}
 
 		$last      = strtolower($shorthand[strlen($shorthand) - 1]);
