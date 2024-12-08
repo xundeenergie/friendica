@@ -770,7 +770,7 @@ class Image
 	 */
 	public function getBlurHash(): string
 	{
-		$image = New Image($this->asString(), $this->getType(), $this->filename, false);
+		$image = clone($this);
 		if (empty($image) || !$this->isValid()) {
 			return '';
 		}
