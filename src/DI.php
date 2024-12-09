@@ -164,7 +164,7 @@ abstract class DI
 	}
 
 	/**
-	 * @return AtProtocol\Arguments
+	 * @return ATProtocol\Actor
 	 */
 	public static function atpActor()
 	{
