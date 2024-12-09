@@ -295,7 +295,7 @@ class Jetstream
 				break;
 		}
 		if (microtime(true) - $timestamp > 2) {
-			$this->logger->notice('Commit processed', ['duration' => round(microtime(true) - $timestamp, 3), 'time' => date(DateTimeFormat::ATOM, $data->time_us / 1000000), 'did' => $data->did, 'operation' => $data->commit->operation, 'collection' => $data->commit->collection]);
+			$this->logger->notice('Commit processed', ['duration' => round(microtime(true) - $timestamp, 3), 'drift' => $drift, 'capped' => $this->capped, 'time' => date(DateTimeFormat::ATOM, $data->time_us / 1000000), 'did' => $data->did, 'operation' => $data->commit->operation, 'collection' => $data->commit->collection]);
 		}
 	}
 
