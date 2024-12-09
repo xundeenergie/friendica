@@ -125,6 +125,8 @@ class Processor
 
 	public function createPost(stdClass $data, array $uids, bool $dont_fetch)
 	{
+		$parent = '';
+
 		if (!empty($data->commit->record->reply)) {
 			$root   = $this->getUri($data->commit->record->reply->root);
 			$parent = $this->getUri($data->commit->record->reply->parent);
@@ -166,7 +168,7 @@ class Processor
 						return;
 					}
 				}
-				$item = $this->addMedia($post->thread->post->embed, $item, 0, 0, 0);
+				$item = $this->addMedia($post->thread->post->embed, $item, 0);
 			}
 
 			$id = Item::insert($item);
@@ -295,7 +297,7 @@ class Processor
 		}
 
 		if (!empty($post->embed)) {
-			$item = $this->addMedia($post->embed, $item, $uid, $level);
+			$item = $this->addMedia($post->embed, $item, $level);
 		}
 
 		$item['restrictions'] = $this->getRestrictionsForUser($post, $item, $post_reason);
@@ -819,7 +821,7 @@ class Processor
 		}
 
 		$elements = explode(':', $uri);
-		if (empty($elements) || ($elements[0] != 'at')) {
+		if ($elements[0] !== 'at') {
 			$post = Post::selectFirstPost(['extid'], ['uri' => $uri]);
 			return $this->getUriClass($post['extid'] ?? '');
 		}
