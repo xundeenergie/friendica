@@ -15,6 +15,7 @@ use Friendica\BaseModule;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
 use Friendica\Util\BasePath;
+use Friendica\Util\Network;
 use Friendica\Util\Profiler;
 use Friendica\Util\XML;
 use Psr\Log\LoggerInterface;
@@ -72,11 +73,12 @@ class OpenSearch extends BaseModule
 		}
 
 		if (!empty($shortcut_icon)) {
-			$imagedata = getimagesize($this->baseUrl . $shortcut_icon);
+			$shortcut_icon = Network::addBasePath($shortcut_icon, $this->baseUrl);
+			$imagedata = getimagesize($shortcut_icon);
 		}
 
 		if (!empty($imagedata)) {
-			XML::addElement($xml, $parent, 'Image', $this->baseUrl . $shortcut_icon, [
+			XML::addElement($xml, $parent, 'Image', $shortcut_icon, [
 				'width'  => $imagedata[0],
 				'height' => $imagedata[1],
 				'type'   => $imagedata['mime'],
