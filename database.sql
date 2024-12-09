@@ -2110,6 +2110,7 @@ CREATE VIEW `post-engagement-user-view` AS SELECT
 	`post-thread-user`.`received` AS `received`,
 	`post-thread-user`.`created` AS `created`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-engagement`.`language` AS `restricted`,
 	0 AS `comments`,
 	0 AS `activities`
@@ -2236,6 +2237,7 @@ CREATE VIEW `post-searchindex-user-view` AS SELECT
 	`post-thread-user`.`received` AS `received`,
 	`post-thread-user`.`created` AS `created`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-searchindex`.`language` AS `restricted`,
 	0 AS `comments`,
 	0 AS `activities`
@@ -2494,6 +2496,7 @@ CREATE VIEW `post-thread-origin-view` AS SELECT
 	`post-user`.`global` AS `global`,
 	EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post-thread-user`.`uri-id`) AS `featured`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-origin`.`vid` AS `vid`,
 	`post-thread-user`.`psid` AS `psid`,
 	IF (`post-origin`.`vid` IS NULL, '', `verb`.`name`) AS `verb`,
@@ -2881,6 +2884,7 @@ CREATE VIEW `post-thread-user-view` AS SELECT
 	`post-user`.`global` AS `global`,
 	EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post-thread-user`.`uri-id`) AS `featured`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-user`.`vid` AS `vid`,
 	`post-thread-user`.`psid` AS `psid`,
 	IF (`post-user`.`vid` IS NULL, '', `verb`.`name`) AS `verb`,
@@ -3061,6 +3065,7 @@ CREATE VIEW `post-view` AS SELECT
 	`post`.`global` AS `global`,
 	EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post`.`uri-id`) AS `featured`,
 	`post`.`network` AS `network`,
+	255 AS `protocol`,
 	`post`.`vid` AS `vid`,
 	IF (`post`.`vid` IS NULL, '', `verb`.`name`) AS `verb`,
 	`post-content`.`title` AS `title`,
@@ -3215,6 +3220,7 @@ CREATE VIEW `post-thread-view` AS SELECT
 	`post`.`global` AS `global`,
 	EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post-thread`.`uri-id`) AS `featured`,
 	`post-thread`.`network` AS `network`,
+	255 AS `protocol`,
 	`post`.`vid` AS `vid`,
 	IF (`post`.`vid` IS NULL, '', `verb`.`name`) AS `verb`,
 	`post-content`.`title` AS `title`,
@@ -3418,6 +3424,7 @@ CREATE VIEW `network-thread-view` AS SELECT
 	`post-thread-user`.`starred` AS `starred`,
 	`post-thread-user`.`mention` AS `mention`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-thread-user`.`contact-id` AS `contact-id`,
 	`ownercontact`.`contact-type` AS `contact-type`
 	FROM `post-thread-user`
@@ -3446,6 +3453,7 @@ CREATE VIEW `network-thread-circle-view` AS SELECT
 	`post-thread-user`.`starred` AS `starred`,
 	`post-thread-user`.`mention` AS `mention`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-thread-user`.`contact-id` AS `contact-id`,
 	`ownercontact`.`contact-type` AS `contact-type`
 	FROM `post-thread-user`
@@ -3818,6 +3826,7 @@ CREATE VIEW `tag-search-view` AS SELECT
 	`post-user`.`gravity` AS `gravity`,
 	`post-user`.`received` AS `received`,
 	`post-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-user`.`author-id` AS `author-id`,
 	`tag`.`name` AS `name`
 	FROM `post-tag`
