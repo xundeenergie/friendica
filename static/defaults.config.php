@@ -730,4 +730,13 @@ return [
 		// Wether the blocklist is publicly listed under /about (or in any later API)
 		'public' => true,
 	],
+	'jetstream' => [
+		// pidfile (Path)
+		// Jetstream pid file path. For example: pidfile = /path/to/jetstream.pid
+		'pidfile' => '',
+		// did_limit (Integer)
+		// Maximum number of DIDs that are filtered in Jetstream. The maximum number is 10,000,
+		// The higher the number, the more likely the system won't be able to process the posts on time.
+		'did_limit' => 1000,
+	],
 ];
