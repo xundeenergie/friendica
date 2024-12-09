@@ -434,6 +434,7 @@ class Photo
 		$data        = '';
 		$backend_ref = '';
 		$storage     = '';
+		$img_str     = $image->asString();
 
 		try {
 			if (DBA::isResult($existing_photo)) {
@@ -442,9 +443,9 @@ class Photo
 			} else {
 				$storage = DI::storage();
 			}
-			$backend_ref = $storage->put($image->asString(), $backend_ref);
+			$backend_ref = $storage->put($img_str, $backend_ref);
 		} catch (InvalidClassStorageException $storageException) {
-			$data = $image->asString();
+			$data = $img_str;
 		}
 
 		$fields = [
@@ -452,7 +453,7 @@ class Photo
 			'contact-id' => $cid,
 			'guid' => $guid,
 			'resource-id' => $rid,
-			'hash' => md5($image->asString()),
+			'hash' => md5($img_str),
 			'created' => $created,
 			'edited' => DateTimeFormat::utcNow(),
 			'filename' => basename($filename),
@@ -460,8 +461,8 @@ class Photo
 			'album' => $album,
 			'height' => $image->getHeight(),
 			'width' => $image->getWidth(),
-			'datasize' => strlen($image->asString()),
-			'blurhash' => $image->getBlurHash(),
+			'datasize' => strlen($img_str),
+			'blurhash' => $image->getBlurHash($img_str),
 			'data' => $data,
 			'scale' => $scale,
 			'photo-type' => $type,
