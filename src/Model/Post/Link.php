@@ -130,12 +130,12 @@ class Link
 
 		if (Images::isSupportedMimeType($fields['mimetype'])) {
 			$img_str = $curlResult->getBodyString();
-			$image = new Image($img_str, $fields['mimetype'], $url);
+			$image = new Image($img_str, $fields['mimetype'], $url, false);
 			if ($image->isValid()) {
 				$fields['mimetype'] = $image->getType();
 				$fields['width']    = $image->getWidth();
 				$fields['height']   = $image->getHeight();
-				$fields['blurhash'] = $image->getBlurHash();
+				$fields['blurhash'] = $image->getBlurHash($img_str);
 			}
 		}
 

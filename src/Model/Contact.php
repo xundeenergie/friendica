@@ -2320,7 +2320,7 @@ class Contact
 						if ($fetchResult->isSuccess() && !empty($img_str)) {
 							$image = new Image($img_str, $fetchResult->getContentType(), $avatar);
 							if ($image->isValid()) {
-								$update_fields['blurhash'] = $image->getBlurHash();
+								$update_fields['blurhash'] = $image->getBlurHash($img_str);
 							} else {
 								return;
 							}

@@ -366,11 +366,11 @@ class Images
 			return [];
 		}
 
-		$image = new Image($img_str, '', $url);
+		$image = new Image($img_str, '', $url, false);
 
 		if ($image->isValid()) {
-			$data['blurhash'] = $image->getBlurHash();
-			
+			$data['blurhash'] = $image->getBlurHash($img_str);
+
 			if ($ocr) {
 				$media = ['img_str' => $img_str];
 				Hook::callAll('ocr-detection', $media);
@@ -454,7 +454,7 @@ class Images
 	{
 		return self::getBBCodeByUrl(
 			DI::baseUrl() . '/photos/' . $nickname . '/image/' . $resource_id,
-			DI::baseUrl() . '/photo/' . $resource_id . '-' . $preview. $ext,
+			DI::baseUrl() . '/photo/' . $resource_id . '-' . $preview . $ext,
 			$description
 		);
 	}
