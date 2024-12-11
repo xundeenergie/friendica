@@ -9,12 +9,12 @@
 		xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
 	<testsuites>
 		<testsuite name="friendica">
-			<directory suffix=".php">functional/</directory>
-			<directory suffix=".php">src/</directory>
-			<directory suffix=".php">Unit/</directory>
+			<directory suffix="Test.php">functional/</directory>
+			<directory suffix="Test.php">src/</directory>
+			<directory suffix="Test.php">Unit/</directory>
 		</testsuite>
 		<testsuite name="unit">
-			<directory suffix=".php">Unit/</directory>
+			<directory suffix="Test.php">Unit/</directory>
 		</testsuite>
 	</testsuites>
 	<!-- Filters for Code Coverage -->
