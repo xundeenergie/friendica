@@ -7,11 +7,11 @@
 
 namespace Friendica\Test\src;
 
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\CollectionDouble;
 use Friendica\Test\Util\EntityDouble;
 
-class CollectionTest extends MockedTest
+class CollectionTest extends MockedTestCase
 {
 	/**
 	 * Test if the BaseCollection::column() works as expected

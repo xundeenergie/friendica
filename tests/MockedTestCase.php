@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * This class verifies each mock after each call
  */
-abstract class MockedTest extends TestCase
+abstract class MockedTestCase extends TestCase
 {
 	protected function tearDown() : void
 	{

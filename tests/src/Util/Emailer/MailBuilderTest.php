@@ -12,7 +12,7 @@ use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
 use Friendica\Network\HTTPException\UnprocessableEntityException;
 use Friendica\Object\EMail\IEmail;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\SampleMailBuilder;
 use Friendica\Test\Util\VFSTrait;
 use Friendica\Util\EMailer\MailBuilder;
@@ -23,7 +23,7 @@ use Psr\Log\NullLogger;
  * This class tests the "MailBuilder" (@see MailBuilder )
  * Since it's an abstract class and every extended class of it has dependencies, we use a "SampleMailBuilder" (@see SampleMailBuilder ) to make this class work
  */
-class MailBuilderTest extends MockedTest
+class MailBuilderTest extends MockedTestCase
 {
 	use VFSTrait;
 

@@ -9,10 +9,10 @@ namespace Friendica\Test\src\Network;
 
 use Friendica\Network\Probe;
 use Friendica\Test\DiceHttpMockHandlerTrait;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use GuzzleHttp\Middleware;
 
-class ProbeTest extends MockedTest
+class ProbeTest extends MockedTestCase
 {
 	use DiceHttpMockHandlerTrait;
 

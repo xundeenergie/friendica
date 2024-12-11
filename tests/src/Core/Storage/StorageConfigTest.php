@@ -8,9 +8,9 @@
 namespace Friendica\Test\src\Core\Storage;
 
 use Friendica\Core\Storage\Capability\ICanConfigureStorage;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-abstract class StorageConfigTest extends MockedTest
+abstract class StorageConfigTest extends MockedTestCase
 {
 	/** @return ICanConfigureStorage */
 	abstract protected function getInstance();

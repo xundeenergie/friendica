@@ -8,11 +8,11 @@
 namespace Friendica\Test\src\Security\TwoFactor\Model;
 
 use Friendica\Security\TwoFactor\Model\TrustedBrowser;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Strings;
 
-class TrustedBrowserTest extends MockedTest
+class TrustedBrowserTest extends MockedTestCase
 {
 	public function test__construct()
 	{

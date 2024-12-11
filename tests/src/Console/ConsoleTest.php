@@ -8,10 +8,10 @@
 namespace Friendica\Test\src\Console;
 
 use Asika\SimpleConsole\Console;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\Intercept;
 
-abstract class ConsoleTest extends MockedTest
+abstract class ConsoleTest extends MockedTestCase
 {
 	/**
 	 * @var array The default argv for a Console Instance

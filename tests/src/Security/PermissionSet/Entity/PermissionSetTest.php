@@ -8,9 +8,9 @@
 namespace Friendica\Test\src\Security\PermissionSet\Entity;
 
 use Friendica\Security\PermissionSet\Entity\PermissionSet;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-class PermissionSetTest extends MockedTest
+class PermissionSetTest extends MockedTestCase
 {
 	public function dateAllowedContacts()
 	{

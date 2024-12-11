@@ -9,11 +9,11 @@ namespace Friendica\Test\src\Network\HTTPClient\Client;
 
 use Friendica\DI;
 use Friendica\Test\DiceHttpMockHandlerTrait;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 
-class HTTPClientTest extends MockedTest
+class HTTPClientTest extends MockedTestCase
 {
 	use DiceHttpMockHandlerTrait;
 

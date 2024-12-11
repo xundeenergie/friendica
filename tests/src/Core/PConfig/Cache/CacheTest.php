@@ -7,10 +7,9 @@
 
 namespace Friendica\Test\src\Core\PConfig\Cache;
 
-use Friendica\Core\PConfig\Cache;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-class CacheTest extends MockedTest
+class CacheTest extends MockedTestCase
 {
 	public function dataTests()
 	{

@@ -9,9 +9,9 @@ namespace Friendica\Test\src\Core\Session;
 
 use Friendica\Core\Session\Model\UserSession;
 use Friendica\Core\Session\Type\ArraySession;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-class UserSessionTest extends MockedTest
+class UserSessionTest extends MockedTestCase
 {
 	public function dataLocalUserId()
 	{

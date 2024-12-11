@@ -8,13 +8,13 @@
 namespace Friendica\Test\src\Core\Logger;
 
 use Friendica\Core\Config\Capability\IManageConfigValues;
-use Friendica\Test\MockedTest;
 use Friendica\Core\Logger\Util\Introspection;
+use Friendica\Test\MockedTestCase;
 use Mockery\MockInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-abstract class AbstractLoggerTest extends MockedTest
+abstract class AbstractLoggerTest extends MockedTestCase
 {
 	use LoggerDataTrait;
 

@@ -15,13 +15,13 @@ use Friendica\Core\L10n;
 use Friendica\DI;
 use Friendica\Network\HTTPClient\Capability\ICanHandleHttpResponses;
 use Friendica\Network\HTTPClient\Capability\ICanSendHttpRequests;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\VFSTrait;
 use Mockery;
 use Mockery\MockInterface;
 use phpmock\phpunit\PHPMock;
 
-class InstallerTest extends MockedTest
+class InstallerTest extends MockedTestCase
 {
 	use VFSTrait;
 	use ArraySubsetAsserts;

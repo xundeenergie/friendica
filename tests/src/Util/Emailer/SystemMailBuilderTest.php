@@ -10,13 +10,13 @@ namespace Friendica\Test\src\Util\Emailer;
 use Friendica\App\BaseURL;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\VFSTrait;
 use Friendica\Util\EMailer\MailBuilder;
 use Friendica\Util\EMailer\SystemMailBuilder;
 use Psr\Log\NullLogger;
 
-class SystemMailBuilderTest extends MockedTest
+class SystemMailBuilderTest extends MockedTestCase
 {
 	use VFSTrait;
 

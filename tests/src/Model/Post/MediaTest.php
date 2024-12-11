@@ -7,9 +7,9 @@
 
 namespace Friendica\Test\src\Model\Post;
 
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-class MediaTest extends MockedTest
+class MediaTest extends MockedTestCase
 {
 	/**
 	 * Test the api_get_attachments() function.

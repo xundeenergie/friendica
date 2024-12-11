@@ -8,11 +8,11 @@
 namespace Friendica\Test\src\Core\Config\Cache;
 
 use Friendica\Core\Config\ValueObject\Cache;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use ParagonIE\HiddenString\HiddenString;
 use stdClass;
 
-class CacheTest extends MockedTest
+class CacheTest extends MockedTestCase
 {
 	public function dataTests()
 	{

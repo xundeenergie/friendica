@@ -7,9 +7,9 @@
 
 namespace Friendica\Test\src\Content;
 
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-class ItemTest extends MockedTest
+class ItemTest extends MockedTestCase
 {
 	/**
 	 * @doesNotPerformAssertions
