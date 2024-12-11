@@ -9,12 +9,12 @@ namespace Friendica\Test\src\Util;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Friendica\Test\DiceHttpMockHandlerTrait;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\Images;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
 
-class ImagesTest extends MockedTest
+class ImagesTest extends MockedTestCase
 {
 	use DiceHttpMockHandlerTrait;
 	use ArraySubsetAsserts;

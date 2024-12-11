@@ -12,7 +12,7 @@ use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Object\EMail\IEmail;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\EmailerSpy;
 use Friendica\Test\Util\HookMockTrait;
 use Friendica\Test\Util\SampleMailBuilder;
@@ -26,7 +26,7 @@ use Psr\Log\NullLogger;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class EMailerTest extends MockedTest
+class EMailerTest extends MockedTestCase
 {
 	use VFSTrait;
 	use HookMockTrait;

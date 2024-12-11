@@ -11,11 +11,11 @@ use Friendica\App\BaseURL;
 use Friendica\App\Request;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Model\User\Cookie;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\StaticCookie;
 use Mockery\MockInterface;
 
-class CookieTest extends MockedTest
+class CookieTest extends MockedTestCase
 {
 	/** @var MockInterface|IManageConfigValues */
 	private $config;

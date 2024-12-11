@@ -11,11 +11,11 @@ use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Friendica\Core\PConfig\Type\AbstractPConfigValues;
 use Friendica\Core\PConfig\Repository\PConfig as PConfigModel;
 use Friendica\Core\PConfig\ValueObject\Cache;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Mockery;
 use Mockery\MockInterface;
 
-abstract class PConfigTest extends MockedTest
+abstract class PConfigTest extends MockedTestCase
 {
 	use ArraySubsetAsserts;
 

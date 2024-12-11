@@ -10,9 +10,9 @@ namespace Friendica\Test\src\Core\Storage;
 use Friendica\Core\Storage\Capability\ICanReadFromStorage;
 use Friendica\Core\Storage\Capability\ICanWriteToStorage;
 use Friendica\Core\Storage\Exception\ReferenceStorageException;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-abstract class StorageTest extends MockedTest
+abstract class StorageTest extends MockedTestCase
 {
 	/** @return ICanWriteToStorage */
 	abstract protected function getInstance();

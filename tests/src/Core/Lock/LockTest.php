@@ -8,9 +8,9 @@
 namespace Friendica\Test\src\Core\Lock;
 
 use Friendica\Core\Lock\Capability\ICanLock;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-abstract class LockTest extends MockedTest
+abstract class LockTest extends MockedTestCase
 {
 	/**
 	 * @var int Start time of the mock (used for time operations)

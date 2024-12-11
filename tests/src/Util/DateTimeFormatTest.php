@@ -7,10 +7,10 @@
 
 namespace Friendica\Test\src\Util;
 
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\DateTimeFormat;
 
-class DateTimeFormatTest extends MockedTest
+class DateTimeFormatTest extends MockedTestCase
 {
 	public function dataYearMonth()
 	{

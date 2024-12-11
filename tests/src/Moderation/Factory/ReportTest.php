@@ -10,13 +10,13 @@ namespace Friendica\Test\src\Moderation\Factory;
 use Friendica\Moderation\Collection;
 use Friendica\Moderation\Factory;
 use Friendica\Moderation\Entity;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\Clock\FrozenClock;
 use Friendica\Util\DateTimeFormat;
 use Psr\Clock\ClockInterface;
 use Psr\Log\NullLogger;
 
-class ReportTest extends MockedTest
+class ReportTest extends MockedTestCase
 {
 	public function dataCreateFromTableRow(): array
 	{

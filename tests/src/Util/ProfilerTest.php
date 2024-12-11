@@ -8,12 +8,12 @@
 namespace Friendica\Test\src\Util;
 
 use Friendica\Core\Config\Capability\IManageConfigValues;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\Profiler;
 use Mockery\MockInterface;
 use Psr\Log\LoggerInterface;
 
-class ProfilerTest extends MockedTest
+class ProfilerTest extends MockedTestCase
 {
 	/**
 	 * @var LoggerInterface|MockInterface

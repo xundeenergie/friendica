@@ -8,9 +8,9 @@
 namespace Friendica\Test\src\Core;
 
 use Friendica\Core\L10n;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-class L10nTest extends MockedTest
+class L10nTest extends MockedTestCase
 {
 	public function dataDetectLanguage()
 	{

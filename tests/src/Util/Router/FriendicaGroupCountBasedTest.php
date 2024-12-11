@@ -11,10 +11,10 @@ use FastRoute\DataGenerator\GroupCountBased;
 use FastRoute\RouteCollector;
 use FastRoute\RouteParser\Std;
 use Friendica\Module\Special\Options;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\Router\FriendicaGroupCountBased;
 
-class FriendicaGroupCountBasedTest extends MockedTest
+class FriendicaGroupCountBasedTest extends MockedTestCase
 {
 	public function testOptions()
 	{

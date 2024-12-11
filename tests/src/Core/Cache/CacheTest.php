@@ -8,12 +8,10 @@
 namespace Friendica\Test\src\Core\Cache;
 
 use Friendica\Core\Cache\Capability\ICanCache;
-use Friendica\Core\Cache\Capability\ICanCacheInMemory;
-use Friendica\Core\Cache\Type\AbstractCache;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\PidFile;
 
-abstract class CacheTest extends MockedTest
+abstract class CacheTest extends MockedTestCase
 {
 	/**
 	 * @var int Start time of the mock (used for time operations)

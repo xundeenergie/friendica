@@ -8,9 +8,9 @@
 namespace Friendica\Test\src\Core\KeyValueStorage;
 
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-abstract class KeyValueStorageTest extends MockedTest
+abstract class KeyValueStorageTest extends MockedTestCase
 {
 	abstract public function getInstance(): IManageKeyValuePairs;
 

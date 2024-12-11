@@ -12,10 +12,10 @@ use Friendica\App\BaseURL;
 use Friendica\Core\L10n;
 use Friendica\Factory\Api\Twitter\User;
 use Friendica\Module\Api\ApiResponse;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Psr\Log\NullLogger;
 
-class ApiResponseTest extends MockedTest
+class ApiResponseTest extends MockedTestCase
 {
 	public function testErrorWithJson()
 	{

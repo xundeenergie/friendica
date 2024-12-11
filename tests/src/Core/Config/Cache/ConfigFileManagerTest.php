@@ -9,12 +9,12 @@ namespace Friendica\Test\src\Core\Config\Cache;
 
 use Friendica\Core\Config\Factory\Config;
 use Friendica\Core\Config\ValueObject\Cache;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\VFSTrait;
 use Friendica\Core\Config\Util\ConfigFileManager;
 use org\bovigo\vfs\vfsStream;
 
-class ConfigFileManagerTest extends MockedTest
+class ConfigFileManagerTest extends MockedTestCase
 {
 	use VFSTrait;
 

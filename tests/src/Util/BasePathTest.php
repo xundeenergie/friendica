@@ -7,10 +7,10 @@
 
 namespace Friendica\Test\src\Util;
 
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\BasePath;
 
-class BasePathTest extends MockedTest
+class BasePathTest extends MockedTestCase
 {
 	public function dataPaths()
 	{
