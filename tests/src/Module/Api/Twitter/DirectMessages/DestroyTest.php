@@ -11,9 +11,9 @@ use Friendica\App\Router;
 use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\DirectMessages\Destroy;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class DestroyTest extends ApiTest
+class DestroyTest extends ApiTestCase
 {
 	protected function setUp(): void
 	{

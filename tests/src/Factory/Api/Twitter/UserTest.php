@@ -11,7 +11,7 @@ use Friendica\DI;
 use Friendica\Factory\Api\Twitter\User;
 use Friendica\Network\HTTPException\NotFoundException;
 use Friendica\Test\FixtureTestCase;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
 class UserTest extends FixtureTestCase
 {
@@ -22,11 +22,11 @@ class UserTest extends FixtureTestCase
 	 */
 	protected function assertSelfUser(array $user)
 	{
-		self::assertEquals(ApiTest::SELF_USER['id'], $user['uid']);
-		self::assertEquals(ApiTest::SELF_USER['id'], $user['cid']);
+		self::assertEquals(ApiTestCase::SELF_USER['id'], $user['uid']);
+		self::assertEquals(ApiTestCase::SELF_USER['id'], $user['cid']);
 		self::assertEquals('DFRN', $user['location']);
-		self::assertEquals(ApiTest::SELF_USER['name'], $user['name']);
-		self::assertEquals(ApiTest::SELF_USER['nick'], $user['screen_name']);
+		self::assertEquals(ApiTestCase::SELF_USER['name'], $user['name']);
+		self::assertEquals(ApiTestCase::SELF_USER['nick'], $user['screen_name']);
 		self::assertTrue($user['verified']);
 	}
 
@@ -38,7 +38,7 @@ class UserTest extends FixtureTestCase
 	public function testApiGetUser()
 	{
 		$user = (new User(DI::logger(), DI::twitterStatus()))
-			->createFromUserId(ApiTest::SELF_USER['id'])
+			->createFromUserId(ApiTestCase::SELF_USER['id'])
 			->toArray();
 
 		$this->assertSelfUser($user);
@@ -54,7 +54,7 @@ class UserTest extends FixtureTestCase
 		$this->markTestIncomplete('Needs missing fields for profile colors at API User object first.');
 
 		/*
-		DI::pConfig()->set(ApiTest::SELF_USER['id'], 'frio', 'schema', 'red');
+		DI::pConfig()->set(ApiTestCase::SELF_USER['id'], 'frio', 'schema', 'red');
 
 		$userFactory = new User(DI::logger(), DI::twitterStatus());
 		$user        = $userFactory->createFromUserId(42);
@@ -76,7 +76,7 @@ class UserTest extends FixtureTestCase
 		$this->markTestIncomplete('Needs missing fields for profile colors at API User object first.');
 
 		/*
-		DI::pConfig()->set(ApiTest::SELF_USER['id'], 'frio', 'schema', '---');
+		DI::pConfig()->set(ApiTestCase::SELF_USER['id'], 'frio', 'schema', '---');
 
 		$userFactory = new User(DI::logger(), DI::twitterStatus());
 		$user        = $userFactory->createFromUserId(42);
@@ -98,10 +98,10 @@ class UserTest extends FixtureTestCase
 		$this->markTestIncomplete('Needs missing fields for profile colors at API User object first.');
 
 		/*
-		DI::pConfig()->set(ApiTest::SELF_USER['id'], 'frio', 'schema', '---');
-		DI::pConfig()->set(ApiTest::SELF_USER['id'], 'frio', 'nav_bg', '#123456');
-		DI::pConfig()->set(ApiTest::SELF_USER['id'], 'frio', 'link_color', '#123456');
-		DI::pConfig()->set(ApiTest::SELF_USER['id'], 'frio', 'background_color', '#123456');
+		DI::pConfig()->set(ApiTestCase::SELF_USER['id'], 'frio', 'schema', '---');
+		DI::pConfig()->set(ApiTestCase::SELF_USER['id'], 'frio', 'nav_bg', '#123456');
+		DI::pConfig()->set(ApiTestCase::SELF_USER['id'], 'frio', 'link_color', '#123456');
+		DI::pConfig()->set(ApiTestCase::SELF_USER['id'], 'frio', 'background_color', '#123456');
 
 		$userFactory = new User(DI::logger(), DI::twitterStatus());
 		$user        = $userFactory->createFromUserId(42);

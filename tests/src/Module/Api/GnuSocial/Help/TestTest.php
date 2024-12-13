@@ -10,9 +10,9 @@ namespace Friendica\Test\src\Module\Api\GnuSocial\Help;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\DI;
 use Friendica\Module\Api\GNUSocial\Help\Test;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class TestTest extends ApiTest
+class TestTest extends ApiTestCase
 {
 	public function testJson()
 	{

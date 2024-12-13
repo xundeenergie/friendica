@@ -11,9 +11,9 @@ use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Statuses\Retweet;
 use Friendica\Network\HTTPException\BadRequestException;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class RetweetTest extends ApiTest
+class RetweetTest extends ApiTestCase
 {
 	protected function setUp(): void
 	{

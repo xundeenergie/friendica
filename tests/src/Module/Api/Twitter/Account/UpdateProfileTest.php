@@ -10,9 +10,9 @@ namespace Friendica\Test\src\Module\Api\Twitter\Account;
 use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Account\UpdateProfile;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class UpdateProfileTest extends ApiTest
+class UpdateProfileTest extends ApiTestCase
 {
 	/**
 	 * Test the api_account_update_profile() function.

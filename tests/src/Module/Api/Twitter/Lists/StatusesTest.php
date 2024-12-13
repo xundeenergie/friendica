@@ -11,9 +11,9 @@ use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Lists\Statuses;
 use Friendica\Network\HTTPException\BadRequestException;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class StatusesTest extends ApiTest
+class StatusesTest extends ApiTestCase
 {
 	/**
 	 * Test the api_lists_statuses() function.

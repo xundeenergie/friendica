@@ -11,9 +11,9 @@ use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Factory\Api\Twitter\DirectMessage;
 use Friendica\Module\Api\Twitter\DirectMessages\NewDM;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class NewDMTest extends ApiTest
+class NewDMTest extends ApiTestCase
 {
 	protected function setUp(): void
 	{

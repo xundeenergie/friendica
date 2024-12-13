@@ -12,9 +12,9 @@ use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Favorites\Create;
 use Friendica\Network\HTTPException\BadRequestException;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class CreateTest extends ApiTest
+class CreateTest extends ApiTestCase
 {
 	protected function setUp(): void
 	{

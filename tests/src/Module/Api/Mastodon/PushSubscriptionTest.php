@@ -7,9 +7,9 @@
 
 namespace Friendica\Test\src\Module\Api\Mastodon;
 
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class PushSubscriptionTest extends ApiTest
+class PushSubscriptionTest extends ApiTestCase
 {
 	/**
 	 * Test the api_account_verify_credentials() function.

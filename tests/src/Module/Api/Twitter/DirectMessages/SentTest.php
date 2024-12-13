@@ -11,9 +11,9 @@ use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Factory\Api\Twitter\DirectMessage;
 use Friendica\Module\Api\Twitter\DirectMessages\Sent;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class SentTest extends ApiTest
+class SentTest extends ApiTestCase
 {
 	/**
 	 * Test the api_direct_messages_box() function.

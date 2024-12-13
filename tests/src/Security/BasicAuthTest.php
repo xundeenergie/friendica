@@ -8,9 +8,9 @@
 namespace Friendica\Test\src\Security;
 
 use Friendica\Security\BasicAuth;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class BasicAuthTest extends ApiTest
+class BasicAuthTest extends ApiTestCase
 {
 	/**
 	 * Test the api_source() function.
