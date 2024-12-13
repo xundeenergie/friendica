@@ -14,7 +14,7 @@ use Friendica\Core\Config\Model\ConfigTransaction;
 use Friendica\Core\Config\Util\ConfigFileManager;
 use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Database\Database;
-use Friendica\Test\DatabaseTest;
+use Friendica\Test\DatabaseTestCase;
 use Friendica\Test\FixtureTestCase;
 use Friendica\Test\MockedTest;
 use Friendica\Test\Util\Database\StaticDatabase;

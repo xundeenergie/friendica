@@ -9,7 +9,7 @@ namespace Friendica\Test\src\Core\Cache;
 
 use Friendica\App\BaseURL;
 use Friendica\Core\Cache;
-use Friendica\Test\DatabaseTestTrait;
+use Friendica\Test\DatabaseTestCaseTrait;
 use Friendica\Test\Util\CreateDatabaseTrait;
 use Friendica\Test\Util\VFSTrait;
 

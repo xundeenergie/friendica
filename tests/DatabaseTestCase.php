@@ -10,7 +10,7 @@ namespace Friendica\Test;
 /**
  * Abstract class used by tests that need a database.
  */
-abstract class DatabaseTest extends MockedTestCase
+abstract class DatabaseTestCase extends MockedTestCase
 {
 	use DatabaseTestTrait;
 
