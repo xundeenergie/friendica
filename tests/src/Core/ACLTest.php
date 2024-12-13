@@ -8,9 +8,9 @@
 namespace Friendica\Test\src\Core;
 
 use Friendica\Core\ACL;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 
-class ACLTest extends FixtureTest
+class ACLTest extends FixtureTestCase
 {
 	/**
 	 * Test the ACL::isValidContact() function.

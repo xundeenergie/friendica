@@ -10,10 +10,10 @@ namespace Friendica\Test\src\Core\Worker\Repository;
 use Friendica\Core\Worker\Factory;
 use Friendica\Core\Worker\Repository;
 use Friendica\DI;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Psr\Log\NullLogger;
 
-class ProcessTest extends FixtureTest
+class ProcessTest extends FixtureTestCase
 {
 	public function testStandardProcess()
 	{

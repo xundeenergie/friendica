@@ -12,10 +12,10 @@ use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\DI;
 use Friendica\Module\Special\HTTPException;
 use Friendica\Module\Special\Options;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Mockery\MockInterface;
 
-class OptionsTest extends FixtureTest
+class OptionsTest extends FixtureTestCase
 {
 	/** @var MockInterface|HTTPException */
 	protected $httpExceptionMock;

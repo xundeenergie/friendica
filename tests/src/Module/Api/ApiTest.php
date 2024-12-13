@@ -17,14 +17,14 @@ use Friendica\DI;
 use Friendica\Module\Special\HTTPException;
 use Friendica\Security\Authentication;
 use Friendica\Security\BasicAuth;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Friendica\Test\Util\AppDouble;
 use Friendica\Test\Util\AuthenticationDouble;
 use Friendica\Test\Util\AuthTestConfig;
 use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 
-abstract class ApiTest extends FixtureTest
+abstract class ApiTest extends FixtureTestCase
 {
 	// User data that the test database is populated with
 	const SELF_USER = [

@@ -9,9 +9,9 @@ namespace Friendica\Test\src\Factory\Api\Twitter;
 
 use Friendica\DI;
 use Friendica\Factory\Api\Friendica\Activities;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 
-class ActivitiesTest extends FixtureTest
+class ActivitiesTest extends FixtureTestCase
 {
 	/**
 	 * Test the api_format_items_activities() function.

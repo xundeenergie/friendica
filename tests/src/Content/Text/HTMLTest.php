@@ -10,11 +10,11 @@ namespace Friendica\Test\src\Content\Text;
 use Exception;
 use Friendica\Content\Text\HTML;
 use Friendica\Network\HTTPException\InternalServerErrorException;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 
-class HTMLTest extends FixtureTest
+class HTMLTest extends FixtureTestCase
 {
 	public function dataHTML()
 	{

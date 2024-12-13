@@ -10,7 +10,7 @@ namespace Friendica\Test;
 /**
  * Parent class for test cases requiring fixtures
  */
-abstract class FixtureTest extends MockedTestCase
+abstract class FixtureTestCase extends MockedTestCase
 {
 	use FixtureTestTrait;
 
