@@ -187,7 +187,7 @@ abstract class ApiTestCase extends FixtureTestCase
 	public function installAuthTest()
 	{
 		$addon           = 'authtest';
-		$addon_file_path = __DIR__ . '/../../../Util/authtest/authtest.php';
+		$addon_file_path = __DIR__ . '/Util/authtest/authtest.php';
 		$t               = @filemtime($addon_file_path);
 
 		@include_once($addon_file_path);
