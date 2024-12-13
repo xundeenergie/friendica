@@ -9,10 +9,10 @@ namespace Friendica\Test\src\Factory\Api\Twitter;
 
 use Friendica\DI;
 use Friendica\Factory\Api\Twitter\DirectMessage;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Friendica\Test\src\Module\Api\ApiTest;
 
-class DirectMessageTest extends FixtureTest
+class DirectMessageTest extends FixtureTestCase
 {
 	/**
 	 * Test the api_format_messages() function.

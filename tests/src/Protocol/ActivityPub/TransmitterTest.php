@@ -11,9 +11,9 @@ use Friendica\Core\Hook;
 use Friendica\DI;
 use Friendica\Model\Post;
 use Friendica\Protocol\ActivityPub\Transmitter;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 
-class TransmitterTest extends FixtureTest
+class TransmitterTest extends FixtureTestCase
 {
 	protected function setUp(): void
 	{

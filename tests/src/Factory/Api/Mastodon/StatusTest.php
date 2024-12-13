@@ -10,9 +10,9 @@ namespace Friendica\Test\src\Factory\Api\Mastodon;
 use Friendica\Core\Hook;
 use Friendica\DI;
 use Friendica\Model\Post;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 
-class StatusTest extends FixtureTest
+class StatusTest extends FixtureTestCase
 {
 	protected $status;
 

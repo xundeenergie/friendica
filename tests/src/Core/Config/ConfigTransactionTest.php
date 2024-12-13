@@ -15,13 +15,13 @@ use Friendica\Core\Config\Util\ConfigFileManager;
 use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Database\Database;
 use Friendica\Test\DatabaseTest;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Friendica\Test\MockedTest;
 use Friendica\Test\Util\Database\StaticDatabase;
 use Friendica\Test\Util\VFSTrait;
 use Mockery\Exception\InvalidCountException;
 
-class ConfigTransactionTest extends FixtureTest
+class ConfigTransactionTest extends FixtureTestCase
 {
 	/** @var ConfigFileManager */
 	protected $configFileManager;

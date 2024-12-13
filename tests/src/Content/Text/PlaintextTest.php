@@ -10,9 +10,9 @@ namespace Friendica\Test\src\Content\Text;
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Text\Plaintext;
 use Friendica\Network\HTTPException\InternalServerErrorException;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 
-class PlaintextTest extends FixtureTest
+class PlaintextTest extends FixtureTestCase
 {
 	protected function setUp(): void
 	{

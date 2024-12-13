@@ -8,9 +8,9 @@
 namespace Friendica\Test\src\Navigation\Notifications\Entity;
 
 use Friendica\Navigation\Notifications\Entity\Notify;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 
-class NotifyTest extends FixtureTest
+class NotifyTest extends FixtureTestCase
 {
 	public function dataFormatNotify(): array
 	{

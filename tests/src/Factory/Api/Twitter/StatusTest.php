@@ -16,10 +16,10 @@ use Friendica\Factory\Api\Twitter\Media;
 use Friendica\Factory\Api\Twitter\Mention;
 use Friendica\Factory\Api\Twitter\Status;
 use Friendica\Factory\Api\Twitter\Url;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Friendica\Test\src\Module\Api\ApiTest;
 
-class StatusTest extends FixtureTest
+class StatusTest extends FixtureTestCase
 {
 	protected $statusFactory;
 

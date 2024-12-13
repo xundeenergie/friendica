@@ -10,10 +10,10 @@ namespace Friendica\Test\src\Factory\Api\Twitter;
 use Friendica\DI;
 use Friendica\Factory\Api\Twitter\User;
 use Friendica\Network\HTTPException\NotFoundException;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Friendica\Test\src\Module\Api\ApiTest;
 
-class UserTest extends FixtureTest
+class UserTest extends FixtureTestCase
 {
 	/**
 	 * Assert that an user array contains expected keys.
