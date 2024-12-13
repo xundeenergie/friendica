@@ -13,7 +13,7 @@ use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Database\Database;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
-use Friendica\Test\DatabaseTestCaseTrait;
+use Friendica\Test\DatabaseTestTrait;
 use Friendica\Test\Util\Database\StaticDatabase;
 use Friendica\Util\Profiler;
 use Psr\Log\NullLogger;
