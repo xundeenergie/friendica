@@ -7,9 +7,9 @@
 
 namespace Friendica\Test\src\Content;
 
-use Friendica\Test\DatabaseTest;
+use Friendica\Test\DatabaseTestCase;
 
-class PageInfoTest extends DatabaseTest
+class PageInfoTest extends DatabaseTestCase
 {
 	public function dataGetRelevantUrlFromBody()
 	{

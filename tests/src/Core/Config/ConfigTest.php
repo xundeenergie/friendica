@@ -13,12 +13,12 @@ use Friendica\Core\Config\Model\DatabaseConfig;
 use Friendica\Core\Config\Model\ReadOnlyFileConfig;
 use Friendica\Core\Config\Util\ConfigFileManager;
 use Friendica\Core\Config\ValueObject\Cache;
-use Friendica\Test\DatabaseTest;
+use Friendica\Test\DatabaseTestCase;
 use Friendica\Test\Util\CreateDatabaseTrait;
 use Friendica\Test\Util\VFSTrait;
 use org\bovigo\vfs\vfsStream;
 
-class ConfigTest extends DatabaseTest
+class ConfigTest extends DatabaseTestCase
 {
 	use ArraySubsetAsserts;
 	use VFSTrait;
