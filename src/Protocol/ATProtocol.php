@@ -147,7 +147,7 @@ final class ATProtocol
 		return $data;
 	}
 
-	private function post(int $uid, string $url, string $params, array $headers): ?stdClass
+	public function post(int $uid, string $url, string $params, array $headers): ?stdClass
 	{
 		$pds = $this->getUserPds($uid);
 		if (empty($pds)) {
@@ -172,8 +172,11 @@ final class ATProtocol
 			$data->code = $curlResult->getReturnCode();
 		}
 
-		$this->pConfig->set($uid, 'bluesky', 'status', self::STATUS_SUCCESS);
-		Item::incrementOutbound(Protocol::BLUESKY);
+		if (!empty($data->code) && ($data->code >= 200) && ($data->code < 400)) {
+			$this->pConfig->set($uid, 'bluesky', 'status', self::STATUS_SUCCESS);
+		} else {
+			$this->pConfig->set($uid, 'bluesky', 'status', self::STATUS_API_FAIL);
+		}
 		return $data;
 	}
 
@@ -230,7 +233,7 @@ final class ATProtocol
 		return $did;
 	}
 
-	private function getDid(string $handle): string
+	public function getDid(string $handle): string
 	{
 		if ($handle == '') {
 			return '';
@@ -373,7 +376,7 @@ final class ATProtocol
 		return in_array('at://' . $handle, $data->alsoKnownAs);
 	}
 
-	private function getUserToken(int $uid): string
+	public function getUserToken(int $uid): string
 	{
 		$token   = $this->pConfig->get($uid, 'bluesky', 'access_token');
 		$created = $this->pConfig->get($uid, 'bluesky', 'token_created');
@@ -393,6 +396,11 @@ final class ATProtocol
 
 		$data = $this->post($uid, '/xrpc/com.atproto.server.refreshSession', '', ['Authorization' => ['Bearer ' . $token]]);
 		if (empty($data) || empty($data->accessJwt)) {
+			$this->logger->debug('Refresh failed', ['return' => $data]);
+			$password = $this->pConfig->get($uid, 'bluesky', 'password');
+			if (!empty($password)) {
+				return $this->createUserToken($uid, $password);
+			}
 			$this->pConfig->set($uid, 'bluesky', 'status', self::STATUS_TOKEN_FAIL);
 			return '';
 		}

@@ -86,7 +86,7 @@ class Item
 
 	// Field list that is used to display the items
 	const DISPLAY_FIELDLIST = [
-		'uid', 'id', 'parent', 'guid', 'network', 'gravity',
+		'uid', 'id', 'parent', 'guid', 'network', 'protocol', 'gravity',
 		'uri-id', 'uri', 'thr-parent-id', 'thr-parent', 'parent-uri-id', 'parent-uri', 'conversation',
 		'commented', 'created', 'edited', 'received', 'verb', 'object-type', 'postopts', 'plink',
 		'wall', 'private', 'starred', 'origin', 'parent-origin', 'title', 'body', 'language', 'sensitive',
@@ -4169,10 +4169,11 @@ class Item
 	 * @param string $uri
 	 * @param int    $uid
 	 * @param int    $completion
+	 * @param string $mimetype
 	 *
 	 * @return integer item id
 	 */
-	public static function fetchByLink(string $uri, int $uid = 0, int $completion = ActivityPub\Receiver::COMPLETION_MANUAL): int
+	public static function fetchByLink(string $uri, int $uid = 0, int $completion = ActivityPub\Receiver::COMPLETION_MANUAL, string $mimetype = ''): int
 	{
 		Logger::info('Trying to fetch link', ['uid' => $uid, 'uri' => $uri]);
 		$item_id = self::searchByLink($uri, $uid);
@@ -4194,35 +4195,49 @@ class Item
 		Hook::callAll('item_by_link', $hookData);
 
 		if (isset($hookData['item_id'])) {
+			Logger::info('Hook link fetched', ['uid' => $uid, 'uri' => $uri, 'id' => $hookData['item_id']]);
 			return is_numeric($hookData['item_id']) ? $hookData['item_id'] : 0;
 		}
 
-		try {
-			$curlResult = DI::httpClient()->head($uri, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::JSON_AS, HttpClientOptions::REQUEST => HttpClientRequest::ACTIVITYPUB]);
-			if (!HTTPSignature::isValidContentType($curlResult->getContentType(), $uri) && (current(explode(';', $curlResult->getContentType())) == 'application/json')) {
+		if (!$mimetype) {
+			try {
+				$curlResult = DI::httpClient()->head($uri, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::JSON_AS, HttpClientOptions::REQUEST => HttpClientRequest::ACTIVITYPUB]);
+				$mimetype = empty($curlResult) ? '' : $curlResult->getContentType();
+			} catch (\Throwable $th) {
+				Logger::info('Error while fetching HTTP link via HEAD', ['uid' => $uid, 'uri' => $uri, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
+				return 0;
+			}
+		}
+
+		if (!HTTPSignature::isValidContentType($mimetype, $uri) && (current(explode(';', $mimetype)) == 'application/json')) {
+			try {
 				// Issue 14126: Workaround for Mastodon servers that return "application/json" on a "head" request.
 				$curlResult = HTTPSignature::fetchRaw($uri, $uid);
+				$mimetype = empty($curlResult) ? '' : $curlResult->getContentType();
+			} catch (\Throwable $th) {
+				Logger::info('Error while fetching HTTP link via signed GET', ['uid' => $uid, 'uri' => $uri, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
+				return 0;
 			}
-			if (HTTPSignature::isValidContentType($curlResult->getContentType(), $uri)) {
-				$fetched_uri = ActivityPub\Processor::fetchMissingActivity($uri, [], '', $completion, $uid);
-			}
-		} catch (\Throwable $th) {
-			Logger::info('Invalid link', ['uid' => $uid, 'uri' => $uri, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
-			return 0;
 		}
 
-		if (!empty($fetched_uri)) {
-			$item_id = self::searchByLink($fetched_uri, $uid);
-		} else {
-			$item_id = Diaspora::fetchByURL($uri);
+		if (HTTPSignature::isValidContentType($mimetype, $uri)) {
+			$fetched_uri = ActivityPub\Processor::fetchMissingActivity($uri, [], '', $completion, $uid);
+			if (!empty($fetched_uri)) {
+				$item_id = self::searchByLink($fetched_uri, $uid);
+				if ($item_id) {
+					Logger::info('ActivityPub link fetched', ['uid' => $uid, 'uri' => $uri, 'id' => $item_id]);
+					return $item_id;
+				}
+			}
 		}
 
-		if (!empty($item_id)) {
-			Logger::info('Link fetched', ['uid' => $uid, 'uri' => $uri, 'id' => $item_id]);
+		$item_id = Diaspora::fetchByURL($uri);
+		if ($item_id) {
+			Logger::info('Diaspora link fetched', ['uid' => $uid, 'uri' => $uri, 'id' => $item_id]);
 			return $item_id;
 		}
 
-		Logger::info('Link not found', ['uid' => $uid, 'uri' => $uri]);
+		Logger::info('This is not an item link', ['uid' => $uid, 'uri' => $uri]);
 		return 0;
 	}
 

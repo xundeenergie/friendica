@@ -38,9 +38,10 @@ use stdClass;
  */
 class Jetstream
 {
-	private $uids   = [];
-	private $self   = [];
-	private $capped = false;
+	private $uids      = [];
+	private $self      = [];
+	private $capped    = false;
+	private $next_stat = 0;
 
 	/** @var LoggerInterface */
 	private $logger;
@@ -108,6 +109,7 @@ class Jetstream
 						$timestamp = $data->time_us;
 						$this->route($data);
 						$this->keyValue->set('jetstream_timestamp', $timestamp);
+						$this->incrementMessages();
 					} else {
 						$this->logger->warning('Unexpected return value', ['data' => $data]);
 						break;
@@ -133,6 +135,15 @@ class Jetstream
 				$this->logger->error('Error while trying to close the connection', ['code' => $e->getCode(), 'message' => $e->getMessage()]);
 			}
 		}
+	}
+
+	private function incrementMessages()
+	{
+		$packets = (int)($this->keyValue->get('jetstream_messages') ?? 0);
+		if ($packets >= PHP_INT_MAX) {
+			$packets = 0;
+		}
+		$this->keyValue->set('jetstream_messages', $packets + 1);
 	}
 
 	private function syncContacts()
@@ -184,9 +195,13 @@ class Jetstream
 		}
 
 		if (!$this->capped && count($dids) < $did_limit) {
-			$contacts = Contact::selectToArray(['url'], ['uid' => 0, 'network' => Protocol::BLUESKY], ['order' => ['last-item' => true], 'limit' => $did_limit]);
+			$condition = ["`uid` = ? AND `network` = ? AND EXISTS(SELECT `author-id` FROM `post-user` WHERE `author-id` = `contact`.`id` AND `post-user`.`uid` != ?)", 0, Protocol::BLUESKY, 0];
+			$contacts = Contact::selectToArray(['url'], $condition, ['order' => ['last-item' => true], 'limit' => $did_limit]);
 			$dids     = $this->addDids($contacts, $uids, $did_limit, $dids);
 		}
+
+		$this->keyValue->set('jetstream_did_count', count($dids));
+		$this->keyValue->set('jetstream_did_limit', $did_limit);
 
 		$this->logger->debug('Selected DIDs', ['uids' => $active_uids, 'count' => count($dids), 'capped' => $this->capped]);
 		$update = [
@@ -241,17 +256,7 @@ class Jetstream
 
 	private function routeCommits(stdClass $data)
 	{
-		$drift = max(0, round(time() - $data->time_us / 1000000));
-		if ($drift > 60 && !$this->capped) {
-			$this->capped = true;
-			$this->setOptions();
-			$this->logger->notice('Drift is too high, dids will be capped');
-		} elseif ($drift == 0 && $this->capped) {
-			$this->capped = false;
-			$this->setOptions();
-			$this->logger->notice('Drift is low enough, dids will be uncapped');
-		}
-
+		$drift = $this->getDrift($data);
 		$this->logger->notice('Received commit', ['time' => date(DateTimeFormat::ATOM, $data->time_us / 1000000), 'drift' => $drift, 'capped' => $this->capped, 'did' => $data->did, 'operation' => $data->commit->operation, 'collection' => $data->commit->collection, 'timestamp' => $data->time_us]);
 		$timestamp = microtime(true);
 
@@ -297,6 +302,23 @@ class Jetstream
 		if (microtime(true) - $timestamp > 2) {
 			$this->logger->notice('Commit processed', ['duration' => round(microtime(true) - $timestamp, 3), 'drift' => $drift, 'capped' => $this->capped, 'time' => date(DateTimeFormat::ATOM, $data->time_us / 1000000), 'did' => $data->did, 'operation' => $data->commit->operation, 'collection' => $data->commit->collection]);
 		}
+	}
+
+	private function getDrift(stdClass $data): int
+	{
+		$drift = max(0, round(time() - $data->time_us / 1000000));
+		$this->keyValue->set('jetstream_drift', $drift);
+
+		if ($drift > 60 && !$this->capped) {
+			$this->capped = true;
+			$this->setOptions();
+			$this->logger->notice('Drift is too high, dids will be capped');
+		} elseif ($drift == 0 && $this->capped) {
+			$this->capped = false;
+			$this->setOptions();
+			$this->logger->notice('Drift is low enough, dids will be uncapped');
+		}
+		return $drift;
 	}
 
 	private function routePost(stdClass $data, int $drift)
