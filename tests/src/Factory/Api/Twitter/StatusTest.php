@@ -17,7 +17,7 @@ use Friendica\Factory\Api\Twitter\Mention;
 use Friendica\Factory\Api\Twitter\Status;
 use Friendica\Factory\Api\Twitter\Url;
 use Friendica\Test\FixtureTestCase;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
 class StatusTest extends FixtureTestCase
 {
@@ -47,7 +47,7 @@ class StatusTest extends FixtureTestCase
 	public function testApiConvertItem()
 	{
 		$status = $this->statusFactory
-			->createFromItemId(13, ApiTest::SELF_USER['id'])
+			->createFromItemId(13, ApiTestCase::SELF_USER['id'])
 			->toArray();
 
 		self::assertStringStartsWith('item_title', $status['text']);
@@ -108,7 +108,7 @@ class StatusTest extends FixtureTestCase
 	public function testApiGetEntitiesWithIncludeEntities()
 	{
 		$status = $this->statusFactory
-			->createFromItemId(13, ApiTest::SELF_USER['id'], true)
+			->createFromItemId(13, ApiTestCase::SELF_USER['id'], true)
 			->toArray();
 
 		self::assertIsArray($status['entities']);
@@ -130,7 +130,7 @@ class StatusTest extends FixtureTestCase
 		$posts = DI::dba()->selectToArray('post-view', ['uri-id']);
 		foreach ($posts as $item) {
 			$status = $this->statusFactory
-				->createFromUriId($item['uri-id'], ApiTest::SELF_USER['id'])
+				->createFromUriId($item['uri-id'], ApiTestCase::SELF_USER['id'])
 				->toArray();
 
 			self::assertIsInt($status['id']);

@@ -11,9 +11,9 @@ use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Statuses\Mentions;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class MentionsTest extends ApiTest
+class MentionsTest extends ApiTestCase
 {
 	/**
 	 * Test the api_statuses_mentions() function.

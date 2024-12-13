@@ -7,9 +7,9 @@
 
 namespace Friendica\Test\src\Module\Api\Mastodon\Timelines;
 
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class HomeTest extends ApiTest
+class HomeTest extends ApiTestCase
 {
 	/**
 	 * Test the api_statuses_home_timeline() function.

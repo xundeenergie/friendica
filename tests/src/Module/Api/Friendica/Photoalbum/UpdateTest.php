@@ -11,9 +11,9 @@ use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Friendica\Photoalbum\Update;
 use Friendica\Network\HTTPException\BadRequestException;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class UpdateTest extends ApiTest
+class UpdateTest extends ApiTestCase
 {
 	protected function setUp(): void
 	{

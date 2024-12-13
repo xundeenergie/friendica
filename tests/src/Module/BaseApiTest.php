@@ -8,9 +8,9 @@
 namespace Friendica\Test\src\Module;
 
 use Friendica\Module\BaseApi;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class BaseApiTest extends ApiTest
+class BaseApiTest extends ApiTestCase
 {
 	public function testWithWrongAuth()
 	{

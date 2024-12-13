@@ -10,9 +10,9 @@ namespace Friendica\Test\src\Module\Api\Twitter\DirectMessages;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\DirectMessages\All;
 use Friendica\Factory\Api\Twitter\DirectMessage;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class AllTest extends ApiTest
+class AllTest extends ApiTestCase
 {
 	/**
 	 * Test the api_direct_messages_box() function.

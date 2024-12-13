@@ -12,9 +12,9 @@ use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Users\Search;
 use Friendica\Network\HTTPException\BadRequestException;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class SearchTest extends ApiTest
+class SearchTest extends ApiTestCase
 {
 	/**
 	 * Test the api_users_search() function.

@@ -7,9 +7,9 @@
 
 namespace Friendica\Test\src\Module\Api\Mastodon\Accounts;
 
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class StatusesTest extends ApiTest
+class StatusesTest extends ApiTestCase
 {
 	/**
 	 * Test the api_status_show() function.
