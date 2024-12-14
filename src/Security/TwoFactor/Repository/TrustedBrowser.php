@@ -7,7 +7,6 @@
 
 namespace Friendica\Security\TwoFactor\Repository;
 
-use Friendica\Security\TwoFactor;
 use Friendica\Database\Database;
 use Friendica\Security\TwoFactor\Exception\TrustedBrowserNotFoundException;
 use Friendica\Security\TwoFactor\Exception\TrustedBrowserPersistenceException;
