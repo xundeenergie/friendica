@@ -9,7 +9,7 @@ namespace Friendica\Contact\FriendSuggest\Repository;
 
 use Friendica\BaseRepository;
 use Friendica\Contact\FriendSuggest\Collection;
-use Friendica\Contact\FriendSuggest\Entity\FriendSuggest as EntityFriendSuggest;
+use Friendica\Contact\FriendSuggest\Entity\FriendSuggest as FriendSuggestEntity;
 use Friendica\Contact\FriendSuggest\Exception\FriendSuggestNotFoundException;
 use Friendica\Contact\FriendSuggest\Exception\FriendSuggestPersistenceException;
 use Friendica\Contact\FriendSuggest\Factory;
