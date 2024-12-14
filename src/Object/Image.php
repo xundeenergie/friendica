@@ -13,7 +13,7 @@ use Friendica\Util\Images;
 use Imagick;
 use ImagickDraw;
 use ImagickPixel;
-use GDImage;
+use GdImage;
 use kornrunner\Blurhash\Blurhash;
 
 /**
@@ -21,7 +21,7 @@ use kornrunner\Blurhash\Blurhash;
  */
 class Image
 {
-	/** @var GDImage|Imagick|resource */
+	/** @var GdImage|Imagick|resource */
 	private $image;
 
 	/*
@@ -41,7 +41,7 @@ class Image
 	 * @param string $data     Image data
 	 * @param string $type     optional, default ''
 	 * @param string $filename optional, default ''
-	 * @param string $imagick  optional, default 'true'
+	 * @param bool   $imagick  optional, default 'true'
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
@@ -765,7 +765,6 @@ class Image
 	/**
 	 * Create a blurhash out of a given image string
 	 *
-	 * @param string $img_str
 	 * @return string
 	 */
 	public function getBlurHash(): string

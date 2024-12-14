@@ -106,10 +106,9 @@ class ContactSelector
 	 * Determines network name
 	 *
 	 * @param string $network  network of the contact
-	 * @param string $profile  optional, default empty
 	 * @param string $protocol (Optional) Protocol that is used for the transmission
 	 * @param int $gsid Server id
-	 * @return string
+	 *
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
 	public static function networkToName(string $network, string $protocol = '', int $gsid = null): string

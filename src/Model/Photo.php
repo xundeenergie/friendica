@@ -489,14 +489,11 @@ class Photo
 	 * Delete info from table and data from storage
 	 *
 	 * @param array $conditions Field condition(s)
-	 * @param array $options    Options array, Optional
-	 *
-	 * @return boolean
 	 *
 	 * @throws \Exception
 	 * @see   \Friendica\Database\DBA::delete
 	 */
-	public static function delete(array $conditions, array $options = []): bool
+	public static function delete(array $conditions): bool
 	{
 		// get photo to delete data info
 		$photos = DBA::select('photo', ['id', 'backend-class', 'backend-ref'], $conditions);
@@ -516,7 +513,7 @@ class Photo
 
 		DBA::close($photos);
 
-		return DBA::delete('photo', $conditions, $options);
+		return DBA::delete('photo', $conditions);
 	}
 
 	/**

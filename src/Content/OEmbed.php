@@ -8,6 +8,7 @@
 namespace Friendica\Content;
 
 use DOMDocument;
+use DOMElement;
 use DOMXPath;
 use Exception;
 use Friendica\Content\Text\BBCode;
@@ -83,6 +84,7 @@ class OEmbed
 							$xpath->query("//link[@type='application/json+oembed'] | //link[@type='text/json+oembed']")
 							as $link)
 						{
+							/** @var DOMElement $link */
 							$href = $link->getAttributeNode('href')->nodeValue;
 							// Both Youtube and Vimeo output OEmbed endpoint URL with HTTP
 							// but their OEmbed endpoint is only accessible by HTTPS ¯\_(ツ)_/¯

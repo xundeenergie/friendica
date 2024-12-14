@@ -8,10 +8,8 @@
 namespace Friendica\Factory\Api\Mastodon;
 
 use Friendica\BaseFactory;
-use Friendica\Content\Text\BBCode;
 use Friendica\Model\Post;
 use Friendica\Network\HTTPException;
-use Friendica\Util\Strings;
 
 class Card extends BaseFactory
 {
@@ -21,7 +19,8 @@ class Card extends BaseFactory
 	 *
 	 * @return \Friendica\Object\Api\Mastodon\Card
 	 * @throws HTTPException\InternalServerErrorException
-	 * @throws \ImagickException*@throws \Exception
+	 * @throws \ImagickException
+	 * @throws \Exception
 	 */
 	public function createFromUriId(int $uriId, array $history = []): \Friendica\Object\Api\Mastodon\Card
 	{

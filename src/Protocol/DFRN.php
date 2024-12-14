@@ -417,7 +417,7 @@ class DFRN
 				$t_dob = strtotime($bd);
 				$now = strtotime(DateTimeFormat::timezoneNow($tz));
 				if ($t_dob < $now) {
-					$bd = $y + 1 . '-' . $tmp_dob . ' 00:00';
+					$bd = (int) $y + 1 . '-' . $tmp_dob . ' 00:00';
 				}
 				$birthday = DateTimeFormat::convert($bd, 'UTC', $tz, DateTimeFormat::ATOM);
 			}

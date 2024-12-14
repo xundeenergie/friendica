@@ -552,8 +552,10 @@ class Database
 					break;
 				}
 
-				/** @var $stmt mysqli_stmt|PDOStatement */
-				if (!$stmt = $this->connection->prepare($sql)) {
+				/** @var mysqli_stmt|PDOStatement $stmt */
+				$stmt = $this->connection->prepare($sql);
+
+				if (!$stmt) {
 					$errorInfo     = $this->connection->errorInfo();
 					$this->error   = (string)$errorInfo[2];
 					$this->errorno = (int)$errorInfo[1];
@@ -889,7 +891,7 @@ class Database
 	/**
 	 * Returns the number of columns of a statement
 	 *
-	 * @param object Statement object
+	 * @param object $stmt Statement object
 	 *
 	 * @return int Number of columns
 	 */
@@ -910,7 +912,7 @@ class Database
 	/**
 	 * Returns the number of rows of a statement
 	 *
-	 * @param PDOStatement|mysqli_result|mysqli_stmt Statement object
+	 * @param PDOStatement|mysqli_result|mysqli_stmt $stmt Statement object
 	 *
 	 * @return int Number of rows
 	 */
@@ -1652,7 +1654,7 @@ class Database
 	/**
 	 * Returns the error number of the last query
 	 *
-	 * @return string Error number (0 if no error)
+	 * @return int Error number (0 if no error)
 	 */
 	public function errorNo(): int
 	{

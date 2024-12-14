@@ -7,7 +7,7 @@
 
 namespace Friendica;
 
-use Friendica\Network\HTTPException;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 
 /**
  * The Entity classes directly inheriting from this abstract class are meant to represent a single business entity.
@@ -29,12 +29,12 @@ abstract class BaseEntity extends BaseDataTransferObject
 	/**
 	 * @param string $name
 	 * @return mixed
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public function __get(string $name)
 	{
 		if (!property_exists($this, $name)) {
-			throw new HTTPException\InternalServerErrorException('Unknown property ' . $name . ' in Entity ' . static::class);
+			throw new InternalServerErrorException('Unknown property ' . $name . ' in Entity ' . static::class);
 		}
 
 		return $this->$name;
@@ -43,12 +43,12 @@ abstract class BaseEntity extends BaseDataTransferObject
 	/**
 	 * @param mixed $name
 	 * @return bool
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public function __isset($name): bool
 	{
 		if (!property_exists($this, $name)) {
-			throw new HTTPException\InternalServerErrorException('Unknown property ' . $name . ' of type ' . gettype($name) . ' in Entity ' . static::class);
+			throw new InternalServerErrorException('Unknown property ' . $name . ' of type ' . gettype($name) . ' in Entity ' . static::class);
 		}
 
 		return !empty($this->$name);

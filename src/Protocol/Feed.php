@@ -1146,7 +1146,6 @@ class Feed
 	 * @param DOMDocument $doc       XML document
 	 * @param array       $item      Data of the item that is to be posted
 	 * @param array       $owner     Contact data of the poster
-	 * @param bool        $toplevel  Is it for en entry element (false) or a feed entry (true)?
 	 * @return DOMElement Entry element
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
@@ -1172,14 +1171,13 @@ class Feed
 	 * @param DOMDocument $doc       XML document
 	 * @param \DOMElement $entry     Entry element where the content is added
 	 * @param array       $item      Data of the item that is to be posted
-	 * @param array       $owner     Contact data of the poster
 	 * @param string      $title     Title for the post
 	 * @param string      $verb      The activity verb
 	 * @param bool        $complete  Add the "status_net" element?
-	 * @return void
+	 *
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
-	private static function entryContent(DOMDocument $doc, DOMElement $entry, array $item, $title, string $verb = '', bool $complete = true)
+	private static function entryContent(DOMDocument $doc, DOMElement $entry, array $item, $title, string $verb = '', bool $complete = true): void
 	{
 		if ($verb == '') {
 			$verb = self::constructVerb($item);
@@ -1217,11 +1215,10 @@ class Feed
 	 * @param object      $entry     The entry element where the elements are added
 	 * @param array       $item      Data of the item that is to be posted
 	 * @param array       $owner     Contact data of the poster
-	 * @param bool        $complete  default true
-	 * @return void
+	 *
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
-	private static function entryFooter(DOMDocument $doc, $entry, array $item, array $owner)
+	private static function entryFooter(DOMDocument $doc, $entry, array $item, array $owner): void
 	{
 		$mentioned = [];
 

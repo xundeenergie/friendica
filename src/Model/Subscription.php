@@ -12,7 +12,7 @@ use Friendica\Core\Worker;
 use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Factory\Api\Mastodon\Notification as NotificationFactory;
-use Friendica\Navigation\Notifications\Entity;
+use Friendica\Navigation\Notifications\Entity\Notification as NotificationEntity;
 use Friendica\Object\Api\Mastodon\Notification;
 use Minishlink\WebPush\VAPID;
 
@@ -21,9 +21,6 @@ class Subscription
 	/**
 	 * Select a subscription record exists
 	 *
-	 * @param int   $applicationid
-	 * @param int   $uid
-	 * @param array $fields
 	 * @return array|bool Array on success, false on failure
 	 */
 	public static function select(int $applicationid, int $uid, array $fields = [])
@@ -120,10 +117,9 @@ class Subscription
 	/**
 	 * Prepare push notification
 	 *
-	 * @param Notification $Notification
 	 * @return void
 	 */
-	public static function pushByNotification(Entity\Notification $notification)
+	public static function pushByNotification(NotificationEntity $notification)
 	{
 		$type = NotificationFactory::getType($notification);
 

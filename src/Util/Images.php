@@ -189,9 +189,9 @@ class Images
 	 * Fetch image mimetype from the image data or guessing from the file name
 	 *
 	 * @param string $image_data Image data
-	 * @param string $filename   File name (for guessing the type via the extension)
-	 * @param string $default    Default MIME type
+	 *
 	 * @return string MIME type
+	 *
 	 * @throws \Exception
 	 */
 	public static function getMimeTypeByData(string $image_data): string

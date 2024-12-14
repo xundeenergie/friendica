@@ -445,7 +445,7 @@ class Item
 	 * Get guid from given item record
 	 *
 	 * @param array $item Item record
-	 * @param bool Whether to notify (?)
+	 * @param bool $notify Whether to notify (?)
 	 * @return string Guid
 	 */
 	public static function guid(array $item, bool $notify): string
@@ -2123,7 +2123,6 @@ class Item
 	 *
 	 * @param array $item
 	 * @return string detected language
-	 * @throws \Text_LanguageDetect_Exception
 	 */
 	private static function getLanguage(array $item): ?string
 	{
@@ -3571,7 +3570,7 @@ class Item
 		}
 
 		$xpath = new \DOMXPath($dom);
-		/** @var DOMElement $element */
+		/** @var \DOMElement $element */
 		foreach ($xpath->query("//img[@class='network-svg']") as $element) {
 			$src = $element->getAttributeNode('src')->nodeValue;
 			if ($src == $svg) {

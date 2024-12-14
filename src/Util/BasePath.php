@@ -19,8 +19,8 @@ class BasePath
 	private $server;
 
 	/**
-	 * @param string|null $baseDir The default base path
-	 * @param array       $server  server arguments
+	 * @param string $baseDir The default base path
+	 * @param array  $server  server arguments
 	 */
 	public function __construct(string $baseDir, array $server = [])
 	{

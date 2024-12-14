@@ -51,7 +51,7 @@ final class ATProtocol
 	/** @var \Friendica\Core\Config\Capability\IManageConfigValues */
 	private $config;
 
-	/** @var IManagePersonalConfigValue */
+	/** @var IManagePersonalConfigValues */
 	private $pConfig;
 
 	/** @var ICanSendHttpRequests */

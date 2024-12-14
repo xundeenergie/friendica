@@ -35,7 +35,7 @@ final class MediaType
 	private $type;
 
 	/**
-	 * @var @string
+	 * @var string
 	 */
 	private $subType;
 

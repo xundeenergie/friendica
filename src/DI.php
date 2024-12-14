@@ -164,7 +164,7 @@ abstract class DI
 	}
 
 	/**
-	 * @return AtProtocol\Arguments
+	 * @return ATProtocol\Actor
 	 */
 	public static function atpActor()
 	{
@@ -341,7 +341,7 @@ abstract class DI
 	}
 
 	/**
-	 * @return LoggerInterface
+	 * @return \Friendica\Core\Logger\Type\WorkerLogger
 	 */
 	public static function workerLogger()
 	{
@@ -554,7 +554,7 @@ abstract class DI
 	//
 
 	/**
-	 * @return Contact\FriendSuggest\Repository\FriendSuggest;
+	 * @return Contact\FriendSuggest\Repository\FriendSuggest
 	 */
 	public static function fsuggest()
 	{
@@ -562,7 +562,7 @@ abstract class DI
 	}
 
 	/**
-	 * @return Contact\FriendSuggest\Factory\FriendSuggest;
+	 * @return Contact\FriendSuggest\Factory\FriendSuggest
 	 */
 	public static function fsuggestFactory()
 	{

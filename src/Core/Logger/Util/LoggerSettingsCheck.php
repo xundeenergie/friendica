@@ -17,7 +17,7 @@ class LoggerSettingsCheck implements ICheckLoggerSettings
 {
 	/** @var IManageConfigValues */
 	protected $config;
-	/** @var $fileSystem */
+	/** @var FileSystem */
 	protected $fileSystem;
 	/** @var L10n */
 	protected $l10n;
@@ -38,10 +38,8 @@ class LoggerSettingsCheck implements ICheckLoggerSettings
 
 			try {
 				$stream = $this->fileSystem->createStream($file);
-
-				if (!isset($stream)) {
-					throw new LoggerUnusableException('Stream is null.');
-				}
+			} catch (LoggerUnusableException $exception) {
+				throw new LoggerUnusableException('Stream is null.', $exception);
 			} catch (\Throwable $exception) {
 				return $this->l10n->t('The logfile \'%s\' is not usable. No logging possible (error: \'%s\')', $file, $exception->getMessage());
 			}
@@ -57,16 +55,14 @@ class LoggerSettingsCheck implements ICheckLoggerSettings
 		if ($this->config->get('system', 'debugging')) {
 			$file = $this->config->get('system', 'dlogfile');
 
-			if (empty($file)) {
+			if ($file === null || $file === '') {
 				return null;
 			}
 
 			try {
 				$stream = $this->fileSystem->createStream($file);
-
-				if (!isset($stream)) {
-					throw new LoggerUnusableException('Stream is null.');
-				}
+			} catch (LoggerUnusableException $exception) {
+				throw new LoggerUnusableException('Stream is null.', $exception);
 			} catch (\Throwable $exception) {
 				return $this->l10n->t('The debug logfile \'%s\' is not usable. No logging possible (error: \'%s\')', $file, $exception->getMessage());
 			}

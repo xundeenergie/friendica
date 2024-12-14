@@ -7,6 +7,7 @@
 
 namespace Friendica\Core;
 
+use Exception;
 use Friendica\App\Page;
 use Friendica\Database\DBA;
 use Friendica\DI;

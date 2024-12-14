@@ -9,6 +9,7 @@ namespace Friendica\Console;
 
 use Console_Table;
 use Friendica\App\Mode;
+use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\DI;
 use Friendica\Model\Contact as ContactModel;
 use Friendica\Model\User as UserModel;
@@ -29,7 +30,7 @@ class Contact extends \Asika\SimpleConsole\Console
 	 */
 	private $appMode;
 	/**
-	 * @var IPConfig
+	 * @var IManagePersonalConfigValues
 	 */
 	private $pConfig;
 

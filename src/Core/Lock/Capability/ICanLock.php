@@ -65,7 +65,7 @@ interface ICanLock
 	/**
 	 * Lists all locks
 	 *
-	 * @param string prefix optional a prefix to search
+	 * @param string $prefix optional a prefix to search
 	 *
 	 * @return string[] Empty if it isn't supported by the cache driver
 	 *

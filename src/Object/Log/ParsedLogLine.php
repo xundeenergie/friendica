@@ -39,7 +39,7 @@ class ParsedLogLine
 	public $logline;
 
 	/**
-	 * @param int line id
+	 * @param int $id line id
 	 * @param string $logline Source log line to parse
 	 */
 	public function __construct(int $id, string $logline)

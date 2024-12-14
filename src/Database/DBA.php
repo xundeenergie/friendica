@@ -233,7 +233,7 @@ class DBA
 	/**
 	 * Returns the number of columns of a statement
 	 *
-	 * @param object Statement object
+	 * @param object $stmt Statement object
 	 * @return int Number of columns
 	 */
 	public static function columnCount($stmt): int
@@ -243,7 +243,7 @@ class DBA
 	/**
 	 * Returns the number of rows of a statement
 	 *
-	 * @param PDOStatement|mysqli_result|mysqli_stmt Statement object
+	 * @param PDOStatement|mysqli_result|mysqli_stmt $stmt Statement object
 	 * @return int Number of rows
 	 */
 	public static function numRows($stmt): int
@@ -364,9 +364,9 @@ class DBA
 	 * @return boolean was the delete successful?
 	 * @throws \Exception
 	 */
-	public static function delete(string $table, array $conditions, array $options = []): bool
+	public static function delete(string $table, array $conditions): bool
 	{
-		return DI::dba()->delete($table, $conditions, $options);
+		return DI::dba()->delete($table, $conditions);
 	}
 
 	/**
@@ -756,7 +756,7 @@ class DBA
 	/**
 	 * Returns the error number of the last query
 	 *
-	 * @return string Error number (0 if no error)
+	 * @return int Error number (0 if no error)
 	 */
 	public static function errorNo(): int
 	{
@@ -813,8 +813,8 @@ class DBA
 	/**
 	 * Acquire a lock to prevent a table optimization
 	 *
-	 * @return bool 
-	 * @throws LockPersistenceException 
+	 * @return bool
+	 * @throws LockPersistenceException
 	 */
 	public static function acquireOptimizeLock(): bool
 	{
@@ -823,8 +823,8 @@ class DBA
 
 	/**
 	 * Release the table optimization lock
-	 * @return bool 
-	 * @throws LockPersistenceException 
+	 * @return bool
+	 * @throws LockPersistenceException
 	 */
 	public static function releaseOptimizeLock(): bool
 	{

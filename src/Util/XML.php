@@ -122,9 +122,9 @@ class XML
 	/**
 	 * Copies an XML object
 	 *
-	 * @param object|string $source      The XML source
-	 * @param object        $target      The XML target
-	 * @param string        $elementname Name of the XML element of the target
+	 * @param object $source      The XML source
+	 * @param object $target      The XML target
+	 * @param string $elementname Name of the XML element of the target
 	 * @return void
 	 */
 	public static function copy(&$source, &$target, $elementname)
@@ -476,7 +476,7 @@ class XML
 	 * @param DOMXPath $xpath XPath object
 	 * @param string $element Element name
 	 * @param DOMNode $context Context object or NULL
-	 * @return ???|bool First element's attributes field or false on failure
+	 * @return mixed|bool First element's attributes field or false on failure
 	 */
 	public static function getFirstAttributes(DOMXPath $xpath, string $element, DOMNode $context = null)
 	{

@@ -7,8 +7,8 @@
 
 namespace Friendica\Collection\Api\Mastodon;
 
-use Friendica\Api\Entity\Mastodon\Field;
 use Friendica\BaseCollection;
+use Friendica\Object\Api\Mastodon\Field;
 
 class Fields extends BaseCollection
 {

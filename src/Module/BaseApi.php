@@ -252,7 +252,7 @@ class BaseApi extends BaseModule
 
 	/**
 	 * Set boundaries for the "link" header
-	 * @param array $boundaries
+	 *
 	 * @param int|\DateTime $id
 	 */
 	protected static function setBoundaries($id)

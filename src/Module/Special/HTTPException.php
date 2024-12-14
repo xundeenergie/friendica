@@ -7,13 +7,16 @@
 
 namespace Friendica\Module\Special;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\Request;
 use Friendica\Core\L10n;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Model\UserSession;
 use Friendica\Core\System;
 use Friendica\Module\Response;
+use Friendica\Network\HTTPException as NetworkHTTPException;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 /**
  * This special module displays HTTPException when they are thrown in modules.
@@ -26,7 +29,7 @@ class HTTPException
 	protected $l10n;
 	/** @var LoggerInterface */
 	protected $logger;
-	/** @var App\Arguments */
+	/** @var Arguments */
 	protected $args;
 	/** @var bool */
 	protected $isSiteAdmin;
@@ -35,7 +38,7 @@ class HTTPException
 	/** @var string */
 	protected $requestId;
 
-	public function __construct(L10n $l10n, LoggerInterface $logger, App\Arguments $args, UserSession $session, App\Request $request, array $server = [])
+	public function __construct(L10n $l10n, LoggerInterface $logger, Arguments $args, UserSession $session, Request $request, array $server = [])
 	{
 		$this->logger      = $logger;
 		$this->l10n        = $l10n;
@@ -50,11 +53,9 @@ class HTTPException
 	 *
 	 * Fills in the blanks if title or descriptions aren't provided by the exception.
 	 *
-	 * @param \Friendica\Network\HTTPException $e
-	 *
 	 * @return array ['$title' => ..., '$description' => ...]
 	 */
-	private function getVars(\Friendica\Network\HTTPException $e)
+	private function getVars(NetworkHTTPException $e)
 	{
 		// Explanations are mostly taken from https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 		$vars = [
@@ -76,11 +77,9 @@ class HTTPException
 	/**
 	 * Displays a bare message page with no theming at all.
 	 *
-	 * @param \Friendica\Network\HTTPException $e
-	 *
 	 * @throws \Exception
 	 */
-	public function rawContent(\Friendica\Network\HTTPException $e)
+	public function rawContent(NetworkHTTPException $e)
 	{
 		$content = '';
 
@@ -89,7 +88,7 @@ class HTTPException
 			try {
 				$tpl     = Renderer::getMarkupTemplate('http_status.tpl');
 				$content = Renderer::replaceMacros($tpl, $vars);
-			} catch (\Exception $e) {
+			} catch (Throwable $th) {
 				$vars = array_map('htmlentities', $vars);
 				$content = "<h1>{$vars['$title']}</h1><p>{$vars['$message']}</p>";
 				if ($this->isSiteAdmin) {
@@ -111,12 +110,10 @@ class HTTPException
 	/**
 	 * Returns a content string that can be integrated in the current theme.
 	 *
-	 * @param \Friendica\Network\HTTPException $e
-	 *
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function content(\Friendica\Network\HTTPException $e): string
+	public function content(NetworkHTTPException $e): string
 	{
 		if ($e->getCode() >= 400) {
 			$this->logger->debug('Exit with error',

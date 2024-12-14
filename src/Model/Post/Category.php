@@ -140,8 +140,6 @@ class Category
 	 * Inserts new terms for the provided item ID based on the legacy item.file field BBCode content.
 	 * Deletes all previous file terms for the same item ID.
 	 *
-	 * @param integer $item_id item id
-	 * @param         $files
 	 * @return void
 	 * @throws \Exception
 	 */

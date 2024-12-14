@@ -9,12 +9,13 @@ namespace Friendica\Console;
 
 use Friendica\App\BaseURL;
 use Friendica\Contact\Avatar;
+use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
+use Friendica\Core\Protocol;
+use Friendica\Database\Database;
 use Friendica\Model\Contact;
 use Friendica\Model\Photo;
 use Friendica\Object\Image;
-use Friendica\Core\Config\Capability\IManageConfigValues;
-use Friendica\Core\Protocol;
 
 /**
  * tool to move cached avatars to the avatar file cache.
@@ -24,12 +25,12 @@ class MoveToAvatarCache extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var $dba Friendica\Database\Database
+	 * @var Database
 	 */
 	private $dba;
 
 	/**
-	 * @var $baseurl Friendica\App\BaseURL
+	 * @var BaseURL
 	 */
 	private $baseUrl;
 

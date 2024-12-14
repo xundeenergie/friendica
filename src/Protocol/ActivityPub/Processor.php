@@ -1449,7 +1449,7 @@ class Processor
 	 * @return int|bool New mail table row id or false on error
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
-	private static function postMail(array $item): bool
+	private static function postMail(array $item)
 	{
 		if (($item['gravity'] != Item::GRAVITY_PARENT) && !DBA::exists('mail', ['uri' => $item['thr-parent'], 'uid' => $item['uid']])) {
 			Logger::info('Parent not found, mail will be discarded.', ['uid' => $item['uid'], 'uri' => $item['thr-parent']]);

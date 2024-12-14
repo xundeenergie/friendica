@@ -163,9 +163,6 @@ class GServer
 
 	/**
 	 * Checks if the given server array is unreachable for a long time now
-	 *
-	 * @param integer $gsid
-	 * @return boolean
 	 */
 	private static function isDefunct(array $gserver): bool
 	{
@@ -509,7 +506,7 @@ class GServer
 	 * @return UriInterface cleaned URI
 	 * @throws Exception
 	 */
-	public static function cleanUri(UriInterface $dirtyUri): string
+	public static function cleanUri(UriInterface $dirtyUri): UriInterface
 	{
 		return $dirtyUri
 			->withUserInfo('')
@@ -1349,8 +1346,6 @@ class GServer
 	 *
 	 * @see https://github.com/jaywink/nodeinfo2
 	 *
-	 * @param string $nodeinfo_url address of the nodeinfo path
-	 *
 	 * @return array Server data
 	 *
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
@@ -1539,7 +1534,6 @@ class GServer
 	/**
 	 * Fetches server data via an ActivityPub account with url of that server
 	 *
-	 * @param string $url        URL of the given server
 	 * @param array  $serverdata array with server data
 	 *
 	 * @return array server data

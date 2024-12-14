@@ -7,7 +7,10 @@
 
 namespace Friendica\Content\Text;
 
-use \HTMLPurifier_URIScheme;
+use HTMLPurifier_Config;
+use HTMLPurifier_Context;
+use HTMLPurifier_URI;
+use HTMLPurifier_URIScheme;
 
 /**
  * Validates content-id ("cid") as used in multi-part MIME messages, as defined by RFC 2392

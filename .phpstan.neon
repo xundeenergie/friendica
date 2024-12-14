@@ -3,10 +3,10 @@
 # SPDX-License-Identifier: CC0-1.0
 
 parameters:
-    level: 1
+    level: 2
 
     paths:
-        - addon/
+        # - addon/
         - src/
 
     excludePaths:
@@ -23,3 +23,19 @@ parameters:
 
     dynamicConstantNames:
         - DB_UPDATE_VERSION
+
+    ignoreErrors:
+        -
+            # Ignore missing GdImage class in PHP <= 7.4
+            message: '(^Property .+ has unknown class GdImage as its type\.$)'
+            path: src
+
+        -
+            # Ignore missing IMAP\Connection class in PHP <= 8.0
+            message: '(^Method .+ has invalid return type IMAP\\Connection\.$)'
+            path: src
+
+        -
+            # Ignore missing IMAP\Connection class in PHP <= 8.0
+            message: '(^Parameter .+ has invalid type IMAP\\Connection\.$)'
+            path: src

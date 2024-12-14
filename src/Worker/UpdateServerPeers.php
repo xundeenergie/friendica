@@ -23,7 +23,7 @@ class UpdateServerPeers
 	/**
 	 * Query the given server for their known peers
 	 *
-	 * @param string $gserver Server URL
+	 * @param string $url Server URL
 	 * @return void
 	 */
 	public static function execute(string $url)

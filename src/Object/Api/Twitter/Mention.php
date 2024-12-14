@@ -31,7 +31,6 @@ class Mention extends BaseDataTransferObject
 	/**
 	 * Creates a mention record from an tag-view record.
 	 *
-	 * @param BaseURL $baseUrl
 	 * @param array   $tag     tag-view record
 	 * @param array   $contact contact table record
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException

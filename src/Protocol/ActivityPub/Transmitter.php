@@ -19,7 +19,6 @@ use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Model\APContact;
 use Friendica\Model\Contact;
-use Friendica\Model\GServer;
 use Friendica\Model\Item;
 use Friendica\Model\Photo;
 use Friendica\Model\Post;
@@ -904,10 +903,6 @@ class Transmitter
 
 	/**
 	 * Get a list of receivers for the provided uri-id
-	 *
-	 * @param array $item
-	 * @param boolean $blindcopy
-	 * @return array
 	 */
 	public static function getReceiversForUriId(int $uri_id, bool $blindcopy): array
 	{
@@ -1344,8 +1339,6 @@ class Transmitter
 	/**
 	 * Creates an activity array for a given URI-Id and uid
 	 *
-	 * @param integer $uri_id
-	 * @param integer $uid
 	 * @param boolean $object_mode       true = Create the object, false = create the activity with the object
 	 * @param boolean $api_mode          true = used for the API
 	 * @param boolean $announce_activity true = the announced object is the activity, false = we announce the object link
@@ -1370,7 +1363,6 @@ class Transmitter
 	/**
 	 * Creates an activity array for a given item id
 	 *
-	 * @param integer $item_id
 	 * @param boolean $object_mode       true = Create the object, false = create the activity with the object
 	 * @param boolean $api_mode          true = used for the API
 	 * @param boolean $announce_activity true = the announced object is the activity, false = we announce the object link
@@ -2509,15 +2501,14 @@ class Transmitter
 	 * Prepends mentions (@) to $body variable
 	 *
 	 * @param string $body HTML code
-	 * @param int    $uriId
 	 * @param string $authorLink Author link
 	 * @return string HTML code with prepended mentions
 	 */
-	private static function prependMentions(string $body, int $uriid, string $authorLink): string
+	private static function prependMentions(string $body, int $uriId, string $authorLink): string
 	{
 		$mentions = [];
 
-		foreach (Tag::getByURIId($uriid, [Tag::IMPLICIT_MENTION]) as $tag) {
+		foreach (Tag::getByURIId($uriId, [Tag::IMPLICIT_MENTION]) as $tag) {
 			$profile = Contact::getByURL($tag['url'], false, ['addr', 'contact-type', 'nick']);
 			if (
 				!empty($profile['addr'])

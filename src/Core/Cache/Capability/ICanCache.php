@@ -18,7 +18,7 @@ interface ICanCache
 	/**
 	 * Lists all cache keys
 	 *
-	 * @param string|null prefix optional a prefix to search
+	 * @param string|null $prefix optional a prefix to search
 	 *
 	 * @return array Empty if it isn't supported by the cache driver
 	 */

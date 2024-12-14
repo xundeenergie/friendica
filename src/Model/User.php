@@ -521,7 +521,6 @@ class User
 	/**
 	 * Get owner data by nick name
 	 *
-	 * @param int $nick
 	 * @return boolean|array
 	 * @throws Exception
 	 */
@@ -1215,6 +1214,7 @@ class User
 				$_SESSION['openid'] = $openid_url;
 
 				$openid = new LightOpenID(DI::baseUrl()->getHost());
+				/** @phpstan-ignore-next-line $openid->identity is private, but will be set via magic setter */
 				$openid->identity = $openid_url;
 				$openid->returnUrl = DI::baseUrl() . '/openid';
 				$openid->required = ['namePerson/friendly', 'contact/email', 'namePerson'];
