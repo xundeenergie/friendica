@@ -35,7 +35,13 @@ class Actor
 		$this->atprotocol = $atprotocol;
 	}
 
-	public function syncContacts(int $uid)
+	/**
+	 * Syncronize the contacts (followers, sharers) for the given user
+	 *
+	 * @param integer $uid User ID
+	 * @return void
+	 */
+	public function syncContacts(int $uid): void
 	{
 		$this->logger->info('Sync contacts for user - start', ['uid' => $uid]);
 		$contacts = Contact::selectToArray(['id', 'url', 'rel'], ['uid' => $uid, 'network' => Protocol::BLUESKY, 'rel' => [Contact::FRIEND, Contact::SHARING, Contact::FOLLOWER]]);
@@ -93,9 +99,16 @@ class Actor
 		$this->logger->info('Sync contacts for user - done', ['uid' => $uid]);
 	}
 
-	public function updateContactByDID(string $did)
+	/**
+	 * Update a contact for a given DID and user id
+	 *
+	 * @param string  $did         DID (did:plc:...)
+	 * @param integer $contact_uid User id of the contact to be updated
+	 * @return void
+	 */
+	public function updateContactByDID(string $did, int $contact_uid): void
 	{
-		$profile = $this->atprotocol->XRPCGet('app.bsky.actor.getProfile', ['actor' => $did]);
+		$profile = $this->atprotocol->XRPCGet('app.bsky.actor.getProfile', ['actor' => $did], $contact_uid);
 		if (empty($profile) || empty($profile->did)) {
 			return;
 		}
@@ -139,20 +152,7 @@ class Actor
 			}
 		}
 
-		/*
-		@todo Add this part when the function will be callable with a uid
-		if (!empty($profile->viewer)) {
-			if (!empty($profile->viewer->following) && !empty($profile->viewer->followedBy)) {
-				$fields['rel'] = Contact::FRIEND;
-			} elseif (!empty($profile->viewer->following) && empty($profile->viewer->followedBy)) {
-				$fields['rel'] = Contact::SHARING;
-			} elseif (empty($profile->viewer->following) && !empty($profile->viewer->followedBy)) {
-				$fields['rel'] = Contact::FOLLOWER;
-			} else {
-				$fields['rel'] = Contact::NOTHING;
-			}
-		}
-		*/
+		Contact::update($fields, ['nurl' => $profile->did, 'network' => Protocol::BLUESKY]);
 
 		if (!empty($profile->avatar)) {
 			$contact = Contact::selectFirst(['id', 'avatar'], ['network' => Protocol::BLUESKY, 'nurl' => $did, 'uid' => 0]);
@@ -161,16 +161,37 @@ class Actor
 			}
 		}
 
-		$this->logger->notice('Update profile', ['did' => $profile->did, 'fields' => $fields]);
+		$this->logger->notice('Update global profile', ['did' => $profile->did, 'fields' => $fields]);
 
-		Contact::update($fields, ['nurl' => $profile->did, 'network' => Protocol::BLUESKY]);
+		if (!empty($profile->viewer) && ($contact_uid != 0)) {
+			if (!empty($profile->viewer->following) && !empty($profile->viewer->followedBy)) {
+				$user_fields = ['rel' => Contact::FRIEND];
+			} elseif (!empty($profile->viewer->following) && empty($profile->viewer->followedBy)) {
+				$user_fields = ['rel' => Contact::SHARING];
+			} elseif (empty($profile->viewer->following) && !empty($profile->viewer->followedBy)) {
+				$user_fields = ['rel' => Contact::FOLLOWER];
+			} else {
+				$user_fields = ['rel' => Contact::NOTHING];
+			}
+			Contact::update($user_fields, ['nurl' => $profile->did, 'network' => Protocol::BLUESKY, 'uid' => $contact_uid]);
+			$this->logger->notice('Update user profile', ['uid' => $contact_uid, 'did' => $profile->did, 'fields' => $user_fields]);
+		}
 	}
 
-	public function getContactByDID(string $did, int $uid, int $contact_uid): array
+	/**
+	 * Fetch and possibly create a contact array for a given DID
+	 *
+	 * @param string  $did         The contact DID
+	 * @param integer $uid         "0" when either the public contact or the user contact is desired
+	 * @param integer $contact_uid If not found, the contact will be created for this user id
+	 * @param boolean $auto_update Default "false". If activated, the contact will be updated every 24 hours
+	 * @return array Contact array
+	 */
+	public function getContactByDID(string $did, int $uid, int $contact_uid, bool $auto_update = false): array
 	{
 		$contact = Contact::selectFirst([], ['network' => Protocol::BLUESKY, 'nurl' => $did, 'uid' => [$contact_uid, $uid]], ['order' => ['uid' => true]]);
 
-		if (!empty($contact)) {
+		if (!empty($contact) && (!$auto_update || ($contact['updated'] > DateTimeFormat::utc('now -24 hours')))) {
 			return $contact;
 		}
 
@@ -196,7 +217,7 @@ class Actor
 			$cid = $contact['id'];
 		}
 
-		$this->updateContactByDID($did);
+		$this->updateContactByDID($did, $contact_uid);
 
 		return Contact::getById($cid);
 	}

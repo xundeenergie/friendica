@@ -66,6 +66,11 @@ final class ATProtocol
 		$this->httpClient = $httpClient;
 	}
 
+	/**
+	 * Returns an array of user ids who want to import the Bluesky timeline
+	 *
+	 * @return array user ids
+	 */
 	public function getUids(): array
 	{
 		$uids         = [];
@@ -92,6 +97,15 @@ final class ATProtocol
 		return $uids;
 	}
 
+	/**
+	 * Fetches XRPC data
+	 * @see https://atproto.com/specs/xrpc#lexicon-http-endpoints
+	 *
+	 * @param string  $url        for example "app.bsky.feed.getTimeline"
+	 * @param array   $parameters Array with parameters
+	 * @param integer $uid        User ID
+	 * @return stdClass|null Fetched data
+	 */
 	public function XRPCGet(string $url, array $parameters = [], int $uid = 0): ?stdClass
 	{
 		if (!empty($parameters)) {
@@ -119,6 +133,13 @@ final class ATProtocol
 		return $data;
 	}
 
+	/**
+	 * Fetch data from the given URL via GET and return it as a JSON class
+	 *
+	 * @param string $url HTTP URL
+	 * @param array $opts HTTP options
+	 * @return stdClass|null Fetched data
+	 */
 	public function get(string $url, array $opts = []): ?stdClass
 	{
 		try {
@@ -141,12 +162,30 @@ final class ATProtocol
 		return $data;
 	}
 
+	/**
+	 * Perform an XRPC post for a given user
+	 * @see https://atproto.com/specs/xrpc#lexicon-http-endpoints
+	 *
+	 * @param integer $uid       User ID
+	 * @param string $url        Endpoints like "com.atproto.repo.createRecord"
+	 * @param [type] $parameters array or StdClass with parameters
+	 * @return stdClass|null
+	 */
 	public function XRPCPost(int $uid, string $url, $parameters): ?stdClass
 	{
 		$data = $this->post($uid, '/xrpc/' . $url, json_encode($parameters), ['Content-type' => 'application/json', 'Authorization' => ['Bearer ' . $this->getUserToken($uid)]]);
 		return $data;
 	}
 
+	/**
+	 * Post data to the user PDS
+	 *
+	 * @param integer $uid   User ID
+	 * @param string $url    HTTP URL without the hostname
+	 * @param string $params Parameter string
+	 * @param array $headers HTTP header information
+	 * @return stdClass|null
+	 */
 	public function post(int $uid, string $url, string $params, array $headers): ?stdClass
 	{
 		$pds = $this->getUserPds($uid);
@@ -180,6 +219,13 @@ final class ATProtocol
 		return $data;
 	}
 
+	/**
+	 * Fetches the PDS for a given user
+	 * @see https://atproto.com/guides/glossary#pds-personal-data-server
+	 *
+	 * @param integer $uid User ID or 0
+	 * @return string|null PDS or null if the user has got no PDS assigned. If UID set to 0, the public api URL is used
+	 */
 	private function getUserPds(int $uid): ?string
 	{
 		if ($uid == 0) {
@@ -205,6 +251,14 @@ final class ATProtocol
 		return $pds;
 	}
 
+	/**
+	 * Fetch the DID for a given user
+	 * @see https://atproto.com/guides/glossary#did-decentralized-id
+	 *
+	 * @param integer $uid     User ID
+	 * @param boolean $refresh Default "false". If set to true, the DID is detected from the handle again.
+	 * @return string|null     DID or null if no DID has been found.
+	 */
 	public function getUserDid(int $uid, bool $refresh = false): ?string
 	{
 		if (!$this->pConfig->get($uid, 'bluesky', 'post')) {
@@ -233,6 +287,12 @@ final class ATProtocol
 		return $did;
 	}
 
+	/**
+	 * Fetches the DID for a given handle
+	 *
+	 * @param string $handle The user handle
+	 * @return string DID (did:plc:...)
+	 */
 	public function getDid(string $handle): string
 	{
 		if ($handle == '') {
@@ -268,6 +328,12 @@ final class ATProtocol
 		return '';
 	}
 
+	/**
+	 * Fetches a DID for a given profile URL
+	 *
+	 * @param string $url HTTP path to the profile in the format https://bsky.app/profile/username
+	 * @return string DID (did:plc:...)
+	 */
 	public function getDidByProfile(string $url): string
 	{
 		if (preg_match('#^' . self::WEB . '/profile/(.+)#', $url, $matches)) {
@@ -317,6 +383,13 @@ final class ATProtocol
 		return $ids['bsky_did'];
 	}
 
+	/**
+	 * Fetches the DID of a given handle via a HTTP request to the .well-known URL.
+	 * This is one of the ways, custom handles can be authorized.
+	 *
+	 * @param string $handle The user handle
+	 * @return string DID (did:plc:...)
+	 */
 	private function getDidByWellknown(string $handle): string
 	{
 		$curlResult = $this->httpClient->get('http://' . $handle . '/.well-known/atproto-did');
@@ -331,6 +404,13 @@ final class ATProtocol
 		return '';
 	}
 
+	/**
+	 * Fetches the DID of a given handle via a DND request.
+	 * This is one of the ways, custom handles can be authorized.
+	 *
+	 * @param string $handle The user handle
+	 * @return string DID (did:plc:...)
+	 */
 	private function getDidByDns(string $handle): string
 	{
 		$records = @dns_get_record('_atproto.' . $handle . '.', DNS_TXT);
@@ -350,7 +430,13 @@ final class ATProtocol
 		return '';
 	}
 
-	private function getPdsOfDid(string $did): ?string
+	/**
+	 * Fetch the PDS of a given DID
+	 *
+	 * @param string $did DID (did:plc:...)
+	 * @return string|null URL of the PDS, e.g. https://enoki.us-east.host.bsky.network
+	 */
+	public function getPdsOfDid(string $did): ?string
 	{
 		$data = $this->get(self::DIRECTORY . '/' . $did);
 		if (empty($data) || empty($data->service)) {
@@ -366,6 +452,13 @@ final class ATProtocol
 		return null;
 	}
 
+	/**
+	 * Checks if the provided DID matches the handle
+	 *
+	 * @param string $did DID (did:plc:...)
+	 * @param string $handle The user handle
+	 * @return boolean
+	 */
 	private function isValidDid(string $did, string $handle): bool
 	{
 		$data = $this->get(self::DIRECTORY . '/' . $did);
@@ -376,6 +469,12 @@ final class ATProtocol
 		return in_array('at://' . $handle, $data->alsoKnownAs);
 	}
 
+	/**
+	 * Fetches the user token for a given user
+	 *
+	 * @param integer $uid User ID
+	 * @return string user token
+	 */
 	public function getUserToken(int $uid): string
 	{
 		$token   = $this->pConfig->get($uid, 'bluesky', 'access_token');
@@ -390,6 +489,12 @@ final class ATProtocol
 		return $token;
 	}
 
+	/**
+	 * Refresh and returns the user token for a given user.
+	 *
+	 * @param integer $uid User ID
+	 * @return string user token
+	 */
 	private function refreshUserToken(int $uid): string
 	{
 		$token = $this->pConfig->get($uid, 'bluesky', 'refresh_token');
@@ -412,6 +517,13 @@ final class ATProtocol
 		return $data->accessJwt;
 	}
 
+	/**
+	 * Create a user token for the given user
+	 *
+	 * @param integer $uid      User ID
+	 * @param string  $password Application password
+	 * @return string user token
+	 */
 	public function createUserToken(int $uid, string $password): string
 	{
 		$did = $this->getUserDid($uid);
