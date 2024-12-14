@@ -30,7 +30,7 @@ class FriendSuggest extends BaseRepository
 		parent::__construct($database, $logger, $factory);
 	}
 
-	private function convertToTableRow(EntityFriendSuggest $fsuggest): array
+	private function convertToTableRow(FriendSuggestEntity $fsuggest): array
 	{
 		return [
 			'uid'     => $fsuggest->uid,
@@ -47,7 +47,7 @@ class FriendSuggest extends BaseRepository
 	/**
 	 * @throws NotFoundException The underlying exception if there's no FriendSuggest with the given conditions
 	 */
-	private function selectOne(array $condition, array $params = []): EntityFriendSuggest
+	private function selectOne(array $condition, array $params = []): FriendSuggestEntity
 	{
 		return parent::_selectOne($condition, $params);
 	}
@@ -68,7 +68,7 @@ class FriendSuggest extends BaseRepository
 	/**
 	 * @throws FriendSuggestNotFoundException in case there's no suggestion for this id
 	 */
-	public function selectOneById(int $id): EntityFriendSuggest
+	public function selectOneById(int $id): FriendSuggestEntity
 	{
 		try {
 			return $this->selectOne(['id' => $id]);
@@ -96,7 +96,7 @@ class FriendSuggest extends BaseRepository
 	/**
 	 * @throws FriendSuggestNotFoundException in case the underlying storage cannot save the suggestion
 	 */
-	public function save(EntityFriendSuggest $fsuggest): EntityFriendSuggest
+	public function save(FriendSuggestEntity $fsuggest): FriendSuggestEntity
 	{
 		try {
 			$fields = $this->convertToTableRow($fsuggest);
