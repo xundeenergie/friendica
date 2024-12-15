@@ -503,10 +503,10 @@ class GServer
 	 *
 	 * @param UriInterface $dirtyUri
 	 *
-	 * @return string cleaned URI
+	 * @return UriInterface cleaned URI
 	 * @throws Exception
 	 */
-	public static function cleanUri(UriInterface $dirtyUri): string
+	public static function cleanUri(UriInterface $dirtyUri): UriInterface
 	{
 		return $dirtyUri
 			->withUserInfo('')

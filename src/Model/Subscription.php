@@ -12,7 +12,7 @@ use Friendica\Core\Worker;
 use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Factory\Api\Mastodon\Notification as NotificationFactory;
-use Friendica\Navigation\Notifications\Entity\Notification as EntityNotification;
+use Friendica\Navigation\Notifications\Entity\Notification as NotificationEntity;
 use Friendica\Object\Api\Mastodon\Notification;
 use Minishlink\WebPush\VAPID;
 
@@ -119,7 +119,7 @@ class Subscription
 	 *
 	 * @return void
 	 */
-	public static function pushByNotification(EntityNotification $notification)
+	public static function pushByNotification(NotificationEntity $notification)
 	{
 		$type = NotificationFactory::getType($notification);
 
