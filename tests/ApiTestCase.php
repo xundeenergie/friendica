@@ -7,7 +7,6 @@
 
 namespace Friendica\Test;
 
-use Friendica\App;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Core\Addon;
 use Friendica\Core\Config\Capability\IManageConfigValues;
@@ -16,7 +15,6 @@ use Friendica\DI;
 use Friendica\Module\Special\HTTPException;
 use Friendica\Security\Authentication;
 use Friendica\Security\BasicAuth;
-use Friendica\Test\Util\AppDouble;
 use Friendica\Test\Util\AuthenticationDouble;
 use Friendica\Test\Util\AuthTestConfig;
 use Psr\Http\Message\ResponseInterface;
@@ -158,11 +156,8 @@ abstract class ApiTestCase extends FixtureTestCase
 
 		$this->dice = $this->dice
 			->addRule(Authentication::class, ['instanceOf' => AuthenticationDouble::class, 'shared' => true])
-			->addRule(App::class, ['instanceOf' => AppDouble::class, 'shared' => true]);
+		;
 		DI::init($this->dice);
-
-		// Manual override to bypass API authentication
-		DI::app()->setIsLoggedIn(true);
 
 		$this->httpExceptionMock = $this->dice->create(HTTPException::class);
 
