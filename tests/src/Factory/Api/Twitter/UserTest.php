@@ -10,8 +10,8 @@ namespace Friendica\Test\src\Factory\Api\Twitter;
 use Friendica\DI;
 use Friendica\Factory\Api\Twitter\User;
 use Friendica\Network\HTTPException\NotFoundException;
-use Friendica\Test\FixtureTestCase;
 use Friendica\Test\ApiTestCase;
+use Friendica\Test\FixtureTestCase;
 
 class UserTest extends FixtureTestCase
 {

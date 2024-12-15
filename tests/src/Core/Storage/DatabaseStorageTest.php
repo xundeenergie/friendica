@@ -8,9 +8,10 @@
 namespace Friendica\Test\src\Core\Storage;
 
 use Friendica\Core\Storage\Type\Database;
+use Friendica\Test\StorageTestCase;
 use Friendica\Test\Util\CreateDatabaseTrait;
 
-class DatabaseStorageTest extends StorageTest
+class DatabaseStorageTest extends StorageTestCase
 {
 	use CreateDatabaseTrait;
 

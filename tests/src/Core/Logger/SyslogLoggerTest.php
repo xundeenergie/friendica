@@ -9,9 +9,10 @@ namespace Friendica\Test\src\Core\Logger;
 
 use Friendica\Core\Logger\Exception\LogLevelException;
 use Friendica\Core\Logger\Type\SyslogLogger;
+use Friendica\Test\LoggerTestCase;
 use Psr\Log\LogLevel;
 
-class SyslogLoggerTest extends AbstractLoggerTest
+class SyslogLoggerTest extends LoggerTestCase
 {
 	/**
 	 * @var SyslogLoggerWrapper

@@ -5,13 +5,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Core\Cache;
+namespace Friendica\Test;
 
 use Friendica\Core\Cache\Capability\ICanCache;
 use Friendica\Test\MockedTestCase;
 use Friendica\Util\PidFile;
 
-abstract class CacheTest extends MockedTestCase
+abstract class CacheTestCase extends MockedTestCase
 {
 	/**
 	 * @var int Start time of the mock (used for time operations)

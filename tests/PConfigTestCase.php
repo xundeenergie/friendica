@@ -5,17 +5,16 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Core\PConfig;
+namespace Friendica\Test;
 
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Friendica\Core\PConfig\Type\AbstractPConfigValues;
 use Friendica\Core\PConfig\Repository\PConfig as PConfigModel;
 use Friendica\Core\PConfig\ValueObject\Cache;
-use Friendica\Test\MockedTestCase;
 use Mockery;
 use Mockery\MockInterface;
 
-abstract class PConfigTest extends MockedTestCase
+abstract class PConfigTestCase extends MockedTestCase
 {
 	use ArraySubsetAsserts;
 

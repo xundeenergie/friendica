@@ -7,7 +7,6 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Account;
 
-use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Account\RateLimitStatus;

@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Core\Logger;
+namespace Friendica\Test;
 
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Logger\Util\Introspection;
@@ -14,7 +14,7 @@ use Mockery\MockInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-abstract class AbstractLoggerTest extends MockedTestCase
+abstract class LoggerTestCase extends MockedTestCase
 {
 	use LoggerDataTrait;
 

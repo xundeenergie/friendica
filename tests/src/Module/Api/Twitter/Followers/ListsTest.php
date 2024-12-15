@@ -7,7 +7,6 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Followers;
 
-use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Followers\Lists;
 use Friendica\Test\ApiTestCase;

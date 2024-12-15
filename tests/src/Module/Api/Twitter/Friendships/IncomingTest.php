@@ -7,7 +7,6 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Friendships;
 
-use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Friendships\Incoming;
 use Friendica\Test\ApiTestCase;

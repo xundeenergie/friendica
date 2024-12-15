@@ -7,7 +7,6 @@
 
 namespace Friendica\Test\src\Module\Api\Mastodon\Accounts;
 
-use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Mastodon\Accounts\VerifyCredentials;
 use Friendica\Test\ApiTestCase;
