@@ -8,12 +8,13 @@
 namespace Friendica\Test\src\Core\PConfig;
 
 use Friendica\Core\PConfig\Type\PreloadPConfig;
+use Friendica\Test\PConfigTestCase;
 
-class PreloadPConfigTest extends PConfigTest
+class PreloadPConfigTest extends PConfigTestCase
 {
 	public function getInstance()
 	{
-		return new \Friendica\Core\PConfig\Type\PreloadPConfig($this->configCache, $this->configModel);
+		return new PreloadPConfig($this->configCache, $this->configModel);
 	}
 
 	/**
