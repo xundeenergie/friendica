@@ -5,12 +5,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Core\Storage;
+namespace Friendica\Test;
 
 use Friendica\Core\Storage\Capability\ICanConfigureStorage;
 use Friendica\Test\MockedTestCase;
 
-abstract class StorageConfigTest extends MockedTestCase
+abstract class StorageConfigTestCase extends MockedTestCase
 {
 	/** @return ICanConfigureStorage */
 	abstract protected function getInstance();
