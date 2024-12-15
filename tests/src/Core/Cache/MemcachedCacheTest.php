@@ -10,6 +10,7 @@ namespace Friendica\Test\src\Core\Cache;
 use Exception;
 use Friendica\Core\Cache\Type\MemcachedCache;
 use Friendica\Core\Config\Capability\IManageConfigValues;
+use Friendica\Test\MemoryCacheTestCase;
 use Mockery;
 use Psr\Log\NullLogger;
 
@@ -17,7 +18,7 @@ use Psr\Log\NullLogger;
  * @requires extension memcached
  * @group MEMCACHED
  */
-class MemcachedCacheTest extends MemoryCacheTest
+class MemcachedCacheTest extends MemoryCacheTestCase
 {
 	protected function getInstance()
 	{
