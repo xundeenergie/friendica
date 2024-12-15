@@ -9,13 +9,14 @@ namespace Friendica\Test\src\Core\Logger;
 
 use Friendica\Core\Logger\Exception\LoggerArgumentException;
 use Friendica\Core\Logger\Exception\LogLevelException;
+use Friendica\Test\LoggerTestCase;
 use Friendica\Test\Util\VFSTrait;
 use Friendica\Core\Logger\Type\StreamLogger;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
 use Psr\Log\LogLevel;
 
-class StreamLoggerTest extends AbstractLoggerTest
+class StreamLoggerTest extends LoggerTestCase
 {
 	use VFSTrait;
 
