@@ -7,7 +7,6 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Blocks;
 
-use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Blocks\Lists;
 use Friendica\Test\ApiTestCase;

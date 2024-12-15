@@ -9,8 +9,8 @@ namespace Friendica\Test\src\Factory\Api\Twitter;
 
 use Friendica\DI;
 use Friendica\Factory\Api\Twitter\DirectMessage;
-use Friendica\Test\FixtureTestCase;
 use Friendica\Test\ApiTestCase;
+use Friendica\Test\FixtureTestCase;
 
 class DirectMessageTest extends FixtureTestCase
 {

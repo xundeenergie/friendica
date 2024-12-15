@@ -7,7 +7,6 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Statuses;
 
-use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Statuses\Show;
 use Friendica\Network\HTTPException\BadRequestException;

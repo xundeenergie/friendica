@@ -16,8 +16,8 @@ use Friendica\Factory\Api\Twitter\Media;
 use Friendica\Factory\Api\Twitter\Mention;
 use Friendica\Factory\Api\Twitter\Status;
 use Friendica\Factory\Api\Twitter\Url;
-use Friendica\Test\FixtureTestCase;
 use Friendica\Test\ApiTestCase;
+use Friendica\Test\FixtureTestCase;
 
 class StatusTest extends FixtureTestCase
 {
