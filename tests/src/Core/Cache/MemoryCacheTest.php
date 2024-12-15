@@ -9,8 +9,9 @@ namespace Friendica\Test\src\Core\Cache;
 
 use Exception;
 use Friendica\Core\Cache\Capability\ICanCacheInMemory;
+use Friendica\Test\CacheTestCase;
 
-abstract class MemoryCacheTest extends CacheTest
+abstract class MemoryCacheTest extends CacheTestCase
 {
 	/**
 	 * @var \Friendica\Core\Cache\Capability\ICanCacheInMemory
