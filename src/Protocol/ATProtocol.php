@@ -166,9 +166,9 @@ final class ATProtocol
 	 * Perform an XRPC post for a given user
 	 * @see https://atproto.com/specs/xrpc#lexicon-http-endpoints
 	 *
-	 * @param int          $uid        User ID
-	 * @param string       $url        Endpoints like "com.atproto.repo.createRecord"
-	 * @param array|object $parameters array or StdClass with parameters
+	 * @param int            $uid        User ID
+	 * @param string         $url        Endpoints like "com.atproto.repo.createRecord"
+	 * @param array|stdClass $parameters array or StdClass with parameters
 	 */
 	public function XRPCPost(int $uid, string $url, $parameters): ?stdClass
 	{
