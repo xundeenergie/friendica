@@ -302,7 +302,7 @@ class Protocol
 			return false;
 		}
 
-		if (in_array($protocol, array_merge(self::NATIVE_SUPPORT, [self::ZOT, self::PHANTOM]))) {
+		if (in_array($protocol, array_merge(self::NATIVE_SUPPORT, [self::ZOT, self::BLUESKY, self::PHANTOM]))) {
 			return true;
 		}
 

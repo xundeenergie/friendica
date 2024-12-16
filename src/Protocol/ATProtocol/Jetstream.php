@@ -38,9 +38,9 @@ use stdClass;
  */
 class Jetstream
 {
-	private $uids   = [];
-	private $self   = [];
-	private $capped = false;
+	private $uids      = [];
+	private $self      = [];
+	private $capped    = false;
 
 	/** @var LoggerInterface */
 	private $logger;
@@ -73,10 +73,12 @@ class Jetstream
 		$this->processor  = $processor;
 	}
 
-	// *****************************************
-	// * Listener
-	// *****************************************
-	public function listen()
+	/**
+	 * Listen to incoming webstream messages from Jetstream
+	 *
+	 * @return void
+	 */
+	public function listen(): void
 	{
 		$timeout       = 300;
 		$timeout_limit = 10;
@@ -108,6 +110,7 @@ class Jetstream
 						$timestamp = $data->time_us;
 						$this->route($data);
 						$this->keyValue->set('jetstream_timestamp', $timestamp);
+						$this->incrementMessages();
 					} else {
 						$this->logger->warning('Unexpected return value', ['data' => $data]);
 						break;
@@ -135,6 +138,25 @@ class Jetstream
 		}
 	}
 
+	/**
+	 * Increment the message counter for the statistics page
+	 *
+	 * @return void
+	 */
+	private function incrementMessages(): void
+	{
+		$packets = (int)($this->keyValue->get('jetstream_messages') ?? 0);
+		if ($packets >= PHP_INT_MAX) {
+			$packets = 0;
+		}
+		$this->keyValue->set('jetstream_messages', $packets + 1);
+	}
+
+	/**
+	 * Synchronize contacts for all active users
+	 *
+	 * @return void
+	 */
 	private function syncContacts()
 	{
 		$active_uids = $this->atprotocol->getUids();
@@ -147,6 +169,11 @@ class Jetstream
 		}
 	}
 
+	/**
+	 * Set options like the followed DIDs
+	 *
+	 * @return void
+	 */
 	private function setOptions()
 	{
 		$active_uids = $this->atprotocol->getUids();
@@ -184,9 +211,13 @@ class Jetstream
 		}
 
 		if (!$this->capped && count($dids) < $did_limit) {
-			$contacts = Contact::selectToArray(['url'], ['uid' => 0, 'network' => Protocol::BLUESKY], ['order' => ['last-item' => true], 'limit' => $did_limit]);
+			$condition = ["`uid` = ? AND `network` = ? AND EXISTS(SELECT `author-id` FROM `post-user` WHERE `author-id` = `contact`.`id` AND `post-user`.`uid` != ?)", 0, Protocol::BLUESKY, 0];
+			$contacts = Contact::selectToArray(['url'], $condition, ['order' => ['last-item' => true], 'limit' => $did_limit]);
 			$dids     = $this->addDids($contacts, $uids, $did_limit, $dids);
 		}
+
+		$this->keyValue->set('jetstream_did_count', count($dids));
+		$this->keyValue->set('jetstream_did_limit', $did_limit);
 
 		$this->logger->debug('Selected DIDs', ['uids' => $active_uids, 'count' => count($dids), 'capped' => $this->capped]);
 		$update = [
@@ -204,6 +235,15 @@ class Jetstream
 		}
 	}
 
+	/**
+	 * Returns an array of DIDs provided by an array of contacts
+	 *
+	 * @param array   $contacts  Array of contact records
+	 * @param array   $uids      Array with the user ids with enabled bluesky timeline import
+	 * @param integer $did_limit Maximum limit of entries
+	 * @param array   $dids      Array of DIDs that are added to the output list
+	 * @return array DIDs
+	 */
 	private function addDids(array $contacts, array $uids, int $did_limit, array $dids): array
 	{
 		foreach ($contacts as $contact) {
@@ -218,7 +258,13 @@ class Jetstream
 		return $dids;
 	}
 
-	private function route(stdClass $data)
+	/**
+	 * Route incoming messages
+	 *
+	 * @param stdClass $data message object
+	 * @return void
+	 */
+	private function route(stdClass $data): void
 	{
 		Item::incrementInbound(Protocol::BLUESKY);
 
@@ -239,19 +285,15 @@ class Jetstream
 		}
 	}
 
-	private function routeCommits(stdClass $data)
+	/**
+	 * Route incoming commit messages
+	 *
+	 * @param stdClass $data message object
+	 * @return void
+	 */
+	private function routeCommits(stdClass $data): void
 	{
-		$drift = max(0, round(time() - $data->time_us / 1000000));
-		if ($drift > 60 && !$this->capped) {
-			$this->capped = true;
-			$this->setOptions();
-			$this->logger->notice('Drift is too high, dids will be capped');
-		} elseif ($drift == 0 && $this->capped) {
-			$this->capped = false;
-			$this->setOptions();
-			$this->logger->notice('Drift is low enough, dids will be uncapped');
-		}
-
+		$drift = $this->getDrift($data);
 		$this->logger->notice('Received commit', ['time' => date(DateTimeFormat::ATOM, $data->time_us / 1000000), 'drift' => $drift, 'capped' => $this->capped, 'did' => $data->did, 'operation' => $data->commit->operation, 'collection' => $data->commit->collection, 'timestamp' => $data->time_us]);
 		$timestamp = microtime(true);
 
@@ -295,11 +337,41 @@ class Jetstream
 				break;
 		}
 		if (microtime(true) - $timestamp > 2) {
-			$this->logger->notice('Commit processed', ['duration' => round(microtime(true) - $timestamp, 3), 'time' => date(DateTimeFormat::ATOM, $data->time_us / 1000000), 'did' => $data->did, 'operation' => $data->commit->operation, 'collection' => $data->commit->collection]);
+			$this->logger->notice('Commit processed', ['duration' => round(microtime(true) - $timestamp, 3), 'drift' => $drift, 'capped' => $this->capped, 'time' => date(DateTimeFormat::ATOM, $data->time_us / 1000000), 'did' => $data->did, 'operation' => $data->commit->operation, 'collection' => $data->commit->collection]);
 		}
 	}
 
-	private function routePost(stdClass $data, int $drift)
+	/**
+	 * Calculate the drift between the server timestamp and the current time.
+	 *
+	 * @param stdClass $data message object
+	 * @return integer The calculated drift
+	 */
+	private function getDrift(stdClass $data): int
+	{
+		$drift = max(0, round(time() - $data->time_us / 1000000));
+		$this->keyValue->set('jetstream_drift', $drift);
+
+		if ($drift > 60 && !$this->capped) {
+			$this->capped = true;
+			$this->setOptions();
+			$this->logger->notice('Drift is too high, dids will be capped');
+		} elseif ($drift == 0 && $this->capped) {
+			$this->capped = false;
+			$this->setOptions();
+			$this->logger->notice('Drift is low enough, dids will be uncapped');
+		}
+		return $drift;
+	}
+
+	/**
+	 * Route app.bsky.feed.post commits 
+	 *
+	 * @param stdClass $data message object
+	 * @param integer $drift
+	 * @return void
+	 */
+	private function routePost(stdClass $data, int $drift): void
 	{
 		switch ($data->commit->operation) {
 			case 'delete':
@@ -316,7 +388,14 @@ class Jetstream
 		}
 	}
 
-	private function routeRepost(stdClass $data, int $drift)
+	/**
+	 * Route app.bsky.feed.repost commits 
+	 *
+	 * @param stdClass $data message object
+	 * @param integer $drift
+	 * @return void
+	 */
+	private function routeRepost(stdClass $data, int $drift): void
 	{
 		switch ($data->commit->operation) {
 			case 'delete':
@@ -333,7 +412,13 @@ class Jetstream
 		}
 	}
 
-	private function routeLike(stdClass $data)
+	/**
+	 * Route app.bsky.feed.like commits 
+	 *
+	 * @param stdClass $data message object
+	 * @return void
+	 */
+	private function routeLike(stdClass $data): void
 	{
 		switch ($data->commit->operation) {
 			case 'delete':
@@ -350,7 +435,13 @@ class Jetstream
 		}
 	}
 
-	private function routeProfile(stdClass $data)
+	/**
+	 * Route app.bsky.actor.profile commits 
+	 *
+	 * @param stdClass $data message object
+	 * @return void
+	 */
+	private function routeProfile(stdClass $data): void
 	{
 		switch ($data->commit->operation) {
 			case 'delete':
@@ -358,11 +449,11 @@ class Jetstream
 				break;
 
 			case 'create':
-				$this->actor->updateContactByDID($data->did);
+				$this->actor->updateContactByDID($data->did, 0);
 				break;
 
 			case 'update':
-				$this->actor->updateContactByDID($data->did);
+				$this->actor->updateContactByDID($data->did, 0);
 				break;
 
 			default:
@@ -371,7 +462,13 @@ class Jetstream
 		}
 	}
 
-	private function routeFollow(stdClass $data)
+	/**
+	 * Route app.bsky.graph.follow commits 
+	 *
+	 * @param stdClass $data message object
+	 * @return void
+	 */
+	private function routeFollow(stdClass $data): void
 	{
 		switch ($data->commit->operation) {
 			case 'delete':
@@ -394,7 +491,13 @@ class Jetstream
 		}
 	}
 
-	private function storeCommitMessage(stdClass $data)
+	/**
+	 * Store commit messages for debugging purposes
+	 *
+	 * @param stdClass $data message object
+	 * @return void
+	 */
+	private function storeCommitMessage(stdClass $data): void
 	{
 		if ($this->config->get('debug', 'jetstream_log')) {
 			$tempfile = tempnam(System::getTempPath(), 'at-proto.commit.' . $data->commit->collection . '.' . $data->commit->operation . '-');

@@ -13,6 +13,7 @@ namespace Friendica\Protocol\ATProtocol;
 use Friendica\App\BaseURL;
 use Friendica\Core\Protocol;
 use Friendica\Database\Database;
+use Friendica\Database\DBA;
 use Friendica\Model\Contact;
 use Friendica\Model\Conversation;
 use Friendica\Model\Item;
@@ -130,12 +131,12 @@ class Processor
 		if (!empty($data->commit->record->reply)) {
 			$root   = $this->getUri($data->commit->record->reply->root);
 			$parent = $this->getUri($data->commit->record->reply->parent);
-			$uids   = $this->getPostUids($root);
+			$uids   = $this->getPostUids($root, true);
 			if (!$uids) {
 				$this->logger->debug('Comment is not imported since the root post is not found.', ['root' => $root, 'parent' => $parent]);
 				return;
 			}
-			if ($dont_fetch && !$this->getPostUids($parent)) {
+			if ($dont_fetch && !$this->getPostUids($parent, false)) {
 				$this->logger->debug('Comment is not imported since the parent post is not found.', ['root' => $root, 'parent' => $parent]);
 				return;
 			}
@@ -168,6 +169,7 @@ class Processor
 						return;
 					}
 				}
+				$item['source'] = json_encode($post);
 				$item = $this->addMedia($post->thread->post->embed, $item, 0);
 			}
 
@@ -185,7 +187,7 @@ class Processor
 
 	public function createRepost(stdClass $data, array $uids, bool $dont_fetch)
 	{
-		if ($dont_fetch && !$this->getPostUids($this->getUri($data->commit->record->subject))) {
+		if ($dont_fetch && !$this->getPostUids($this->getUri($data->commit->record->subject), true)) {
 			$this->logger->debug('Repost is not imported since the subject is not found.', ['subject' => $this->getUri($data->commit->record->subject)]);
 			return;
 		}
@@ -215,7 +217,7 @@ class Processor
 
 	public function createLike(stdClass $data)
 	{
-		$uids = $this->getPostUids($this->getUri($data->commit->record->subject));
+		$uids = $this->getPostUids($this->getUri($data->commit->record->subject), false);
 		if (!$uids) {
 			$this->logger->debug('Like is not imported since the subject is not found.', ['subject' => $this->getUri($data->commit->record->subject)]);
 			return;
@@ -272,7 +274,7 @@ class Processor
 		return true;
 	}
 
-	private function processPost(stdClass $post, int $uid, int $post_reason, int $causer, int $level, int $protocol): int
+	public function processPost(stdClass $post, int $uid, int $post_reason, int $causer, int $level, int $protocol): int
 	{
 		$uri = $this->getUri($post);
 
@@ -380,7 +382,7 @@ class Processor
 		return $item;
 	}
 
-	private function getHeaderFromPost(stdClass $post, string $uri, int $uid, int $protocol): array
+	public function getHeaderFromPost(stdClass $post, string $uri, int $uid, int $protocol): array
 	{
 		$parts = $this->getUriParts($uri);
 		if (empty($post->author) || empty($post->cid) || empty($parts->rkey)) {
@@ -540,6 +542,8 @@ class Processor
 						'url'         => $image->fullsize,
 						'preview'     => $image->thumb,
 						'description' => $image->alt,
+						'height'      => $image->aspectRatio->height ?? null,
+						'width'       => $image->aspectRatio->width ?? null,
 					];
 					Post\Media::insert($media);
 				}
@@ -563,6 +567,7 @@ class Processor
 					'uri-id'      => $item['uri-id'],
 					'type'        => Post\Media::HTML,
 					'url'         => $embed->external->uri,
+					'preview'     => $embed->external->thumb ?? null,
 					'name'        => $embed->external->title,
 					'description' => $embed->external->description,
 				];
@@ -688,7 +693,7 @@ class Processor
 		return $restrict ? Item::CANT_REPLY : null;
 	}
 
-	private function fetchMissingPost(string $uri, int $uid, int $post_reason, int $causer, int $level, string $fallback = '', bool $always_fetch = false, int $Protocol = Conversation::PARCEL_JETSTREAM): string
+	public function fetchMissingPost(string $uri, int $uid, int $post_reason, int $causer, int $level, string $fallback = '', bool $always_fetch = false, int $Protocol = Conversation::PARCEL_JETSTREAM): string
 	{
 		$timestamp = microtime(true);
 		$stamp     = Strings::getRandomHex(30);
@@ -796,7 +801,7 @@ class Processor
 		return $uri;
 	}
 
-	private function getUriParts(string $uri): ?stdClass
+	public function getUriParts(string $uri): ?stdClass
 	{
 		$class = $this->getUriClass($uri);
 		if (empty($class)) {
@@ -814,7 +819,7 @@ class Processor
 		return $class;
 	}
 
-	private function getUriClass(string $uri): ?stdClass
+	public function getUriClass(string $uri): ?stdClass
 	{
 		if (empty($uri)) {
 			return null;
@@ -839,7 +844,7 @@ class Processor
 		return $class;
 	}
 
-	private function fetchUriId(string $uri, int $uid): string
+	public function fetchUriId(string $uri, int $uid): string
 	{
 		$reply = Post::selectFirst(['uri-id'], ['uri' => $uri, 'uid' => [$uid, 0]]);
 		if (!empty($reply['uri-id'])) {
@@ -854,16 +859,18 @@ class Processor
 		return 0;
 	}
 
-	private function getPostUids(string $uri): array
+	private function getPostUids(string $uri, bool $with_public_user): array
 	{
+		$condition = $with_public_user ? [] : ["`uid` != ?", 0];
+
 		$uids  = [];
-		$posts = Post::select(['uid'], ['uri' => $uri]);
+		$posts = Post::select(['uid'], DBA::mergeConditions(['uri' => $uri], $condition));
 		while ($post = Post::fetch($posts)) {
 			$uids[] = $post['uid'];
 		}
 		$this->db->close($posts);
 
-		$posts = Post::select(['uid'], ['extid' => $uri]);
+		$posts = Post::select(['uid'], DBA::mergeConditions(['extid' => $uri], $condition));
 		while ($post = Post::fetch($posts)) {
 			$uids[] = $post['uid'];
 		}
@@ -880,7 +887,7 @@ class Processor
 		return Post::exists(['extid' => $uri, 'uid' => $uids]);
 	}
 
-	private function getUri(stdClass $post): string
+	public function getUri(stdClass $post): string
 	{
 		if (empty($post->cid)) {
 			$this->logger->info('Invalid URI', ['post' => $post]);
@@ -889,7 +896,7 @@ class Processor
 		return $post->uri . ':' . $post->cid;
 	}
 
-	private function getPostUri(string $uri, int $uid): string
+	public function getPostUri(string $uri, int $uid): string
 	{
 		if (Post::exists(['uri' => $uri, 'uid' => [$uid, 0]])) {
 			$this->logger->debug('Post exists', ['uri' => $uri]);
