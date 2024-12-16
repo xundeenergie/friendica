@@ -4207,7 +4207,7 @@ class Item
 		if (!$mimetype) {
 			try {
 				$curlResult = DI::httpClient()->head($uri, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::JSON_AS, HttpClientOptions::REQUEST => HttpClientRequest::ACTIVITYPUB]);
-				$mimetype = empty($curlResult) ? '' : $curlResult->getContentType();
+				$mimetype = $curlResult->getContentType();
 			} catch (\Throwable $th) {
 				Logger::info('Error while fetching HTTP link via HEAD', ['uid' => $uid, 'uri' => $uri, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
 				return 0;
@@ -4218,7 +4218,7 @@ class Item
 			try {
 				// Issue 14126: Workaround for Mastodon servers that return "application/json" on a "head" request.
 				$curlResult = HTTPSignature::fetchRaw($uri, $uid);
-				$mimetype = empty($curlResult) ? '' : $curlResult->getContentType();
+				$mimetype = $curlResult->getContentType();
 			} catch (\Throwable $th) {
 				Logger::info('Error while fetching HTTP link via signed GET', ['uid' => $uid, 'uri' => $uri, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
 				return 0;
