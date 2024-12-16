@@ -51,6 +51,8 @@ class Media
 	const ACTIVITY    = 20;
 	const ACCOUNT     = 21;
 	const HLS         = 22;
+	const JSON        = 23;
+	const LD          = 24;
 	const DOCUMENT    = 128;
 
 	/**
@@ -180,14 +182,14 @@ class Media
 		}
 
 		// Fetch the mimetype or size if missing.
-		if (Network::isValidHttpUrl($media['url']) && (empty($media['mimetype']) || empty($media['size']))) {
+		if (Network::isValidHttpUrl($media['url']) && empty($media['mimetype']) && !in_array($media['type'], [self::IMAGE, self::HLS])) {
 			$timeout = DI::config()->get('system', 'xrd_timeout');
 			try {
-				$curlResult = DI::httpClient()->head($media['url'], [HttpClientOptions::TIMEOUT => $timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
+				$curlResult = DI::httpClient()->head($media['url'], [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::AS_DEFAULT, HttpClientOptions::TIMEOUT => $timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
 
 				// Workaround for systems that can't handle a HEAD request
-				if (!$curlResult->isSuccess() && ($curlResult->getReturnCode() == 405)) {
-					$curlResult = DI::httpClient()->get($media['url'], HttpClientAccept::DEFAULT, [HttpClientOptions::TIMEOUT => $timeout]);
+				if (!$curlResult->isSuccess() && in_array($curlResult->getReturnCode(), [400, 403, 405])) {
+					$curlResult = DI::httpClient()->get($media['url'], HttpClientAccept::AS_DEFAULT, [HttpClientOptions::TIMEOUT => $timeout]);
 				}
 				if ($curlResult->isSuccess()) {
 					if (empty($media['mimetype'])) {
@@ -197,16 +199,20 @@ class Media
 						$media['size'] = (int)($curlResult->getHeader('Content-Length')[0] ?? strlen($curlResult->getBodyString() ?? ''));
 					}
 				} else {
-					Logger::notice('Could not fetch head', ['media' => $media]);
+					Logger::notice('Could not fetch head', ['media' => $media, 'code' => $curlResult->getReturnCode()]);
 				}
 			} catch (\Throwable $th) {
 				Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
 			}
 		}
 
-		$filetype = !empty($media['mimetype']) ? strtolower(current(explode('/', $media['mimetype']))) : '';
+		if (($media['type'] != self::DOCUMENT) && !empty($media['mimetype'])) {
+			$media = self::addType($media);
+		}
 
-		if (($media['type'] == self::IMAGE) || ($filetype == 'image')) {
+		Logger::debug('Got type for url', ['type' => $media['type'], 'mimetype' => $media['mimetype'] ?? '', 'url' => $media['url']]);
+
+		if ($media['type'] == self::IMAGE) {
 			$imagedata = Images::getInfoFromURLCached($media['url'], empty($media['description']));
 			if ($imagedata) {
 				$media['mimetype'] = $imagedata['mime'];
@@ -223,23 +229,19 @@ class Media
 			}
 		}
 
-		if ($media['type'] != self::DOCUMENT) {
-			$media = self::addType($media);
-		}
-
 		if (!empty($media['preview'])) {
 			$media = self::addPreviewData($media);
 		}
 
-		if (in_array($media['type'], [self::TEXT, self::APPLICATION, self::HTML, self::XML, self::PLAIN])) {
-			$media = self::addActivity($media);
-		}
-
-		if (in_array($media['type'], [self::TEXT, self::APPLICATION, self::HTML, self::XML, self::PLAIN])) {
+		if (in_array($media['type'], [self::TEXT, self::ACTIVITY, self::LD, self::JSON, self::HTML, self::XML, self::PLAIN])) {
 			$media = self::addAccount($media);
 		}
 
-		if ($media['type'] == self::HTML) {
+		if (in_array($media['type'], [self::ACTIVITY, self::LD, self::JSON])) {
+			$media = self::addActivity($media);
+		}
+
+		if (in_array($media['type'], [self::HTML, self::LD, self::JSON])) {
 			$media = self::addPage($media);
 		}
 
@@ -254,6 +256,16 @@ class Media
 
 		$imagedata = Images::getInfoFromURLCached($media['preview']);
 		if ($imagedata) {
+			$media['blurhash'] = $imagedata['blurhash'] ?? null;
+
+			// When the original picture is potentially animated but the preview isn't, we override the preview
+			if (in_array($media['mimetype'] ?? '', ['image/gif', 'image/png']) && !in_array($imagedata['mime'], ['image/gif', 'image/png'])) {
+				$media['preview'] = $media['url'];
+				$media['preview-width'] = $media['width'];
+				$media['preview-height'] = $media['height'];
+				return $media;
+			}
+
 			$media['preview-width'] = $imagedata[0];
 			$media['preview-height'] = $imagedata[1];
 		}
@@ -269,19 +281,22 @@ class Media
 	 */
 	private static function addActivity(array $media): array
 	{
-		$id = Item::fetchByLink($media['url'], 0, ActivityPub\Receiver::COMPLETION_ASYNC);
+		$id = Item::fetchByLink($media['url'], 0, ActivityPub\Receiver::COMPLETION_ASYNC, $media['mimetype'] ?? '');
 		if (empty($id)) {
+			$media['type'] = $media['type'] == self::ACTIVITY ? self::JSON : $media['type'];
 			return $media;
 		}
 
 		$item = Post::selectFirst([], ['id' => $id, 'network' => Protocol::FEDERATED]);
 		if (empty($item['id'])) {
 			Logger::debug('Not a federated activity', ['id' => $id, 'uri-id' => $media['uri-id'], 'url' => $media['url']]);
+			$media['type'] = $media['type'] == self::ACTIVITY ? self::JSON : $media['type'];
 			return $media;
 		}
 
 		if ($item['uri-id'] == $media['uri-id']) {
 			Logger::info('Media-Uri-Id is identical to Uri-Id', ['uri-id' => $media['uri-id']]);
+			$media['type'] = $media['type'] == self::ACTIVITY ? self::JSON : $media['type'];
 			return $media;
 		}
 
@@ -290,6 +305,7 @@ class Media
 			parse_url($item['plink'], PHP_URL_HOST) != parse_url($item['uri'], PHP_URL_HOST)
 		) {
 			Logger::debug('Not a link to an activity', ['uri-id' => $media['uri-id'], 'url' => $media['url'], 'plink' => $item['plink'], 'uri' => $item['uri']]);
+			$media['type'] = $media['type'] == self::ACTIVITY ? self::JSON : $media['type'];
 			return $media;
 		}
 
@@ -375,14 +391,23 @@ class Media
 	 */
 	private static function addPage(array $media): array
 	{
-		$data = ParseUrl::getSiteinfoCached($media['url']);
+		$data = ParseUrl::getSiteinfoCached($media['url'], $media['mimetype'] ?? '');
+		if (empty($data['images'][0]['src']) && empty($data['text']) && empty($data['title'])) {
+			if (!empty($media['preview'])) {
+				$media = self::addPreviewData($media);
+				Logger::debug('Detected site data is empty, use suggested media data instead', ['uri-id' => $media['uri-id'], 'url' => $media['url'], 'type' => $data['type']]);
+			}
+		} else {
+			$media['preview'] = $data['images'][0]['src'] ?? null;
+			$media['preview-height'] = $data['images'][0]['height'] ?? null;
+			$media['preview-width'] = $data['images'][0]['width'] ?? null;
+			$media['blurhash'] = $data['images'][0]['blurhash'] ?? null;
+			$media['description'] = $data['text'] ?? null;
+			$media['name'] = $data['title'] ?? null;	
+		}
+		
+		$media['type'] = self::HTML;
 		$media['size'] = $data['size'] ?? null;
-		$media['preview'] = $data['images'][0]['src'] ?? null;
-		$media['preview-height'] = $data['images'][0]['height'] ?? null;
-		$media['preview-width'] = $data['images'][0]['width'] ?? null;
-		$media['blurhash'] = $data['images'][0]['blurhash'] ?? null;
-		$media['description'] = $data['text'] ?? null;
-		$media['name'] = $data['title'] ?? null;
 		$media['author-url'] = $data['author_url'] ?? null;
 		$media['author-name'] = $data['author_name'] ?? null;
 		$media['author-image'] = $data['author_img'] ?? null;
@@ -481,6 +506,12 @@ class Media
 			$type = self::TORRENT;
 		} elseif (($filetype == 'application') && ($subtype == 'vnd.apple.mpegurl')) {
 			$type = self::HLS;
+		} elseif (($filetype == 'application') && ($subtype == 'activity+json')) {
+			$type = self::ACTIVITY;
+		} elseif (($filetype == 'application') && ($subtype == 'ld+json')) {
+			$type = self::LD;
+		} elseif (($filetype == 'application') && ($subtype == 'json')) {
+			$type = self::JSON;
 		} elseif ($filetype == 'application') {
 			$type = self::APPLICATION;
 		} else {

@@ -10,6 +10,7 @@ namespace Friendica\Network;
 use DOMDocument;
 use DomXPath;
 use Exception;
+use Friendica\Content\Text\HTML;
 use Friendica\Core\Hook;
 use Friendica\Core\Logger;
 use Friendica\Core\Protocol;
@@ -24,6 +25,7 @@ use Friendica\Network\HTTPClient\Client\HttpClientOptions;
 use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Protocol\ActivityNamespace;
 use Friendica\Protocol\ActivityPub;
+use Friendica\Protocol\ATProtocol;
 use Friendica\Protocol\Diaspora;
 use Friendica\Protocol\Email;
 use Friendica\Protocol\Feed;
@@ -732,8 +734,8 @@ class Probe
 
 		$parts = parse_url($uri);
 		if (empty($parts['scheme']) && empty($parts['host']) && (empty($parts['path']) || strpos($parts['path'], '@') === false)) {
-			Logger::info('URI was not detectable', ['uri' => $uri]);
-			return [];
+			Logger::info('URI was not detectable, probe for AT Protocol now', ['uri' => $uri]);
+			return self::atProtocol($uri);
 		}
 
 		// If the URI starts with "mailto:" then jump directly to the mail detection
@@ -757,6 +759,10 @@ class Probe
 		}
 
 		if (empty($data)) {
+			$data = self::atProtocol($uri);
+			if (!empty($data)) {
+				return $data;
+			}
 			if (!empty($parts['scheme'])) {
 				return self::feed($uri);
 			} elseif (!empty($uid)) {
@@ -1685,6 +1691,75 @@ class Probe
 		unset($baseParts['fragment']);
 
 		return (string)Uri::fromParts((array)(array)$baseParts);
+	}
+
+	/**
+	 * Check for AT Protocol (Bluesky)
+	 *
+	 * @param string $uri Profile link
+	 * @return array Profile data or empty array
+	 */
+	private static function atProtocol(string $uri): array
+	{
+		if (parse_url($uri, PHP_URL_SCHEME) == 'did') {
+			$did = $uri;
+		} elseif (parse_url($uri, PHP_URL_PATH) == $uri && strpos($uri, '@') === false) {
+			$did = DI::atProtocol()->getDid($uri);
+			if (empty($did)) {
+				return [];
+			}
+		} elseif (Network::isValidHttpUrl($uri)) {
+			$did = DI::atProtocol()->getDidByProfile($uri);
+			if (empty($did)) {
+				return [];
+			}
+		} else {
+			return [];
+		}
+	
+		$profile = DI::atProtocol()->XRPCGet('app.bsky.actor.getProfile', ['actor' => $did]);
+		if (empty($profile) || empty($profile->did)) {
+			return [];
+		}
+
+		$nick = $profile->handle ?? $profile->did;
+		$name = $profile->displayName ?? $nick;
+
+		$data = [
+			'network'  => Protocol::BLUESKY,
+			'url'      => $profile->did,
+			'alias'    => ATProtocol::WEB . '/profile/' . $nick,
+			'name'     => $name ?: $nick,
+			'nick'     => $nick,
+			'addr'     => $nick,
+			'poll'     => ATProtocol::WEB . '/profile/' . $profile->did . '/rss',
+			'photo'    => $profile->avatar ?? '',
+		];
+	
+		if (!empty($profile->description)) {
+			$data['about'] = HTML::toBBCode($profile->description);
+		}
+	
+		if (!empty($profile->banner)) {
+			$data['header'] = $profile->banner;
+		}
+
+		$directory = DI::atProtocol()->get(ATProtocol::DIRECTORY . '/' . $profile->did);
+		if (!empty($directory)) {
+			foreach ($directory->service as $service) {
+				if (($service->id == '#atproto_pds') && ($service->type == 'AtprotoPersonalDataServer') && !empty($service->serviceEndpoint)) {
+					$data['baseurl'] = $service->serviceEndpoint;
+				}
+			}
+
+			foreach ($directory->verificationMethod as $method) {
+				if (!empty($method->publicKeyMultibase)) {
+					$data['pubkey'] = $method->publicKeyMultibase;
+				}
+			}
+		}
+
+		return $data;
 	}
 
 	/**
