@@ -9,10 +9,10 @@ namespace Friendica\Test\src\Database;
 
 use Friendica\Core\Config\Util\ConfigFileManager;
 use Friendica\Core\Config\ValueObject\Cache;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Friendica\Test\Util\CreateDatabaseTrait;
 
-class DatabaseTest extends FixtureTest
+class DatabaseTest extends FixtureTestCase
 {
 	use CreateDatabaseTrait;
 

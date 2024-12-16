@@ -10,11 +10,11 @@ namespace Friendica\Test\src\Core\Addon\Model;
 use Friendica\Core\Addon\Exception\AddonInvalidConfigFileException;
 use Friendica\Core\Addon\Model\AddonLoader;
 use Friendica\Core\Config\Capability\IManageConfigValues;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\VFSTrait;
 use org\bovigo\vfs\vfsStream;
 
-class AddonLoaderTest extends MockedTest
+class AddonLoaderTest extends MockedTestCase
 {
 	use VFSTrait;
 

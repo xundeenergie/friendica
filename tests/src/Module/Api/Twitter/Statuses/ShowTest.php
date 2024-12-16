@@ -7,13 +7,12 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Statuses;
 
-use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Statuses\Show;
 use Friendica\Network\HTTPException\BadRequestException;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class ShowTest extends ApiTest
+class ShowTest extends ApiTestCase
 {
 	/**
 	 * Test the api_statuses_show() function.

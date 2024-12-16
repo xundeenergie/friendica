@@ -5,12 +5,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Core\Lock;
+namespace Friendica\Test;
 
 use Friendica\Core\Lock\Capability\ICanLock;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-abstract class LockTest extends MockedTest
+abstract class LockTestCase extends MockedTestCase
 {
 	/**
 	 * @var int Start time of the mock (used for time operations)

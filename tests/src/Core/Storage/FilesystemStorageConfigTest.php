@@ -11,11 +11,12 @@ use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
 use Friendica\Core\Storage\Capability\ICanConfigureStorage;
 use Friendica\Core\Storage\Type\FilesystemConfig;
+use Friendica\Test\StorageConfigTestCase;
 use Friendica\Test\Util\VFSTrait;
 use Mockery\MockInterface;
 use org\bovigo\vfs\vfsStream;
 
-class FilesystemStorageConfigTest extends StorageConfigTest
+class FilesystemStorageConfigTest extends StorageConfigTestCase
 {
 	use VFSTrait;
 

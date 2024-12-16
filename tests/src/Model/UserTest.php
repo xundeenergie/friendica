@@ -11,10 +11,10 @@ use Dice\Dice;
 use Friendica\Database\Database;
 use Friendica\DI;
 use Friendica\Model\User;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Mockery\MockInterface;
 
-class UserTest extends MockedTest
+class UserTest extends MockedTestCase
 {
 	private $parent;
 	private $child;

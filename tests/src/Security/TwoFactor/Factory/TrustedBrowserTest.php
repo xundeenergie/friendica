@@ -8,12 +8,12 @@
 namespace Friendica\Test\src\Security\TwoFactor\Factory;
 
 use Friendica\Security\TwoFactor\Factory\TrustedBrowser;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Strings;
 use Psr\Log\NullLogger;
 
-class TrustedBrowserTest extends MockedTest
+class TrustedBrowserTest extends MockedTestCase
 {
 	public function testCreateFromTableRowSuccess()
 	{

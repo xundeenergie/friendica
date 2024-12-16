@@ -9,10 +9,10 @@ namespace Friendica\Test\src\Contact\FriendSuggest\Factory;
 
 use Friendica\Contact\FriendSuggest\Factory\FriendSuggest;
 use Friendica\Contact\FriendSuggest\Entity;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Psr\Log\NullLogger;
 
-class FriendSuggestTest extends MockedTest
+class FriendSuggestTest extends MockedTestCase
 {
 	public function dataCreate()
 	{

@@ -26,7 +26,7 @@ use Friendica\Database\Definition\ViewDefinition;
 use Friendica\DI;
 use Friendica\Core\Config\Factory\Config;
 use Friendica\Core\Storage\Type;
-use Friendica\Test\DatabaseTest;
+use Friendica\Test\DatabaseTestCase;
 use Friendica\Test\Util\CreateDatabaseTrait;
 use Friendica\Test\Util\Database\StaticDatabase;
 use Friendica\Test\Util\VFSTrait;
@@ -36,7 +36,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Friendica\Test\Util\SampleStorageBackend;
 
-class StorageManagerTest extends DatabaseTest
+class StorageManagerTest extends DatabaseTestCase
 {
 	use CreateDatabaseTrait;
 

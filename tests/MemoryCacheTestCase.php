@@ -5,12 +5,12 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Core\Cache;
+namespace Friendica\Test;
 
 use Exception;
 use Friendica\Core\Cache\Capability\ICanCacheInMemory;
 
-abstract class MemoryCacheTest extends CacheTest
+abstract class MemoryCacheTestCase extends CacheTestCase
 {
 	/**
 	 * @var \Friendica\Core\Cache\Capability\ICanCacheInMemory

@@ -11,9 +11,9 @@ use Friendica\Content\Smilies;
 use Friendica\Core\Hook;
 use Friendica\DI;
 use Friendica\Network\HTTPException\InternalServerErrorException;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 
-class SmiliesTest extends FixtureTest
+class SmiliesTest extends FixtureTestCase
 {
 	protected function setUp(): void
 	{

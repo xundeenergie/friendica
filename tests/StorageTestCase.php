@@ -5,14 +5,14 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Core\Storage;
+namespace Friendica\Test;
 
 use Friendica\Core\Storage\Capability\ICanReadFromStorage;
 use Friendica\Core\Storage\Capability\ICanWriteToStorage;
 use Friendica\Core\Storage\Exception\ReferenceStorageException;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-abstract class StorageTest extends MockedTest
+abstract class StorageTestCase extends MockedTestCase
 {
 	/** @return ICanWriteToStorage */
 	abstract protected function getInstance();

@@ -16,6 +16,7 @@ use Friendica\Core\L10n;
 use Friendica\Core\Logger;
 use Friendica\Database\Database;
 use Friendica\DI;
+use Friendica\Test\ConsoleTestCase;
 use Friendica\Test\Util\RendererMockTrait;
 use Friendica\Test\Util\VFSTrait;
 use Mockery;
@@ -24,7 +25,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
 use Psr\Log\NullLogger;
 
-class AutomaticInstallationConsoleTest extends ConsoleTest
+class AutomaticInstallationConsoleTest extends ConsoleTestCase
 {
 	use VFSTrait;
 	use RendererMockTrait;
@@ -273,7 +274,7 @@ Creating config file...
 Checking database...
 
 [Error] --------
-Could not connect to database.: 
+Could not connect to database.:
 
 
 FIN;
@@ -633,12 +634,12 @@ Options
     -d|--dbdata <database>    The name of the mysql/mariadb database (env MYSQL_DATABASE)
     -U|--dbuser <username>    The username of the mysql/mariadb database login (env MYSQL_USER or MYSQL_USERNAME)
     -P|--dbpass <password>    The password of the mysql/mariadb database login (env MYSQL_PASSWORD)
-    -U|--url <url>            The full base URL of Friendica - f.e. 'https://friendica.local/sub' (env FRIENDICA_URL) 
+    -U|--url <url>            The full base URL of Friendica - f.e. 'https://friendica.local/sub' (env FRIENDICA_URL)
     -B|--phppath <php_path>   The path of the PHP binary (env FRIENDICA_PHP_PATH)
     -b|--basepath <base_path> The basepath of Friendica (env FRIENDICA_BASE_PATH)
     -t|--tz <timezone>        The timezone of Friendica (env FRIENDICA_TZ)
     -L|--lang <language>      The language of Friendica (env FRIENDICA_LANG)
- 
+
 Environment variables
    MYSQL_HOST                  The host of the mysql/mariadb database (mandatory if mysql and environment is used)
    MYSQL_PORT                  The port of the mysql/mariadb database
@@ -651,7 +652,7 @@ Environment variables
    FRIENDICA_ADMIN_MAIL        The admin email address of Friendica (this email will be used for admin access)
    FRIENDICA_TZ                The timezone of Friendica
    FRIENDICA_LANG              The langauge of Friendica
-   
+
 Examples
 	bin/console autoinstall -f 'input.config.php
 		Installs Friendica with the prepared 'input.config.php' file

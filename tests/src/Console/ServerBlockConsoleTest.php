@@ -9,10 +9,11 @@ namespace Friendica\Test\src\Console;
 
 use Friendica\Console\ServerBlock;
 use Friendica\Moderation\DomainPatternBlocklist;
+use Friendica\Test\ConsoleTestCase;
 use Friendica\Test\FixtureTestTrait;
 use Mockery;
 
-class ServerBlockConsoleTest extends ConsoleTest
+class ServerBlockConsoleTest extends ConsoleTestCase
 {
 	use FixtureTestTrait;
 

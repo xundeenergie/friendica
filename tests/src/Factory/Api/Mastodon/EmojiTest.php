@@ -9,9 +9,9 @@ namespace Friendica\Test\src\Factory\Api\Mastodon;
 
 use Friendica\Content\Smilies;
 use Friendica\DI;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 
-class EmojiTest extends FixtureTest
+class EmojiTest extends FixtureTestCase
 {
 	protected function setUp(): void
 	{

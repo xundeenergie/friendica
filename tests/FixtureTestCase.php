@@ -8,22 +8,22 @@
 namespace Friendica\Test;
 
 /**
- * Abstract class used by tests that need a database.
+ * Parent class for test cases requiring fixtures
  */
-abstract class DatabaseTest extends MockedTest
+abstract class FixtureTestCase extends MockedTestCase
 {
-	use DatabaseTestTrait;
+	use FixtureTestTrait;
 
 	protected function setUp(): void
 	{
-		$this->setUpDb();
-
 		parent::setUp();
+
+		$this->setUpFixtures();
 	}
 
 	protected function tearDown(): void
 	{
-		$this->tearDownDb();
+		$this->tearDownFixtures();
 
 		parent::tearDown();
 	}

@@ -5,13 +5,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Console;
+namespace Friendica\Test;
 
 use Asika\SimpleConsole\Console;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\Intercept;
 
-abstract class ConsoleTest extends MockedTest
+abstract class ConsoleTestCase extends MockedTestCase
 {
 	/**
 	 * @var array The default argv for a Console Instance

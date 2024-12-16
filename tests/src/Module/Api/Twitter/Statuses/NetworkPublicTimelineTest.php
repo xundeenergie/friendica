@@ -7,13 +7,12 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Statuses;
 
-use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Statuses\NetworkPublicTimeline;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class NetworkPublicTimelineTest extends ApiTest
+class NetworkPublicTimelineTest extends ApiTestCase
 {
 	/**
 	 * Test the api_statuses_networkpublic_timeline() function.

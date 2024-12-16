@@ -11,9 +11,9 @@ use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Favorites\Destroy;
 use Friendica\Network\HTTPException\BadRequestException;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class DestroyTest extends ApiTest
+class DestroyTest extends ApiTestCase
 {
 	protected function setUp(): void
 	{

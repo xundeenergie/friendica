@@ -7,12 +7,11 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Followers;
 
-use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Followers\Lists;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class ListsTest extends ApiTest
+class ListsTest extends ApiTestCase
 {
 	/**
 	 * Test the api_statuses_f() function.

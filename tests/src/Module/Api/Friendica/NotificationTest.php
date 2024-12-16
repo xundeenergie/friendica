@@ -10,11 +10,11 @@ namespace Friendica\Test\src\Module\Api\Friendica;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\DI;
 use Friendica\Module\Api\Friendica\Notification;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Temporal;
 
-class NotificationTest extends ApiTest
+class NotificationTest extends ApiTestCase
 {
 	public function testEmpty()
 	{

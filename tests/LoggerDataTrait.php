@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Core\Logger;
+namespace Friendica\Test;
 
 trait LoggerDataTrait
 {

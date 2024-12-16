@@ -13,10 +13,10 @@ use Friendica\Module\Api\Twitter\Media\Upload;
 use Friendica\Network\HTTPException\BadRequestException;
 use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Network\HTTPException\UnauthorizedException;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 use Friendica\Test\Util\AuthTestConfig;
 
-class UploadTest extends ApiTest
+class UploadTest extends ApiTestCase
 {
 	protected function setUp(): void
 	{

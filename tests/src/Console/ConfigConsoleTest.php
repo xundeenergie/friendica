@@ -11,11 +11,12 @@ use Friendica\App;
 use Friendica\App\Mode;
 use Friendica\Console\Config;
 use Friendica\Core\Config\Capability\IManageConfigValues;
+use Friendica\Test\ConsoleTestCase;
 use Mockery;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;
 
-class ConfigConsoleTest extends ConsoleTest
+class ConfigConsoleTest extends ConsoleTestCase
 {
 	/**
 	 * @var App\Mode|MockInterface $appMode

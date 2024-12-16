@@ -11,6 +11,7 @@ use Exception;
 use Friendica\Core\Cache\Type\MemcachedCache;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Lock\Type\CacheLock;
+use Friendica\Test\LockTestCase;
 use Mockery;
 use Psr\Log\NullLogger;
 
@@ -18,7 +19,7 @@ use Psr\Log\NullLogger;
  * @requires extension memcached
  * @group MEMCACHED
  */
-class MemcachedCacheLockTest extends LockTest
+class MemcachedCacheLockTest extends LockTestCase
 {
 	protected function getInstance()
 	{

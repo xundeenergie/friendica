@@ -7,12 +7,11 @@
 
 namespace Friendica\Test\src\Module\Api\Mastodon\Accounts;
 
-use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Mastodon\Accounts\VerifyCredentials;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class VerifyCredentialsTest extends ApiTest
+class VerifyCredentialsTest extends ApiTestCase
 {
 	/**
 	 * Test the api_account_verify_credentials() function.

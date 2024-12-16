@@ -10,13 +10,14 @@ namespace Friendica\Test\src\Core\Cache;
 use Exception;
 use Friendica\Core\Cache\Type\MemcacheCache;
 use Friendica\Core\Config\Capability\IManageConfigValues;
+use Friendica\Test\MemoryCacheTestCase;
 use Mockery;
 
 /**
  * @requires extension memcache
  * @group MEMCACHE
  */
-class MemcacheCacheTest extends MemoryCacheTest
+class MemcacheCacheTest extends MemoryCacheTestCase
 {
 	protected function getInstance()
 	{

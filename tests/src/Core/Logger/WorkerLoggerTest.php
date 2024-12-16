@@ -8,10 +8,10 @@
 namespace Friendica\Test\src\Core\Logger;
 
 use Friendica\Core\Logger\Type\WorkerLogger;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Psr\Log\LoggerInterface;
 
-class WorkerLoggerTest extends MockedTest
+class WorkerLoggerTest extends MockedTestCase
 {
 	private function assertUid($uid)
 	{

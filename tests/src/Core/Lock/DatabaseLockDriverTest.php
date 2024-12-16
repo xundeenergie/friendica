@@ -8,9 +8,10 @@
 namespace Friendica\Test\src\Core\Lock;
 
 use Friendica\Core\Lock\Type\DatabaseLock;
+use Friendica\Test\LockTestCase;
 use Friendica\Test\Util\CreateDatabaseTrait;
 
-class DatabaseLockDriverTest extends LockTest
+class DatabaseLockDriverTest extends LockTestCase
 {
 	use CreateDatabaseTrait;
 

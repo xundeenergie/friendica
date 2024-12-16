@@ -13,13 +13,13 @@ use Friendica\Profile\ProfileField\Exception\UnexpectedPermissionSetException;
 use Friendica\Profile\ProfileField\Factory\ProfileField as ProfileFieldFactory;
 use Friendica\Security\PermissionSet\Repository\PermissionSet as PermissionSetRepository;
 use Friendica\Security\PermissionSet\Factory\PermissionSet as PermissionSetFactory;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\ACLFormatter;
 use Friendica\Util\DateTimeFormat;
 use Mockery\MockInterface;
 use Psr\Log\NullLogger;
 
-class ProfileFieldTest extends MockedTest
+class ProfileFieldTest extends MockedTestCase
 {
 	/** @var MockInterface|PermissionSetRepository */
 	protected $permissionSetRepository;

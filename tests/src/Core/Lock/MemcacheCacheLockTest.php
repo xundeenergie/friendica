@@ -11,13 +11,14 @@ use Exception;
 use Friendica\Core\Cache\Type\MemcacheCache;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Lock\Type\CacheLock;
+use Friendica\Test\LockTestCase;
 use Mockery;
 
 /**
  * @requires extension Memcache
  * @group MEMCACHE
  */
-class MemcacheCacheLockTest extends LockTest
+class MemcacheCacheLockTest extends LockTestCase
 {
 	protected function getInstance()
 	{
@@ -39,7 +40,7 @@ class MemcacheCacheLockTest extends LockTest
 
 		try {
 			$cache = new MemcacheCache($host, $configMock);
-			$lock = new \Friendica\Core\Lock\Type\CacheLock($cache);
+			$lock = new CacheLock($cache);
 		} catch (Exception $e) {
 			static::markTestSkipped('Memcache is not available');
 		}

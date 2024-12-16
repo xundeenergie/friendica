@@ -8,8 +8,9 @@
 namespace Friendica\Test\src\Core\PConfig;
 
 use Friendica\Core\PConfig\Type\JitPConfig;
+use Friendica\Test\PConfigTestCase;
 
-class JitPConfigTest extends PConfigTest
+class JitPConfigTest extends PConfigTestCase
 {
 	public function getInstance()
 	{

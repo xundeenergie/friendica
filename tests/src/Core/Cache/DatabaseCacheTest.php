@@ -7,13 +7,13 @@
 
 namespace Friendica\Test\src\Core\Cache;
 
-use Friendica\App\BaseURL;
-use Friendica\Core\Cache;
+use Friendica\Core\Cache\Type\DatabaseCache;
+use Friendica\Test\CacheTestCase;
 use Friendica\Test\DatabaseTestTrait;
 use Friendica\Test\Util\CreateDatabaseTrait;
 use Friendica\Test\Util\VFSTrait;
 
-class DatabaseCacheTest extends CacheTest
+class DatabaseCacheTest extends CacheTestCase
 {
 	use DatabaseTestTrait;
 	use CreateDatabaseTrait;
@@ -30,7 +30,7 @@ class DatabaseCacheTest extends CacheTest
 
 	protected function getInstance()
 	{
-		$this->cache = new Cache\Type\DatabaseCache('database', $this->getDbInstance());
+		$this->cache = new DatabaseCache('database', $this->getDbInstance());
 		return $this->cache;
 	}
 

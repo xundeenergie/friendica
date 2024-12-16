@@ -5,26 +5,23 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace Friendica\Test\src\Module\Api;
+namespace Friendica\Test;
 
 use Friendica\App;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Core\Addon;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Hook;
-use Friendica\Database\Database;
 use Friendica\DI;
 use Friendica\Module\Special\HTTPException;
 use Friendica\Security\Authentication;
 use Friendica\Security\BasicAuth;
-use Friendica\Test\FixtureTest;
 use Friendica\Test\Util\AppDouble;
 use Friendica\Test\Util\AuthenticationDouble;
 use Friendica\Test\Util\AuthTestConfig;
-use Mockery\MockInterface;
 use Psr\Http\Message\ResponseInterface;
 
-abstract class ApiTest extends FixtureTest
+abstract class ApiTestCase extends FixtureTestCase
 {
 	// User data that the test database is populated with
 	const SELF_USER = [
@@ -190,7 +187,7 @@ abstract class ApiTest extends FixtureTest
 	public function installAuthTest()
 	{
 		$addon           = 'authtest';
-		$addon_file_path = __DIR__ . '/../../../Util/authtest/authtest.php';
+		$addon_file_path = __DIR__ . '/Util/authtest/authtest.php';
 		$t               = @filemtime($addon_file_path);
 
 		@include_once($addon_file_path);

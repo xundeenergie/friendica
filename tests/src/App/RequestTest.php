@@ -9,9 +9,9 @@ namespace Friendica\Test\src\App;
 
 use Friendica\App\Request;
 use Friendica\Core\Config\Capability\IManageConfigValues;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-class RequestTest extends MockedTest
+class RequestTest extends MockedTestCase
 {
 	public function dataServerArray(): array
 	{
