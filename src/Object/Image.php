@@ -105,7 +105,8 @@ class Image
 	 * @param string $data
 	 * @return boolean
 	 */
-	private function isAnimatedWebP(string $data) {
+	private function isAnimatedWebP(string $data)
+	{
 		$header_format = 'A4Riff/I1Filesize/A4Webp/A4Vp/A74Chunk';
 		$header = @unpack($header_format, $data);
 
@@ -356,7 +357,6 @@ class Image
 		} else {
 			return false;
 		}
-
 	}
 
 	/**
@@ -526,7 +526,7 @@ class Image
 		$width = $this->getWidth();
 		$height = $this->getHeight();
 
-		if ((!$width)|| (!$height)) {
+		if ((!$width) || (!$height)) {
 			return false;
 		}
 
@@ -733,7 +733,7 @@ class Image
 			}
 		}
 
-		$stream = fopen('php://memory','r+');
+		$stream = fopen('php://memory', 'r+');
 
 		switch ($this->getImageType()) {
 			case IMAGETYPE_PNG:
@@ -767,9 +767,9 @@ class Image
 	 *
 	 * @return string
 	 */
-	public function getBlurHash(): string
+	public function getBlurHash(string $img_str = ''): string
 	{
-		$image = New Image($this->asString(), $this->getType(), $this->filename, false);
+		$image = new Image($img_str ?: $this->asString(), $this->getType(), $this->filename, false);
 		if (!$this->isValid()) {
 			return '';
 		}

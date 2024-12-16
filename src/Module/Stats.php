@@ -94,6 +94,13 @@ class Stats extends BaseModule
 				'deferred'      => [],
 				'total'         => [],
 			],
+			'jetstream' => [
+				'drift'     => intval($this->keyValue->get('jetstream_drift')),
+				'did_count' => intval($this->keyValue->get('jetstream_did_count')),
+				'did_limit' => intval($this->keyValue->get('jetstream_did_limit')),
+				'messages'  => intval($this->keyValue->get('jetstream_messages')),
+				'timestamp' => intval($this->keyValue->get('jetstream_timestamp')),
+			],
 			'users' => [
 				'total'          => intval($this->keyValue->get('nodeinfo_total_users')),
 				'activeWeek'     => intval($this->keyValue->get('nodeinfo_active_users_weekly')),
