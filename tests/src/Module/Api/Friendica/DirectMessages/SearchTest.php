@@ -19,7 +19,7 @@ class SearchTest extends ApiTestCase
 	{
 		$directMessage = new DirectMessage(new NullLogger(), DI::dba(), DI::twitterUser());
 
-		$response = (new Search($directMessage, DI::dba(), DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		$response = (new Search($directMessage, DI::dba(), DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock);
 
 		$json = $this->toJson($response);
@@ -37,7 +37,7 @@ class SearchTest extends ApiTestCase
 
 		$directMessage = new DirectMessage(new NullLogger(), DI::dba(), DI::twitterUser());
 
-		$response = (new Search($directMessage, DI::dba(), DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		$response = (new Search($directMessage, DI::dba(), DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'searchstring' => 'item_body'
 			]);
@@ -58,7 +58,7 @@ class SearchTest extends ApiTestCase
 	{
 		$directMessage = new DirectMessage(new NullLogger(), DI::dba(), DI::twitterUser());
 
-		$response = (new Search($directMessage, DI::dba(), DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		$response = (new Search($directMessage, DI::dba(), DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'searchstring' => 'test'
 			]);
