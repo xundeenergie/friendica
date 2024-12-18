@@ -23,7 +23,7 @@ class StatusesTest extends ApiTestCase
 	{
 		$this->expectException(BadRequestException::class);
 
-		(new Statuses(DI::dba(), DI::twitterStatus(), DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		(new Statuses(DI::dba(), DI::twitterStatus(), DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock);
 	}
 

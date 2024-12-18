@@ -57,7 +57,7 @@ class SearchTest extends ApiTestCase
 	{
 		$this->expectException(BadRequestException::class);
 
-		(new Search(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		(new Search(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock);
 	}
 }

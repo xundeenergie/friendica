@@ -21,7 +21,7 @@ class UpdateProfileTest extends ApiTestCase
 	{
 		$this->useHttpMethod(Router::POST);
 
-		$response = (new UpdateProfile(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), [], ['extension' => 'json']))
+		$response = (new UpdateProfile(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), [], ['extension' => 'json']))
 			->run($this->httpExceptionMock, [
 				'name'        => 'new_name',
 				'description' => 'new_description'

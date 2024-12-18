@@ -24,7 +24,7 @@ class ShowTest extends ApiTestCase
 		$this->expectException(BadRequestException::class);
 
 
-		(new Show(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		(new Show(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock);
 	}
 
@@ -35,7 +35,7 @@ class ShowTest extends ApiTestCase
 	 */
 	public function testApiStatusesShowWithId()
 	{
-		$response = (new Show(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		$response = (new Show(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'id' => 1
 			]);

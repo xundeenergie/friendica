@@ -23,7 +23,7 @@ class ConversationTest extends ApiTestCase
 	{
 		$directMessage = new DirectMessage(DI::logger(), DI::dba(), DI::twitterUser());
 
-		$response = (new Conversation($directMessage, DI::dba(), DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), [], ['extension' => 'json']))
+		$response = (new Conversation($directMessage, DI::dba(), DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), [], ['extension' => 'json']))
 			->run($this->httpExceptionMock, [
 				'friendica_verbose' => true,
 			]);

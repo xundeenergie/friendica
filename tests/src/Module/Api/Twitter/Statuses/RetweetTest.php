@@ -31,7 +31,7 @@ class RetweetTest extends ApiTestCase
 	{
 		$this->expectException(BadRequestException::class);
 
-		(new Retweet(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		(new Retweet(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock);
 	}
 
@@ -57,7 +57,7 @@ class RetweetTest extends ApiTestCase
 	 */
 	public function testApiStatusesRepeatWithId()
 	{
-		$response = (new Retweet(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		$response = (new Retweet(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'id' => 1
 			]);
