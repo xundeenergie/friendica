@@ -188,7 +188,7 @@ abstract class ApiTestCase extends FixtureTestCase
 		@include_once($addon_file_path);
 		if (function_exists($addon . '_install')) {
 			$func = $addon . '_install';
-			$func(DI::app());
+			$func();
 		}
 
 		/** @var $config IManageConfigValues */
