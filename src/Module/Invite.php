@@ -30,7 +30,6 @@ class Invite extends BaseModule
 
 		self::checkFormSecurityTokenRedirectOnError('/', 'send_invite');
 
-		$app = DI::app();
 		$config = DI::config();
 
 		$max_invites = intval($config->get('system', 'max_invites'));
@@ -117,7 +116,6 @@ class Invite extends BaseModule
 			throw new HTTPException\ForbiddenException(DI::l10n()->t('Permission denied.'));
 		}
 
-		$app = DI::app();
 		$config = DI::config();
 
 		$inviteOnly = false;
@@ -142,7 +140,7 @@ class Invite extends BaseModule
 			if (Register::getPolicy() === Register::CLOSED) {
 				return DI::l10n()->t('Our apologies. This system is not currently configured to connect with other public sites or invite members.');
 			} else {
-				$linkTxt = DI::l10n()->t('To accept this invitation, please visit and register at %s.', DI::baseUrl() . '/register' 
+				$linkTxt = DI::l10n()->t('To accept this invitation, please visit and register at %s.', DI::baseUrl() . '/register'
 					. "\r\n" . "\r\n" . DI::l10n()->t('Friendica sites all inter-connect to create a huge privacy-enhanced social web that is owned and controlled by its members. They can also connect with many traditional social networks.'));
 			}
 		}

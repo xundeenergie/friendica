@@ -36,17 +36,18 @@ class Authorize extends BaseApi
 		], $request);
 
 		if ($request['response_type'] != 'code') {
-			Logger::warning('Unsupported or missing response type', ['request' => $_REQUEST]);
+			Logger::warning('Unsupported or missing response type', ['request' => $request]);
 			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity($this->t('Unsupported or missing response type')));
 		}
 
 		if (empty($request['client_id']) || empty($request['redirect_uri'])) {
-			Logger::warning('Incomplete request data', ['request' => $_REQUEST]);
+			Logger::warning('Incomplete request data', ['request' => $request]);
 			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity($this->t('Incomplete request data')));
 		}
 
 		$application = OAuth::getApplication($request['client_id'], $request['client_secret'], $request['redirect_uri']);
 		if (empty($application)) {
+			Logger::warning('An application could not be fetched.', ['request' => $request]);
 			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity());
 		}
 
@@ -59,14 +60,14 @@ class Authorize extends BaseApi
 		$uid = DI::userSession()->getLocalUserId();
 		if (empty($uid)) {
 			Logger::info('Redirect to login');
-			DI::app()->redirect('login?' . http_build_query(['return_authorize' => $redirect]));
+			DI::appHelper()->redirect('login?' . http_build_query(['return_authorize' => $redirect]));
 		} else {
 			Logger::info('Already logged in user', ['uid' => $uid]);
 		}
 
 		if (!OAuth::existsTokenForUser($application, $uid) && !DI::session()->get('oauth_acknowledge')) {
 			Logger::info('Redirect to acknowledge');
-			DI::app()->redirect('oauth/acknowledge?' . http_build_query(['return_authorize' => $redirect, 'application' => $application['name']]));
+			DI::appHelper()->redirect('oauth/acknowledge?' . http_build_query(['return_authorize' => $redirect, 'application' => $application['name']]));
 		}
 
 		DI::session()->remove('oauth_acknowledge');
@@ -77,7 +78,7 @@ class Authorize extends BaseApi
 		}
 
 		if ($application['redirect_uri'] != 'urn:ietf:wg:oauth:2.0:oob') {
-			DI::app()->redirect($request['redirect_uri'] . (strpos($request['redirect_uri'], '?') ? '&' : '?') . http_build_query(['code' => $token['code'], 'state' => $request['state']]));
+			DI::appHelper()->redirect($request['redirect_uri'] . (strpos($request['redirect_uri'], '?') ? '&' : '?') . http_build_query(['code' => $token['code'], 'state' => $request['state']]));
 		}
 
 		self::$oauth_code = $token['code'];

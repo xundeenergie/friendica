@@ -14,10 +14,10 @@ use Friendica\Profile\ProfileField\Factory\ProfileField as ProfileFieldFactory;
 use Friendica\Security\PermissionSet\Repository\PermissionSet;
 use Friendica\Security\PermissionSet\Factory\PermissionSet as PermissionSetFactory;
 use Friendica\Security\PermissionSet\Repository\PermissionSet as PermissionSetRepository;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Friendica\DI;
 
-class ProfileFieldTest extends FixtureTest
+class ProfileFieldTest extends FixtureTestCase
 {
 	/** @var ProfileFieldRepository */
 	private $depository;

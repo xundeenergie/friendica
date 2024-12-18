@@ -26,8 +26,6 @@ class ListEntity extends BaseDataTransferObject
 	/**
 	 * Creates an list record
 	 *
-	 * @param int $id
-	 * @param string $title
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
 	public function __construct(string $id, string $title, string $policy)

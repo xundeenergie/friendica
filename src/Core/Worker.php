@@ -533,7 +533,7 @@ class Worker
 	 */
 	private static function execFunction(array $queue, string $funcname, array $argv, bool $method_call)
 	{
-		$a = DI::app();
+		$appHelper = DI::appHelper();
 
 		self::coolDown();
 
@@ -547,7 +547,7 @@ class Worker
 		// For this reason the variables have to be initialized.
 		DI::profiler()->reset();
 
-		$a->setQueue($queue);
+		$appHelper->setQueue($queue);
 
 		$up_duration = microtime(true) - self::$up_start;
 
@@ -571,7 +571,7 @@ class Worker
 
 		Logger::disableWorker();
 
-		$a->setQueue([]);
+		$appHelper->setQueue([]);
 
 		$duration = (microtime(true) - $stamp);
 
@@ -824,13 +824,17 @@ class Worker
 				$max_idletime = DI::config()->get('system', 'worker_max_idletime');
 				$last_check   = DI::cache()->get(self::LAST_CHECK);
 				$last_date    = $last_check ? date('c', $last_check) : '';
-				if (($max_idletime > 0) && (time() > $last_check + $max_idletime) && !DBA::exists('workerqueue', ["`done` AND `executed` > ?", DateTimeFormat::utc('now - ' . $max_idletime . ' second')])) {
+				if (
+					($max_idletime > 0)
+					&& (time() > (int) $last_check + (int) $max_idletime)
+					&& !DBA::exists('workerqueue', ["`done` AND `executed` > ?", DateTimeFormat::utc('now - ' . $max_idletime . ' second')])
+				) {
 					DI::cache()->set(self::LAST_CHECK, time(), Duration::HOUR);
 					Logger::info('The last worker execution had been too long ago.', ['last' => $last_check, 'last-check' => $last_date, 'seconds' => $max_idletime, 'load' => $load, 'max_load' => $maxsysload, 'active_worker' => $active, 'max_worker' => $maxqueues]);
 					return false;
 				} elseif ($max_idletime > 0) {
 					Logger::debug('Maximum idletime not reached.', ['last' => $last_check, 'last-check' => $last_date, 'seconds' => $max_idletime, 'load' => $load, 'max_load' => $maxsysload, 'active_worker' => $active, 'max_worker' => $maxqueues]);
-				}	
+				}
 			}
 		}
 
@@ -1211,7 +1215,7 @@ class Worker
 	/**
 	 * Adds tasks to the worker queue
 	 *
-	 * @param (integer|array) priority or parameter array, strings are deprecated and are ignored
+	 * @param integer|array $args priority or parameter array, strings are deprecated and are ignored
 	 *
 	 * next args are passed as $cmd command line
 	 * or: Worker::add(Worker::PRIORITY_HIGH, 'Notifier', Delivery::DELETION, $drop_id);
@@ -1371,20 +1375,20 @@ class Worker
 	 */
 	public static function getRetrial(): int
 	{
-		$queue = DI::app()->getQueue();
+		$queue = DI::appHelper()->getQueue();
 		return $queue['retrial'] ?? 0;
 	}
 
 	/**
 	 * Defers the current worker entry
 	 *
-	 * @param int $worker_defer_limit Maximum defer limit 
+	 * @param int $worker_defer_limit Maximum defer limit
 	 * @return boolean had the entry been deferred?
 	 * @throws \Exception
 	 */
 	public static function defer(int $worker_defer_limit = 0): bool
 	{
-		$queue = DI::app()->getQueue();
+		$queue = DI::appHelper()->getQueue();
 
 		if (empty($queue)) {
 			return false;

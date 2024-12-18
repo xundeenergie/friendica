@@ -10,18 +10,17 @@ namespace Friendica\Factory\Api\Mastodon;
 use Friendica\BaseFactory;
 use Friendica\Database\DBA;
 use Friendica\Model\Subscription as ModelSubscription;
+use Friendica\Object\Api\Mastodon\Subscription as SubscriptionObject;
 
 class Subscription extends BaseFactory
 {
 	/**
 	 * @param int $applicationid Application Id
 	 * @param int $uid           Item user
-	 *
-	 * @return \Friendica\Object\Api\Mastodon\Status
 	 */
-	public function createForApplicationIdAndUserId(int $applicationid, int $uid): \Friendica\Object\Api\Mastodon\Subscription
+	public function createForApplicationIdAndUserId(int $applicationid, int $uid): SubscriptionObject
 	{
 		$subscription = DBA::selectFirst('subscription', [], ['application-id' => $applicationid, 'uid' => $uid]);
-		return new \Friendica\Object\Api\Mastodon\Subscription($subscription, ModelSubscription::getPublicVapidKey());
+		return new SubscriptionObject($subscription, ModelSubscription::getPublicVapidKey());
 	}
 }

@@ -10,9 +10,9 @@ namespace Friendica\Test\src\Module\Api\Twitter\Statuses;
 use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Statuses\Update;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class UpdateTest extends ApiTest
+class UpdateTest extends ApiTestCase
 {
 	protected function setUp(): void
 	{

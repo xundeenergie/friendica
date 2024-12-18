@@ -9,7 +9,6 @@ namespace Friendica\Module\Admin;
 
 use Friendica\App;
 use Friendica\Core\Addon;
-use Friendica\Core\Config\Util\ConfigFileManager;
 use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Core\Renderer;
 use Friendica\Core\Update;
@@ -19,7 +18,6 @@ use Friendica\DI;
 use Friendica\Core\Config\Factory\Config;
 use Friendica\Module\BaseAdmin;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
-use Friendica\Network\HTTPException\ServiceUnavailableException;
 use Friendica\Network\Probe;
 use Friendica\Util\DateTimeFormat;
 
@@ -29,7 +27,7 @@ class Summary extends BaseAdmin
 	{
 		parent::content();
 
-		$a = DI::app();
+		$basePath = DI::appHelper()->getBasePath();
 
 		// are there MyISAM tables in the DB? If so, trigger a warning message
 		$warningtext = [];
@@ -55,7 +53,7 @@ class Summary extends BaseAdmin
 			$table_definition_cache = DBA::getVariable('table_definition_cache');
 			$table_open_cache = DBA::getVariable('table_open_cache');
 			if (!empty($table_definition_cache) && !empty($table_open_cache)) {
-				$suggested_definition_cache = min(400 + round($table_open_cache / 2, 1), 2000);
+				$suggested_definition_cache = min(400 + round((int) $table_open_cache / 2, 1), 2000);
 				if ($suggested_definition_cache > $table_definition_cache) {
 					$warningtext[] = DI::l10n()->t('Your table_definition_cache is too low (%d). This can lead to the database error "Prepared statement needs to be re-prepared". Please set it at least to %d. See <a href="%s">here</a> for more information.<br />', $table_definition_cache, $suggested_definition_cache, 'https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_table_definition_cache');
 				}
@@ -64,23 +62,19 @@ class Summary extends BaseAdmin
 
 		// Check if github.com/friendica/stable/VERSION is higher then
 		// the local version of Friendica. Check is opt-in, source may be stable or develop branch
-		if (DI::config()->get('system', 'check_new_version_url', 'none') != 'none') {
-			$gitversion = DI::keyValue()->get('git_friendica_version') ?? '';
-
-			if (version_compare(App::VERSION, $gitversion) < 0) {
-				$warningtext[] = DI::l10n()->t('There is a new version of Friendica available for download. Your current version is %1$s, upstream version is %2$s', App::VERSION, $gitversion);
-			}
+		if (Update::isAvailable()) {
+			$warningtext[] = DI::l10n()->t('There is a new version of Friendica available for download. Your current version is %1$s, upstream version is %2$s', App::VERSION, Update::getAvailableVersion());
 		}
 
-		if (DI::config()->get('system', 'dbupdate', DBStructure::UPDATE_NOT_CHECKED) == DBStructure::UPDATE_NOT_CHECKED) {
+		if (DBStructure::getUpdateStatus() == DBStructure::UPDATE_NOT_CHECKED) {
 			DBStructure::performUpdate();
 		}
 
-		if (DI::config()->get('system', 'dbupdate') == DBStructure::UPDATE_FAILED) {
+		if (DBStructure::getUpdateStatus() == DBStructure::UPDATE_FAILED) {
 			$warningtext[] = DI::l10n()->t('The database update failed. Please run "php bin/console.php dbstructure update" from the command line and have a look at the errors that might appear.');
 		}
 
-		if (DI::config()->get('system', 'update') == Update::FAILED) {
+		if (Update::getStatus() == Update::FAILED) {
 			$warningtext[] = DI::l10n()->t('The last update failed. Please run "php bin/console.php dbstructure update" from the command line and have a look at the errors that might appear. (Some of the errors are possibly inside the logfile.)');
 		}
 
@@ -120,7 +114,7 @@ class Summary extends BaseAdmin
 		}
 
 		// check legacy basepath settings
-		$configLoader = (new Config())->createConfigFileManager($a->getBasePath(), $_SERVER);
+		$configLoader = (new Config())->createConfigFileManager($basePath, $_SERVER);
 		$configCache = new Cache();
 		$configLoader->setupCache($configCache);
 		$confBasepath = $configCache->get('system', 'basepath');
@@ -160,9 +154,6 @@ class Summary extends BaseAdmin
 		// We can do better, but this is a quick queue status
 		$queues = ['label' => DI::l10n()->t('Message queues'), 'deferred' => $deferred, 'workerq' => $workerqueue];
 
-		$variables = DBA::toArray(DBA::p('SHOW variables LIKE "max_allowed_packet"'));
-		$max_allowed_packet = $variables ? $variables[0]['Value'] : 0;
-
 		$server_settings = [
 			'label' => DI::l10n()->t('Server Settings'),
 			'php'   => [
@@ -173,7 +164,7 @@ class Summary extends BaseAdmin
 				'memory_limit'        => ini_get('memory_limit')
 			],
 			'mysql' => [
-				'max_allowed_packet' => $max_allowed_packet
+				'max_allowed_packet' => DBA::getVariable('max_allowed_packet'),
 			]
 		];
 

@@ -7,10 +7,10 @@
 
 namespace Friendica\Model;
 
+use Exception;
 use Friendica\Contact\Avatar;
 use Friendica\Contact\Header;
 use Friendica\Contact\Introduction\Exception\IntroductionNotFoundException;
-use Friendica\Contact\LocalRelationship\Entity\LocalRelationship;
 use Friendica\Content\Conversation as ConversationContent;
 use Friendica\Content\Pager;
 use Friendica\Content\Text\HTML;
@@ -25,7 +25,8 @@ use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientOptions;
-use Friendica\Network\HTTPException;
+use Friendica\Network\HTTPException\NotFoundException;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Network\Probe;
 use Friendica\Object\Image;
 use Friendica\Protocol\Activity;
@@ -104,7 +105,7 @@ class Contact
 	 * @param array $condition Array of fields for condition
 	 * @param array $params    Array of several parameters
 	 * @return array
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function selectToArray(array $fields = [], array $condition = [], array $params = []): array
 	{
@@ -116,7 +117,7 @@ class Contact
 	 * @param array $condition Array of fields for condition
 	 * @param array $params    Array of several parameters
 	 * @return array|bool
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function selectFirst(array $fields = [], array $condition = [], array $params = [])
 	{
@@ -130,7 +131,7 @@ class Contact
 	 * @param array $condition Array of fields for condition
 	 * @param array $params    Array of several parameters
 	 * @return array
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function selectAccountToArray(array $fields = [], array $condition = [], array $params = []): array
 	{
@@ -142,7 +143,7 @@ class Contact
 	 * @param array $condition Array of fields for condition
 	 * @param array $params    Array of several parameters
 	 * @return array|bool
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function selectFirstAccount(array $fields = [], array $condition = [], array $params = [])
 	{
@@ -162,7 +163,7 @@ class Contact
 	 * @param int   $duplicate_mode Do an update on a duplicate entry
 	 *
 	 * @return int  id of the created contact
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function insert(array $fields, int $duplicate_mode = Database::INSERT_DEFAULT): int
 	{
@@ -233,7 +234,7 @@ class Contact
 	 * @param array|boolean $old_fields array with the old field values that are about to be replaced (true = update on duplicate, false = don't update identical fields)
 	 *
 	 * @return boolean was the update successful?
-	 * @throws \Exception
+	 * @throws Exception
 	 * @todo Let's get rid of boolean type of $old_fields
 	 */
 	public static function update(array $fields, array $condition, $old_fields = []): bool
@@ -249,7 +250,7 @@ class Contact
 	 * @param integer $id     Contact ID
 	 * @param array   $fields Array of selected fields, empty for all
 	 * @return array|boolean Contact record if it exists, false otherwise
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function getAccountById(int $id, array $fields = [])
 	{
@@ -260,7 +261,7 @@ class Contact
 	 * @param integer $id     Contact ID
 	 * @param array   $fields Array of selected fields, empty for all
 	 * @return array|boolean Contact record if it exists, false otherwise
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function getById(int $id, array $fields = [])
 	{
@@ -273,7 +274,7 @@ class Contact
 	 * @param integer $uri_id uri-id of the contact
 	 * @param array   $fields Array of selected fields, empty for all
 	 * @return array|boolean Contact record if it exists, false otherwise
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function getByUriId(int $uri_id, array $fields = [])
 	{
@@ -288,7 +289,7 @@ class Contact
 	 *
 	 * @return array all remote contacts
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function getVisitorByUrl(string $url, array $fields = ['id', 'uid']): array
 	{
@@ -432,7 +433,7 @@ class Contact
 	 * @param bool $strict If "true" then contact mustn't be set to pending or readonly
 	 *
 	 * @return boolean is the contact id a follower?
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function isFollower(int $cid, int $uid, bool $strict = false): bool
@@ -461,7 +462,7 @@ class Contact
 	 * @param bool   $strict If "true" then contact mustn't be set to pending or readonly
 	 *
 	 * @return boolean is the contact id a follower?
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function isFollowerByURL(string $url, int $uid, bool $strict = false): bool
@@ -483,7 +484,7 @@ class Contact
 	 * @param bool $strict If "true" then contact mustn't be set to pending or readonly
 	 *
 	 * @return boolean is the contact sharing with given user?
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function isSharing(int $cid, int $uid, bool $strict = false): bool
@@ -512,7 +513,7 @@ class Contact
 	 * @param bool   $strict If "true" then contact mustn't be set to pending or readonly
 	 *
 	 * @return boolean is the contact url being followed?
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function isSharingByURL(string $url, int $uid, bool $strict = false): bool
@@ -544,7 +545,7 @@ class Contact
 	 * @param boolean $dont_update Don't update the contact
 	 *
 	 * @return string basepath
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function getBasepath(string $url, bool $dont_update = false): string
@@ -594,7 +595,7 @@ class Contact
 	/**
 	 * Check if the given contact ID is on the same server
 	 *
-	 * @param string $url The contact link
+	 * @param int $cid The contact link
 	 * @return boolean Is it the same server?
 	 */
 	public static function isLocalById(int $cid): bool
@@ -619,7 +620,7 @@ class Contact
 	 * @param  integer $uid User ID
 	 *
 	 * @return integer|boolean Public contact id for given user id
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function getPublicIdByUserId(int $uid)
 	{
@@ -634,7 +635,7 @@ class Contact
 	 * @param int $uid User ID
 	 *
 	 * @return array with public and user's contact id
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function getPublicAndUserContactID(int $cid, int $uid): array
@@ -700,7 +701,7 @@ class Contact
 	 * @param int $cid Either public contact id or user's contact id
 	 * @param int $uid User ID
 	 * @return array with public and user's contact id
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	private static function legacyGetPublicAndUserContactID(int $cid, int $uid): array
@@ -741,7 +742,7 @@ class Contact
 	 * @param array $fields The selected fields for the contact
 	 * @return array The contact details
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function getContactForUser(int $cid, int $uid, array $fields = []): array
 	{
@@ -759,7 +760,7 @@ class Contact
 	 *
 	 * @param int $uid
 	 * @return bool Operation success
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public static function createSelfFromUserId(int $uid): bool
 	{
@@ -822,7 +823,7 @@ class Contact
 	 * @param int  $uid
 	 * @param bool $update_avatar Force the avatar update
 	 * @return bool "true" if updated
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function updateSelfFromUserID(int $uid, bool $update_avatar = false): bool
 	{
@@ -943,7 +944,7 @@ class Contact
 	 *
 	 * @param int $id contact id
 	 * @return void
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public static function remove(int $id)
 	{
@@ -973,7 +974,7 @@ class Contact
 	 *
 	 * @param array $contact Target user-specific contact (uid != 0) array
 	 * @return void
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function unfollow(array $contact): void
@@ -1003,7 +1004,7 @@ class Contact
 	 *
 	 * @param array $contact User-specific contact array (uid != 0) to revoke the follow from
 	 * @return void
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function revokeFollow(array $contact): void
@@ -1031,7 +1032,7 @@ class Contact
 	 *
 	 * @param array $contact User-specific contact (uid != 0) array
 	 * @return void
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function terminateFriendship(array $contact)
@@ -1078,21 +1079,21 @@ class Contact
 	 *
 	 * @param array $contact contact to mark for archival
 	 * @return void
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public static function markForArchival(array $contact)
 	{
-		if (!isset($contact['url']) && !empty($contact['id'])) {
-			$fields = ['id', 'url', 'archive', 'self', 'term-date'];
+		if ((!isset($contact['uri-id']) || !isset($contact['url']) || !isset($contact['archive']) || !isset($contact['self']) || !isset($contact['term-date'])) && !empty($contact['id'])) {
+			$fields = ['id', 'uri-id', 'url', 'archive', 'self', 'term-date'];
 			$contact = DBA::selectFirst('contact', $fields, ['id' => $contact['id']]);
 			if (!DBA::isResult($contact)) {
 				return;
 			}
-		} elseif (!isset($contact['url'])) {
+		} elseif (!isset($contact['url']) || !isset($contact['uri-id'])) {
 			Logger::info('Empty contact', ['contact' => $contact]);
 		}
 
-		Logger::info('Contact is marked for archival', ['id' => $contact['id'], 'term-date' => $contact['term-date']]);
+		Logger::info('Contact is marked for archival', ['id' => $contact['id'], 'archive' => $contact['archive'], 'term-date' => $contact['term-date'], 'url' => $contact['url']]);
 
 		// Contact already archived or "self" contact? => nothing to do
 		if ($contact['archive'] || $contact['self']) {
@@ -1100,8 +1101,7 @@ class Contact
 		}
 
 		if ($contact['term-date'] <= DBA::NULL_DATETIME) {
-			self::update(['term-date' => DateTimeFormat::utcNow()], ['id' => $contact['id']]);
-			self::update(['term-date' => DateTimeFormat::utcNow()], ['`nurl` = ? AND `term-date` <= ? AND NOT `self`', Strings::normaliseLink($contact['url']), DBA::NULL_DATETIME]);
+			self::update(['term-date' => DateTimeFormat::utcNow()], ['uri-id' => $contact['uri-id'], 'self' => false]);
 		} else {
 			/* @todo
 			 * We really should send a notification to the owner after 2-3 weeks
@@ -1118,8 +1118,7 @@ class Contact
 				 * delete, though if the owner tries to unarchive them we'll start
 				 * the whole process over again.
 				 */
-				self::update(['archive' => true], ['id' => $contact['id']]);
-				self::update(['archive' => true], ['nurl' => Strings::normaliseLink($contact['url']), 'self' => false]);
+				self::update(['archive' => true], ['uri-id' => $contact['uri-id'], 'self' => false]);
 			}
 		}
 	}
@@ -1131,7 +1130,7 @@ class Contact
 	 *
 	 * @param array $contact contact to be unmarked for archival
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function unmarkForArchival(array $contact)
 	{
@@ -1144,28 +1143,25 @@ class Contact
 			}
 		}
 
-		$condition = ['`id` = ? AND (`term-date` > ? OR `archive`)', $contact['id'], DBA::NULL_DATETIME];
-		$exists = DBA::exists('contact', $condition);
-
 		// We don't need to update, we never marked this contact for archival
-		if (!$exists) {
+		$condition = ['`id` = ? AND (`term-date` > ? OR `archive`)', $contact['id'], DBA::NULL_DATETIME];
+		if (!DBA::exists('contact', $condition)) {
 			return;
 		}
 
-		Logger::info('Contact is marked as vital again', ['id' => $contact['id'], 'term-date' => $contact['term-date']]);
-
-		if (!isset($contact['url']) && !empty($contact['id'])) {
-			$fields = ['id', 'url', 'batch'];
+		if ((!isset($contact['url']) || !isset($contact['uri-id'])) && !empty($contact['id'])) {
+			$fields = ['id', 'uri-id', 'url', 'batch', 'term-date'];
 			$contact = DBA::selectFirst('contact', $fields, ['id' => $contact['id']]);
 			if (!DBA::isResult($contact)) {
 				return;
 			}
 		}
 
+		Logger::info('Contact is marked as vital again', ['id' => $contact['id'], 'term-date' => $contact['term-date'], 'url' => $contact['url']]);
+
 		// It's a miracle. Our dead contact has inexplicably come back to life.
 		$fields = ['failed' => false, 'term-date' => DBA::NULL_DATETIME, 'archive' => false];
-		self::update($fields, ['id' => $contact['id']]);
-		self::update($fields, ['nurl' => Strings::normaliseLink($contact['url']), 'self' => false]);
+		self::update($fields, ['uri-id' => $contact['uri-id'], 'self' => false]);
 	}
 
 	/**
@@ -1174,7 +1170,7 @@ class Contact
 	 * @param array $contact contact
 	 * @param int   $uid     Visitor user id
 	 * @return array
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function photoMenu(array $contact, int $uid): array
@@ -1225,7 +1221,7 @@ class Contact
 			if ($contact['uid'] && in_array($contact['rel'], [self::SHARING, self::FRIEND])) {
 				$unfollow_link = 'contact/unfollow?url=' . urlencode($contact['url']) . '&auto=1';
 			} elseif (!$contact['pending']) {
-				$follow_link = 'contact/follow?url=' . urlencode($contact['url']) . '&auto=1';
+				$follow_link = 'contact/follow?binurl=' . bin2hex($contact['url']) . '&auto=1';
 			}
 		}
 
@@ -1306,7 +1302,7 @@ class Contact
 	 * @param array   $default   Default value for creating the contact when everything else fails
 	 *
 	 * @return integer Contact ID
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function getIdForURL(string $url = null, int $uid = 0, $update = null, array $default = []): int
@@ -1372,7 +1368,7 @@ class Contact
 				$personal_contact = DBA::selectFirst('contact', $fields, ["`nurl` = ? AND `uid` != 0", Strings::normaliseLink($url)]);
 			}
 
-			if (DBA::isResult($personal_contact)) {
+			if (DBA::isResult($personal_contact) && !Probe::isProbable($personal_contact['network'])) {
 				Logger::info('Take contact data from personal contact', ['url' => $url, 'update' => $update, 'contact' => $personal_contact]);
 				$data = $personal_contact;
 				$data['photo'] = $personal_contact['avatar'];
@@ -1447,7 +1443,7 @@ class Contact
 		if ($data['network'] == Protocol::DIASPORA) {
 			try {
 				DI::dsprContact()->updateFromProbeArray($data);
-			} catch (HTTPException\NotFoundException $e) {
+			} catch (NotFoundException $e) {
 				Logger::notice($e->getMessage(), ['url' => $url, 'data' => $data]);
 			} catch (\InvalidArgumentException $e) {
 				Logger::notice($e->getMessage(), ['url' => $url, 'data' => $data]);
@@ -1455,7 +1451,7 @@ class Contact
 		} elseif (!empty($data['networks'][Protocol::DIASPORA])) {
 			try {
 				DI::dsprContact()->updateFromProbeArray($data['networks'][Protocol::DIASPORA]);
-			} catch (HTTPException\NotFoundException $e) {
+			} catch (NotFoundException $e) {
 				Logger::notice($e->getMessage(), ['url' => $url, 'data' => $data['networks'][Protocol::DIASPORA]]);
 			} catch (\InvalidArgumentException $e) {
 				Logger::notice($e->getMessage(), ['url' => $url, 'data' => $data['networks'][Protocol::DIASPORA]]);
@@ -1480,7 +1476,7 @@ class Contact
 	 * @param int $cid contact id
 	 *
 	 * @return boolean Is the contact archived?
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public static function isArchived(int $cid): bool
 	{
@@ -1523,7 +1519,7 @@ class Contact
 	 *
 	 * @param int $cid contact id
 	 * @return boolean Is the contact blocked?
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public static function isBlocked(int $cid): bool
 	{
@@ -1548,7 +1544,7 @@ class Contact
 	 *
 	 * @param int $cid contact id
 	 * @return boolean Is the contact hidden?
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function isHidden(int $cid): bool
 	{
@@ -1571,7 +1567,7 @@ class Contact
 	 * @param bool   $only_media   Only display media content
 	 * @param string $last_created Newest creation date, used for paging
 	 * @return string posts in HTML
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function getPostsFromUrl(string $contact_url, int $uid, bool $only_media = false, string $last_created = null): string
 	{
@@ -1586,13 +1582,17 @@ class Contact
 	 * @param bool   $only_media   Only display media content
 	 * @param string $last_created Newest creation date, used for paging
 	 * @return string posts in HTML
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function getPostsFromId(int $cid, int $uid, bool $only_media = false, string $last_created = null): string
 	{
-		$contact = DBA::selectFirst('contact', ['contact-type', 'network'], ['id' => $cid]);
+		$contact = DBA::selectFirst('contact', ['contact-type', 'network', 'name', 'nick'], ['id' => $cid]);
 		if (!DBA::isResult($contact)) {
 			return '';
+		}
+
+		if (Contact\User::isIsBlocked($cid, $uid)) {
+			return DI::l10n()->t('%s has blocked you', $contact['name'] ?: $contact['nick']);
 		}
 
 		if (empty($contact["network"]) || in_array($contact["network"], Protocol::FEDERATED)) {
@@ -1654,13 +1654,17 @@ class Contact
 	 * @param int  $update      Update mode
 	 * @param int  $parent      Item parent ID for the update mode
 	 * @return string posts in HTML
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function getThreadsFromId(int $cid, int $uid, int $update = 0, int $parent = 0, string $last_created = ''): string
 	{
-		$contact = DBA::selectFirst('contact', ['contact-type', 'network'], ['id' => $cid]);
+		$contact = DBA::selectFirst('contact', ['contact-type', 'network', 'name', 'nick'], ['id' => $cid]);
 		if (!DBA::isResult($contact)) {
 			return '';
+		}
+
+		if (Contact\User::isIsBlocked($cid, $uid)) {
+			return DI::l10n()->t('%s has blocked you', $contact['name'] ?: $contact['nick']);
 		}
 
 		if (empty($contact["network"]) || in_array($contact["network"], Protocol::FEDERATED)) {
@@ -2283,8 +2287,8 @@ class Contact
 	 * @param bool   $create_cache Enforces the creation of cached avatar fields
 	 *
 	 * @return void
-	 * @throws HTTPException\InternalServerErrorException
-	 * @throws HTTPException\NotFoundException
+	 * @throws InternalServerErrorException
+	 * @throws NotFoundException
 	 * @throws \ImagickException
 	 */
 	public static function updateAvatar(int $cid, string $avatar, bool $force = false, bool $create_cache = false)
@@ -2298,7 +2302,7 @@ class Contact
 			return;
 		}
 
-		if (!Network::isValidHttpUrl($avatar)) {
+		if (!empty($avatar) && !Network::isValidHttpUrl($avatar)) {
 			Logger::warning('Invalid avatar', ['cid' => $cid, 'avatar' => $avatar]);
 			$avatar = '';
 		}
@@ -2317,7 +2321,7 @@ class Contact
 						if ($fetchResult->isSuccess() && !empty($img_str)) {
 							$image = new Image($img_str, $fetchResult->getContentType(), $avatar);
 							if ($image->isValid()) {
-								$update_fields['blurhash'] = $image->getBlurHash();
+								$update_fields['blurhash'] = $image->getBlurHash($img_str);
 							} else {
 								return;
 							}
@@ -2361,6 +2365,8 @@ class Contact
 			$cache_avatar = !DBA::exists('contact', ['nurl' => $contact['nurl'], 'self' => true]);
 		}
 
+		$fields = [];
+
 		if (in_array($contact['network'], [Protocol::FEED, Protocol::MAIL]) || $cache_avatar) {
 			if (Avatar::deleteCache($contact)) {
 				$force = true;
@@ -2376,6 +2382,8 @@ class Contact
 				];
 				Logger::debug('Use default avatar', ['id' => $cid, 'uid' => $uid]);
 			}
+
+			$local_uid = 0;
 
 			// Use the data from the self account
 			if (empty($fields)) {
@@ -2408,8 +2416,15 @@ class Contact
 				if ($update) {
 					$photos = Photo::importProfilePhoto($avatar, $uid, $cid, true);
 					if ($photos) {
-						$fields = ['avatar' => $avatar, 'photo' => $photos[0], 'thumb' => $photos[1], 'micro' => $photos[2], 'blurhash' => $photos[3], 'avatar-date' => DateTimeFormat::utcNow()];
-						$update = !empty($fields);
+						$fields = [
+							'avatar' => $avatar,
+							'photo' => $photos[0],
+							'thumb' => $photos[1],
+							'micro' => $photos[2],
+							'blurhash' => $photos[3],
+							'avatar-date' => DateTimeFormat::utcNow(),
+						];
+						$update = true;
 						Logger::debug('Created new cached avatars', ['id' => $cid, 'uid' => $uid, 'owner-uid' => $local_uid]);
 					} else {
 						$update = false;
@@ -2472,7 +2487,7 @@ class Contact
 	 * @param integer $id  contact id
 	 * @param string  $url The new URL to use for polling
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function updatePollUrl(int $id, string $url)
 	{
@@ -2488,7 +2503,7 @@ class Contact
 	 * @param string  $url    The profile URL of the contact
 	 * @param array   $fields The fields that are updated
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	private static function updateContact(int $id, int $uid, int $uri_id, string $url, array $fields)
 	{
@@ -2581,7 +2596,7 @@ class Contact
 	 * @param string  $nurl  Normalised contact url
 	 * @param integer $uid   User id
 	 * @return boolean
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function removeDuplicates(string $nurl, int $uid)
 	{
@@ -2659,7 +2674,7 @@ class Contact
 	 * @param integer $id      contact id
 	 * @param string  $network Optional network we are probing for
 	 * @return boolean
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function updateFromProbe(int $id, string $network = ''): bool
@@ -2682,7 +2697,7 @@ class Contact
 		if ($data['network'] == Protocol::DIASPORA) {
 			try {
 				DI::dsprContact()->updateFromProbeArray($data);
-			} catch (HTTPException\NotFoundException $e) {
+			} catch (NotFoundException $e) {
 				Logger::notice($e->getMessage(), ['id' => $id, 'network' => $network, 'contact' => $contact, 'data' => $data]);
 			} catch (\InvalidArgumentException $e) {
 				Logger::notice($e->getMessage(), ['id' => $id, 'network' => $network, 'contact' => $contact, 'data' => $data]);
@@ -2690,7 +2705,7 @@ class Contact
 		} elseif (!empty($data['networks'][Protocol::DIASPORA])) {
 			try {
 				DI::dsprContact()->updateFromProbeArray($data['networks'][Protocol::DIASPORA]);
-			} catch (HTTPException\NotFoundException $e) {
+			} catch (NotFoundException $e) {
 				Logger::notice($e->getMessage(), ['id' => $id, 'network' => $network, 'contact' => $contact, 'data' => $data]);
 			} catch (\InvalidArgumentException $e) {
 				Logger::notice($e->getMessage(), ['id' => $id, 'network' => $network, 'contact' => $contact, 'data' => $data]);
@@ -2706,8 +2721,6 @@ class Contact
 	 *
 	 * @param int   $id
 	 * @param array $contact
-	 *
-	 * @return boolean
 	 */
 	private static function hasLocalData(int $id, array $contact): bool
 	{
@@ -2748,7 +2761,7 @@ class Contact
 	 * @param integer $id      contact id
 	 * @param array   $ret     Probed data
 	 * @return boolean
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	private static function updateFromProbeArray(int $id, array $ret): bool
@@ -2767,6 +2780,8 @@ class Contact
 			'network', 'alias', 'baseurl', 'gsid', 'forum', 'prv', 'contact-type', 'pubkey', 'last-item', 'xmpp', 'matrix',
 			'created', 'last-update'
 		];
+
+		/** @var array<string,mixed> */
 		$contact = DBA::selectFirst('contact', $fields, ['id' => $id]);
 		if (!DBA::isResult($contact)) {
 			return false;
@@ -2792,22 +2807,22 @@ class Contact
 
 		$has_local_data = self::hasLocalData($id, $contact);
 
-		$uid = $contact['uid'];
+		$uid = $contact['uid'] ?? null;
 		unset($contact['uid']);
 
-		$uriid = $contact['uri-id'];
+		$uriid = $contact['uri-id'] ?? null;
 		unset($contact['uri-id']);
 
-		$pubkey = $contact['pubkey'];
+		$pubkey = $contact['pubkey'] ?? null;
 		unset($contact['pubkey']);
 
-		$created = $contact['created'];
+		$created = $contact['created'] ?? '';
 		unset($contact['created']);
 
-		$last_update = $contact['last-update'];
+		$last_update = $contact['last-update'] ?? '';
 		unset($contact['last-update']);
 
-		$contact['photo'] = $contact['avatar'];
+		$contact['photo'] = $contact['avatar'] ?? null;
 		unset($contact['avatar']);
 
 		$updated = DateTimeFormat::utcNow();
@@ -2998,9 +3013,9 @@ class Contact
 	/**
 	 * Updates contact record by provided URL
 	 *
-	 * @param integer $url contact url
-	 * @return integer Contact id
-	 * @throws HTTPException\InternalServerErrorException
+	 * @param string $url contact url
+	 * @return int Contact id
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function updateFromProbeByURL(string $url): int
@@ -3055,8 +3070,8 @@ class Contact
 	 * @param string $url         The profile URL of the contact
 	 * @param string $network
 	 * @return array
-	 * @throws HTTPException\InternalServerErrorException
-	 * @throws HTTPException\NotFoundException
+	 * @throws InternalServerErrorException
+	 * @throws NotFoundException
 	 * @throws \ImagickException
 	 */
 	public static function createFromProbeForUser(int $uid, string $url, string $network = ''): array
@@ -3244,7 +3259,7 @@ class Contact
 	 * @param bool   $sharing  True: Contact is now sharing with Owner; False: Contact is now following Owner (default)
 	 * @param string $note     Introduction additional message
 	 * @return bool|null True: follow request is accepted; False: relationship is rejected; Null: relationship is pending
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function addRelationship(array $importer, array $contact, array $datarray, bool $sharing = false, string $note = '')
@@ -3401,7 +3416,7 @@ class Contact
 	 * @param array $contact User-specific contact (uid != 0) array
 	 * @param bool  $delete  Delete if set, otherwise set relation to "nothing" when contact had been a follower
 	 * @return void
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function removeFollower(array $contact, bool $delete = true)
@@ -3435,7 +3450,7 @@ class Contact
 	 *
 	 * @param array $contact User-specific contact (uid != 0) array
 	 * @param bool  $delete  Delete if set, otherwise set relation to "nothing" when contact had been a sharer
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public static function removeSharer(array $contact, bool $delete = true)
 	{
@@ -3498,7 +3513,7 @@ class Contact
 	 *
 	 * @param array $contact_ids Contact id list
 	 * @return array
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function pruneUnavailable(array $contact_ids): array
 	{
@@ -3540,7 +3555,7 @@ class Contact
 	 * @param string $url         An url that we will be redirected to after the authentication
 	 *
 	 * @return string with "redir" link
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function magicLink(string $contact_url, string $url = ''): string
@@ -3567,7 +3582,7 @@ class Contact
 	 * @param string  $url An url that we will be redirected to after the authentication
 	 *
 	 * @return string with "redir" link
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function magicLinkById(int $cid, string $url = ''): string
@@ -3591,7 +3606,7 @@ class Contact
 	 * @param string $url     An url that we will be redirected to after the authentication
 	 *
 	 * @return string with "redir" link
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function magicLinkByContact(array $contact, string $url = ''): string
@@ -3796,7 +3811,7 @@ class Contact
 	 * @param array $condition
 	 *
 	 * @return bool
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function exists(array $condition): bool
 	{

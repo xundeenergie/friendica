@@ -7,7 +7,9 @@
 
 namespace Friendica\Module;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\App\Page;
 use Friendica\BaseModule;
 use Friendica\Content\Feature;
 use Friendica\Content\Nav;
@@ -20,12 +22,12 @@ use Psr\Log\LoggerInterface;
 
 class BaseSettings extends BaseModule
 {
-	/** @var App\Page */
+	/** @var Page */
 	protected $page;
 	/** @var IHandleUserSessions */
 	protected $session;
 
-	public function __construct(IHandleUserSessions $session, App\Page $page, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(IHandleUserSessions $session, Page $page, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 

@@ -8,7 +8,9 @@
 namespace Friendica\Module;
 
 use Exception;
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Core\L10n;
 use Friendica\Core\Protocol;
@@ -35,8 +37,8 @@ use Psr\Log\LoggerInterface;
  */
 class Magic extends BaseModule
 {
-	/** @var App */
-	protected $app;
+	/** @var AppHelper */
+	protected $appHelper;
 	/** @var Database */
 	protected $dba;
 	/** @var ICanSendHttpRequests */
@@ -44,11 +46,11 @@ class Magic extends BaseModule
 	/** @var IHandleUserSessions */
 	protected $userSession;
 
-	public function __construct(App $app, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, Database $dba, ICanSendHttpRequests $httpClient, IHandleUserSessions $userSession, $server, array $parameters = [])
+	public function __construct(AppHelper $appHelper, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, Database $dba, ICanSendHttpRequests $httpClient, IHandleUserSessions $userSession, $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
-		$this->app         = $app;
+		$this->appHelper   = $appHelper;
 		$this->dba         = $dba;
 		$this->httpClient  = $httpClient;
 		$this->userSession = $userSession;
@@ -63,33 +65,28 @@ class Magic extends BaseModule
 
 		$this->logger->debug('Invoked', ['request' => $request]);
 
-		$addr     = $request['addr'] ?? '';
-		$bdest    = $request['bdest'] ?? '';
-		$dest     = $request['dest'] ?? '';
-		$rev      = intval($request['rev'] ?? 0);
+		$addr     = (string) $request['addr'] ?? '';
+		$bdest    = (string) $request['bdest'] ?? '';
+		$dest     = (string) $request['dest'] ?? '';
 		$owa      = intval($request['owa'] ?? 0);
-		$delegate = $request['delegate'] ?? '';
 
 		// bdest is preferred as it is hex-encoded and can survive url rewrite and argument parsing
-		if (!empty($bdest)) {
+		if ($bdest !== '') {
 			$dest = hex2bin($bdest);
 			$this->logger->debug('bdest detected', ['dest' => $dest]);
 		}
 
 		$target = $dest ?: $addr;
 
-		if ($addr ?: $dest) {
-			$contact = Contact::getByURL($addr ?: $dest);
+		$contact = Contact::getByURL($addr ?: $dest);
+		if ($contact === [] && $owa === 0) {
+			$this->logger->info('No contact record found, no oWA, redirecting to destination.', ['request' => $request, 'server' => $_SERVER, 'dest' => $dest]);
+			$this->appHelper->redirect($dest);
 		}
 
-		if (empty($contact)) {
-			if (!$owa) {
-				$this->logger->info('No contact record found, no oWA, redirecting to destination.', ['request' => $request, 'server' => $_SERVER, 'dest' => $dest]);
-				$this->app->redirect($dest);
-			}
-		} else {
+		if ($contact !== []) {
 			// Redirect if the contact is already authenticated on this site.
-			if ($this->app->getContactId() && strpos($contact['nurl'], Strings::normaliseLink($this->baseUrl)) !== false) {
+			if ($this->appHelper->getContactId() && strpos($contact['nurl'], Strings::normaliseLink($this->baseUrl)) !== false) {
 				$this->logger->info('Contact is already authenticated, redirecting to destination.', ['dest' => $dest]);
 				System::externalRedirect($dest);
 			}
@@ -97,14 +94,14 @@ class Magic extends BaseModule
 			$this->logger->debug('Contact found', ['url' => $contact['url']]);
 		}
 
-		if (!$this->userSession->getLocalUserId() || !$owa) {
+		if (!$this->userSession->getLocalUserId() || $owa === 0) {
 			$this->logger->notice('Not logged in or not OWA, redirecting to destination.', ['uid' => $this->userSession->getLocalUserId(), 'owa' => $owa, 'dest' => $dest]);
-			$this->app->redirect($dest);
+			$this->appHelper->redirect($dest);
 		}
 
 		$dest = Network::removeUrlParameter($dest, 'zid');
 		$dest = Network::removeUrlParameter($dest, 'f');
-		
+
 		// OpenWebAuth
 		$owner = User::getOwnerDataById($this->userSession->getLocalUserId());
 
@@ -169,7 +166,7 @@ class Magic extends BaseModule
 		$j = json_decode($curlResult->getBodyString(), true);
 		if (empty($j) || !$j['success']) {
 			$this->logger->notice('Invalid JSON, redirecting to destination.', ['json' => $j, 'dest' => $dest]);
-			$this->app->redirect($dest);
+			$this->appHelper->redirect($dest);
 		}
 
 		if ($j['encrypted_token']) {

@@ -12,13 +12,13 @@ use Friendica\Core\Hooks\Exceptions\HookInstanceException;
 use Friendica\Core\Hooks\Exceptions\HookRegisterArgumentException;
 use Friendica\Core\Hooks\Model\DiceInstanceManager;
 use Friendica\Core\Hooks\Util\StrategiesFileManager;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\Hooks\InstanceMocks\FakeInstance;
 use Friendica\Test\Util\Hooks\InstanceMocks\FakeInstanceDecorator;
 use Friendica\Test\Util\Hooks\InstanceMocks\IAmADecoratedInterface;
 use Mockery\MockInterface;
 
-class InstanceManagerTest extends MockedTest
+class InstanceManagerTest extends MockedTestCase
 {
 	/** @var StrategiesFileManager|MockInterface */
 	protected $hookFileManager;

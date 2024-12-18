@@ -163,9 +163,6 @@ class GServer
 
 	/**
 	 * Checks if the given server array is unreachable for a long time now
-	 *
-	 * @param integer $gsid
-	 * @return boolean
 	 */
 	private static function isDefunct(array $gserver): bool
 	{
@@ -224,6 +221,8 @@ class GServer
 	 */
 	public static function reachable(array $contact): bool
 	{
+		$server = '';
+
 		if (!empty($contact['gsid'])) {
 			$gsid = $contact['gsid'];
 		} elseif (!empty($contact['baseurl'])) {
@@ -507,7 +506,7 @@ class GServer
 	 * @return UriInterface cleaned URI
 	 * @throws Exception
 	 */
-	public static function cleanUri(UriInterface $dirtyUri): string
+	public static function cleanUri(UriInterface $dirtyUri): UriInterface
 	{
 		return $dirtyUri
 			->withUserInfo('')
@@ -753,6 +752,10 @@ class GServer
 			$serverdata = self::detectNetworkViaContacts($url, $serverdata);
 		}
 
+		if ($serverdata['platform'] == 'mastodon') {
+			$serverdata = self::detectMastodonForks($serverdata);
+		}
+
 		if (($serverdata['network'] == Protocol::PHANTOM) && in_array($serverdata['detection-method'], [self::DETECT_MANUAL, self::DETECT_BODY])) {
 			self::setFailureByUrl($url);
 			return false;
@@ -795,6 +798,8 @@ class GServer
 		$serverdata['last_contact'] = DateTimeFormat::utcNow();
 		$serverdata['failed']       = false;
 		$serverdata['blocked']      = false;
+
+		$id = 0;
 
 		$gserver = DBA::selectFirst('gserver', ['network'], ['nurl' => Strings::normaliseLink($url)]);
 		if (!DBA::isResult($gserver)) {
@@ -1193,10 +1198,6 @@ class GServer
 			}
 		}
 
-		if (empty($server)) {
-			return [];
-		}
-
 		if (empty($server['network'])) {
 			$server['network'] = Protocol::PHANTOM;
 		}
@@ -1333,10 +1334,6 @@ class GServer
 			}
 		}
 
-		if (empty($server)) {
-			return [];
-		}
-
 		if (empty($server['network'])) {
 			$server['network'] = Protocol::PHANTOM;
 		}
@@ -1348,8 +1345,6 @@ class GServer
 	 * Parses NodeInfo2
 	 *
 	 * @see https://github.com/jaywink/nodeinfo2
-	 *
-	 * @param string $nodeinfo_url address of the nodeinfo path
 	 *
 	 * @return array Server data
 	 *
@@ -1440,7 +1435,7 @@ class GServer
 			}
 		}
 
-		if (empty($server) || empty($server['platform'])) {
+		if (empty($server['platform'])) {
 			return [];
 		}
 
@@ -1539,7 +1534,6 @@ class GServer
 	/**
 	 * Fetches server data via an ActivityPub account with url of that server
 	 *
-	 * @param string $url        URL of the given server
 	 * @param array  $serverdata array with server data
 	 *
 	 * @return array server data
@@ -1648,10 +1642,11 @@ class GServer
 		}
 
 		$data = json_decode($curlResult->getBodyString(), true);
-		if (empty($data)) {
+		if (!is_string($data)) {
 			return '';
 		}
-		return $data ?? '';
+
+		return $data;
 	}
 
 	private static function getZotData(string $url, array $serverdata): array
@@ -1789,6 +1784,23 @@ class GServer
 		if (in_array($serverdata['detection-method'], self::DETECT_UNSPECIFIC)) {
 			$serverdata['detection-method'] = self::DETECT_CONTACTS;
 		}
+		return $serverdata;
+	}
+
+	private static function detectMastodonForks(array $serverdata): array
+	{
+		if (strpos($serverdata['version'], 'glitch') !== false) {
+			$serverdata['platform'] = 'glitchsoc';
+		}
+
+		if (strpos($serverdata['version'], 'chuckya') !== false) {
+			$serverdata['platform'] = 'chuckya';
+		}
+
+		if (strpos($serverdata['version'], 'sakura') !== false) {
+			$serverdata['platform'] = 'sakura';
+		}
+
 		return $serverdata;
 	}
 
@@ -2289,13 +2301,19 @@ class GServer
 			return $serverdata;
 		}
 
-		if (file_exists(__DIR__ . '/../../static/platforms.config.php')) {
-			require __DIR__ . '/../../static/platforms.config.php';
-		} else {
+		if (!file_exists(__DIR__ . '/../../static/platforms.config.php')) {
 			throw new HTTPException\InternalServerErrorException('Invalid platform file');
 		}
 
-		$platforms = array_merge($ap_platforms, $dfrn_platforms, $zap_platforms, $platforms);
+		/** @var array $grouped_platforms */
+		$grouped_platforms = require __DIR__ . '/../../static/platforms.config.php';
+
+		$platforms = array_merge(
+			$grouped_platforms['ap_platforms'],
+			$grouped_platforms['dfrn_platforms'],
+			$grouped_platforms['zap_platforms'],
+			$grouped_platforms['platforms'],
+		);
 
 		$doc = new DOMDocument();
 		@$doc->loadHTML($curlResult->getBodyString());
@@ -2346,11 +2364,11 @@ class GServer
 					$platform = $platform_parts[0];
 					$serverdata['version'] = $platform_parts[1];
 				}
-				if (in_array($platform, array_values($dfrn_platforms))) {
+				if (in_array($platform, array_values($grouped_platforms['dfrn_platforms']))) {
 					$serverdata['network'] = Protocol::DFRN;
-				} elseif (in_array($platform, array_values($ap_platforms))) {
+				} elseif (in_array($platform, array_values($grouped_platforms['ap_platforms']))) {
 					$serverdata['network'] = Protocol::ACTIVITYPUB;
-				} elseif (in_array($platform, array_values($zap_platforms))) {
+				} elseif (in_array($platform, array_values($grouped_platforms['zap_platforms']))) {
 					$serverdata['network'] = Protocol::ZOT;
 				}
 				if (in_array($platform, array_values($platforms))) {
@@ -2393,9 +2411,9 @@ class GServer
 					$assigned = true;
 				}
 
-				if (in_array($attr['content'], array_keys($ap_platforms))) {
+				if (in_array($attr['content'], array_keys($grouped_platforms['ap_platforms']))) {
 					$serverdata['network'] = Protocol::ACTIVITYPUB;
-				} elseif (in_array($attr['content'], array_values($zap_platforms))) {
+				} elseif (in_array($attr['content'], array_values($grouped_platforms['zap_platforms']))) {
 					$serverdata['network'] = Protocol::ZOT;
 				}
 			}
@@ -2471,7 +2489,7 @@ class GServer
 	 */
 	public static function discover()
 	{
-		if (!DI::config('system', 'discover_servers')) {
+		if (!DI::config()->get('system', 'discover_servers')) {
 			return;
 		}
 

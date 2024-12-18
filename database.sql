@@ -1,6 +1,6 @@
 -- ------------------------------------------
--- Friendica 2024.09-dev (Yellow Archangel)
--- DB_UPDATE_VERSION 1573
+-- Friendica 2024.12-dev (Yellow Archangel)
+-- DB_UPDATE_VERSION 1576
 -- ------------------------------------------
 
 
@@ -2110,6 +2110,7 @@ CREATE VIEW `post-engagement-user-view` AS SELECT
 	`post-thread-user`.`received` AS `received`,
 	`post-thread-user`.`created` AS `created`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-engagement`.`language` AS `restricted`,
 	0 AS `comments`,
 	0 AS `activities`
@@ -2123,7 +2124,7 @@ CREATE VIEW `post-engagement-user-view` AS SELECT
 			AND (NOT `contact`.`readonly` AND NOT `contact`.`blocked` AND NOT `contact`.`pending`)
 			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
 			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
-			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`authorcontact`.`id`, `ownercontact`.`id`) AND (`blocked` OR `ignored`))
+			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`authorcontact`.`id`, `ownercontact`.`id`) AND (`blocked` OR `ignored` OR `is-blocked`))
 			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`);
 
 --
@@ -2163,7 +2164,10 @@ CREATE VIEW `post-timeline-view` AS SELECT
 	`owner`.`gsid` AS `owner-gsid`,
 	`post-user`.`causer-id` AS `causer-id`,
 	`causer`.`blocked` AS `causer-blocked`,
-	`causer`.`gsid` AS `causer-gsid`
+	`causer`.`gsid` AS `causer-gsid`,
+	`post-thread-user`.`network` AS `parent-network`,
+	`post-thread-user`.`owner-id` AS `parent-owner-id`,
+	`post-thread-user`.`author-id` AS `parent-author-id`
 	FROM `post-user`
 			LEFT JOIN `post-thread-user` ON `post-thread-user`.`uri-id` = `post-user`.`parent-uri-id` AND `post-thread-user`.`uid` = `post-user`.`uid`
 			STRAIGHT_JOIN `contact` ON `contact`.`id` = `post-user`.`contact-id`
@@ -2233,6 +2237,7 @@ CREATE VIEW `post-searchindex-user-view` AS SELECT
 	`post-thread-user`.`received` AS `received`,
 	`post-thread-user`.`created` AS `created`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-searchindex`.`language` AS `restricted`,
 	0 AS `comments`,
 	0 AS `activities`
@@ -2246,7 +2251,7 @@ CREATE VIEW `post-searchindex-user-view` AS SELECT
 			AND (NOT `contact`.`readonly` AND NOT `contact`.`blocked` AND NOT `contact`.`pending`)
 			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
 			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
-			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`authorcontact`.`id`, `ownercontact`.`id`) AND (`blocked` OR `ignored`))
+			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`authorcontact`.`id`, `ownercontact`.`id`) AND (`blocked` OR `ignored` OR `is-blocked`))
 			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`);
 
 --
@@ -2414,6 +2419,7 @@ CREATE VIEW `post-origin-view` AS SELECT
 	`diaspora-interaction`.`interaction` AS `signed_text`,
 	`parent-item-uri`.`guid` AS `parent-guid`,
 	`post-thread-user`.`network` AS `parent-network`,
+	`post-thread-user`.`owner-id` AS `parent-owner-id`,
 	`post-thread-user`.`author-id` AS `parent-author-id`,
 	`parent-post-author`.`url` AS `parent-author-link`,
 	`parent-post-author`.`name` AS `parent-author-name`,
@@ -2490,6 +2496,7 @@ CREATE VIEW `post-thread-origin-view` AS SELECT
 	`post-user`.`global` AS `global`,
 	EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post-thread-user`.`uri-id`) AS `featured`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-origin`.`vid` AS `vid`,
 	`post-thread-user`.`psid` AS `psid`,
 	IF (`post-origin`.`vid` IS NULL, '', `verb`.`name`) AS `verb`,
@@ -2607,6 +2614,7 @@ CREATE VIEW `post-thread-origin-view` AS SELECT
 	`diaspora-interaction`.`interaction` AS `signed_text`,
 	`parent-item-uri`.`guid` AS `parent-guid`,
 	`post-thread-user`.`network` AS `parent-network`,
+	`post-thread-user`.`owner-id` AS `parent-owner-id`,
 	`post-thread-user`.`author-id` AS `parent-author-id`,
 	`author`.`url` AS `parent-author-link`,
 	`author`.`name` AS `parent-author-name`,
@@ -2800,6 +2808,7 @@ CREATE VIEW `post-user-view` AS SELECT
 	`diaspora-interaction`.`interaction` AS `signed_text`,
 	`parent-item-uri`.`guid` AS `parent-guid`,
 	`post-thread-user`.`network` AS `parent-network`,
+	`post-thread-user`.`owner-id` AS `parent-owner-id`,
 	`post-thread-user`.`author-id` AS `parent-author-id`,
 	`parent-post-author`.`url` AS `parent-author-link`,
 	`parent-post-author`.`name` AS `parent-author-name`,
@@ -2875,6 +2884,7 @@ CREATE VIEW `post-thread-user-view` AS SELECT
 	`post-user`.`global` AS `global`,
 	EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post-thread-user`.`uri-id`) AS `featured`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-user`.`vid` AS `vid`,
 	`post-thread-user`.`psid` AS `psid`,
 	IF (`post-user`.`vid` IS NULL, '', `verb`.`name`) AS `verb`,
@@ -2992,6 +3002,7 @@ CREATE VIEW `post-thread-user-view` AS SELECT
 	`diaspora-interaction`.`interaction` AS `signed_text`,
 	`parent-item-uri`.`guid` AS `parent-guid`,
 	`post-thread-user`.`network` AS `parent-network`,
+	`post-thread-user`.`owner-id` AS `parent-owner-id`,
 	`post-thread-user`.`author-id` AS `parent-author-id`,
 	`author`.`url` AS `parent-author-link`,
 	`author`.`name` AS `parent-author-name`,
@@ -3054,6 +3065,7 @@ CREATE VIEW `post-view` AS SELECT
 	`post`.`global` AS `global`,
 	EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post`.`uri-id`) AS `featured`,
 	`post`.`network` AS `network`,
+	255 AS `protocol`,
 	`post`.`vid` AS `vid`,
 	IF (`post`.`vid` IS NULL, '', `verb`.`name`) AS `verb`,
 	`post-content`.`title` AS `title`,
@@ -3148,6 +3160,7 @@ CREATE VIEW `post-view` AS SELECT
 	`diaspora-interaction`.`interaction` AS `signed_text`,
 	`parent-item-uri`.`guid` AS `parent-guid`,
 	`post-thread`.`network` AS `parent-network`,
+	`post-thread`.`owner-id` AS `parent-owner-id`,
 	`post-thread`.`author-id` AS `parent-author-id`,
 	`parent-post-author`.`url` AS `parent-author-link`,
 	`parent-post-author`.`name` AS `parent-author-name`,
@@ -3207,6 +3220,7 @@ CREATE VIEW `post-thread-view` AS SELECT
 	`post`.`global` AS `global`,
 	EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post-thread`.`uri-id`) AS `featured`,
 	`post-thread`.`network` AS `network`,
+	255 AS `protocol`,
 	`post`.`vid` AS `vid`,
 	IF (`post`.`vid` IS NULL, '', `verb`.`name`) AS `verb`,
 	`post-content`.`title` AS `title`,
@@ -3303,6 +3317,7 @@ CREATE VIEW `post-thread-view` AS SELECT
 	`diaspora-interaction`.`interaction` AS `signed_text`,
 	`parent-item-uri`.`guid` AS `parent-guid`,
 	`post-thread`.`network` AS `parent-network`,
+	`post-thread`.`owner-id` AS `parent-owner-id`,
 	`post-thread`.`author-id` AS `parent-author-id`,
 	`author`.`url` AS `parent-author-link`,
 	`author`.`name` AS `parent-author-name`,
@@ -3409,6 +3424,7 @@ CREATE VIEW `network-thread-view` AS SELECT
 	`post-thread-user`.`starred` AS `starred`,
 	`post-thread-user`.`mention` AS `mention`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-thread-user`.`contact-id` AS `contact-id`,
 	`ownercontact`.`contact-type` AS `contact-type`
 	FROM `post-thread-user`
@@ -3420,7 +3436,7 @@ CREATE VIEW `network-thread-view` AS SELECT
 			AND (NOT `contact`.`readonly` AND NOT `contact`.`blocked` AND NOT `contact`.`pending`)
 			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
 			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
-			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored` OR `channel-only`))
+			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored` OR `is-blocked` OR `channel-only`))
 			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`);
 
 --
@@ -3437,6 +3453,7 @@ CREATE VIEW `network-thread-circle-view` AS SELECT
 	`post-thread-user`.`starred` AS `starred`,
 	`post-thread-user`.`mention` AS `mention`,
 	`post-thread-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-thread-user`.`contact-id` AS `contact-id`,
 	`ownercontact`.`contact-type` AS `contact-type`
 	FROM `post-thread-user`
@@ -3448,7 +3465,7 @@ CREATE VIEW `network-thread-circle-view` AS SELECT
 			AND (NOT `contact`.`readonly` AND NOT `contact`.`blocked` AND NOT `contact`.`pending`)
 			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
 			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
-			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored`))
+			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored` OR `is-blocked`))
 			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`);
 
 --
@@ -3517,6 +3534,7 @@ CREATE VIEW `owner-view` AS SELECT
 	`contact`.`unsearchable` AS `unsearchable`,
 	`contact`.`sensitive` AS `sensitive`,
 	`contact`.`baseurl` AS `baseurl`,
+	`contact`.`gsid` AS `gsid`,
 	`contact`.`reason` AS `reason`,
 	`contact`.`info` AS `info`,
 	`contact`.`bdyear` AS `bdyear`,
@@ -3808,6 +3826,7 @@ CREATE VIEW `tag-search-view` AS SELECT
 	`post-user`.`gravity` AS `gravity`,
 	`post-user`.`received` AS `received`,
 	`post-user`.`network` AS `network`,
+	`post-user`.`protocol` AS `protocol`,
 	`post-user`.`author-id` AS `author-id`,
 	`tag`.`name` AS `name`
 	FROM `post-tag`

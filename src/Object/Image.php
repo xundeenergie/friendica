@@ -13,7 +13,7 @@ use Friendica\Util\Images;
 use Imagick;
 use ImagickDraw;
 use ImagickPixel;
-use GDImage;
+use GdImage;
 use kornrunner\Blurhash\Blurhash;
 
 /**
@@ -21,7 +21,7 @@ use kornrunner\Blurhash\Blurhash;
  */
 class Image
 {
-	/** @var GDImage|Imagick|resource */
+	/** @var GdImage|Imagick|resource */
 	private $image;
 
 	/*
@@ -41,7 +41,7 @@ class Image
 	 * @param string $data     Image data
 	 * @param string $type     optional, default ''
 	 * @param string $filename optional, default ''
-	 * @param string $imagick  optional, default 'true'
+	 * @param bool   $imagick  optional, default 'true'
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
@@ -105,7 +105,8 @@ class Image
 	 * @param string $data
 	 * @return boolean
 	 */
-	private function isAnimatedWebP(string $data) {
+	private function isAnimatedWebP(string $data)
+	{
 		$header_format = 'A4Riff/I1Filesize/A4Webp/A4Vp/A74Chunk';
 		$header = @unpack($header_format, $data);
 
@@ -356,7 +357,6 @@ class Image
 		} else {
 			return false;
 		}
-
 	}
 
 	/**
@@ -526,7 +526,7 @@ class Image
 		$width = $this->getWidth();
 		$height = $this->getHeight();
 
-		if ((!$width)|| (!$height)) {
+		if ((!$width) || (!$height)) {
 			return false;
 		}
 
@@ -733,7 +733,7 @@ class Image
 			}
 		}
 
-		$stream = fopen('php://memory','r+');
+		$stream = fopen('php://memory', 'r+');
 
 		switch ($this->getImageType()) {
 			case IMAGETYPE_PNG:
@@ -765,13 +765,12 @@ class Image
 	/**
 	 * Create a blurhash out of a given image string
 	 *
-	 * @param string $img_str
 	 * @return string
 	 */
-	public function getBlurHash(): string
+	public function getBlurHash(string $img_str = ''): string
 	{
-		$image = New Image($this->asString(), $this->getType(), $this->filename, false);
-		if (empty($image) || !$this->isValid()) {
+		$image = new Image($img_str ?: $this->asString(), $this->getType(), $this->filename, false);
+		if (!$this->isValid()) {
 			return '';
 		}
 
@@ -827,6 +826,7 @@ class Image
 	{
 		$scaled = Images::getScalingDimensions($width, $height, 90);
 		$pixels = Blurhash::decode($blurhash, $scaled['width'], $scaled['height']);
+		$draw   = null;
 
 		if ($this->isImagick()) {
 			$this->image = new Imagick();
@@ -839,7 +839,7 @@ class Image
 		for ($y = 0; $y < $scaled['height']; ++$y) {
 			for ($x = 0; $x < $scaled['width']; ++$x) {
 				[$r, $g, $b] = $pixels[$y][$x];
-				if ($this->isImagick()) {
+				if ($draw !== null) {
 					$draw->setFillColor("rgb($r, $g, $b)");
 					$draw->point($x, $y);
 				} else {
@@ -848,7 +848,7 @@ class Image
 			}
 		}
 
-		if ($this->isImagick()) {
+		if ($draw !== null) {
 			$this->image->drawImage($draw);
 			$this->width  = $this->image->getImageWidth();
 			$this->height = $this->image->getImageHeight();

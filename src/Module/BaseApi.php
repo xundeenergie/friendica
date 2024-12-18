@@ -8,8 +8,10 @@
 namespace Friendica\Module;
 
 use DateTime;
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
 use Friendica\App\Router;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Core\L10n;
 use Friendica\Core\Logger;
@@ -51,8 +53,8 @@ class BaseApi extends BaseModule
 	 */
 	protected static $request = [];
 
-	/** @var App */
-	protected $app;
+	/** @var AppHelper */
+	protected $appHelper;
 
 	/** @var ApiResponse */
 	protected $response;
@@ -60,11 +62,11 @@ class BaseApi extends BaseModule
 	/** @var \Friendica\Factory\Api\Mastodon\Error */
 	protected $errorFactory;
 
-	public function __construct(\Friendica\Factory\Api\Mastodon\Error $errorFactory, App $app, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, ApiResponse $response, array $server, array $parameters = [])
+	public function __construct(\Friendica\Factory\Api\Mastodon\Error $errorFactory, AppHelper $appHelper, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, ApiResponse $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
-		$this->app          = $app;
+		$this->appHelper    = $appHelper;
 		$this->errorFactory = $errorFactory;
 	}
 
@@ -250,7 +252,7 @@ class BaseApi extends BaseModule
 
 	/**
 	 * Set boundaries for the "link" header
-	 * @param array $boundaries
+	 *
 	 * @param int|\DateTime $id
 	 */
 	protected static function setBoundaries($id)
@@ -509,7 +511,7 @@ class BaseApi extends BaseModule
 	/**
 	 * @param int   $errorno
 	 * @param Error $error
-	 * @return void
+	 * @return never
 	 * @throws HTTPException\InternalServerErrorException
 	 */
 	protected function logAndJsonError(int $errorno, Error $error)

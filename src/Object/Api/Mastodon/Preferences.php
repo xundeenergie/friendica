@@ -17,32 +17,58 @@ use Friendica\BaseDataTransferObject;
  */
 class Preferences extends BaseDataTransferObject
 {
-//	/** @var string (Enumerable, oneOf) */
-//	protected $posting_default_visibility;
-//	/** @var bool */
-//	protected $posting_default_sensitive;
-//	/** @var string (ISO 639-1 language two-letter code), or null*/
-//	protected $posting_default_language;
-//	/** @var string (Enumerable, oneOf) */
-//	protected $reading_expand_media;
-//	/** @var bool */
-//	protected $reading_expand_spoilers;
+	/**
+	 * @var string (Enumerable, oneOf)
+	 */
+	private $visibility;
+
+	/**
+	 * @var bool
+	 */
+	private $sensitive;
+
+	/**
+	 * @var string (ISO 639-1 language two-letter code), or null
+	 */
+	private $language;
+
+	/**
+	 * @var string (Enumerable, oneOf)
+	 */
+	private $media;
+
+	/**
+	 * @var bool
+	 */
+	private $spoilers;
 
 	/**
 	 * Creates a preferences record.
 	 *
-	 * @param BaseURL $baseUrl
-	 * @param array   $publicContact Full contact table record with uid = 0
-	 * @param array   $apcontact     Optional full apcontact table record
-	 * @param array   $userContact   Optional full contact table record with uid != 0
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
 	public function __construct(string $visibility, bool $sensitive, string $language, string $media, bool $spoilers)
 	{
-		$this->{'posting:default:visibility'} = $visibility;
-		$this->{'posting:default:sensitive'}  = $sensitive;
-		$this->{'posting:default:language'}   = $language;
-		$this->{'reading:expand:media'}       = $media;
-		$this->{'reading:expand:spoilers'}    = $spoilers;
+		$this->visibility = $visibility;
+		$this->sensitive = $sensitive;
+		$this->language = $language;
+		$this->media = $media;
+		$this->spoilers = $spoilers;
+	}
+
+	/**
+	 * Returns the current entity as an array
+	 *
+	 * @return array
+	 */
+	public function toArray(): array
+	{
+		return [
+			'posting:default:visibility' => $this->visibility,
+			'posting:default:sensitive' => $this->sensitive,
+			'posting:default:language' => $this->language,
+			'reading:expand:media' => $this->media,
+			'reading:expand:spoilers' => $this->spoilers,
+		];
 	}
 }

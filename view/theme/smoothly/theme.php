@@ -20,7 +20,7 @@
  * Screenshot: <a href="screenshot.png">Screenshot</a>
  */
 
-use Friendica\App;
+use Friendica\AppHelper;
 use Friendica\Core\Renderer;
 use Friendica\DI;
 
@@ -28,7 +28,7 @@ use Friendica\DI;
  * This script can be included even when the app is in maintenance mode which requires us to avoid any config call
  */
 
-function smoothly_init(App $a) {
+function smoothly_init(AppHelper $appHelper) {
 	Renderer::setActiveTemplateEngine('smarty3');
 
 	$cssFile = null;

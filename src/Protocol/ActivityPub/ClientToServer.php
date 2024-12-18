@@ -307,7 +307,6 @@ class ClientToServer
 	 * @param integer $page      Page number
 	 * @param integer $max_id    Maximum ID
 	 * @param string  $requester URL of requesting account
-	 * @param boolean $nocache   Wether to bypass caching
 	 * @return array of posts
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
@@ -323,7 +322,7 @@ class ClientToServer
 			$requester_id = Contact::getIdForURL($requester, $owner['uid']);
 			if (!empty($requester_id)) {
 				$permissionSets = DI::permissionSet()->selectByContactId($requester_id, $owner['uid']);
-				if (!empty($permissionSets)) {
+				if (count($permissionSets) > 0) {
 					$condition = ['psid' => array_merge($permissionSets->column('id'),
 						[DI::permissionSet()->selectPublicForUser($owner['uid'])])];
 				}

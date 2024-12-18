@@ -7,8 +7,8 @@
 
 namespace Friendica\Content;
 
-use Friendica\App;
 use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\Content\Text\BBCode;
 use Friendica\Content\Text\BBCode\Video;
 use Friendica\Content\Text\HTML;
@@ -32,6 +32,7 @@ use Friendica\Model\Post;
 use Friendica\Model\Tag;
 use Friendica\Model\User;
 use Friendica\Network\HTTPException;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Object\EMail\ItemCCEMail;
 use Friendica\Protocol\Activity;
 use Friendica\Util\ACLFormatter;
@@ -42,6 +43,7 @@ use Friendica\Util\Profiler;
 use Friendica\Util\Proxy;
 use Friendica\Util\XML;
 use GuzzleHttp\Psr7\Uri;
+use ImagickException;
 
 /**
  * A content helper class for displaying items
@@ -66,10 +68,10 @@ class Item
 	private $baseURL;
 	/** @var Emailer */
 	private $emailer;
-	/** @var App */
-	private $app;
+	/** @var AppHelper */
+	private $appHelper;
 
-	public function __construct(Profiler $profiler, Activity $activity, L10n $l10n, IHandleUserSessions $userSession, Video $bbCodeVideo, ACLFormatter $aclFormatter, IManagePersonalConfigValues $pConfig, BaseURL $baseURL, Emailer $emailer, App $app)
+	public function __construct(Profiler $profiler, Activity $activity, L10n $l10n, IHandleUserSessions $userSession, Video $bbCodeVideo, ACLFormatter $aclFormatter, IManagePersonalConfigValues $pConfig, BaseURL $baseURL, Emailer $emailer, AppHelper $appHelper)
 	{
 		$this->profiler     = $profiler;
 		$this->activity     = $activity;
@@ -80,7 +82,7 @@ class Item
 		$this->baseURL      = $baseURL;
 		$this->pConfig      = $pConfig;
 		$this->emailer      = $emailer;
-		$this->app          = $app;
+		$this->appHelper    = $appHelper;
 	}
 
 	/**
@@ -174,12 +176,13 @@ class Item
 	 * @param string $network     The network of the post
 	 *
 	 * @return array|bool ['replaced' => $replaced, 'contact' => $contact] or "false" on if already replaced
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
-	 * @throws \ImagickException
+	 * @throws InternalServerErrorException
+	 * @throws ImagickException
 	 */
 	public static function replaceTag(string &$body, int $profile_uid, string $tag, string $network = '')
 	{
 		$replaced = false;
+		$contact  = [];
 
 		//is it a person tag?
 		if (Tag::isType($tag, Tag::MENTION, Tag::IMPLICIT_MENTION, Tag::EXCLUSIVE_MENTION)) {
@@ -247,6 +250,8 @@ class Item
 				}
 			}
 
+			$newname = '';
+
 			// Check if $contact has been successfully loaded
 			if (DBA::isResult($contact)) {
 				$profile = $contact['url'];
@@ -272,7 +277,7 @@ class Item
 	 * @param array $item
 	 * @return void
 	 * @throws ImagickException
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public function localize(array &$item)
 	{
@@ -642,11 +647,6 @@ class Item
 
 	/**
 	 * Add a share block for the given guid
-	 *
-	 * @param string $guid
-	 * @param integer $uid
-	 * @param bool $add_media
-	 * @return string
 	 */
 	private function createSharedPostByGuid(string $guid, bool $add_media): string
 	{

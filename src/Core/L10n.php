@@ -345,10 +345,6 @@ class L10n
 
 	/**
 	 * Provide a fallback which will not collide with a function defined in any language file
-	 *
-	 * @param int $n
-	 *
-	 * @return bool
 	 */
 	private function stringPluralSelectDefault(float $n): bool
 	{
@@ -426,7 +422,7 @@ class L10n
 		$iso639 = new \Matriphe\ISO639\ISO639;
 
 		// In ISO 639-2 undetermined languages have got the code "und".
-		// There is no official code for ISO 639-1, but "un" is not assigned to any language.   
+		// There is no official code for ISO 639-1, but "un" is not assigned to any language.
 		$languages = [self::UNDETERMINED_LANGUAGE => $this->t('Undetermined')];
 
 		foreach ($this->getDetectableLanguages() as $code) {

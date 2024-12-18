@@ -178,7 +178,7 @@ class APContact
 
 			try {
 				$curlResult = HTTPSignature::fetchRaw($url);
-				$failed = empty($curlResult) || empty($curlResult->getBodyString()) ||
+				$failed = empty($curlResult->getBodyString()) ||
 					(!$curlResult->isSuccess() && ($curlResult->getReturnCode() != 410));
 
 					if (!$failed) {

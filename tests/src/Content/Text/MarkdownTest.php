@@ -9,9 +9,9 @@ namespace Friendica\Test\src\Content\Text;
 
 use Exception;
 use Friendica\Content\Text\Markdown;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 
-class MarkdownTest extends FixtureTest
+class MarkdownTest extends FixtureTestCase
 {
 	public function dataMarkdown()
 	{

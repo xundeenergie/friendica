@@ -8,7 +8,7 @@
 namespace Friendica\Console;
 
 use Asika\SimpleConsole\CommandArgsException;
-use Friendica\App;
+use Friendica\App\Mode;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use RuntimeException;
 
@@ -38,7 +38,7 @@ class Config extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var App\Mode
+	 * @var Mode
 	 */
 	private $appMode;
 	/**
@@ -80,7 +80,7 @@ HELP;
 		return $help;
 	}
 
-	public function __construct(App\Mode $appMode, IManageConfigValues $config, array $argv = null)
+	public function __construct(Mode $appMode, IManageConfigValues $config, array $argv = null)
 	{
 		parent::__construct($argv);
 

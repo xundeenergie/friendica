@@ -7,7 +7,9 @@
 
 namespace Friendica\Module\Security\TwoFactor;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Core\L10n;
 use Friendica\Core\Renderer;
@@ -33,8 +35,8 @@ use Psr\Log\LoggerInterface;
  */
 class Trust extends BaseModule
 {
-	/** @var App  */
-	protected $app;
+	/** @var AppHelper */
+	protected $appHelper;
 	/** @var Authentication  */
 	protected $auth;
 	/** @var IHandleUserSessions  */
@@ -46,11 +48,11 @@ class Trust extends BaseModule
 	/** @var TwoFactor\Repository\TrustedBrowser  */
 	protected $trustedBrowserRepository;
 
-	public function __construct(App $app, Authentication $auth, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, IHandleUserSessions $session, Cookie $cookie, TwoFactor\Factory\TrustedBrowser $trustedBrowserFactory, TwoFactor\Repository\TrustedBrowser $trustedBrowserRepository, Response $response, array $server, array $parameters = [])
+	public function __construct(AppHelper $appHelper, Authentication $auth, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, IHandleUserSessions $session, Cookie $cookie, TwoFactor\Factory\TrustedBrowser $trustedBrowserFactory, TwoFactor\Repository\TrustedBrowser $trustedBrowserRepository, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
-		$this->app                      = $app;
+		$this->appHelper                = $appHelper;
 		$this->auth                     = $auth;
 		$this->session                  = $session;
 		$this->cookie                   = $cookie;
@@ -88,13 +90,13 @@ class Trust extends BaseModule
 			}
 
 			try {
-				$this->auth->setForUser($this->app, User::getById($this->session->getLocalUserId()), true, true);
+				$this->auth->setForUser(User::getById($this->session->getLocalUserId()), true, true);
 				$this->baseUrl->redirect($this->session->pop('return_path', ''));
 			} catch (FoundException | TemporaryRedirectException | MovedPermanentlyException $e) {
 				// exception wanted!
 				throw $e;
 			} catch (\Exception $e) {
-				$this->logger->warning('Unexpected error during authentication.', ['user' => $this->session->getLocalUserId(), 'exception' => $exception]);
+				$this->logger->warning('Unexpected error during authentication.', ['user' => $this->session->getLocalUserId(), 'exception' => $e]);
 			}
 		}
 	}
@@ -109,7 +111,7 @@ class Trust extends BaseModule
 			try {
 				$trustedBrowser = $this->trustedBrowserRepository->selectOneByHash($this->cookie->get('2fa_cookie_hash'));
 				if (!$trustedBrowser->trusted) {
-					$this->auth->setForUser($this->app, User::getById($this->session->getLocalUserId()), true, true);
+					$this->auth->setForUser(User::getById($this->session->getLocalUserId()), true, true);
 					$this->baseUrl->redirect($this->session->pop('return_path', ''));
 				}
 			} catch (TrustedBrowserNotFoundException $exception) {

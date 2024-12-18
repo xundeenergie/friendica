@@ -18,7 +18,7 @@ use Friendica\Object\Log\ParsedLogLine;
  */
 class ParsedLogIterator implements \Iterator
 {
-	/** @var \Iterator */
+	/** @var ReversedFileReader */
 	private $reader;
 
 	/** @var ParsedLogLine current iterator value*/
@@ -33,10 +33,6 @@ class ParsedLogIterator implements \Iterator
 	/** @var string search term */
 	private $search = '';
 
-
-	/**
-	 * @param ReversedFileReader $reader
-	 */
 	public function __construct(ReversedFileReader $reader)
 	{
 		$this->reader = $reader;

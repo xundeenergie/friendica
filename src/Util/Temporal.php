@@ -264,7 +264,7 @@ class Temporal
 				$input_text,
 				DI::l10n()->t(
 					'Time zone: <strong>%s</strong> <a href="%s">Change in Settings</a>',
-					str_replace('_', ' ', DI::app()->getTimeZone()) . ' (GMT ' . DateTimeFormat::localNow('P') . ')',
+					str_replace('_', ' ', DI::appHelper()->getTimeZone()) . ' (GMT ' . DateTimeFormat::localNow('P') . ')',
 					DI::baseUrl() . '/settings'
 				),
 				$required ? '*' : '',
@@ -359,6 +359,8 @@ class Temporal
 				return sprintf($format, $r, (($r == 1) ? $str[0] : $str[1]));
 			}
 		}
+
+		return '';
 	}
 
 	/**

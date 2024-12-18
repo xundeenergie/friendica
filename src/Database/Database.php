@@ -534,6 +534,8 @@ class Database
 			throw new ServiceUnavailableException('The Connection is empty, although connected is set true.');
 		}
 
+		$retval = false;
+
 		switch ($this->driver) {
 			case self::PDO:
 				// If there are no arguments we use "query"
@@ -550,8 +552,10 @@ class Database
 					break;
 				}
 
-				/** @var $stmt mysqli_stmt|PDOStatement */
-				if (!$stmt = $this->connection->prepare($sql)) {
+				/** @var mysqli_stmt|PDOStatement $stmt */
+				$stmt = $this->connection->prepare($sql);
+
+				if (!$stmt) {
 					$errorInfo     = $this->connection->errorInfo();
 					$this->error   = (string)$errorInfo[2];
 					$this->errorno = (int)$errorInfo[1];
@@ -887,7 +891,7 @@ class Database
 	/**
 	 * Returns the number of columns of a statement
 	 *
-	 * @param object Statement object
+	 * @param object $stmt Statement object
 	 *
 	 * @return int Number of columns
 	 */
@@ -908,7 +912,7 @@ class Database
 	/**
 	 * Returns the number of rows of a statement
 	 *
-	 * @param PDOStatement|mysqli_result|mysqli_stmt Statement object
+	 * @param PDOStatement|mysqli_result|mysqli_stmt $stmt Statement object
 	 *
 	 * @return int Number of rows
 	 */
@@ -1074,6 +1078,8 @@ class Database
 	 */
 	public function lastInsertId(): int
 	{
+		$id = 0;
+
 		switch ($this->driver) {
 			case self::PDO:
 				$id = $this->connection->lastInsertId();
@@ -1648,7 +1654,7 @@ class Database
 	/**
 	 * Returns the error number of the last query
 	 *
-	 * @return string Error number (0 if no error)
+	 * @return int Error number (0 if no error)
 	 */
 	public function errorNo(): int
 	{
@@ -1681,6 +1687,8 @@ class Database
 			return false;
 		}
 
+		$ret = false;
+
 		switch ($this->driver) {
 			case self::PDO:
 				$ret = $stmt->closeCursor();
@@ -1695,8 +1703,6 @@ class Database
 				} elseif ($stmt instanceof mysqli_result) {
 					$stmt->free();
 					$ret = true;
-				} else {
-					$ret = false;
 				}
 				break;
 		}
@@ -1770,8 +1776,8 @@ class Database
 	/**
 	 * Acquire a lock to prevent a table optimization
 	 *
-	 * @return bool 
-	 * @throws LockPersistenceException 
+	 * @return bool
+	 * @throws LockPersistenceException
 	 */
 	public function acquireOptimizeLock(): bool
 	{
@@ -1781,8 +1787,8 @@ class Database
 	/**
 	 * Release the table optimization lock
 	 *
-	 * @return bool 
-	 * @throws LockPersistenceException 
+	 * @return bool
+	 * @throws LockPersistenceException
 	 */
 	public function releaseOptimizeLock(): bool
 	{

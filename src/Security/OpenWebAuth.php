@@ -15,6 +15,7 @@ use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Model\Contact;
 use Friendica\Model\OpenWebAuthToken;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Util\HTTPSignature;
 use Friendica\Util\Network;
 use Friendica\Util\Strings;
@@ -114,7 +115,7 @@ class OpenWebAuth
 	 */
 	public static function init(string $token)
 	{
-		$a = DI::app();
+		$appHelper = DI::appHelper();
 
 		// Clean old OpenWebAuthToken entries.
 		OpenWebAuthToken::purge('owt', '3 MINUTE');
@@ -144,7 +145,7 @@ class OpenWebAuth
 		 */
 		Hook::callAll('magic_auth_success', $arr);
 
-		$a->setContactId($arr['visitor']['id']);
+		$appHelper->setContactId($arr['visitor']['id']);
 
 		DI::sysmsg()->addInfo(DI::l10n()->t('OpenWebAuth: %1$s welcomes %2$s', DI::baseUrl()->getHost(), $visitor['name']));
 
@@ -160,7 +161,7 @@ class OpenWebAuth
 	 */
 	public static function addVisitorCookieForHandle(string $handle): array
 	{
-		$a = DI::app();
+		$appHelper = DI::appHelper();
 
 		// Try to find the public contact entry of the visitor.
 		$cid = Contact::getIdForURL($handle);
@@ -183,7 +184,7 @@ class OpenWebAuth
 
 		DI::userSession()->setVisitorsContacts($visitor['url']);
 
-		$a->setContactId($visitor['id']);
+		$appHelper->setContactId($visitor['id']);
 
 		Logger::info('Authenticated visitor', ['url' => $visitor['url']]);
 

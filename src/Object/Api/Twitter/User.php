@@ -62,7 +62,7 @@ class User extends BaseDataTransferObject
 	protected $default_profile;
 	/** @var bool */
 	protected $default_profile_image;
-	/** @var Status */
+	/** @var array */
 	protected $status;
 	/** @var array */
 	protected $withheld_in_countries;
@@ -117,12 +117,11 @@ class User extends BaseDataTransferObject
 	 * @param array $publicContact         Full contact table record with uid = 0
 	 * @param array $apcontact             Optional full apcontact table record
 	 * @param array $userContact           Optional full contact table record with uid != 0
-	 * @param null  $status
 	 * @param bool  $include_user_entities Whether to add the entities property
 	 *
 	 * @throws InternalServerErrorException
 	 */
-	public function __construct(array $publicContact, array $apcontact = [], array $userContact = [], $status = null, bool $include_user_entities = true)
+	public function __construct(array $publicContact, array $apcontact = [], array $userContact = [], ?Status $status = null, bool $include_user_entities = true)
 	{
 		$uid = $userContact['uid'] ?? 0;
 
@@ -131,7 +130,7 @@ class User extends BaseDataTransferObject
 		$this->name                    = $publicContact['name'] ?: $publicContact['nick'];
 		$this->screen_name             = $publicContact['nick'] ?: $publicContact['name'];
 		$this->location                = $publicContact['location'] ?:
-			ContactSelector::networkToName($publicContact['network'], $publicContact['url'], $publicContact['protocol']);
+			ContactSelector::networkToName($publicContact['network'], $publicContact['protocol'], $publicContact['gsid']);
 		$this->derived                 = [];
 		$this->url                     = $publicContact['url'];
 		// No entities needed since we don't perform any shortening in the URL or description
@@ -156,10 +155,10 @@ class User extends BaseDataTransferObject
 		$this->default_profile         = false;
 		$this->default_profile_image   = false;
 
-		if (!empty($status)) {
-			$this->status = $status;
-		} else {
+		if ($status === null) {
 			unset($this->status);
+		} else {
+			$this->status = $status->toArray();
 		}
 
 		//  Unused optional fields

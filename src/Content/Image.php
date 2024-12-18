@@ -11,6 +11,7 @@ use Friendica\Content\Image\Collection\MasonryImageRow;
 use Friendica\Content\Image\Entity\MasonryImage;
 use Friendica\Content\Post\Collection\PostMedias;
 use Friendica\Core\Renderer;
+use Friendica\Network\HTTPException\ServiceUnavailableException;
 
 class Image
 {
@@ -42,9 +43,7 @@ class Image
 	}
 
 	/**
-	 * @param PostMedias $images
-	 * @return string
-	 * @throws \Friendica\Network\HTTPException\ServiceUnavailableException
+	 * @throws ServiceUnavailableException
 	 */
 	private static function getImageGridHtml(PostMedias $images): string
 	{
@@ -70,9 +69,7 @@ class Image
 	 * For each row, we calculate how much of the total width each picture will take depending on their aspect ratio
 	 * and how much relative height it needs to accomodate all pictures next to each other with their height normalized.
 	 *
-	 * @param array $images
-	 * @return string
-	 * @throws \Friendica\Network\HTTPException\ServiceUnavailableException
+	 * @throws ServiceUnavailableException
 	 */
 	private static function getHorizontalMasonryHtml(PostMedias $images): string
 	{

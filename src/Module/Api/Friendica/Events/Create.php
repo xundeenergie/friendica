@@ -59,11 +59,11 @@ class Create extends BaseApi
 			$finish   = DBA::NULL_DATETIME;
 			$nofinish = true;
 		} else {
-			$finish   = DateTimeFormat::convert($request['end_time'], 'UTC', DI::app()->getTimeZone());
+			$finish   = DateTimeFormat::convert($request['end_time'], 'UTC', DI::appHelper()->getTimeZone());
 			$nofinish = false;
 		}
 
-		$start = DateTimeFormat::convert($request['start_time'], 'UTC', DI::app()->getTimeZone());
+		$start = DateTimeFormat::convert($request['start_time'], 'UTC', DI::appHelper()->getTimeZone());
 
 		// create event
 		$event = [];

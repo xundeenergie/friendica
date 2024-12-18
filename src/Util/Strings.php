@@ -155,7 +155,8 @@ class Strings
 	{
 		if ($network != '') {
 			if ($url != '') {
-				$network_name = '<a href="' . $url . '">' . ContactSelector::networkToName($network, $url) . '</a>';
+				$gsid = ContactSelector::getServerIdForProfile($url);
+				$network_name = '<a href="' . $url . '">' . ContactSelector::networkToName($network, '', $gsid) . '</a>';
 			} else {
 				$network_name = ContactSelector::networkToName($network);
 			}
@@ -529,8 +530,12 @@ class Strings
 	{
 		$shorthand = trim($shorthand);
 
-		if (is_numeric($shorthand)) {
-			return $shorthand;
+		if (ctype_digit($shorthand)) {
+			return (int) $shorthand;
+		}
+
+		if ($shorthand === '') {
+			return 0;
 		}
 
 		$last      = strtolower($shorthand[strlen($shorthand) - 1]);

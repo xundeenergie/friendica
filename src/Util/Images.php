@@ -189,9 +189,9 @@ class Images
 	 * Fetch image mimetype from the image data or guessing from the file name
 	 *
 	 * @param string $image_data Image data
-	 * @param string $filename   File name (for guessing the type via the extension)
-	 * @param string $default    Default MIME type
+	 *
 	 * @return string MIME type
+	 *
 	 * @throws \Exception
 	 */
 	public static function getMimeTypeByData(string $image_data): string
@@ -308,13 +308,13 @@ class Images
 
 		$data = DI::cache()->get($cacheKey);
 
-		if (empty($data) || !is_array($data)) {
+		if (!is_array($data)) {
 			$data = self::getInfoFromURL($url, $ocr);
 
 			DI::cache()->set($cacheKey, $data);
 		}
 
-		return $data ?? [];
+		return $data;
 	}
 
 	/**
@@ -366,11 +366,11 @@ class Images
 			return [];
 		}
 
-		$image = new Image($img_str, '', $url);
+		$image = new Image($img_str, '', $url, false);
 
 		if ($image->isValid()) {
-			$data['blurhash'] = $image->getBlurHash();
-			
+			$data['blurhash'] = $image->getBlurHash($img_str);
+
 			if ($ocr) {
 				$media = ['img_str' => $img_str];
 				Hook::callAll('ocr-detection', $media);
@@ -454,7 +454,7 @@ class Images
 	{
 		return self::getBBCodeByUrl(
 			DI::baseUrl() . '/photos/' . $nickname . '/image/' . $resource_id,
-			DI::baseUrl() . '/photo/' . $resource_id . '-' . $preview. $ext,
+			DI::baseUrl() . '/photo/' . $resource_id . '-' . $preview . $ext,
 			$description
 		);
 	}

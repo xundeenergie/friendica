@@ -7,7 +7,6 @@
 
 namespace Friendica\Core\Config\Model;
 
-use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Config\Capability\ISetConfigValuesTransactionally;
 use Friendica\Core\Config\Exception\ConfigPersistenceException;
 use Friendica\Core\Config\ValueObject\Cache;
@@ -17,7 +16,7 @@ use Friendica\Core\Config\ValueObject\Cache;
  */
 class ConfigTransaction implements ISetConfigValuesTransactionally
 {
-	/** @var IManageConfigValues */
+	/** @var DatabaseConfig */
 	protected $config;
 	/** @var Cache */
 	protected $setCache;

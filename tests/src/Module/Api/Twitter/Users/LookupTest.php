@@ -7,13 +7,12 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Users;
 
-use Friendica\App\Router;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Users\Lookup;
 use Friendica\Network\HTTPException\NotFoundException;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class LookupTest extends ApiTest
+class LookupTest extends ApiTestCase
 {
 	/**
 	 * Test the api_users_lookup() function.

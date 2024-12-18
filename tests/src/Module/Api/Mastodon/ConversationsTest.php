@@ -7,9 +7,9 @@
 
 namespace Friendica\Test\src\Module\Api\Mastodon;
 
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class ConversationsTest extends ApiTest
+class ConversationsTest extends ApiTestCase
 {
 	/**
 	 * Test the api_conversation_show() function.

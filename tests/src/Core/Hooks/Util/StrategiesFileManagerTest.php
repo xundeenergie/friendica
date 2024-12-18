@@ -11,13 +11,13 @@ use Friendica\Core\Addon\Capability\ICanLoadAddons;
 use Friendica\Core\Hooks\Capability\ICanRegisterStrategies;
 use Friendica\Core\Hooks\Exceptions\HookConfigException;
 use Friendica\Core\Hooks\Util\StrategiesFileManager;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\VFSTrait;
 use org\bovigo\vfs\vfsStream;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class StrategiesFileManagerTest extends MockedTest
+class StrategiesFileManagerTest extends MockedTestCase
 {
 	use VFSTrait;
 

@@ -274,24 +274,24 @@ class StorageManager
 	 */
 	public function register(string $class): bool
 	{
-		if (is_subclass_of($class, ICanReadFromStorage::class)) {
-			/** @var ICanReadFromStorage $class */
-			if ($this->isValidBackend($class::getName(), $this->validBackends)) {
-				return true;
-			}
-
-			$backends   = $this->validBackends;
-			$backends[] = $class::getName();
-
-			if ($this->config->set('storage', 'backends', $backends)) {
-				$this->validBackends = $backends;
-				return true;
-			} else {
-				return false;
-			}
-		} else {
+		if (!is_subclass_of($class, ICanReadFromStorage::class)) {
 			return false;
 		}
+
+		/** @var class-string<ICanReadFromStorage> $class */
+		if ($this->isValidBackend($class::getName(), $this->validBackends)) {
+			return true;
+		}
+
+		$backends   = $this->validBackends;
+		$backends[] = $class::getName();
+
+		if ($this->config->set('storage', 'backends', $backends)) {
+			$this->validBackends = $backends;
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -305,30 +305,31 @@ class StorageManager
 	 */
 	public function unregister(string $class): bool
 	{
-		if (is_subclass_of($class, ICanReadFromStorage::class)) {
-			/** @var ICanReadFromStorage $class */
-			if ($this->currentBackend::getName() == $class::getName()) {
-				throw new StorageException(sprintf('Cannot unregister %s, because it\'s currently active.', $class::getName()));
-			}
-
-			$key = array_search($class::getName(), $this->validBackends);
-
-			if ($key !== false) {
-				$backends = $this->validBackends;
-				unset($backends[$key]);
-				$backends = array_values($backends);
-				if ($this->config->set('storage', 'backends', $backends)) {
-					$this->validBackends = $backends;
-					return true;
-				} else {
-					return false;
-				}
-			} else {
-				return true;
-			}
-		} else {
+		if (!is_subclass_of($class, ICanReadFromStorage::class)) {
 			return false;
 		}
+
+		/** @var class-string<ICanReadFromStorage> $class */
+		if ($this->currentBackend::getName() == $class::getName()) {
+			throw new StorageException(sprintf('Cannot unregister %s, because it\'s currently active.', $class::getName()));
+		}
+
+		$key = array_search($class::getName(), $this->validBackends);
+
+		if ($key === false) {
+			return true;
+		}
+
+		$backends = $this->validBackends;
+		unset($backends[$key]);
+		$backends = array_values($backends);
+
+		if ($this->config->set('storage', 'backends', $backends)) {
+			$this->validBackends = $backends;
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

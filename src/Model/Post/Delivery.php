@@ -17,11 +17,6 @@ class Delivery
 {
 	/**
 	 * Add a post to an inbox
-	 *
-	 * @param integer $uri_id
-	 * @param string  $inbox
-	 * @param string  $created
-	 * @param array   %receivers
 	 */
 	public static function add(int $uri_id, int $uid, string $inbox, string $created, string $command, array $receivers)
 	{

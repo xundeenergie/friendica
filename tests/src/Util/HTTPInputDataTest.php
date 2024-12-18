@@ -7,16 +7,15 @@
 
 namespace Friendica\Test\src\Util;
 
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\HTTPInputDataDouble;
-use Friendica\Util\HTTPInputData;
 
 /**
  * Testing HTTPInputData
  *
  * @see	HTTPInputData
  */
-class HTTPInputDataTest extends MockedTest
+class HTTPInputDataTest extends MockedTestCase
 {
 	/**
 	 * Returns the data stream for the unit test

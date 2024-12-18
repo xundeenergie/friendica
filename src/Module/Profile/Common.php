@@ -7,7 +7,9 @@
 
 namespace Friendica\Module\Profile;
 
-use Friendica\App;
+use Friendica\App\Arguments;
+use Friendica\App\BaseURL;
+use Friendica\AppHelper;
 use Friendica\Content\Nav;
 use Friendica\Content\Pager;
 use Friendica\Core\Config\Capability\IManageConfigValues;
@@ -30,16 +32,16 @@ class Common extends BaseProfile
 	private $config;
 	/** @var IHandleUserSessions */
 	private $userSession;
-	/** @var App */
-	private $app;
+	/** @var AppHelper */
+	private $appHelper;
 
-	public function __construct(App $app, IHandleUserSessions $userSession, IManageConfigValues $config, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(AppHelper $appHelper, IHandleUserSessions $userSession, IManageConfigValues $config, L10n $l10n, BaseURL $baseUrl, Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
 		$this->config = $config;
 		$this->userSession = $userSession;
-		$this->app = $app;
+		$this->appHelper = $appHelper;
 	}
 
 	protected function content(array $request = []): string
@@ -52,7 +54,7 @@ class Common extends BaseProfile
 
 		$nickname = $this->parameters['nickname'];
 
-		$profile = Profile::load($this->app, $nickname);
+		$profile = Profile::load($this->appHelper, $nickname);
 		if (empty($profile)) {
 			throw new HTTPException\NotFoundException($this->t('User not found.'));
 		}

@@ -89,7 +89,8 @@ class ParseUrl
 	/**
 	 * Search for cached embeddable data of an url otherwise fetch it
 	 *
-	 * @param string $url         The url of the page which should be scraped
+	 * @param string $url      The url of the page which should be scraped
+	 * @param string $mimetype Optional mimetype that had already been detected for this page
 	 *
 	 * @return array which contains needed data for embedding
 	 *    string 'url'      => The url of the parsed page
@@ -104,7 +105,7 @@ class ParseUrl
 	 * @see   ParseUrl::getSiteinfo() for more information about scraping
 	 * embeddable content
 	 */
-	public static function getSiteinfoCached(string $url): array
+	public static function getSiteinfoCached(string $url, string $mimetype = ''): array
 	{
 		if (empty($url)) {
 			return [
@@ -123,7 +124,7 @@ class ParseUrl
 			return $data;
 		}
 
-		$data = self::getSiteinfo($url);
+		$data = self::getSiteinfo($url, $mimetype);
 
 		$expires = $data['expires'];
 
@@ -155,8 +156,9 @@ class ParseUrl
 	 * like \<title\>Awesome Title\</title\> or
 	 * \<meta name="description" content="An awesome description"\>
 	 *
-	 * @param string $url         The url of the page which should be scraped
-	 * @param int    $count       Internal counter to avoid endless loops
+	 * @param string $url      The url of the page which should be scraped
+	 * @param string $mimetype Optional mimetype that had already been detected for this page
+	 * @param int    $count    Internal counter to avoid endless loops
 	 *
 	 * @return array which contains needed data for embedding
 	 *    string 'url'      => The url of the parsed page
@@ -181,7 +183,7 @@ class ParseUrl
 	 * </body>
 	 * @endverbatim
 	 */
-	public static function getSiteinfo(string $url, int $count = 1): array
+	public static function getSiteinfo(string $url, string $mimetype = '', int $count = 1): array
 	{
 		if (empty($url)) {
 			return [
@@ -212,7 +214,11 @@ class ParseUrl
 			return $siteinfo;
 		}
 
-		$type = self::getContentType($url);
+		if (!empty($mimetype)) {
+			$type = explode('/', current(explode(';', $mimetype)));
+		} else {
+			$type = self::getContentType($url);
+		}
 		Logger::info('Got content-type', ['content-type' => $type, 'url' => $url]);
 		if (!empty($type) && in_array($type[0], ['image', 'video', 'audio'])) {
 			$siteinfo['type'] = $type[0];
@@ -309,7 +315,7 @@ class ParseUrl
 					}
 				}
 				if ($content != '') {
-					$siteinfo = self::getSiteinfo($content, ++$count);
+					$siteinfo = self::getSiteinfo($content, $mimetype, ++$count);
 					return $siteinfo;
 				}
 			}
@@ -1087,7 +1093,7 @@ class ParseUrl
 		$content = JsonLD::fetchElement($jsonld, 'logo', 'url', '@type', 'ImageObject');
 		if (!empty($content) && is_string($content)) {
 			$jsonldinfo['publisher_img'] = trim($content);
-		} elseif (!empty($content) && is_array($content)) {
+		} elseif (is_array($content) && array_key_exists(0, $content)) {
 			$jsonldinfo['publisher_img'] = trim($content[0]);
 		}
 

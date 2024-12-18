@@ -12,9 +12,9 @@ use Friendica\Module\Api\Twitter\ContactEndpoint;
 use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Network\HTTPException\NotFoundException;
 use Friendica\Object\Api\Twitter\User;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 
-class ContactEndpointTest extends FixtureTest
+class ContactEndpointTest extends FixtureTestCase
 {
 	public function testIds()
 	{

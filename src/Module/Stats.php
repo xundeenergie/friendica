@@ -14,8 +14,11 @@ use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
 use Friendica\Core\L10n;
 use Friendica\Core\Protocol;
+use Friendica\Core\Update;
 use Friendica\Core\Worker;
 use Friendica\Database\Database;
+use Friendica\Database\DBA;
+use Friendica\Database\DBStructure;
 use Friendica\Model\Register;
 use Friendica\Moderation\Entity\Report;
 use Friendica\Util\DateTimeFormat;
@@ -23,6 +26,10 @@ use Friendica\Util\Profiler;
 use Psr\Log\LoggerInterface;
 use Friendica\Network\HTTPException;
 
+/**
+ * Returns statistics of the current node for administration use
+ * Like for monitoring
+ */
 class Stats extends BaseModule
 {
 	/** @var IManageConfigValues */
@@ -87,6 +94,13 @@ class Stats extends BaseModule
 				'deferred'      => [],
 				'total'         => [],
 			],
+			'jetstream' => [
+				'drift'     => intval($this->keyValue->get('jetstream_drift')),
+				'did_count' => intval($this->keyValue->get('jetstream_did_count')),
+				'did_limit' => intval($this->keyValue->get('jetstream_did_limit')),
+				'messages'  => intval($this->keyValue->get('jetstream_messages')),
+				'timestamp' => intval($this->keyValue->get('jetstream_timestamp')),
+			],
 			'users' => [
 				'total'          => intval($this->keyValue->get('nodeinfo_total_users')),
 				'activeWeek'     => intval($this->keyValue->get('nodeinfo_active_users_weekly')),
@@ -129,7 +143,25 @@ class Stats extends BaseModule
 				],
 				'open'   => $this->dba->count('report', ['status' => Report::STATUS_OPEN]),
 				'closed' => $this->dba->count('report', ['status' => Report::STATUS_CLOSED]),
-			]
+			],
+			'update' => [
+				'available' 		=> Update::isAvailable(),
+				'available_version' => Update::getAvailableVersion(),
+				'status'            => Update::getStatus(),
+				'db_status'			=> DBStructure::getUpdateStatus(),
+			],
+			'server' => [
+				'version'  => App::VERSION,
+				'php'      => [
+					'version'             => phpversion(),
+					'upload_max_filesize' => ini_get('upload_max_filesize'),
+					'post_max_size'       => ini_get('post_max_size'),
+					'memory_limit'        => ini_get('memory_limit'),
+				],
+				'database' => [
+					'max_allowed_packet' => DBA::getVariable('max_allowed_packet'),
+				],
+			],
 		];
 
 		if (Addon::isEnabled('bluesky')) {

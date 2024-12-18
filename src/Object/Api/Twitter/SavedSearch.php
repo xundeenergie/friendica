@@ -34,7 +34,6 @@ class SavedSearch extends BaseDataTransferObject
 	/**
 	 * Creates a saved search record from a search record.
 	 *
-	 * @param BaseURL $baseUrl
 	 * @param array   $search Full search table record
 	 */
 	public function __construct(array $search)

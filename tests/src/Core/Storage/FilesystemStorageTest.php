@@ -10,10 +10,11 @@ namespace Friendica\Test\src\Core\Storage;
 use Friendica\Core\Storage\Exception\StorageException;
 use Friendica\Core\Storage\Type\Filesystem;
 use Friendica\Core\Storage\Type\FilesystemConfig;
+use Friendica\Test\StorageTestCase;
 use Friendica\Test\Util\VFSTrait;
 use org\bovigo\vfs\vfsStream;
 
-class FilesystemStorageTest extends StorageTest
+class FilesystemStorageTest extends StorageTestCase
 {
 	use VFSTrait;
 

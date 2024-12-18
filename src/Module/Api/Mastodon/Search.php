@@ -157,10 +157,6 @@ class Search extends BaseApi
 			$condition = DBA::mergeConditions($condition, ["`uri-id` < ?", $max_id]);
 		}
 
-		if (!empty($since_id)) {
-			$condition = DBA::mergeConditions($condition, ["`uri-id` > ?", $since_id]);
-		}
-
 		if (!empty($min_id)) {
 			$condition = DBA::mergeConditions($condition, ["`uri-id` > ?", $min_id]);
 

@@ -11,10 +11,10 @@ use Dice\Dice;
 use Friendica\Database\Database;
 use Friendica\Database\DBStructure;
 use Friendica\DI;
-use Friendica\Test\DatabaseTest;
+use Friendica\Test\DatabaseTestCase;
 use Friendica\Test\Util\Database\StaticDatabase;
 
-class DBStructureTest extends DatabaseTest
+class DBStructureTest extends DatabaseTestCase
 {
 	protected function setUp(): void
 	{

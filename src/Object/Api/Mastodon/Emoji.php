@@ -32,7 +32,6 @@ class Emoji extends BaseDataTransferObject
 	// Optional attributes
 	/**
 	 * Unsupported
-	 * @var string
 	 */
 	//protected $category;
 

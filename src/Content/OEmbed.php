@@ -8,6 +8,7 @@
 namespace Friendica\Content;
 
 use DOMDocument;
+use DOMElement;
 use DOMXPath;
 use Exception;
 use Friendica\Content\Text\BBCode;
@@ -48,11 +49,11 @@ class OEmbed
 	{
 		$embedurl = trim($embedurl, '\'"');
 
-		$a = DI::app();
+		$appHelper = DI::appHelper();
 
-		$cache_key = 'oembed:' . $a->getThemeInfoValue('videowidth') . ':' . $embedurl;
+		$cache_key = 'oembed:' . $appHelper->getThemeInfoValue('videowidth') . ':' . $embedurl;
 
-		$condition = ['url' => Strings::normaliseLink($embedurl), 'maxwidth' => $a->getThemeInfoValue('videowidth')];
+		$condition = ['url' => Strings::normaliseLink($embedurl), 'maxwidth' => $appHelper->getThemeInfoValue('videowidth')];
 		$oembed_record = DBA::selectFirst('oembed', ['content'], $condition);
 		if (DBA::isResult($oembed_record)) {
 			$json_string = $oembed_record['content'];
@@ -83,12 +84,13 @@ class OEmbed
 							$xpath->query("//link[@type='application/json+oembed'] | //link[@type='text/json+oembed']")
 							as $link)
 						{
+							/** @var DOMElement $link */
 							$href = $link->getAttributeNode('href')->nodeValue;
 							// Both Youtube and Vimeo output OEmbed endpoint URL with HTTP
 							// but their OEmbed endpoint is only accessible by HTTPS ¯\_(ツ)_/¯
 							$href = str_replace(['http://www.youtube.com/', 'http://player.vimeo.com/'],
 								['https://www.youtube.com/', 'https://player.vimeo.com/'], $href);
-							$result = DI::httpClient()->get($href . '&maxwidth=' . $a->getThemeInfoValue('videowidth'), HttpClientAccept::DEFAULT, [HttpClientOptions::REQUEST => HttpClientRequest::SITEINFO]);
+							$result = DI::httpClient()->get($href . '&maxwidth=' . $appHelper->getThemeInfoValue('videowidth'), HttpClientAccept::DEFAULT, [HttpClientOptions::REQUEST => HttpClientRequest::SITEINFO]);
 							if ($result->isSuccess()) {
 								$json_string = $result->getBodyString();
 								break;
@@ -109,7 +111,7 @@ class OEmbed
 			if (!empty($oembed->type) && $oembed->type != 'error') {
 				DBA::insert('oembed', [
 					'url' => Strings::normaliseLink($embedurl),
-					'maxwidth' => $a->getThemeInfoValue('videowidth'),
+					'maxwidth' => $appHelper->getThemeInfoValue('videowidth'),
 					'content' => $json_string,
 					'created' => DateTimeFormat::utcNow()
 				], Database::INSERT_UPDATE);
@@ -178,7 +180,7 @@ class OEmbed
 			$oembed->thumbnail_height = $data['images'][0]['height'];
 		}
 
-		Hook::callAll('oembed_fetch_url', $embedurl, $oembed);
+		Hook::callAll('oembed_fetch_url', $embedurl);
 
 		return $oembed;
 	}

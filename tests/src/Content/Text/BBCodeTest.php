@@ -10,10 +10,10 @@ namespace Friendica\Test\src\Content\Text;
 use Friendica\Content\Text\BBCode;
 use Friendica\DI;
 use Friendica\Network\HTTPException\InternalServerErrorException;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Friendica\Util\Strings;
 
-class BBCodeTest extends FixtureTest
+class BBCodeTest extends FixtureTestCase
 {
 	/** @var \HTMLPurifier */
 	public $HTMLPurifier;

@@ -7,9 +7,9 @@
 
 namespace Friendica\Test\src\Module\Api\Mastodon;
 
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class SearchTest extends ApiTest
+class SearchTest extends ApiTestCase
 {
 	/**
 	 * Test the api_search() function.

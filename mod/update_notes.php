@@ -8,13 +8,11 @@
  * AJAX synchronisation of notes page
  */
 
-use Friendica\App;
 use Friendica\Core\System;
-use Friendica\DI;
 
 require_once 'mod/notes.php';
 
-function update_notes_content(App $a)
+function update_notes_content()
 {
 	$profile_uid = intval($_GET['p']);
 
@@ -28,7 +26,7 @@ function update_notes_content(App $a)
 	 *
 	 */
 
-	$text = notes_content($a, $profile_uid);
+	$text = notes_content($profile_uid);
 
 	System::htmlUpdateExit($text);
 }

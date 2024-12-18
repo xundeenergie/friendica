@@ -9,7 +9,7 @@ namespace Friendica\Factory\Api\Mastodon;
 
 use Friendica\BaseFactory;
 use Friendica\Model\Contact;
-use Friendica\Navigation\Notifications;
+use Friendica\Navigation\Notifications\Entity\Notification as NotificationEntity;
 use Friendica\Navigation\Notifications\Exception\UnexpectedNotificationTypeException;
 use Friendica\Object\Api\Mastodon\Notification as MstdnNotification;
 use Friendica\Protocol\Activity;
@@ -32,16 +32,17 @@ class Notification extends BaseFactory
 	}
 
 	/**
-	 * @param Notifications\Entity\Notification $Notification
-	 * @param bool $display_quote Display quoted posts
+	 * @param NotificationEntity $Notification
+	 * @param bool $display_quotes Display quoted posts
 	 *
 	 * @return MstdnNotification
 	 * @throws UnexpectedNotificationTypeException
 	 */
-	public function createFromNotification(Notifications\Entity\Notification $Notification, bool $display_quotes): MstdnNotification
+	public function createFromNotification(NotificationEntity $Notification, bool $display_quotes): MstdnNotification
 	{
 		$type = self::getType($Notification);
-		if (empty($type)) {
+
+		if ($type === '') {
 			throw new UnexpectedNotificationTypeException();
 		}
 

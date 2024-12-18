@@ -59,28 +59,34 @@ class Apps extends BaseApi
 			$this->logAndJsonError(422, $this->errorFactory->UnprocessableEntity($this->t('Missing parameters')));
 		}
 
-		$client_id     = bin2hex(random_bytes(32));
-		$client_secret = bin2hex(random_bytes(32));
-
-		$fields = ['client_id' => $client_id, 'client_secret' => $client_secret, 'name' => $request['client_name'], 'redirect_uri' => $request['redirect_uris']];
+		$fields = ['name' => $request['client_name'], 'redirect_uri' => $request['redirect_uris']];
 
 		if (!empty($request['scopes'])) {
 			$fields['scopes'] = $request['scopes'];
 		}
 
-		$fields['read']   = (stripos($request['scopes'], self::SCOPE_READ) !== false);
-		$fields['write']  = (stripos($request['scopes'], self::SCOPE_WRITE) !== false);
-		$fields['follow'] = (stripos($request['scopes'], self::SCOPE_FOLLOW) !== false);
-		$fields['push']   = (stripos($request['scopes'], self::SCOPE_PUSH) !== false);
-
 		if (!empty($request['website'])) {
 			$fields['website'] = $request['website'];
 		}
+
+		$application = DBA::selectFirst('application', ['id'], $fields);
+		if (!empty($application['id'])) {
+			$this->logger->debug('Found existing application', ['request' => $request, 'id' => $application['id']]);
+			$this->jsonExit(DI::mstdnApplication()->createFromApplicationId($application['id'])->toArray());
+		}
+
+		$fields['read']          = (stripos($request['scopes'], self::SCOPE_READ) !== false);
+		$fields['write']         = (stripos($request['scopes'], self::SCOPE_WRITE) !== false);
+		$fields['follow']        = (stripos($request['scopes'], self::SCOPE_FOLLOW) !== false);
+		$fields['push']          = (stripos($request['scopes'], self::SCOPE_PUSH) !== false);
+		$fields['client_id']     = bin2hex(random_bytes(32));
+		$fields['client_secret'] = bin2hex(random_bytes(32));
 
 		if (!DBA::insert('application', $fields)) {
 			$this->logAndJsonError(500, $this->errorFactory->InternalError());
 		}
 
+		$this->logger->debug('Create new application', ['request' => $request, 'id' => DBA::lastInsertId()]);
 		$this->jsonExit(DI::mstdnApplication()->createFromApplicationId(DBA::lastInsertId())->toArray());
 	}
 }

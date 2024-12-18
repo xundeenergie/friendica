@@ -306,13 +306,6 @@ class Crypto
 	 */
 	public static function randomDigits($digits)
 	{
-		$rn = '';
-
-		// generating cryptographically secure pseudo-random integers
-		for ($i = 0; $i < $digits; $i++) {
-			$rn .= random_int(0, 9);
-		}
-
-		return $rn;
+		return random_int(0, 10 ** $digits - 1);
 	}
 }

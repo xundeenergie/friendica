@@ -9,9 +9,9 @@ namespace Friendica\Test\src\Protocol;
 
 use Friendica\Protocol\Activity;
 use Friendica\Protocol\ActivityNamespace;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-class ActivityTest extends MockedTest
+class ActivityTest extends MockedTestCase
 {
 	public function dataMatch()
 	{

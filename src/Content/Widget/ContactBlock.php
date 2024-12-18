@@ -26,7 +26,6 @@ class ContactBlock
 	/**
 	 * Get HTML for contact block
 	 *
-	 * @template widget/contacts.tpl
 	 * @hook contact_block_end (contacts=>array, output=>string)
 	 * @return string Formatted HTML code or empty string
 	 */

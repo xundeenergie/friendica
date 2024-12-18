@@ -11,36 +11,43 @@ use Friendica\BaseModule;
 use Friendica\Core\System;
 use Friendica\DI;
 use Friendica\Model\Post;
-use Friendica\Network\HTTPException;
+use Friendica\Network\HTTPException\NotFoundException;
+use Friendica\Network\HTTPException\UnauthorizedException;
 
 /**
  * Print the body of an Item
  */
 class ItemBody extends BaseModule
 {
+	/**
+	 * @throws NotFoundException|UnauthorizedException
+	 *
+	 * @return string|never
+	 */
 	protected function content(array $request = []): string
 	{
 		if (!DI::userSession()->getLocalUserId()) {
-			throw new HTTPException\UnauthorizedException(DI::l10n()->t('Access denied.'));
+			throw new UnauthorizedException(DI::l10n()->t('Access denied.'));
 		}
 
 		if (empty($this->parameters['item'])) {
-			throw new HTTPException\NotFoundException(DI::l10n()->t('Item not found.'));
+			throw new NotFoundException(DI::l10n()->t('Item not found.'));
 		}
 
 		$itemId = intval($this->parameters['item']);
 
 		$item = Post::selectFirst(['body'], ['uid' => [0, DI::userSession()->getLocalUserId()], 'uri-id' => $itemId]);
 
-		if (!empty($item)) {
-			if (DI::mode()->isAjax()) {
-				echo str_replace("\n", '<br />', $item['body']);
-				System::exit();
-			} else {
-				return str_replace("\n", '<br />', $item['body']);
-			}
-		} else {
-			throw new HTTPException\NotFoundException(DI::l10n()->t('Item not found.'));
+		if (empty($item)) {
+			throw new NotFoundException(DI::l10n()->t('Item not found.'));
 		}
+
+		// TODO: Extract this code into controller
+		if (DI::mode()->isAjax()) {
+			echo str_replace("\n", '<br />', $item['body']);
+			System::exit();
+		}
+
+		return str_replace("\n", '<br />', $item['body']);
 	}
 }

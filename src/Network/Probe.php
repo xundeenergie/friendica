@@ -10,6 +10,7 @@ namespace Friendica\Network;
 use DOMDocument;
 use DomXPath;
 use Exception;
+use Friendica\Content\Text\HTML;
 use Friendica\Core\Hook;
 use Friendica\Core\Logger;
 use Friendica\Core\Protocol;
@@ -24,6 +25,7 @@ use Friendica\Network\HTTPClient\Client\HttpClientOptions;
 use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Protocol\ActivityNamespace;
 use Friendica\Protocol\ActivityPub;
+use Friendica\Protocol\ATProtocol;
 use Friendica\Protocol\Diaspora;
 use Friendica\Protocol\Email;
 use Friendica\Protocol\Feed;
@@ -220,14 +222,16 @@ class Probe
 			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
 			return [];
 		}
+
 		$ssl_connection_error = ($curlResult->getErrorNumber() == CURLE_COULDNT_CONNECT) || ($curlResult->getReturnCode() == 0);
+
+		$host_url = $host;
+
 		if ($curlResult->isSuccess()) {
 			$xml = $curlResult->getBodyString();
 			$xrd = XML::parseString($xml, true);
 			if (!empty($url)) {
 				$host_url = 'https://' . $host;
-			} else {
-				$host_url = $host;
 			}
 		} elseif ($curlResult->isTimeout()) {
 			Logger::info('Probing timeout', ['url' => $ssl_url]);
@@ -550,6 +554,7 @@ class Probe
 	public static function getWebfingerArray(string $uri): array
 	{
 		$parts = parse_url($uri);
+		$lrdd  = [];
 
 		if (!empty($parts['scheme']) && !empty($parts['host'])) {
 			$host = $parts['host'];
@@ -562,8 +567,11 @@ class Probe
 			$nick = '';
 			$addr = '';
 
-			$path_parts = explode('/', trim($parts['path'] ?? '', '/'));
-			if (!empty($path_parts)) {
+			$path_parts = [];
+
+			if (array_key_exists('path', $parts) && trim(strval($parts['path']), '/') !== '') {
+				$path_parts = explode('/', trim($parts['path'], '/'));
+
 				$nick = ltrim(end($path_parts), '@');
 				$addr = $nick . '@' . $host;
 			}
@@ -574,7 +582,7 @@ class Probe
 			}
 
 			if (empty($webfinger) && empty($lrdd)) {
-				while (empty($lrdd) && empty($webfinger) && (sizeof($path_parts) > 1)) {
+				while (empty($lrdd) && empty($webfinger) && (count($path_parts) > 1)) {
 					$host    .= '/' . array_shift($path_parts);
 					$baseurl = $parts['scheme'] . '://' . $host;
 
@@ -668,8 +676,10 @@ class Probe
 			return null;
 		}
 
+		$detected = '';
+
 		// First try the address because this is the primary purpose of webfinger
-		if (!empty($addr)) {
+		if ($addr !== '') {
 			$detected = $addr;
 			$path = str_replace('{uri}', urlencode('acct:' . $addr), $template);
 			$webfinger = self::webfinger($path, $type);
@@ -724,8 +734,8 @@ class Probe
 
 		$parts = parse_url($uri);
 		if (empty($parts['scheme']) && empty($parts['host']) && (empty($parts['path']) || strpos($parts['path'], '@') === false)) {
-			Logger::info('URI was not detectable', ['uri' => $uri]);
-			return [];
+			Logger::info('URI was not detectable, probe for AT Protocol now', ['uri' => $uri]);
+			return self::atProtocol($uri);
 		}
 
 		// If the URI starts with "mailto:" then jump directly to the mail detection
@@ -749,6 +759,10 @@ class Probe
 		}
 
 		if (empty($data)) {
+			$data = self::atProtocol($uri);
+			if (!empty($data)) {
+				return $data;
+			}
 			if (!empty($parts['scheme'])) {
 				return self::feed($uri);
 			} elseif (!empty($uid)) {
@@ -823,13 +837,15 @@ class Probe
 	 */
 	private static function zot(array $webfinger, array $data): array
 	{
+		$zot_url = '';
+
 		foreach ($webfinger['links'] as $link) {
 			if (($link['rel'] == 'http://purl.org/zot/protocol/6.0') && !empty($link['href'])) {
 				$zot_url = $link['href'];
 			}
 		}
 
-		if (empty($zot_url)) {
+		if ($zot_url === '') {
 			return $data;
 		}
 
@@ -871,7 +887,7 @@ class Probe
 				$data['url'] = $link['href'];
 			}
 		}
-		
+
 		$data = self::pollZot($zot_url, $data);
 
 		if (!empty($data['url']) && !empty($webfinger['aliases']) && is_array($webfinger['aliases'])) {
@@ -1429,7 +1445,7 @@ class Probe
 			&& !empty($data['guid'])
 			&& !empty($data['baseurl'])
 			&& !empty($data['pubkey'])
-			&& !empty($hcard_url)
+			&& $hcard_url !== ''
 		) {
 			$data['network'] = Protocol::DIASPORA;
 			$data['manually-approve'] = false;
@@ -1678,6 +1694,75 @@ class Probe
 	}
 
 	/**
+	 * Check for AT Protocol (Bluesky)
+	 *
+	 * @param string $uri Profile link
+	 * @return array Profile data or empty array
+	 */
+	private static function atProtocol(string $uri): array
+	{
+		if (parse_url($uri, PHP_URL_SCHEME) == 'did') {
+			$did = $uri;
+		} elseif (parse_url($uri, PHP_URL_PATH) == $uri && strpos($uri, '@') === false) {
+			$did = DI::atProtocol()->getDid($uri);
+			if (empty($did)) {
+				return [];
+			}
+		} elseif (Network::isValidHttpUrl($uri)) {
+			$did = DI::atProtocol()->getDidByProfile($uri);
+			if (empty($did)) {
+				return [];
+			}
+		} else {
+			return [];
+		}
+	
+		$profile = DI::atProtocol()->XRPCGet('app.bsky.actor.getProfile', ['actor' => $did]);
+		if (empty($profile) || empty($profile->did)) {
+			return [];
+		}
+
+		$nick = $profile->handle ?? $profile->did;
+		$name = $profile->displayName ?? $nick;
+
+		$data = [
+			'network'  => Protocol::BLUESKY,
+			'url'      => $profile->did,
+			'alias'    => ATProtocol::WEB . '/profile/' . $nick,
+			'name'     => $name ?: $nick,
+			'nick'     => $nick,
+			'addr'     => $nick,
+			'poll'     => ATProtocol::WEB . '/profile/' . $profile->did . '/rss',
+			'photo'    => $profile->avatar ?? '',
+		];
+	
+		if (!empty($profile->description)) {
+			$data['about'] = HTML::toBBCode($profile->description);
+		}
+	
+		if (!empty($profile->banner)) {
+			$data['header'] = $profile->banner;
+		}
+
+		$directory = DI::atProtocol()->get(ATProtocol::DIRECTORY . '/' . $profile->did);
+		if (!empty($directory)) {
+			foreach ($directory->service as $service) {
+				if (($service->id == '#atproto_pds') && ($service->type == 'AtprotoPersonalDataServer') && !empty($service->serviceEndpoint)) {
+					$data['baseurl'] = $service->serviceEndpoint;
+				}
+			}
+
+			foreach ($directory->verificationMethod as $method) {
+				if (!empty($method->publicKeyMultibase)) {
+					$data['pubkey'] = $method->publicKeyMultibase;
+				}
+			}
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Check for feed contact
 	 *
 	 * @param string  $url   Profile link
@@ -1776,7 +1861,7 @@ class Probe
 		$password = '';
 		openssl_private_decrypt(hex2bin($mailacct['pass']), $password, $user['prvkey']);
 		$mbox = Email::connect($mailbox, $mailacct['user'], $password);
-		if (!$mbox) {
+		if ($mbox === false) {
 			return [];
 		}
 
@@ -1828,7 +1913,7 @@ class Probe
 			}
 		}
 
-		if (!empty($mbox)) {
+		if ($mbox !== false) {
 			imap_close($mbox);
 		}
 

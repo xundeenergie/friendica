@@ -78,8 +78,7 @@ class LegacyModule extends BaseModule
 		$function_name = $this->moduleName . '_' . $function_suffix;
 
 		if (\function_exists($function_name)) {
-			$a = DI::app();
-			return $function_name($a) ?? '';
+			return $function_name() ?? '';
 		}
 
 		return '';

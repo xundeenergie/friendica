@@ -107,7 +107,6 @@ class BasicAuth
 	 */
 	private static function getUserIdByAuth(bool $do_login = true):int
 	{
-		$a = DI::app();
 		self::$current_user_id = 0;
 
 		// workaround for HTTP-auth in CGI mode
@@ -169,7 +168,7 @@ class BasicAuth
 			throw new UnauthorizedException("This API requires login");
 		}
 
-		DI::auth()->setForUser($a, $record, false, false, false);
+		DI::auth()->setForUser($record, false, false, false);
 
 		Hook::callAll('logged_in', $record);
 

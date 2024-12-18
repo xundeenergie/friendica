@@ -19,7 +19,6 @@ use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Model\APContact;
 use Friendica\Model\Contact;
-use Friendica\Model\GServer;
 use Friendica\Model\Item;
 use Friendica\Model\Photo;
 use Friendica\Model\Post;
@@ -573,11 +572,12 @@ class Transmitter
 		$exclusive  = false;
 		$mention    = false;
 		$audience   = [];
+		$owner      = false;
 
 		// Check if we should always deliver our stuff via BCC
 		if (!empty($item['uid'])) {
 			$owner = User::getOwnerDataById($item['uid']);
-			if (!empty($owner)) {
+			if (is_array($owner)) {
 				$always_bcc = $owner['hide-friends'];
 				$is_group   = ($owner['account-type'] == User::ACCOUNT_TYPE_COMMUNITY);
 
@@ -635,14 +635,6 @@ class Transmitter
 			}
 		} else {
 			$audience[] = $owner['url'];
-		}
-
-		if (self::isAnnounce($item) || self::isAPPost($last_id)) {
-			// Will be activated in a later step
-			$networks = Protocol::FEDERATED;
-		} else {
-			// For now only send to these contacts:
-			$networks = [Protocol::ACTIVITYPUB];
 		}
 
 		$data = ['to' => [], 'cc' => [], 'bto' => [], 'bcc' => [], 'audience' => $audience];
@@ -704,7 +696,7 @@ class Transmitter
 				$cid = Contact::getIdForURL($term['url'], $item['uid']);
 				if (!empty($cid) && in_array($cid, $receiver_list)) {
 					$contact = DBA::selectFirst('contact', ['url', 'network', 'protocol', 'gsid'], ['id' => $cid, 'network' => Protocol::FEDERATED]);
-					if (!DBA::isResult($contact) || !self::isAPContact($contact, $networks)) {
+					if (!DBA::isResult($contact)) {
 						continue;
 					}
 
@@ -741,7 +733,7 @@ class Transmitter
 					}
 
 					$contact = DBA::selectFirst('contact', ['url', 'hidden', 'network', 'protocol', 'gsid'], ['id' => $receiver, 'network' => Protocol::FEDERATED]);
-					if (!DBA::isResult($contact) || !self::isAPContact($contact, $networks)) {
+					if (!DBA::isResult($contact)) {
 						continue;
 					}
 
@@ -911,10 +903,6 @@ class Transmitter
 
 	/**
 	 * Get a list of receivers for the provided uri-id
-	 *
-	 * @param array $item
-	 * @param boolean $blindcopy
-	 * @return array
 	 */
 	public static function getReceiversForUriId(int $uri_id, bool $blindcopy): array
 	{
@@ -985,43 +973,15 @@ class Transmitter
 	}
 
 	/**
-	 * Check if a given contact should be delivered via AP
-	 *
-	 * @param array $contact Contact array
-	 * @param array $networks Array with networks
-	 * @return bool Whether the used protocol matches ACTIVITYPUB
-	 * @throws Exception
-	 */
-	private static function isAPContact(array $contact, array $networks): bool
-	{
-		if (in_array($contact['network'], $networks) || ($contact['protocol'] == Protocol::ACTIVITYPUB)) {
-			return true;
-		}
-
-		return GServer::getProtocol($contact['gsid'] ?? 0) == Post\DeliveryData::ACTIVITYPUB;
-	}
-
-	/**
 	 * Fetches a list of inboxes of followers of a given user
 	 *
 	 * @param integer $uid      User ID
-	 * @param boolean $all_ap   Retrieve all AP enabled inboxes
 	 * @return array of follower inboxes
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public static function fetchTargetInboxesforUser(int $uid, bool $all_ap = false): array
+	public static function fetchTargetInboxesforUser(int $uid): array
 	{
-		$inboxes = [];
-
-		if ($all_ap) {
-			// Will be activated in a later step
-			$networks = Protocol::FEDERATED;
-		} else {
-			// For now only send to these contacts:
-			$networks = [Protocol::ACTIVITYPUB];
-		}
-
 		$condition = [
 			'uid'          => $uid,
 			'self'         => false,
@@ -1029,37 +989,51 @@ class Transmitter
 			'pending'      => false,
 			'blocked'      => false,
 			'network'      => Protocol::FEDERATED,
-			'contact-type' => [Contact::TYPE_UNKNOWN, Contact::TYPE_PERSON, Contact::TYPE_NEWS, Contact::TYPE_ORGANISATION],
 		];
 
 		if (!empty($uid)) {
 			$condition['rel'] = [Contact::FOLLOWER, Contact::FRIEND];
 		}
 
-		$contacts = DBA::select('contact', ['id', 'url', 'network', 'protocol', 'gsid'], $condition);
-		while ($contact = DBA::fetch($contacts)) {
-			if (!self::isAPContact($contact, $networks)) {
+		return self::addInboxesForCondition($condition, []);
+	}
+
+	/**
+	 * Fetch inboxes for a list of contacts
+	 *
+	 * @param array $recipients
+	 * @param array $inboxes
+	 * @return array
+	 */
+	public static function addInboxesForRecipients(array $recipients, array $inboxes): array
+	{
+		return self::addInboxesForCondition(['id' => $recipients], $inboxes);
+	}
+
+	/**
+	 * Get a list of inboxes for a given contact condition
+	 *
+	 * @param array $condition
+	 * @param array $inboxes
+	 * @return array
+	 */
+	private static function addInboxesForCondition(array $condition, array $inboxes): array
+	{
+		$condition = DBA::mergeConditions($condition, ["(`ap-inbox` IS NOT NULL OR `ap-sharedinbox` IS NOT NULL)"]);
+
+		$accounts = DBA::select('account-user-view', ['id', 'url', 'ap-inbox', 'ap-sharedinbox'], $condition);
+		while ($account = DBA::fetch($accounts)) {
+			if (!empty($account['ap-sharedinbox']) && !Contact::isLocal($account['url'])) {
+				$target = $account['ap-sharedinbox'];
+			} elseif (!empty($account['ap-inbox'])) {
+				$target = $account['ap-inbox'];
+			} else {
 				continue;
 			}
-
-			if (Network::isUrlBlocked($contact['url'])) {
-				continue;
-			}
-
-			$profile = APContact::getByURL($contact['url'], false);
-			if (!empty($profile)) {
-				if (empty($profile['sharedinbox']) || Contact::isLocal($contact['url'])) {
-					$target = $profile['inbox'];
-				} else {
-					$target = $profile['sharedinbox'];
-				}
-				if (!self::archivedInbox($target)) {
-					$inboxes[$target][] = $contact['id'];
-				}
+			if (!Transmitter::archivedInbox($target) && (empty($inboxes[$target]) || !in_array($account['id'], $inboxes[$target]))) {
+				$inboxes[$target][] = $account['id'];
 			}
 		}
-		DBA::close($contacts);
-
 		return $inboxes;
 	}
 
@@ -1106,7 +1080,7 @@ class Transmitter
 				}
 
 				if ($item_profile && ($receiver == $item_profile['followers']) && ($uid == $profile_uid)) {
-					$inboxes = array_merge_recursive($inboxes, self::fetchTargetInboxesforUser($uid, true));
+					$inboxes = array_merge_recursive($inboxes, self::fetchTargetInboxesforUser($uid));
 				} else {
 					$profile = APContact::getByURL($receiver, false);
 					if (!empty($profile)) {
@@ -1365,8 +1339,6 @@ class Transmitter
 	/**
 	 * Creates an activity array for a given URI-Id and uid
 	 *
-	 * @param integer $uri_id
-	 * @param integer $uid
 	 * @param boolean $object_mode       true = Create the object, false = create the activity with the object
 	 * @param boolean $api_mode          true = used for the API
 	 * @param boolean $announce_activity true = the announced object is the activity, false = we announce the object link
@@ -1391,7 +1363,6 @@ class Transmitter
 	/**
 	 * Creates an activity array for a given item id
 	 *
-	 * @param integer $item_id
 	 * @param boolean $object_mode       true = Create the object, false = create the activity with the object
 	 * @param boolean $api_mode          true = used for the API
 	 * @param boolean $announce_activity true = the announced object is the activity, false = we announce the object link
@@ -1413,7 +1384,7 @@ class Transmitter
 			}
 		}
 
-		if (!$api_mode && !$item['origin']) {
+		if (!$api_mode && !$item['deleted'] && !$item['origin']) {
 			Logger::debug('Post is not ours and is not stored', ['id' => $item['id'], 'uri-id' => $item['uri-id']]);
 			return false;
 		}
@@ -1421,7 +1392,7 @@ class Transmitter
 		$type = self::getTypeOfItem($item);
 
 		if (!$object_mode) {
-			$data = ['@context' => $context ?? ActivityPub::CONTEXT];
+			$data = ['@context' => ActivityPub::CONTEXT];
 
 			if ($item['deleted'] && ($item['gravity'] == Item::GRAVITY_ACTIVITY)) {
 				$type = 'Undo';
@@ -1772,6 +1743,7 @@ class Transmitter
 
 		$title   = $item['title'];
 		$summary = $item['content-warning'] ?: BBCode::toPlaintext(BBCode::getAbstract($item['body'], Protocol::ACTIVITYPUB));
+		$type    = '';
 
 		if ($item['event-type'] == 'event') {
 			$type = 'Event';
@@ -2103,17 +2075,18 @@ class Transmitter
 	 * Creates an activity id for a given contact id
 	 *
 	 * @param integer $cid Contact ID of target
+	 * @param integer $uid Optional user id. if empty, the contact uid is used.
 	 *
 	 * @return bool|string activity id
 	 */
-	public static function activityIDFromContact(int $cid)
+	public static function activityIDFromContact(int $cid, int $uid = 0)
 	{
 		$contact = DBA::selectFirst('contact', ['uid', 'id', 'created'], ['id' => $cid]);
 		if (!DBA::isResult($contact)) {
 			return false;
 		}
 
-		$hash = hash('ripemd128', $contact['uid'] . '-' . $contact['id'] . '-' . $contact['created']);
+		$hash = hash('ripemd128', $uid ?: $contact['uid'] . '-' . $contact['id'] . '-' . $contact['created']);
 		$uuid = substr($hash, 0, 8) . '-' . substr($hash, 8, 4) . '-' . substr($hash, 12, 4) . '-' . substr($hash, 16, 4) . '-' . substr($hash, 20, 12);
 		return DI::baseUrl() . '/activity/' . $uuid;
 	}
@@ -2478,18 +2451,64 @@ class Transmitter
 	}
 
 	/**
+	 * Transmits a message that we don't want to block this contact anymore
+	 *
+	 * @param string  $target Target profile
+	 * @param integer $cid    Contact id
+	 * @param array   $owner  Sender owner-view record
+	 * @return bool success
+	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws \ImagickException
+	 * @throws \Exception
+	 */
+	public static function sendContactUnblock(string $target, int $cid, array $owner): bool
+	{
+		$profile = APContact::getByURL($target);
+		if (empty($profile['inbox'])) {
+			Logger::warning('No inbox found for target', ['target' => $target, 'profile' => $profile]);
+			return false;
+		}
+
+		$object_id = self::activityIDFromContact($cid, $owner['uid']);
+		if (empty($object_id)) {
+			return false;
+		}
+
+		$objectId = DI::baseUrl() . '/activity/' . System::createGUID();
+
+		$data = [
+			'@context' => ActivityPub::CONTEXT,
+			'id' => $objectId,
+			'type' => 'Undo',
+			'actor' => $owner['url'],
+			'object' => [
+				'id' => $object_id,
+				'type' => 'Block',
+				'actor' => $owner['url'],
+				'object' => $profile['url']
+			],
+			'instrument' => self::getService(),
+			'to' => [$profile['url']],
+		];
+
+		Logger::info('Sending undo to ' . $target . ' for user ' . $owner['uid'] . ' with id ' . $objectId);
+
+		$signed = LDSignature::sign($data, $owner);
+		return HTTPSignature::transmit($signed, $profile['inbox'], $owner);
+	}
+
+	/**
 	 * Prepends mentions (@) to $body variable
 	 *
 	 * @param string $body HTML code
-	 * @param int    $uriId
 	 * @param string $authorLink Author link
 	 * @return string HTML code with prepended mentions
 	 */
-	private static function prependMentions(string $body, int $uriid, string $authorLink): string
+	private static function prependMentions(string $body, int $uriId, string $authorLink): string
 	{
 		$mentions = [];
 
-		foreach (Tag::getByURIId($uriid, [Tag::IMPLICIT_MENTION]) as $tag) {
+		foreach (Tag::getByURIId($uriId, [Tag::IMPLICIT_MENTION]) as $tag) {
 			$profile = Contact::getByURL($tag['url'], false, ['addr', 'contact-type', 'nick']);
 			if (
 				!empty($profile['addr'])

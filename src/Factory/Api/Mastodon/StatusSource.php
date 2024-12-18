@@ -20,7 +20,8 @@ class StatusSource extends BaseFactory
 	 *
 	 * @return \Friendica\Object\Api\Mastodon\StatusSource
 	 * @throws HTTPException\InternalServerErrorException
-	 * @throws \ImagickException*@throws \Exception
+	 * @throws \ImagickException
+	 * @throws \Exception
 	 */
 	public function createFromUriId(int $uriId, int $uid): \Friendica\Object\Api\Mastodon\StatusSource
 	{

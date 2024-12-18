@@ -164,17 +164,17 @@ class PostMedia extends BaseEntity
 	/**
 	 * Get preview path for given media id relative to the base URL
 	 *
-	 * @param string  $size     One of the Proxy::SIZE_* constants
-	 * @param bool     $vlurred If "true", the preview will be blurred
+	 * @param string  $size  One of the Proxy::SIZE_* constants
+	 * @param bool    $blur  If "true", the preview will be blurred
 	 * @return string preview link
 	 */
-	public function getPreviewPath(string $size = '', bool $blurred = false): string
+	public function getPreviewPath(string $size = '', bool $blur = false): string
 	{
 		$path = '/photo/preview/' .
 			(Proxy::getPixelsFromSize($size) ? Proxy::getPixelsFromSize($size) . '/' : '') .
 			$this->id;
 
-		if ($blurred) {
+		if ($blur) {
 			$path .= '?' . http_build_query(['blur' => true]);
 		}
 		return $path;
@@ -228,7 +228,7 @@ class PostMedia extends BaseEntity
 			$newHeight = $dimensionts['height'];
 		}
 
-		return new static(
+		return new self(
 			$this->uriId,
 			$this->url,
 			$this->type,
@@ -255,7 +255,7 @@ class PostMedia extends BaseEntity
 
 	public function withUrl(\GuzzleHttp\Psr7\Uri $url): self
 	{
-		return new static(
+		return new self(
 			$this->uriId,
 			$url,
 			$this->type,

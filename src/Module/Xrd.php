@@ -33,14 +33,14 @@ class Xrd extends BaseModule
 			}
 
 			$uri = urldecode(trim($_GET['uri']));
-			$mode = self::getAcceptedContentType($_SERVER['HTTP_ACCEPT'] ?? '', Response::TYPE_JSON);
+			$mode = self::getAcceptedContentType($_SERVER['HTTP_ACCEPT'] ?? '', Response::TYPE_XML);
 		} else {
 			if (empty($_GET['resource'])) {
 				throw new BadRequestException();
 			}
 
 			$uri = urldecode(trim($_GET['resource']));
-			$mode = self::getAcceptedContentType($_SERVER['HTTP_ACCEPT'] ?? '', Response::TYPE_XML);
+			$mode = self::getAcceptedContentType($_SERVER['HTTP_ACCEPT'] ?? '', Response::TYPE_JSON);
 		}
 
 		if (Network::isValidHttpUrl($uri)) {
@@ -63,6 +63,8 @@ class Xrd extends BaseModule
 		}
 
 		header('Vary: Accept', false);
+
+		$alias = '';
 
 		if ($name == User::getActorName()) {
 			$owner = User::getSystemAccount();
@@ -108,7 +110,7 @@ class Xrd extends BaseModule
 			$parts[] = current(explode(';', $part));
 		}
 
-		if (empty($parts)) {
+		if ($parts === []) {
 			return $default;
 		} elseif (in_array('application/jrd+json', $parts) && !in_array('application/xrd+xml', $parts)) {
 			return Response::TYPE_JSON;

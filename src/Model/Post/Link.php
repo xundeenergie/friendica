@@ -113,9 +113,6 @@ class Link
 
 		try {
 			$curlResult = HTTPSignature::fetchRaw($url, 0, [HttpClientOptions::TIMEOUT => $timeout, HttpClientOptions::ACCEPT_CONTENT => $accept]);
-			if (empty($curlResult) || !$curlResult->isSuccess()) {
-				return [];
-			}
 		} catch (\Exception $exception) {
 			Logger::notice('Error fetching url', ['url' => $url, 'exception' => $exception]);
 			return [];
@@ -130,12 +127,12 @@ class Link
 
 		if (Images::isSupportedMimeType($fields['mimetype'])) {
 			$img_str = $curlResult->getBodyString();
-			$image = new Image($img_str, $fields['mimetype'], $url);
+			$image = new Image($img_str, $fields['mimetype'], $url, false);
 			if ($image->isValid()) {
 				$fields['mimetype'] = $image->getType();
 				$fields['width']    = $image->getWidth();
 				$fields['height']   = $image->getHeight();
-				$fields['blurhash'] = $image->getBlurHash();
+				$fields['blurhash'] = $image->getBlurHash($img_str);
 			}
 		}
 

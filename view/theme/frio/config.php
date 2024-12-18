@@ -7,18 +7,21 @@
  *
  */
 
-use Friendica\App;
+use Friendica\AppHelper;
+use Friendica\Content\ContactSelector;
 use Friendica\Core\Renderer;
 use Friendica\DI;
 
 require_once 'view/theme/frio/php/Image.php';
 require_once 'view/theme/frio/php/scheme.php';
 
-function theme_post(App $a)
+function theme_post(AppHelper $appHelper)
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		return;
 	}
+
+	$previous_scheme = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'frio', 'scheme');
 
 	if (isset($_POST['frio-settings-submit'])) {
 		foreach ([
@@ -40,8 +43,22 @@ function theme_post(App $a)
 			}
 
 		}
-
 		DI::pConfig()->set(DI::userSession()->getLocalUserId(), 'frio', 'css_modified',     time());
+
+		$current_scheme = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'frio', 'scheme');
+
+		if ($previous_scheme != $current_scheme) {
+			$icon_style = DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'accessibility', 'platform_icon_style');
+			if (in_array($current_scheme, ['dark', 'black']) && in_array($icon_style, [ContactSelector::SVG_BLACK])) {
+				DI::pConfig()->set(DI::userSession()->getLocalUserId(), 'accessibility', 'platform_icon_style', ContactSelector::SVG_WHITE);
+			} elseif (in_array($current_scheme, ['dark', 'black']) && in_array($icon_style, [ContactSelector::SVG_COLOR_BLACK])) {
+				DI::pConfig()->set(DI::userSession()->getLocalUserId(), 'accessibility', 'platform_icon_style', ContactSelector::SVG_COLOR_WHITE);
+			} elseif (in_array($current_scheme, ['light']) && in_array($icon_style, [ContactSelector::SVG_WHITE])) {
+				DI::pConfig()->set(DI::userSession()->getLocalUserId(), 'accessibility', 'platform_icon_style', ContactSelector::SVG_BLACK);
+			} elseif (in_array($current_scheme, ['light']) && in_array($icon_style, [ContactSelector::SVG_COLOR_WHITE])) {
+				DI::pConfig()->set(DI::userSession()->getLocalUserId(), 'accessibility', 'platform_icon_style', ContactSelector::SVG_COLOR_BLACK);
+			}
+		}
 	}
 }
 
@@ -75,7 +92,7 @@ function theme_admin_post()
 	}
 }
 
-function theme_content(): string
+function theme_content(AppHelper $appHelper): string
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		return '';
@@ -98,7 +115,7 @@ function theme_content(): string
 	return frio_form($arr);
 }
 
-function theme_admin(): string
+function theme_admin(AppHelper $appHelper): string
 {
 	if (!DI::userSession()->getLocalUserId()) {
 		return '';

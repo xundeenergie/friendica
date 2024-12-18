@@ -8,7 +8,8 @@
 namespace Friendica\Console;
 
 use Console_Table;
-use Friendica\App;
+use Friendica\App\Mode;
+use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\DI;
 use Friendica\Model\Contact as ContactModel;
 use Friendica\Model\User as UserModel;
@@ -25,11 +26,11 @@ class Contact extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var App\Mode
+	 * @var Mode
 	 */
 	private $appMode;
 	/**
-	 * @var IPConfig
+	 * @var IManagePersonalConfigValues
 	 */
 	private $pConfig;
 
@@ -55,7 +56,7 @@ HELP;
 		return $help;
 	}
 
-	public function __construct(App\Mode $appMode, array $argv = null)
+	public function __construct(Mode $appMode, array $argv = null)
 	{
 		parent::__construct($argv);
 
@@ -158,9 +159,10 @@ HELP;
 
 		if ($result['success']) {
 			$this->out('User ' . $user['nickname'] . ' now connected to ' . $url . ', contact ID ' . $result['cid']);
-		} else {
-			throw new RuntimeException($result['message']);
+			return true;
 		}
+
+		throw new RuntimeException($result['message']);
 	}
 
 	/**

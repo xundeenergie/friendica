@@ -14,12 +14,12 @@ use Friendica\Util\DateTimeFormat;
  * Class TrustedBrowser
  *
  *
- * @property-read $cookie_hash
- * @property-read $uid
- * @property-read $user_agent
- * @property-read $trusted
- * @property-read $created
- * @property-read $last_used
+ * @property-read string $cookie_hash
+ * @property-read int $uid
+ * @property-read string $user_agent
+ * @property-read bool $trusted
+ * @property-read string $created
+ * @property-read string|null $last_used
  * @package Friendica\Model\TwoFactor
  */
 class TrustedBrowser extends BaseEntity

@@ -7,14 +7,15 @@
 
 namespace Friendica\Test\src\Core\Logger;
 
-use Friendica\Test\MockedTest;
 use Friendica\Core\Logger\Type\ProfilerLogger;
+use Friendica\Test\LoggerDataTrait;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\Profiler;
 use Mockery\MockInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-class ProfilerLoggerTest extends MockedTest
+class ProfilerLoggerTest extends MockedTestCase
 {
 	use LoggerDataTrait;
 

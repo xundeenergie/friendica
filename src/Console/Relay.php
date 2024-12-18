@@ -8,6 +8,7 @@
 namespace Friendica\Console;
 
 use Asika\SimpleConsole\CommandArgsException;
+use Friendica\Database\Database;
 use Friendica\Model\APContact;
 use Friendica\Protocol\ActivityPub\Transmitter;
 use Friendica\Protocol\Relay as ProtocolRelay;
@@ -23,7 +24,7 @@ class Relay extends \Asika\SimpleConsole\Console
 	protected $helpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var $dba Friendica\Database\Database
+	 * @var Database
 	 */
 	private $dba;
 

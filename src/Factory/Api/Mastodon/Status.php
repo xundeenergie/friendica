@@ -20,7 +20,8 @@ use Friendica\DI;
 use Friendica\Model\Item;
 use Friendica\Model\Post;
 use Friendica\Model\Verb;
-use Friendica\Network\HTTPException;
+use Friendica\Network\HTTPException\InternalServerErrorException;
+use Friendica\Network\HTTPException\NotFoundException;
 use Friendica\Object\Api\Mastodon\Status\FriendicaDeliveryData;
 use Friendica\Object\Api\Mastodon\Status\FriendicaExtension;
 use Friendica\Object\Api\Mastodon\Status\FriendicaVisibility;
@@ -87,8 +88,8 @@ class Status extends BaseFactory
 	 * @param bool $in_reply_status Add an "in_reply_status" element
 	 *
 	 * @return \Friendica\Object\Api\Mastodon\Status
-	 * @throws HTTPException\InternalServerErrorException
-	 * @throws ImagickException|HTTPException\NotFoundException
+	 * @throws InternalServerErrorException
+	 * @throws ImagickException|NotFoundException
 	 */
 	public function createFromUriId(int $uriId, int $uid = 0, bool $display_quote = false, bool $reblog = true, bool $in_reply_status = true): \Friendica\Object\Api\Mastodon\Status
 	{
@@ -101,7 +102,7 @@ class Status extends BaseFactory
 			if ($mail) {
 				return $this->createFromMailId($mail['id']);
 			}
-			throw new HTTPException\NotFoundException('Item with URI ID ' . $uriId . ' not found' . ($uid ? ' for user ' . $uid : '.'));
+			throw new NotFoundException('Item with URI ID ' . $uriId . ' not found' . ($uid ? ' for user ' . $uid : '.'));
 		}
 
 		$activity_fields = ['uri-id', 'thr-parent-id', 'uri', 'author-id', 'author-uri-id', 'author-link', 'app', 'created', 'network', 'parent-author-id', 'private'];
@@ -113,7 +114,7 @@ class Status extends BaseFactory
 			$activity   = $item;
 			$item       = Post::selectFirst($fields, ['uri-id' => $uriId, 'uid' => [0, $uid]], ['order' => ['uid' => true]]);
 			if (!$item) {
-				throw new HTTPException\NotFoundException('Item with URI ID ' . $uriId . ' not found' . ($uid ? ' for user ' . $uid : '.'));
+				throw new NotFoundException('Item with URI ID ' . $uriId . ' not found' . ($uid ? ' for user ' . $uid : '.'));
 			}
 			foreach ($activity_fields as $field) {
 				$item[$field] = $activity[$field];
@@ -202,7 +203,7 @@ class Status extends BaseFactory
 		$sensitive = (bool)$item['sensitive'];
 
 		$network  = ContactSelector::networkToName($item['network']);
-		$sitename = ''; 
+		$sitename = '';
 		$platform = '';
 		$version  = '';
 
@@ -211,12 +212,12 @@ class Status extends BaseFactory
 			if (!empty($gserver)) {
 				$platform = ucfirst($gserver['platform']);
 				$version  = $gserver['version'];
-				$sitename = $gserver['site_name']; 
+				$sitename = $gserver['site_name'];
 			}
 		}
 
 		if ($platform == '') {
-			$platform = ContactSelector::networkToName($item['network'], $item['author-link'], $item['network'], $item['author-gsid']);
+			$platform = ContactSelector::networkToName($item['network'], $item['network'], $item['author-gsid']);
 		}
 
 		$application = new \Friendica\Object\Api\Mastodon\Application($item['app'] ?: $platform);
@@ -328,7 +329,7 @@ class Status extends BaseFactory
 
 		$delivery_data   = $uid != $item['uid'] ? null : new FriendicaDeliveryData($item['delivery_queue_count'], $item['delivery_queue_done'], $item['delivery_queue_failed']);
 		$visibility_data = $uid != $item['uid'] ? null : new FriendicaVisibility($this->aclFormatter->expand($item['allow_cid']), $this->aclFormatter->expand($item['deny_cid']), $this->aclFormatter->expand($item['allow_gid']), $this->aclFormatter->expand($item['deny_gid']));
-		$friendica       = new FriendicaExtension($item['title'] ?? '', $item['changed'], $item['commented'], $item['received'], $counts->dislikes, $origin_dislike, $network, $platform, $version, $sitename, $delivery_data, $visibility_data);
+		$friendica       = new FriendicaExtension($item['title'] ?? '', $item['changed'], $item['commented'], $item['received'], $counts->dislikes, $origin_dislike, $network, $platform, $version, $sitename, $delivery_data, $visibility_data, BBCode::convertForUriId($item['uri-id'], $item['body'], BBCode::EXTERNAL));
 
 		return new \Friendica\Object\Api\Mastodon\Status($item, $account, $counts, $userAttributes, $sensitive, $application, $mentions, $tags, $card, $attachments, $in_reply, $reshare, $friendica, $quote, $poll, $emojis);
 	}
@@ -370,17 +371,17 @@ class Status extends BaseFactory
 	}
 
 	/**
-	 * @param int $uriId id of the mail
+	 * @param int $id id of the mail
 	 *
 	 * @return \Friendica\Object\Api\Mastodon\Status
-	 * @throws HTTPException\InternalServerErrorException
-	 * @throws ImagickException|HTTPException\NotFoundException
+	 * @throws InternalServerErrorException
+	 * @throws ImagickException|NotFoundException
 	 */
 	public function createFromMailId(int $id): \Friendica\Object\Api\Mastodon\Status
 	{
 		$item = ActivityPub\Transmitter::getItemArrayFromMail($id, true);
 		if (empty($item)) {
-			throw new HTTPException\NotFoundException('Mail record not found with id: ' . $id);
+			throw new NotFoundException('Mail record not found with id: ' . $id);
 		}
 
 		$account = $this->mstdnAccountFactory->createFromContactId($item['author-id']);
@@ -399,7 +400,7 @@ class Status extends BaseFactory
 		$attachments = [];
 		$in_reply    = [];
 		$reshare     = [];
-		$friendica   = new FriendicaExtension('', null, null, null, 0, false, null, null, null, null, null, null);
+		$friendica   = new FriendicaExtension('', null, null, null, 0, false, null, null, null, null, null, null, BBCode::convertForUriId($item['uri-id'], $item['body'], BBCode::EXTERNAL));
 
 		return new \Friendica\Object\Api\Mastodon\Status($item, $account, $counts, $userAttributes, $sensitive, $application, $mentions, $tags, $card, $attachments, $in_reply, $reshare, $friendica);
 	}

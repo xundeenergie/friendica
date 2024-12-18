@@ -297,7 +297,9 @@ class HTTPSignature
 
 		self::setInboxStatus($target, ($return_code >= 200) && ($return_code <= 299));
 
-		Item::incrementOutbound(Protocol::ACTIVITYPUB);
+		if (($return_code >= 200) && ($return_code <= 299)) {
+			Item::incrementOutbound(Protocol::ACTIVITYPUB);
+		}
 
 		return $postResult;
 	}
@@ -478,10 +480,6 @@ class HTTPSignature
 			return [];
 		}
 
-		if (empty($curlResult)) {
-			return [];
-		}
-
 		if (!$curlResult->isSuccess() || empty($curlResult->getBodyString())) {
 			Logger::debug('Fetching was unsuccessful', ['url' => $request, 'return-code' => $curlResult->getReturnCode(), 'error-number' => $curlResult->getErrorNumber(), 'error' => $curlResult->getError()]);
 			return [];
@@ -522,7 +520,6 @@ class HTTPSignature
 	 *
 	 * @param string  $request request url
 	 * @param integer $uid     User id of the requester
-	 * @param boolean $binary  TRUE if asked to return binary results (file download) (default is "false")
 	 * @param array   $opts    (optional parameters) associative array with:
 	 *                         'accept_content' => supply Accept: header with 'accept_content' as the value
 	 *                         'timeout' => int Timeout in seconds, default system config value or 60 seconds
@@ -761,9 +758,9 @@ class HTTPSignature
 		}
 
 		if (in_array('(expires)', $sig_block['headers']) && !empty($sig_block['expires'])) {
-			$expired = min($sig_block['expires'], $created + 300);
+			$expired = min($sig_block['expires'], $created + 3600);
 		} else {
-			$expired = $created + 300;
+			$expired = $created + 3600;
 		}
 
 		//  Check if the signed date field is in an acceptable range

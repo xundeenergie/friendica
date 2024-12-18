@@ -22,8 +22,6 @@ class NoScrape extends BaseModule
 {
 	protected function rawContent(array $request = [])
 	{
-		$a = DI::app();
-
 		if (isset($this->parameters['nick'])) {
 			// Get infos about a specific nick (public)
 			$which = $this->parameters['nick'];

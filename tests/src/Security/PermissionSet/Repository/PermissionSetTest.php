@@ -13,10 +13,10 @@ use Friendica\Security\PermissionSet\Exception\PermissionSetNotFoundException;
 use Friendica\Security\PermissionSet\Repository\PermissionSet as PermissionSetRepository;
 use Friendica\Security\PermissionSet\Entity\PermissionSet;
 use Friendica\Security\PermissionSet\Factory\PermissionSet as PermissionSetFactory;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Friendica\DI;
 
-class PermissionSetTest extends FixtureTest
+class PermissionSetTest extends FixtureTestCase
 {
 	/** @var PermissionSetRepository */
 	private $repository;

@@ -9,10 +9,10 @@ namespace Friendica\Test\src\Factory\Api\Twitter;
 
 use Friendica\DI;
 use Friendica\Factory\Api\Twitter\DirectMessage;
-use Friendica\Test\FixtureTest;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
+use Friendica\Test\FixtureTestCase;
 
-class DirectMessageTest extends FixtureTest
+class DirectMessageTest extends FixtureTestCase
 {
 	/**
 	 * Test the api_format_messages() function.
@@ -26,7 +26,7 @@ class DirectMessageTest extends FixtureTest
 		$id  = $ids[0]['id'];
 
 		$directMessage = (new DirectMessage(DI::logger(), DI::dba(), DI::twitterUser()))
-			->createFromMailId($id, ApiTest::SELF_USER['id'])
+			->createFromMailId($id, ApiTestCase::SELF_USER['id'])
 			->toArray();
 
 		self::assertEquals('item_title' . "\n" . 'item_body', $directMessage['text']);
@@ -49,7 +49,7 @@ class DirectMessageTest extends FixtureTest
 		$id  = $ids[0]['id'];
 
 		$directMessage = (new DirectMessage(DI::logger(), DI::dba(), DI::twitterUser()))
-			->createFromMailId($id, ApiTest::SELF_USER['id'], 'html')
+			->createFromMailId($id, ApiTestCase::SELF_USER['id'], 'html')
 			->toArray();
 
 		self::assertEquals('item_title', $directMessage['title']);
@@ -68,7 +68,7 @@ class DirectMessageTest extends FixtureTest
 		$id  = $ids[0]['id'];
 
 		$directMessage = (new DirectMessage(DI::logger(), DI::dba(), DI::twitterUser()))
-			->createFromMailId($id, ApiTest::SELF_USER['id'], 'plain')
+			->createFromMailId($id, ApiTestCase::SELF_USER['id'], 'plain')
 			->toArray();
 
 		self::assertEquals('item_title', $directMessage['title']);
@@ -90,7 +90,7 @@ class DirectMessageTest extends FixtureTest
 		$id  = $ids[0]['id'];
 
 		$directMessage = (new DirectMessage(DI::logger(), DI::dba(), DI::twitterUser()))
-			->createFromMailId($id, ApiTest::SELF_USER['id'], 'plain', $$GETUSEROBJECTS$$)
+			->createFromMailId($id, ApiTestCase::SELF_USER['id'], 'plain', $$GETUSEROBJECTS$$)
 			->toArray();
 
 		self::assertTrue(!isset($directMessage['sender']));

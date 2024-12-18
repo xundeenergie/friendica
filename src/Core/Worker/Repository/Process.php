@@ -81,7 +81,7 @@ class Process extends BaseRepository
 				'pid'      => $process->pid,
 				'hostname' => $this->currentHost,
 			])) {
-				throw new ProcessPersistenceException(sprintf('The process with PID %s doesn\'t exists.', $process->pi));
+				throw new ProcessPersistenceException(sprintf('The process with PID %d doesn\'t exists.', $process->pid));
 			}
 		} catch (\Exception $exception) {
 			throw new ProcessPersistenceException(sprintf('Cannot delete process with PID %s.', $process->pid), $exception);

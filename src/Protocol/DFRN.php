@@ -417,7 +417,7 @@ class DFRN
 				$t_dob = strtotime($bd);
 				$now = strtotime(DateTimeFormat::timezoneNow($tz));
 				if ($t_dob < $now) {
-					$bd = $y + 1 . '-' . $tmp_dob . ' 00:00';
+					$bd = (int) $y + 1 . '-' . $tmp_dob . ' 00:00';
 				}
 				$birthday = DateTimeFormat::convert($bd, 'UTC', $tz, DateTimeFormat::ATOM);
 			}
@@ -986,7 +986,7 @@ class DFRN
 			Logger::notice('Got exception', ['code' => $th->getCode(), 'message' => $th->getMessage()]);
 			return -25;
 		}
-		Item::incrementOutbound(Protocol::DFRN);
+
 		$xml = $postResult->getBodyString();
 
 		$curl_stat = $postResult->getReturnCode();
@@ -1017,6 +1017,7 @@ class DFRN
 
 		if (!empty($contact['gsid'])) {
 			GServer::setReachableById($contact['gsid'], Protocol::DFRN);
+			Item::incrementOutbound(Protocol::DFRN);
 		}
 
 		if (!empty($res->message)) {

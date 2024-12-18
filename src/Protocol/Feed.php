@@ -556,7 +556,7 @@ class Feed
 				Logger::info('Feed is too old', ['created' => $item['created'], 'uid' => $item['uid'], 'uri' => $item['uri']]);
 				continue;
 			}
-			
+
 			if (!empty($item['plink'])) {
 				$fetch_further_information = $contact['fetch_further_information'] ?? LocalRelationship::FFI_NONE;
 			} else {
@@ -736,7 +736,7 @@ class Feed
 				$publish_at = date(DateTimeFormat::MYSQL, $publish_time);
 
 				if (Post\Delayed::add($posting['item']['uri'], $posting['item'], $posting['notify'], Post\Delayed::PREPARED, $publish_at, $posting['taglist'], $posting['attachments'])) {
-					DI::pConfig()->set($item['uid'], 'system', 'last_publish', $publish_time);
+					DI::pConfig()->set($posting['item']['uid'], 'system', 'last_publish', $publish_time);
 				}
 			}
 		}
@@ -1014,7 +1014,7 @@ class Feed
 
 		// Display events in the user's timezone
 		if (strlen($owner['timezone'])) {
-			DI::app()->setTimeZone($owner['timezone']);
+			DI::appHelper()->setTimeZone($owner['timezone']);
 		}
 
 		$previous_created = $last_update;
@@ -1146,7 +1146,6 @@ class Feed
 	 * @param DOMDocument $doc       XML document
 	 * @param array       $item      Data of the item that is to be posted
 	 * @param array       $owner     Contact data of the poster
-	 * @param bool        $toplevel  Is it for en entry element (false) or a feed entry (true)?
 	 * @return DOMElement Entry element
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
@@ -1172,14 +1171,13 @@ class Feed
 	 * @param DOMDocument $doc       XML document
 	 * @param \DOMElement $entry     Entry element where the content is added
 	 * @param array       $item      Data of the item that is to be posted
-	 * @param array       $owner     Contact data of the poster
 	 * @param string      $title     Title for the post
 	 * @param string      $verb      The activity verb
 	 * @param bool        $complete  Add the "status_net" element?
-	 * @return void
+	 *
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
-	private static function entryContent(DOMDocument $doc, DOMElement $entry, array $item, $title, string $verb = '', bool $complete = true)
+	private static function entryContent(DOMDocument $doc, DOMElement $entry, array $item, $title, string $verb = '', bool $complete = true): void
 	{
 		if ($verb == '') {
 			$verb = self::constructVerb($item);
@@ -1217,11 +1215,10 @@ class Feed
 	 * @param object      $entry     The entry element where the elements are added
 	 * @param array       $item      Data of the item that is to be posted
 	 * @param array       $owner     Contact data of the poster
-	 * @param bool        $complete  default true
-	 * @return void
+	 *
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
-	private static function entryFooter(DOMDocument $doc, $entry, array $item, array $owner)
+	private static function entryFooter(DOMDocument $doc, $entry, array $item, array $owner): void
 	{
 		$mentioned = [];
 
@@ -1407,7 +1404,7 @@ class Feed
 
 				$contact = Contact::getByURL($item['author-link']) ?: $owner;
 				$contact['nickname'] = $contact['nickname'] ?? $contact['nick'];
-				$author = self::addAuthor($doc, $contact, false);
+				$author = self::addAuthor($doc, $contact);
 				$entry->appendChild($author);
 			}
 		} else {

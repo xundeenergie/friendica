@@ -14,10 +14,10 @@ use Friendica\Module\NodeInfo110;
 use Friendica\Module\NodeInfo120;
 use Friendica\Module\NodeInfo210;
 use Friendica\Module\Special\HTTPException;
-use Friendica\Test\FixtureTest;
+use Friendica\Test\FixtureTestCase;
 use Mockery\MockInterface;
 
-class NodeInfoTest extends FixtureTest
+class NodeInfoTest extends FixtureTestCase
 {
 	/** @var MockInterface|HTTPException */
 	protected $httpExceptionMock;

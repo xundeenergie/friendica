@@ -7,9 +7,11 @@
 
 namespace Friendica\Content;
 
-use Friendica\App;
 use Friendica\App\Arguments;
 use Friendica\App\BaseURL;
+use Friendica\App\Mode;
+use Friendica\App\Page;
+use Friendica\AppHelper;
 use Friendica\BaseModule;
 use Friendica\Core\ACL;
 use Friendica\Core\Config\Capability\IManageConfigValues;
@@ -32,13 +34,14 @@ use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Object\Post as PostObject;
 use Friendica\Object\Thread;
 use Friendica\Protocol\Activity;
-use Friendica\User\Settings\Entity\UserGServer;
-use Friendica\User\Settings\Repository;
+use Friendica\User\Settings\Entity\UserGServer as UserGServerEntity;
+use Friendica\User\Settings\Repository\UserGServer as UserGServerRepository;
 use Friendica\Util\Crypto;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Profiler;
 use Friendica\Util\Strings;
 use Friendica\Util\Temporal;
+use ImagickException;
 use Psr\Log\LoggerInterface;
 
 class Conversation
@@ -64,7 +67,7 @@ class Conversation
 	private $logger;
 	/** @var Item */
 	private $item;
-	/** @var App\Arguments */
+	/** @var Arguments */
 	private $args;
 	/** @var IManagePersonalConfigValues */
 	private $pConfig;
@@ -72,18 +75,18 @@ class Conversation
 	private $baseURL;
 	/** @var IManageConfigValues */
 	private $config;
-	/** @var App */
-	private $app;
-	/** @var App\Page */
+	/** @var AppHelper */
+	private $appHelper;
+	/** @var Page */
 	private $page;
-	/** @var App\Mode */
+	/** @var Mode */
 	private $mode;
 	/** @var IHandleUserSessions */
 	private $session;
-	/** @var Repository\UserGServer */
+	/** @var UserGServerRepository */
 	private $userGServer;
 
-	public function __construct(Repository\UserGServer $userGServer, LoggerInterface $logger, Profiler $profiler, Activity $activity, L10n $l10n, Item $item, Arguments $args, BaseURL $baseURL, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, App\Page $page, App\Mode $mode, App $app, IHandleUserSessions $session)
+	public function __construct(UserGServerRepository $userGServer, LoggerInterface $logger, Profiler $profiler, Activity $activity, L10n $l10n, Item $item, Arguments $args, BaseURL $baseURL, IManageConfigValues $config, IManagePersonalConfigValues $pConfig, Page $page, Mode $mode, AppHelper $appHelper, IHandleUserSessions $session)
 	{
 		$this->activity    = $activity;
 		$this->item        = $item;
@@ -96,7 +99,7 @@ class Conversation
 		$this->args        = $args;
 		$this->pConfig     = $pConfig;
 		$this->page        = $page;
-		$this->app         = $app;
+		$this->appHelper   = $appHelper;
 		$this->session     = $session;
 		$this->userGServer = $userGServer;
 	}
@@ -110,7 +113,7 @@ class Conversation
 	 * @param array &$conv_responses (already created with builtin activity structure)
 	 * @return void
 	 * @throws ImagickException
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 */
 	public function builtinActivityPuller(array $activity, array &$conv_responses)
 	{
@@ -454,7 +457,7 @@ class Conversation
 
 		$userGservers = $this->userGServer->listIgnoredByUser($this->session->getLocalUserId());
 
-		$ignoredGsids = array_map(function (UserGServer $userGServer) {
+		$ignoredGsids = array_map(function (UserGServerEntity $userGServer) {
 			return $userGServer->gsid;
 		}, $userGservers->getArrayCopy());
 
@@ -596,7 +599,7 @@ class Conversation
 	 * @param string $formSecurityToken A 'contact_action' form security token
 	 * @return array
 	 * @throws InternalServerErrorException
-	 * @throws \ImagickException
+	 * @throws ImagickException
 	 */
 	public function getThreadList(array $items, string $mode, bool $preview, bool $pagedrop, string $formSecurityToken): array
 	{
@@ -1017,7 +1020,7 @@ class Conversation
 			$emojis[$count['uri-id']][$count['reaction']]['title'] = [];
 		}
 
-		// @todo The following code should be removed, once that we display activity authors on demand 
+		// @todo The following code should be removed, once that we display activity authors on demand
 		$activity_verbs = [
 			Activity::LIKE,
 			Activity::DISLIKE,
@@ -1516,8 +1519,8 @@ class Conversation
 				'uriid'                => $item['uri-id'],
 				'author_gsid'          => $item['author-gsid'],
 				'network'              => $item['network'],
-				'network_name'         => ContactSelector::networkToName($item['author-network'], $item['author-link'], $item['network'], $item['author-gsid']),
-				'network_icon'         => ContactSelector::networkToIcon($item['network'], $item['author-link'], $item['author-gsid']),
+				'network_name'         => ContactSelector::networkToName($item['author-network'], $item['network'], $item['author-gsid']),
+				'network_svg'          => ContactSelector::networkToSVG($item['network'], $item['author-gsid'], '', $this->session->getLocalUserId()),
 				'linktitle'            => $this->l10n->t('View %s\'s profile @ %s', $profile_name, $item['author-link']),
 				'profile_url'          => $profile_link,
 				'item_photo_menu_html' => $this->item->photoMenu($item, $formSecurityToken),

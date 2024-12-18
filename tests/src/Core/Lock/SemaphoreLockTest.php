@@ -12,12 +12,14 @@ use Friendica\App;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Config\Model\ReadOnlyFileConfig;
 use Friendica\Core\Config\ValueObject\Cache;
+use Friendica\Core\Lock\Type\SemaphoreLock;
 use Friendica\Core\System;
 use Friendica\DI;
+use Friendica\Test\LockTestCase;
 use Mockery;
 use Mockery\MockInterface;
 
-class SemaphoreLockTest extends LockTest
+class SemaphoreLockTest extends LockTestCase
 {
 	protected function setUp(): void
 	{
@@ -40,7 +42,7 @@ class SemaphoreLockTest extends LockTest
 
 	protected function getInstance()
 	{
-		return new \Friendica\Core\Lock\Type\SemaphoreLock();
+		return new SemaphoreLock();
 	}
 
 	/**

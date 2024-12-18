@@ -13,7 +13,6 @@ class ContactDiscoveryForUser
 {
 	/**
 	 * Discover contact relations
-	 * @param string $url
 	 */
 	public static function execute(int $uid)
 	{

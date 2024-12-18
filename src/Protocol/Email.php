@@ -14,7 +14,7 @@ use Friendica\Content\Text\HTML;
 use Friendica\Core\Protocol;
 use Friendica\Model\Item;
 use Friendica\Util\Strings;
-use \IMAP\Connection;
+use IMAP\Connection;
 
 /**
  * Email class
@@ -25,7 +25,7 @@ class Email
 	 * @param string $mailbox  The mailbox name
 	 * @param string $username The username
 	 * @param string $password The password
-	 * @return Connection|resource|bool
+	 * @return Connection|resource|false
 	 * @throws \Exception
 	 */
 	public static function connect(string $mailbox, string $username, string $password)
@@ -55,7 +55,6 @@ class Email
 	/**
 	 * @param Connection|resource $mbox       mailbox
 	 * @param string              $email_addr email
-	 * @return array
 	 * @throws \Exception
 	 */
 	public static function poll($mbox, string $email_addr): array

@@ -9,9 +9,9 @@ namespace Friendica\Test\src\Module\Api\GnuSocial\GnuSocial;
 
 use Friendica\DI;
 use Friendica\Module\Api\GNUSocial\GNUSocial\Config;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class ConfigTest extends ApiTest
+class ConfigTest extends ApiTestCase
 {
 	/**
 	 * Test the api_statusnet_config() function.

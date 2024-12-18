@@ -42,8 +42,6 @@ class Schedule extends BaseProfile
 			throw new HTTPException\ForbiddenException(DI::l10n()->t('Permission denied.'));
 		}
 
-		$a = DI::app();
-
 		$o = self::getTabsHTML('schedule', true, DI::userSession()->getLocalUserNickname(), false);
 
 		$schedule = [];

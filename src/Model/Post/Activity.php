@@ -16,9 +16,6 @@ class Activity
 	/**
 	 * Insert a new post-activity entry
 	 *
-	 * @param integer $uri_id
-	 * @param array   $fields
-	 *
 	 * @return bool   success
 	 */
 	public static function insert(int $uri_id, string $source): bool

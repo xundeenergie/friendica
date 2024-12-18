@@ -11,10 +11,10 @@ use Friendica\App\BaseURL;
 use Friendica\Core\Config\Model\ReadOnlyFileConfig;
 use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Network\HTTPException\InternalServerErrorException;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Psr\Log\NullLogger;
 
-class BaseURLTest extends MockedTest
+class BaseURLTest extends MockedTestCase
 {
 	public function dataSystemUrl(): array
 	{

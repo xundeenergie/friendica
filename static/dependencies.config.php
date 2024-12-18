@@ -23,6 +23,8 @@
 
 use Dice\Dice;
 use Friendica\App;
+use Friendica\AppHelper;
+use Friendica\AppLegacy;
 use Friendica\Core\Cache;
 use Friendica\Core\Config;
 use Friendica\Core\Hooks\Capability\ICanCreateInstances;
@@ -92,6 +94,9 @@ return [
 		'constructParams' => [
 			[Dice::INSTANCE => Dice::SELF],
 		],
+	],
+	AppHelper::class => [
+		'instanceOf' => AppLegacy::class,
 	],
 	ICanCreateInstances::class   => [
 		'instanceOf' => DiceInstanceManager::class,

@@ -45,6 +45,7 @@ steps:
   composer_install:
     image: friendicaci/php8.2:php8.2.16
     commands:
+      - mkdir addon # create empty addon folder to appease composer
       - export COMPOSER_HOME=.composer
       - composer validate
       - composer install --no-dev --optimize-autoloader

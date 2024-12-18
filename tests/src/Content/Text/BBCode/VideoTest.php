@@ -8,9 +8,9 @@
 namespace Friendica\Test\src\Content\Text\BBCode;
 
 use Friendica\Content\Text\BBCode\Video;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 
-class VideoTest extends MockedTest
+class VideoTest extends MockedTestCase
 {
 	public function dataVideo()
 	{

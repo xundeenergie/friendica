@@ -32,7 +32,7 @@ class Tag extends BaseDataTransferObject
 	 * @param BaseURL $baseUrl
 	 * @param array   $tag       tag-view record
 	 * @param array   $history
-	 * @param array   $following "true" if the user is following this tag
+	 * @param bool    $following "true" if the user is following this tag
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
 	public function __construct(BaseURL $baseUrl, array $tag, array $history = [], bool $following = false)

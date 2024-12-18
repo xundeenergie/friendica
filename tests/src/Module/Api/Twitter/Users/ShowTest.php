@@ -7,13 +7,12 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Users;
 
-use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Users\Show;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class ShowTest extends ApiTest
+class ShowTest extends ApiTestCase
 {
 	/**
 	 * Test the api_users_show() function.

@@ -8,11 +8,11 @@
 namespace Friendica\Test\src\Security\PermissionSet\Factory;
 
 use Friendica\Security\PermissionSet\Factory\PermissionSet;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Util\ACLFormatter;
 use Psr\Log\NullLogger;
 
-class PermissionSetTest extends MockedTest
+class PermissionSetTest extends MockedTestCase
 {
 	/** @var PermissionSet */
 	protected $permissionSet;

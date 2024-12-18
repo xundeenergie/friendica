@@ -8,11 +8,12 @@
 namespace Friendica\Test\src\Core\Cache;
 
 use Friendica\Core\Cache\Type\APCuCache;
+use Friendica\Test\MemoryCacheTestCase;
 
 /**
  * @group APCU
  */
-class APCuCacheTest extends MemoryCacheTest
+class APCuCacheTest extends MemoryCacheTestCase
 {
 	protected function setUp(): void
 	{

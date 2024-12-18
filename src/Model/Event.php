@@ -15,7 +15,9 @@ use Friendica\Core\Renderer;
 use Friendica\Core\System;
 use Friendica\Database\DBA;
 use Friendica\DI;
-use Friendica\Network\HTTPException;
+use Friendica\Network\HTTPException\InternalServerErrorException;
+use Friendica\Network\HTTPException\NotFoundException;
+use Friendica\Network\HTTPException\UnauthorizedException;
 use Friendica\Protocol\Activity;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\Map;
@@ -333,7 +335,7 @@ class Event
 		$item['uri']           = $event['uri'];
 		$item['uri-id']        = ItemURI::getIdByURI($event['uri']);
 		$item['guid']          = $event['guid'];
-		$item['plink']         = $arr['plink'] ?? '';
+		$item['plink']         = '';
 		$item['post-type']     = Item::PT_EVENT;
 		$item['wall']          = $event['cid'] ? 0 : 1;
 		$item['contact-id']    = $contact['id'];
@@ -487,23 +489,23 @@ class Event
 	 * @param string $nickname
 	 *
 	 * @return array the owner array
-	 * @throws HTTPException\InternalServerErrorException
-	 * @throws HTTPException\NotFoundException The given nickname does not exist
-	 * @throws HTTPException\UnauthorizedException The access for the given nickname is restricted
+	 * @throws InternalServerErrorException
+	 * @throws NotFoundException The given nickname does not exist
+	 * @throws UnauthorizedException The access for the given nickname is restricted
 	 */
 	public static function getOwnerForNickname(string $nickname): array
 	{
 		$owner = User::getOwnerDataByNick($nickname);
 		if (empty($owner) || $owner['account_removed'] || $owner['account_expired']) {
-			throw new HTTPException\NotFoundException(DI::l10n()->t('User not found.'));
+			throw new NotFoundException(DI::l10n()->t('User not found.'));
 		}
 
 		if (!DI::userSession()->isAuthenticated() && $owner['hidewall']) {
-			throw new HTTPException\UnauthorizedException(DI::l10n()->t('Access to this profile has been restricted.'));
+			throw new UnauthorizedException(DI::l10n()->t('Access to this profile has been restricted.'));
 		}
 
 		if (!DI::userSession()->isAuthenticated() && !Feature::isEnabled($owner['uid'], Feature::PUBLIC_CALENDAR)) {
-			throw new HTTPException\UnauthorizedException(DI::l10n()->t('Permission denied.'));
+			throw new UnauthorizedException(DI::l10n()->t('Permission denied.'));
 		}
 
 		return $owner;
@@ -514,7 +516,6 @@ class Event
 	 *
 	 * @param int         $owner_uid The User ID of the owner of the event
 	 * @param int         $event_id  The ID of the event in the event table
-	 * @param string|null $nickname  a possible nickname to search for instead of the owner uid
 	 * @return array Query result
 	 * @throws \Exception
 	 */
@@ -541,7 +542,7 @@ class Event
 			$owner_uid
 		));
 		if (empty($events)) {
-			throw new HTTPException\NotFoundException(DI::l10n()->t('Event not found.'));
+			throw new NotFoundException(DI::l10n()->t('Event not found.'));
 		}
 
 		return $events[0];
@@ -556,8 +557,8 @@ class Event
 	 * @param bool|null   $ignore    Filters ignored events (false: unignored events, true: ignored events, null: all events)
 	 *
 	 * @return array Query results.
-	 * @throws HTTPException\NotFoundException
-	 * @throws HTTPException\UnauthorizedException
+	 * @throws NotFoundException
+	 * @throws UnauthorizedException
 	 */
 	public static function getListByDate(int $owner_uid, string $start = null, string $finish = null, ?bool $ignore = false): array
 	{

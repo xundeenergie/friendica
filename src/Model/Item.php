@@ -8,6 +8,7 @@
 namespace Friendica\Model;
 
 use Friendica\Contact\LocalRelationship\Entity\LocalRelationship;
+use Friendica\Content\ContactSelector;
 use Friendica\Content\Image;
 use Friendica\Content\Post\Collection\PostMedias;
 use Friendica\Content\Post\Entity\PostMedia;
@@ -85,7 +86,7 @@ class Item
 
 	// Field list that is used to display the items
 	const DISPLAY_FIELDLIST = [
-		'uid', 'id', 'parent', 'guid', 'network', 'gravity',
+		'uid', 'id', 'parent', 'guid', 'network', 'protocol', 'gravity',
 		'uri-id', 'uri', 'thr-parent-id', 'thr-parent', 'parent-uri-id', 'parent-uri', 'conversation',
 		'commented', 'created', 'edited', 'received', 'verb', 'object-type', 'postopts', 'plink',
 		'wall', 'private', 'starred', 'origin', 'parent-origin', 'title', 'body', 'language', 'sensitive',
@@ -192,6 +193,7 @@ class Item
 			$fields['vid'] = Verb::getID($fields['verb']);
 		}
 
+		$previous = [];
 		if (!empty($fields['edited'])) {
 			$previous = Post::selectFirst(['edited'], $condition);
 		}
@@ -443,7 +445,7 @@ class Item
 	 * Get guid from given item record
 	 *
 	 * @param array $item Item record
-	 * @param bool Whether to notify (?)
+	 * @param bool $notify Whether to notify (?)
 	 * @return string Guid
 	 */
 	public static function guid(array $item, bool $notify): string
@@ -854,6 +856,8 @@ class Item
 		$orig_item = $item;
 
 		$priority = Worker::PRIORITY_HIGH;
+
+		$copy_permissions = false;
 
 		// If it is a posting where users should get notifications, then define it as wall posting
 		if ($notify) {
@@ -1471,6 +1475,12 @@ class Item
 			return false;
 		}
 
+		// We only have to apply restrictions if the post originates from our server or is federated.
+		// Every other time we can trust the remote system.
+		if (!in_array($item['network'], Protocol::FEDERATED) && !$item['origin']) {
+			return false;
+		}
+
 		if (($restrictions & self::CANT_REPLY) && ($item['verb'] == Activity::POST)) {
 			return true;
 		}
@@ -1795,7 +1805,7 @@ class Item
 			}
 		}
 
-		if (($source_uid == 0) && (($item['private'] == self::PRIVATE) || !in_array($item['network'], Protocol::FEDERATED))) {
+		if (($source_uid == 0) && (($item['private'] == self::PRIVATE) || !in_array($item['network'], array_merge(Protocol::FEDERATED, [Protocol::BLUESKY])))) {
 			Logger::notice('Item is private or not from a federated network. It will not be stored for the user.', ['uri-id' => $uri_id, 'uid' => $uid, 'private' => $item['private'], 'network' => $item['network']]);
 			return 0;
 		}
@@ -2113,7 +2123,6 @@ class Item
 	 *
 	 * @param array $item
 	 * @return string detected language
-	 * @throws \Text_LanguageDetect_Exception
 	 */
 	private static function getLanguage(array $item): ?string
 	{
@@ -3198,10 +3207,10 @@ class Item
 		} elseif ($remote_user) {
 			// Authenticated visitor - fetch the matching permissionsets
 			$permissionSets = DI::permissionSet()->selectByContactId($remote_user, $owner_id);
-			if (!empty($set)) {
+			if (count($permissionSets) > 0) {
 				$condition = [
 					"(`private` != ? OR (`private` = ? AND `wall`
-					AND `psid` IN (" . implode(', ', array_fill(0, count($set), '?')) . ")))",
+					AND `psid` IN (" . implode(', ', array_fill(0, count($permissionSets), '?')) . ")))",
 					self::PRIVATE, self::PRIVATE
 				];
 				$condition = array_merge($condition, $permissionSets->column('id'));
@@ -3227,17 +3236,12 @@ class Item
 			$table = DBA::quoteIdentifier($table) . '.';
 		}
 
-		/*
-		 * Construct permissions
-		 *
-		 * default permissions - anonymous user
-		 */
-		$sql = sprintf(" AND " . $table . "`private` != %d", self::PRIVATE);
-
 		// Profile owner - everything is visible
 		if ($local_user && ($local_user == $owner_id)) {
-			$sql = '';
-		} elseif ($remote_user) {
+			return '';
+		}
+
+		if ($remote_user) {
 			/*
 			 * Authenticated visitor. Unless pre-verified,
 			 * check that the contact belongs to this $owner_id
@@ -3247,16 +3251,21 @@ class Item
 			 */
 			$permissionSets = DI::permissionSet()->selectByContactId($remote_user, $owner_id);
 
-			if (!empty($set)) {
+			$sql_set = '';
+
+			if (count($permissionSets) > 0) {
 				$sql_set = sprintf(" OR (" . $table . "`private` = %d AND " . $table . "`wall` AND " . $table . "`psid` IN (", self::PRIVATE) . implode(',', $permissionSets->column('id')) . "))";
-			} else {
-				$sql_set = '';
 			}
 
-			$sql = sprintf(" AND (" . $table . "`private` != %d", self::PRIVATE) . $sql_set . ")";
+			return sprintf(" AND (" . $table . "`private` != %d", self::PRIVATE) . $sql_set . ")";
 		}
 
-		return $sql;
+		/*
+		 * Construct permissions
+		 *
+		 * default permissions - anonymous user
+		 */
+		return sprintf(" AND " . $table . "`private` != %d", self::PRIVATE);
 	}
 
 	/**
@@ -3347,7 +3356,7 @@ class Item
 	 */
 	public static function prepareBody(array &$item, bool $attach = false, bool $is_preview = false, bool $only_cache = false): string
 	{
-		$a = DI::app();
+		$appHelper = DI::appHelper();
 		$uid = DI::userSession()->getLocalUserId();
 		Hook::callAll('prepare_body_init', $item);
 
@@ -3375,15 +3384,16 @@ class Item
 			$item['body'] = preg_replace("#\s*\[attachment .*?].*?\[/attachment]\s*#ism", "\n", $item['body']);
 		}
 
-		$fields = ['uri-id', 'uri', 'body', 'title', 'author-name', 'author-link', 'author-avatar', 'guid', 'created', 'plink', 'network', 'has-media', 'quote-uri-id', 'post-type'];
+		$fields = ['uri-id', 'uri', 'body', 'title', 'author-name', 'author-link', 'author-avatar', 'author-gsid', 'guid', 'created', 'plink', 'network', 'has-media', 'quote-uri-id', 'post-type'];
 
 		$shared_uri_id      = 0;
 		$shared_links       = [];
 		$quote_shared_links = [];
+		$shared_item        = [];
 
 		$shared = DI::contentItem()->getSharedPost($item, $fields);
 		if (!empty($shared['post'])) {
-			$shared_item  = $shared['post'];
+			$shared_item = $shared['post'];
 			$shared_item['body'] = Post\Media::removeFromEndOfBody($shared_item['body']);
 			$shared_item['body'] = Post\Media::replaceImage($shared_item['body']);
 			$quote_uri_id = $shared['post']['uri-id'];
@@ -3422,6 +3432,8 @@ class Item
 				DI::logger()->warning('Missing plink in shared item', ['item' => $item, 'shared' => $shared, 'quote_uri_id' => $quote_uri_id, 'shared_item' => $shared_item]);
 			}
 		}
+
+		$sharedSplitAttachments = [];
 
 		if (!empty($shared_item['uri-id'])) {
 			$shared_uri_id = $shared_item['uri-id'];
@@ -3470,6 +3482,10 @@ class Item
 			unset($hook_data);
 		}
 
+		if (!empty($shared_item['uri-id'])) {
+			$s = self::replacePlatformIcon($s, $shared_item, $uid);
+		}
+
 		$hook_data = [
 			'item' => $item,
 			'html' => $s,
@@ -3492,7 +3508,7 @@ class Item
 			$s = self::addGallery($s, $sharedSplitAttachments['visual']);
 			$s = self::addVisualAttachments($sharedSplitAttachments['visual'], $shared_item, $s, true);
 			$s = self::addLinkAttachment($shared_uri_id ?: $item['uri-id'], $sharedSplitAttachments, $body, $s, true, $quote_shared_links);
-			$s = self::addNonVisualAttachments($sharedSplitAttachments['additional'], $item, $s, true);
+			$s = self::addNonVisualAttachments($sharedSplitAttachments['additional'], $item, $s);
 			$body = BBCode::removeSharedData($body);
 		}
 
@@ -3505,7 +3521,7 @@ class Item
 		$s = self::addGallery($s, $itemSplitAttachments['visual']);
 		$s = self::addVisualAttachments($itemSplitAttachments['visual'], $item, $s, false);
 		$s = self::addLinkAttachment($item['uri-id'], $itemSplitAttachments, $body, $s, false, $shared_links);
-		$s = self::addNonVisualAttachments($itemSplitAttachments['additional'], $item, $s, false);
+		$s = self::addNonVisualAttachments($itemSplitAttachments['additional'], $item, $s);
 		$s = self::addQuestions($item, $s);
 
 		// Map.
@@ -3517,8 +3533,8 @@ class Item
 		}
 
 		// Replace friendica image url size with theme preference.
-		if (!empty($a->getThemeInfoValue('item_image_size'))) {
-			$ps = $a->getThemeInfoValue('item_image_size');
+		if (!empty($appHelper->getThemeInfoValue('item_image_size'))) {
+			$ps = $appHelper->getThemeInfoValue('item_image_size');
 			$s = preg_replace('|(<img[^>]+src="[^"]+/photo/[0-9a-f]+)-[0-9]|', "$1-" . $ps, $s);
 		}
 
@@ -3531,6 +3547,39 @@ class Item
 		$hook_data = ['item' => $item, 'html' => $s];
 		Hook::callAll('prepare_body_final', $hook_data);
 		return $hook_data['html'];
+	}
+
+	/**
+	 * Replace the platform icon with the icon in the style selected by the user
+	 *
+	 * @param string $html
+	 * @param array $item
+	 * @param integer $uid
+	 * @return string
+	 */
+	private static function replacePlatformIcon(string $html, array $item, int $uid): string
+	{
+		$dom = new \DOMDocument();
+		if (!@$dom->loadHTML($html)) {
+			return $html;
+		}
+
+		$svg = ContactSelector::networkToSVG($item['network'], $item['author-gsid'], '', $uid);
+		if (empty($svg)) {
+			return $html;
+		}
+
+		$xpath = new \DOMXPath($dom);
+		/** @var \DOMElement $element */
+		foreach ($xpath->query("//img[@class='network-svg']") as $element) {
+			$src = $element->getAttributeNode('src')->nodeValue;
+			if ($src == $svg) {
+				continue;
+			}
+			$element_html = $element->ownerDocument->saveHTML($element);
+			$html = str_replace($element_html, str_replace($src, $svg, $element_html), $html);
+		}
+		return $html;
 	}
 
 	/**
@@ -3733,6 +3782,9 @@ class Item
 					continue;
 				}
 
+				if (empty($PostMedia->description) && DI::pConfig()->get(DI::userSession()->getLocalUserId(), 'accessibility', 'hide_empty_descriptions')) {
+					continue;
+				}
 				$images[] = $PostMedia->withUrl(new Uri($src_url))->withPreview(new Uri($preview_url), $preview_size);
 			}
 		}
@@ -4122,10 +4174,11 @@ class Item
 	 * @param string $uri
 	 * @param int    $uid
 	 * @param int    $completion
+	 * @param string $mimetype
 	 *
 	 * @return integer item id
 	 */
-	public static function fetchByLink(string $uri, int $uid = 0, int $completion = ActivityPub\Receiver::COMPLETION_MANUAL): int
+	public static function fetchByLink(string $uri, int $uid = 0, int $completion = ActivityPub\Receiver::COMPLETION_MANUAL, string $mimetype = ''): int
 	{
 		Logger::info('Trying to fetch link', ['uid' => $uid, 'uri' => $uri]);
 		$item_id = self::searchByLink($uri, $uid);
@@ -4147,31 +4200,49 @@ class Item
 		Hook::callAll('item_by_link', $hookData);
 
 		if (isset($hookData['item_id'])) {
+			Logger::info('Hook link fetched', ['uid' => $uid, 'uri' => $uri, 'id' => $hookData['item_id']]);
 			return is_numeric($hookData['item_id']) ? $hookData['item_id'] : 0;
 		}
 
-		try {
-			$curlResult = DI::httpClient()->head($uri, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::JSON_AS, HttpClientOptions::REQUEST => HttpClientRequest::ACTIVITYPUB]);
-			if (HTTPSignature::isValidContentType($curlResult->getContentType(), $uri)) {
-				$fetched_uri = ActivityPub\Processor::fetchMissingActivity($uri, [], '', $completion, $uid);
+		if (!$mimetype) {
+			try {
+				$curlResult = DI::httpClient()->head($uri, [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::JSON_AS, HttpClientOptions::REQUEST => HttpClientRequest::ACTIVITYPUB]);
+				$mimetype = $curlResult->getContentType();
+			} catch (\Throwable $th) {
+				Logger::info('Error while fetching HTTP link via HEAD', ['uid' => $uid, 'uri' => $uri, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
+				return 0;
 			}
-		} catch (\Throwable $th) {
-			Logger::info('Invalid link', ['uid' => $uid, 'uri' => $uri, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
-			return 0;
 		}
 
-		if (!empty($fetched_uri)) {
-			$item_id = self::searchByLink($fetched_uri, $uid);
-		} else {
-			$item_id = Diaspora::fetchByURL($uri);
+		if (!HTTPSignature::isValidContentType($mimetype, $uri) && (current(explode(';', $mimetype)) == 'application/json')) {
+			try {
+				// Issue 14126: Workaround for Mastodon servers that return "application/json" on a "head" request.
+				$curlResult = HTTPSignature::fetchRaw($uri, $uid);
+				$mimetype = $curlResult->getContentType();
+			} catch (\Throwable $th) {
+				Logger::info('Error while fetching HTTP link via signed GET', ['uid' => $uid, 'uri' => $uri, 'code' => $th->getCode(), 'message' => $th->getMessage()]);
+				return 0;
+			}
 		}
 
-		if (!empty($item_id)) {
-			Logger::info('Link fetched', ['uid' => $uid, 'uri' => $uri, 'id' => $item_id]);
+		if (HTTPSignature::isValidContentType($mimetype, $uri)) {
+			$fetched_uri = ActivityPub\Processor::fetchMissingActivity($uri, [], '', $completion, $uid);
+			if (!empty($fetched_uri)) {
+				$item_id = self::searchByLink($fetched_uri, $uid);
+				if ($item_id) {
+					Logger::info('ActivityPub link fetched', ['uid' => $uid, 'uri' => $uri, 'id' => $item_id]);
+					return $item_id;
+				}
+			}
+		}
+
+		$item_id = Diaspora::fetchByURL($uri);
+		if ($item_id) {
+			Logger::info('Diaspora link fetched', ['uid' => $uid, 'uri' => $uri, 'id' => $item_id]);
 			return $item_id;
 		}
 
-		Logger::info('Link not found', ['uid' => $uid, 'uri' => $uri]);
+		Logger::info('This is not an item link', ['uid' => $uid, 'uri' => $uri]);
 		return 0;
 	}
 

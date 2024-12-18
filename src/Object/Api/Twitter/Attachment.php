@@ -26,7 +26,6 @@ class Attachment extends BaseDataTransferObject
 	/**
 	 * Creates an Attachment entity array
 	 *
-	 * @param array $attachment
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
 	public function __construct(array $media)

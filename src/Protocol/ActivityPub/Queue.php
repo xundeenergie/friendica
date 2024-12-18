@@ -192,7 +192,7 @@ class Queue
 		}
 
 		if (!empty($entry['wid'])) {
-			$worker = DI::app()->getQueue();
+			$worker = DI::appHelper()->getQueue();
 			$wid = $worker['id'] ?? 0;
 			if ($entry['wid'] != $wid) {
 				$workerqueue = DBA::selectFirst('workerqueue', ['pid'], ['id' => $entry['wid'], 'done' => false]);
@@ -414,7 +414,7 @@ class Queue
 	{
 		$entries = DBA::select('inbox-entry', ['id'], ["NOT `trust` AND `wid` IS NULL"], ['order' => ['id' => true]]);
 		while ($entry = DBA::fetch($entries)) {
-			$data = self::reprepareActivityById($entry['id'], false);
+			$data = self::reprepareActivityById($entry['id']);
 			if ($data['trust']) {
 				DBA::update('inbox-entry', ['trust' => true], ['id' => $entry['id']]);
 			}

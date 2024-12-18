@@ -29,6 +29,8 @@ use Friendica\Model\User;
 use Friendica\Network\HTTPClient\Client\HttpClientAccept;
 use Friendica\Network\HTTPClient\Client\HttpClientRequest;
 use Friendica\Network\HTTPException;
+use Friendica\Network\HTTPException\InternalServerErrorException;
+use Friendica\Network\HTTPException\NotFoundException;
 use Friendica\Network\Probe;
 use Friendica\Protocol\Delivery;
 use Friendica\Util\Crypto;
@@ -623,22 +625,21 @@ class Diaspora
 	 */
 	private static function validPosting(array $msg)
 	{
-		$data = XML::parseString($msg['message']);
+		$element = XML::parseString($msg['message']);
 
-		if (!is_object($data)) {
+		if (!is_object($element)) {
 			Logger::info('No valid XML', ['message' => $msg['message']]);
 			return false;
 		}
 
+		$oldXML = false;
+
 		// Is this the new or the old version?
-		if ($data->getName() == 'XML') {
+		if ($element->getName() === 'XML') {
 			$oldXML = true;
-			foreach ($data->post->children() as $child) {
+			foreach ($element->post->children() as $child) {
 				$element = $child;
 			}
-		} else {
-			$oldXML = false;
-			$element = $data;
 		}
 
 		$type = $element->getName();
@@ -779,7 +780,7 @@ class Diaspora
 	 * @param WebFingerUri $uri The handle
 	 *
 	 * @return string The public key
-	 * @throws InternalServerErrorException
+	 * @throws NotFoundException
 	 * @throws \ImagickException
 	 */
 	private static function key(WebFingerUri $uri): string
@@ -787,7 +788,7 @@ class Diaspora
 		Logger::info('Fetching diaspora key', ['handle' => $uri->getAddr()]);
 		try {
 			return DI::dsprContact()->getByAddr($uri)->pubKey;
-		} catch (HTTPException\NotFoundException | \InvalidArgumentException $e) {
+		} catch (NotFoundException | \InvalidArgumentException $e) {
 			return '';
 		}
 	}
@@ -814,7 +815,7 @@ class Diaspora
 	 * @param string       $url    profile url or WebFinger address
 	 * @param boolean|null $update true = always update, false = never update, null = update when not found or outdated
 	 * @return boolean
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function isSupportedByContactUrl(string $url, ?bool $update = null): bool
@@ -1460,7 +1461,7 @@ class Diaspora
 		 */
 
 		foreach ($matches as $match) {
-			if (empty($match)) {
+			if ($match === '') {
 				continue;
 			}
 
@@ -2914,14 +2915,13 @@ class Diaspora
 	/**
 	 * Transmit a message to a target server
 	 *
-	 * @param array  $owner        the array of the item owner
 	 * @param array  $contact      Target of the communication
 	 * @param string $envelope     The message that is to be transmitted
 	 * @param bool   $public_batch Is it a public post?
 	 * @param string $guid         message guid
 	 *
 	 * @return int Result of the transmission
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	private static function transmit(array $contact, string $envelope, bool $public_batch, string $guid = ''): int
@@ -2962,7 +2962,6 @@ class Diaspora
 				return 0;
 			}
 			$return_code = $postResult->getReturnCode();
-			Item::incrementOutbound(Protocol::DIASPORA);
 		} else {
 			Logger::notice('test_mode');
 			return 200;
@@ -2971,6 +2970,7 @@ class Diaspora
 		if (!empty($contact['gsid']) && (empty($return_code) || $postResult->isTimeout())) {
 			GServer::setFailureById($contact['gsid']);
 		} elseif (!empty($contact['gsid']) && ($return_code >= 200) && ($return_code <= 299)) {
+			Item::incrementOutbound(Protocol::DIASPORA);
 			GServer::setReachableById($contact['gsid'], Protocol::DIASPORA);
 		}
 
@@ -3030,7 +3030,7 @@ class Diaspora
 			// The "addr" field should always be filled.
 			// If this isn't the case, it will raise a notice some lines later.
 			// And in the log we will see where it came from, and we can handle it there.
-			Logger::notice('Empty addr', ['contact' => $contact ?? []]);
+			Logger::notice('Empty addr', ['contact' => $contact]);
 		}
 
 		$envelope = self::buildMessage($msg, $owner, $contact, $owner['uprvkey'], $pubkey ?? '', $public_batch);
@@ -3223,7 +3223,7 @@ class Diaspora
 	/**
 	 * Create an event array
 	 *
-	 * @param integer $event_id The id of the event
+	 * @param string $event_id The id of the event
 	 *
 	 * @return array with event data
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
@@ -3655,6 +3655,8 @@ class Diaspora
 	 */
 	public static function sendFollowup(array $item, array $owner, array $contact, bool $public_batch = false): int
 	{
+		$type = '';
+
 		if (in_array($item['verb'], [Activity::ATTEND, Activity::ATTENDNO, Activity::ATTENDMAYBE])) {
 			$message = self::constructAttend($item, $owner);
 			$type = 'event_participation';

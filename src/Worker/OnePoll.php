@@ -220,7 +220,7 @@ class OnePoll
 
 		Logger::info('Mail is enabled');
 
-		$mbox = null;
+		$mbox = false;
 		$user = DBA::selectFirst('user', ['prvkey'], ['uid' => $importer_uid]);
 
 		$condition = ["`server` != ? AND `user` != ? AND `port` != ? AND `uid` = ?", '', '', 0, $importer_uid];
@@ -232,17 +232,18 @@ class OnePoll
 			$mbox = Email::connect($mailbox, $mailconf['user'], $password);
 			unset($password);
 			Logger::notice('Connect', ['user' => $mailconf['user']]);
-			if ($mbox) {
-				$fields = ['last_check' => $updated];
-				DBA::update('mailacct', $fields, ['id' => $mailconf['id']]);
-				Logger::notice('Connected', ['user' => $mailconf['user']]);
-			} else {
+
+			if ($mbox === false) {
 				Logger::notice('Connection error', ['user' => $mailconf['user'], 'error' => imap_errors()]);
 				return false;
 			}
+
+			$fields = ['last_check' => $updated];
+			DBA::update('mailacct', $fields, ['id' => $mailconf['id']]);
+			Logger::notice('Connected', ['user' => $mailconf['user']]);
 		}
 
-		if (empty($mbox)) {
+		if ($mbox === false) {
 			return false;
 		}
 

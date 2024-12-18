@@ -8,10 +8,8 @@
 namespace Friendica\Core;
 
 use Friendica\Content\Text\BBCode;
-use Friendica\Content\Text\HTML;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\DI;
-use Friendica\Model\User;
 use Friendica\Module\Response;
 use Friendica\Network\HTTPException\FoundException;
 use Friendica\Network\HTTPException\InternalServerErrorException;
@@ -325,9 +323,9 @@ class System
 	/**
 	 * Send HTTP status header and exit.
 	 *
-	 * @param integer $val     HTTP status result value
-	 * @param string  $message Error message. Optional.
-	 * @param string  $content Response body. Optional.
+	 * @param integer $httpCode HTTP status result value
+	 * @param string  $message  Error message. Optional.
+	 * @param string  $content  Response body. Optional.
 	 * @throws \Exception
 	 * @deprecated since 2023.09 Use BaseModule->httpError instead
 	 */
@@ -393,6 +391,8 @@ class System
 
 	/**
 	 * Exit the program execution.
+	 *
+	 * @return never
 	 */
 	public static function exit()
 	{
@@ -506,6 +506,8 @@ class System
 	 * @throws TemporaryRedirectException
 	 *
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
+	 *
+	 * @return never
 	 */
 	public static function externalRedirect($url, $code = 302)
 	{

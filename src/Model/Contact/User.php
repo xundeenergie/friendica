@@ -9,12 +9,13 @@ namespace Friendica\Model\Contact;
 
 use Exception;
 use Friendica\Core\Logger;
-use Friendica\Core\Protocol;
+use Friendica\Core\Worker;
 use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\DI;
 use Friendica\Model\Contact;
 use Friendica\Model\ItemURI;
+use Friendica\Network\HTTPException\InternalServerErrorException;
 use PDOException;
 
 /**
@@ -125,13 +126,14 @@ class User
 	/**
 	 * Block contact id for user id
 	 *
-	 * @param int     $cid     Either public contact id or user's contact id
-	 * @param int     $uid     User ID
-	 * @param boolean $blocked Is the contact blocked or unblocked?
+	 * @param int     $cid      Either public contact id or user's contact id
+	 * @param int     $uid      User ID
+	 * @param boolean $blocked  Is the contact blocked or unblocked?
+	 * @param boolean $only_set Only set the block flag, don't execute any block transmission
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
-	public static function setBlocked(int $cid, int $uid, bool $blocked)
+	public static function setBlocked(int $cid, int $uid, bool $blocked, bool $only_set = false)
 	{
 		$cdata = Contact::getPublicAndUserContactID($cid, $uid);
 		if (empty($cdata)) {
@@ -139,14 +141,25 @@ class User
 		}
 
 		$contact = Contact::getById($cdata['public']);
-		if ($blocked) {
-			Protocol::block($contact, $uid);
-		} else {
-			Protocol::unblock($contact, $uid);
+
+		if (!$only_set) {
+			if ($blocked) {
+				Worker::add(Worker::PRIORITY_HIGH, 'Contact\Block', $cid, $uid);
+			} else {
+				Worker::add(Worker::PRIORITY_HIGH, 'Contact\Unblock', $cid, $uid);
+			}
 		}
 
 		if ($cdata['user'] != 0) {
 			DBA::update('contact', ['blocked' => $blocked], ['id' => $cdata['user'], 'pending' => false]);
+
+			if ($blocked) {
+				$contact = Contact::getById($cdata['user']);
+				if (!empty($contact)) {
+					// Mastodon-expected behavior: relationship is severed on block
+					Contact::terminateFriendship($contact);
+				}
+			}
 		}
 
 		DBA::update('user-contact', ['blocked' => $blocked], ['cid' => $cdata['public'], 'uid' => $uid], true);
@@ -159,7 +172,7 @@ class User
 	 * @param int $uid User ID
 	 *
 	 * @return boolean is the contact id blocked for the given user?
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function isBlocked(int $cid, int $uid): bool
 	{
@@ -200,7 +213,7 @@ class User
 	 * @param int     $uid     User ID
 	 * @param boolean $ignored Is the contact ignored or unignored?
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function setIgnored(int $cid, int $uid, bool $ignored)
 	{
@@ -222,7 +235,7 @@ class User
 	 * @param int $cid Either public contact id or user's contact id
 	 * @param int $uid User ID
 	 * @return boolean is the contact id ignored for the given user?
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function isIgnored(int $cid, int $uid): bool
 	{
@@ -263,7 +276,7 @@ class User
 	 * @param int     $uid       User ID
 	 * @param boolean $collapsed are the contact's posts collapsed or uncollapsed?
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function setCollapsed(int $cid, int $uid, bool $collapsed)
 	{
@@ -281,7 +294,7 @@ class User
 	 * @param int $cid Either public contact id or user's contact id
 	 * @param int $uid User ID
 	 * @return boolean is the contact id blocked for the given user?
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function isCollapsed(int $cid, int $uid): bool
@@ -302,7 +315,7 @@ class User
 	 * @param int $uid       User ID
 	 * @param int $frequency Type of post frequency in channels
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function setChannelFrequency(int $cid, int $uid, int $frequency)
 	{
@@ -320,7 +333,7 @@ class User
 	 * @param int $cid Either public contact id or user's contact id
 	 * @param int $uid User ID
 	 * @return int Type of post frequency in channels
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function getChannelFrequency(int $cid, int $uid): int
@@ -337,11 +350,11 @@ class User
 	/**
 	 * Set the channel only value for contact id and user id
 	 *
-	 * @param int $cid           Either public contact id or user's contact id
-	 * @param int $uid           User ID
-	 * @param int $isChannelOnly Is channel only
+	 * @param int  $cid           Either public contact id or user's contact id
+	 * @param int  $uid           User ID
+	 * @param bool $isChannelOnly Is channel only
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function setChannelOnly(int $cid, int $uid, bool $isChannelOnly)
 	{
@@ -359,7 +372,7 @@ class User
 	 * @param int $cid Either public contact id or user's contact id
 	 * @param int $uid User ID
 	 * @return bool Contact is channel only
-	 * @throws HTTPException\InternalServerErrorException
+	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
 	public static function getChannelOnly(int $cid, int $uid): bool
@@ -380,7 +393,7 @@ class User
 	 * @param int     $uid     User ID
 	 * @param boolean $blocked Is the user blocked or unblocked by the contact?
 	 * @return void
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function setIsBlocked(int $cid, int $uid, bool $blocked)
 	{
@@ -398,7 +411,7 @@ class User
 	 * @param int $cid Either public contact id or user's contact id
 	 * @param int $uid User ID
 	 * @return boolean Is the user blocked or unblocked by the contact?
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function isIsBlocked(int $cid, int $uid): bool
 	{

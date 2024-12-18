@@ -24,7 +24,7 @@
  *
  */
 
- return [
+return [
 	"application-view" => [
 		"fields" => [
 			"id" => ["application", "id"],
@@ -101,6 +101,7 @@
 			"received" => ["post-thread-user", "received"],
 			"created" => ["post-thread-user", "created"],
 			"network" => ["post-thread-user", "network"],
+			"protocol" => ["post-user", "protocol"],
 			"restricted" => ["post-engagement", "language"],
 			"comments" => "0",
 			"activities" => "0",
@@ -115,7 +116,7 @@
 			AND (NOT `contact`.`readonly` AND NOT `contact`.`blocked` AND NOT `contact`.`pending`)
 			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
 			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
-			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`authorcontact`.`id`, `ownercontact`.`id`) AND (`blocked` OR `ignored`))
+			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`authorcontact`.`id`, `ownercontact`.`id`) AND (`blocked` OR `ignored` OR `is-blocked`))
 			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`)"
 	],
 	"post-timeline-view" => [
@@ -153,6 +154,9 @@
 			"causer-id" => ["post-user", "causer-id"],
 			"causer-blocked" => ["causer", "blocked"],
 			"causer-gsid" => ["causer", "gsid"],
+			"parent-network" => ["post-thread-user", "network"],
+			"parent-owner-id" => ["post-thread-user", "owner-id"],
+			"parent-author-id" => ["post-thread-user", "author-id"],
 		],
 		"query" => "FROM `post-user`
 			LEFT JOIN `post-thread-user` ON `post-thread-user`.`uri-id` = `post-user`.`parent-uri-id` AND `post-thread-user`.`uid` = `post-user`.`uid`
@@ -218,6 +222,7 @@
 			"received" => ["post-thread-user", "received"],
 			"created" => ["post-thread-user", "created"],
 			"network" => ["post-thread-user", "network"],
+			"protocol" => ["post-user", "protocol"],
 			"restricted" => ["post-searchindex", "language"],
 			"comments" => "0",
 			"activities" => "0",
@@ -232,7 +237,7 @@
 			AND (NOT `contact`.`readonly` AND NOT `contact`.`blocked` AND NOT `contact`.`pending`)
 			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
 			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
-			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`authorcontact`.`id`, `ownercontact`.`id`) AND (`blocked` OR `ignored`))
+			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`authorcontact`.`id`, `ownercontact`.`id`) AND (`blocked` OR `ignored` OR `is-blocked`))
 			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`)"
 	],
 	"post-origin-view" => [
@@ -397,6 +402,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread-user", "network"],
+			"parent-owner-id" => ["post-thread-user", "owner-id"],
 			"parent-author-id" => ["post-thread-user", "author-id"],
 			"parent-author-link" => ["parent-post-author", "url"],
 			"parent-author-name" => ["parent-post-author", "name"],
@@ -471,6 +477,7 @@
 			"global" => ["post-user", "global"],
 			"featured" => "EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post-thread-user`.`uri-id`)",
 			"network" => ["post-thread-user", "network"],
+			"protocol" => ["post-user", "protocol"],
 			"vid" => ["post-origin", "vid"],
 			"psid" => ["post-thread-user", "psid"],
 			"verb" => "IF (`post-origin`.`vid` IS NULL, '', `verb`.`name`)",
@@ -588,6 +595,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread-user", "network"],
+			"parent-owner-id" => ["post-thread-user", "owner-id"],
 			"parent-author-id" => ["post-thread-user", "author-id"],
 			"parent-author-link" => ["author", "url"],
 			"parent-author-name" => ["author", "name"],
@@ -779,6 +787,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread-user", "network"],
+			"parent-owner-id" => ["post-thread-user", "owner-id"],
 			"parent-author-id" => ["post-thread-user", "author-id"],
 			"parent-author-link" => ["parent-post-author", "url"],
 			"parent-author-name" => ["parent-post-author", "name"],
@@ -852,6 +861,7 @@
 			"global" => ["post-user", "global"],
 			"featured" => "EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post-thread-user`.`uri-id`)",
 			"network" => ["post-thread-user", "network"],
+			"protocol" => ["post-user", "protocol"],
 			"vid" => ["post-user", "vid"],
 			"psid" => ["post-thread-user", "psid"],
 			"verb" => "IF (`post-user`.`vid` IS NULL, '', `verb`.`name`)",
@@ -969,6 +979,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread-user", "network"],
+			"parent-owner-id" => ["post-thread-user", "owner-id"],
 			"parent-author-id" => ["post-thread-user", "author-id"],
 			"parent-author-link" => ["author", "url"],
 			"parent-author-name" => ["author", "name"],
@@ -1029,6 +1040,7 @@
 			"global" => ["post", "global"],
 			"featured" => "EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post`.`uri-id`)",
 			"network" => ["post", "network"],
+			"protocol" => "255",
 			"vid" => ["post", "vid"],
 			"verb" => "IF (`post`.`vid` IS NULL, '', `verb`.`name`)",
 			"title" => ["post-content", "title"],
@@ -1123,6 +1135,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread", "network"],
+			"parent-owner-id" => ["post-thread", "owner-id"],
 			"parent-author-id" => ["post-thread", "author-id"],
 			"parent-author-link" => ["parent-post-author", "url"],
 			"parent-author-name" => ["parent-post-author", "name"],
@@ -1180,6 +1193,7 @@
 			"global" => ["post", "global"],
 			"featured" => "EXISTS(SELECT `type` FROM `post-collection` WHERE `type` = 0 AND `uri-id` = `post-thread`.`uri-id`)",
 			"network" => ["post-thread", "network"],
+			"protocol" => "255",
 			"vid" => ["post", "vid"],
 			"verb" => "IF (`post`.`vid` IS NULL, '', `verb`.`name`)",
 			"title" => ["post-content", "title"],
@@ -1276,6 +1290,7 @@
 			"signed_text" => ["diaspora-interaction", "interaction"],
 			"parent-guid" => ["parent-item-uri", "guid"],
 			"parent-network" => ["post-thread", "network"],
+			"parent-owner-id" => ["post-thread", "owner-id"],
 			"parent-author-id" => ["post-thread", "author-id"],
 			"parent-author-link" => ["author", "url"],
 			"parent-author-name" => ["author", "name"],
@@ -1372,6 +1387,7 @@
 			"starred" => ["post-thread-user", "starred"],
 			"mention" => ["post-thread-user", "mention"],
 			"network" => ["post-thread-user", "network"],
+			"protocol" => ["post-user", "protocol"],
 			"contact-id" => ["post-thread-user", "contact-id"],
 			"contact-type" => ["ownercontact", "contact-type"],
 		],
@@ -1384,7 +1400,7 @@
 			AND (NOT `contact`.`readonly` AND NOT `contact`.`blocked` AND NOT `contact`.`pending`)
 			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
 			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
-			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored` OR `channel-only`))
+			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored` OR `is-blocked` OR `channel-only`))
 			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`)"
 	],
 	"network-thread-circle-view" => [
@@ -1398,6 +1414,7 @@
 			"starred" => ["post-thread-user", "starred"],
 			"mention" => ["post-thread-user", "mention"],
 			"network" => ["post-thread-user", "network"],
+			"protocol" => ["post-user", "protocol"],
 			"contact-id" => ["post-thread-user", "contact-id"],
 			"contact-type" => ["ownercontact", "contact-type"],
 		],
@@ -1410,7 +1427,7 @@
 			AND (NOT `contact`.`readonly` AND NOT `contact`.`blocked` AND NOT `contact`.`pending`)
 			AND (`post-thread-user`.`hidden` IS NULL OR NOT `post-thread-user`.`hidden`)
 			AND NOT `authorcontact`.`blocked` AND NOT `ownercontact`.`blocked`
-			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored`))
+			AND NOT EXISTS(SELECT `cid`  FROM `user-contact` WHERE `uid` = `post-thread-user`.`uid` AND `cid` IN (`post-thread-user`.`author-id`, `post-thread-user`.`owner-id`, `post-thread-user`.`causer-id`) AND (`blocked` OR `ignored` OR `is-blocked`))
 			AND NOT EXISTS(SELECT `gsid` FROM `user-gserver` WHERE `uid` = `post-thread-user`.`uid` AND `gsid` IN (`authorcontact`.`gsid`, `ownercontact`.`gsid`) AND `ignored`)"
 	],
 	"owner-view" => [
@@ -1476,6 +1493,7 @@
 			"unsearchable" => ["contact", "unsearchable"],
 			"sensitive" => ["contact", "sensitive"],
 			"baseurl" => ["contact", "baseurl"],
+			"gsid" => ["contact", "gsid"],
 			"reason" => ["contact", "reason"],
 			"info" => ["contact", "info"],
 			"bdyear" => ["contact", "bdyear"],
@@ -1759,6 +1777,7 @@
 			"gravity" => ["post-user", "gravity"],
 			"received" => ["post-user", "received"],
 			"network" => ["post-user", "network"],
+			"protocol" => ["post-user", "protocol"],
 			"author-id" => ["post-user", "author-id"],
 			"name" => ["tag", "name"],
 		],
@@ -1783,7 +1802,7 @@
 			"label" => ["profile_field", "label"],
 			"value" => ["profile_field", "value"],
 			"order" => ["profile_field", "order"],
-			"psid"=> ["profile_field", "psid"],
+			"psid" => ["profile_field", "psid"],
 			"allow_cid" => ["permissionset", "allow_cid"],
 			"allow_gid" => ["permissionset", "allow_gid"],
 			"deny_cid" => ["permissionset", "deny_cid"],

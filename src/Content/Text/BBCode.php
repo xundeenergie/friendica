@@ -686,7 +686,7 @@ class BBCode
 			// to the last element
 			$newbody = str_replace(
 				'[$#saved_image' . $cnt . '#$]',
-				'<img src="' . self::proxyUrl($image, self::INTERNAL, $uriid) . '" alt="' . DI::l10n()->t('Image/photo') . '" />',
+				'<img src="' . self::proxyUrl($image, self::INTERNAL, $uriid) . '" alt="" class="empty-description"/>',
 				$newbody
 			);
 			$cnt++;
@@ -824,11 +824,6 @@ class BBCode
 
 	/**
 	 * Convert complex IMG and ZMG elements
-	 *
-	 * @param [type] $text
-	 * @param integer $simplehtml
-	 * @param integer $uriid
-	 * @return string
 	 */
 	private static function convertImages(string $text, int $simplehtml, int $uriid = 0): string
 	{
@@ -849,6 +844,7 @@ class BBCode
 						$img_str .= ' ' . $key . '="' . htmlspecialchars($value, ENT_COMPAT) . '"';
 					}
 				}
+				$img_str .= ' ' . empty($attributes['alt']) ? 'class="empty-description"' : 'class="has-alt-description"';
 				return $img_str . '>';
 			},
 			$text
@@ -920,6 +916,7 @@ class BBCode
 				$contact = Contact::getByURL($attributes['profile'], false, ['network']);
 				$network = $contact['network'] ?? Protocol::PHANTOM;
 
+				$gsid = ContactSelector::getServerIdForProfile($attributes['profile']);
 				$tpl = Renderer::getMarkupTemplate('shared_content.tpl');
 				$text .= self::SHARED_ANCHOR . Renderer::replaceMacros($tpl, [
 					'$profile'      => $attributes['profile'],
@@ -929,8 +926,8 @@ class BBCode
 					'$link_title'   => DI::l10n()->t('Link to source'),
 					'$posted'       => $attributes['posted'],
 					'$guid'         => $attributes['guid'],
-					'$network_name' => ContactSelector::networkToName($network, $attributes['profile']),
-					'$network_icon' => ContactSelector::networkToIcon($network, $attributes['profile']),
+					'$network_name' => ContactSelector::networkToName($network, '', $gsid),
+					'$network_svg'  => ContactSelector::networkToSVG($network, $gsid),
 					'$content'      => self::TOP_ANCHOR . self::setMentions(trim($content), 0, $network) . self::BOTTOM_ANCHOR,
 				]);
 				break;
@@ -1111,7 +1108,7 @@ class BBCode
 	/**
 	 * Removes links
 	 *
-	 * @param string $text HTML/BBCode string
+	 * @param string $bbcode HTML/BBCode string
 	 * @return string Cleaned HTML/BBCode
 	 */
 	public static function removeLinks(string $bbcode): string
@@ -1628,7 +1625,7 @@ class BBCode
 	private static function convertStylesToHtml(string $text, int $simple_html): string
 	{
 		// Markdown is designed to pass through HTML elements that it can't handle itself,
-		// so that the other system would parse the original HTML element. 
+		// so that the other system would parse the original HTML element.
 		// But Diaspora has chosen not to do this and doesn't parse HTML elements.
 		// So we need to make some changes here.
 		if ($simple_html == BBCode::DIASPORA) {
@@ -1826,8 +1823,8 @@ class BBCode
 			$text
 		);
 
-		$text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px;" >', $text);
-		$text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*)\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px;" >', $text);
+		$text = preg_replace("/\[img\=([0-9]*)x([0-9]*)\](.*?)\[\/img\]/ism", '<img src="$3" style="width: $1px;" alt="" class="empty-description">', $text);
+		$text = preg_replace("/\[zmg\=([0-9]*)x([0-9]*)\](.*?)\[\/zmg\]/ism", '<img class="zrl" src="$3" style="width: $1px;" alt="" class="empty-description">', $text);
 
 		$text = preg_replace_callback(
 			"/\[[iz]mg\=(.*?)\](.*?)\[\/[iz]mg\]/ism",
@@ -1836,7 +1833,7 @@ class BBCode
 				$alt = htmlspecialchars($matches[2], ENT_COMPAT);
 				// Fix for Markdown problems with Diaspora, see issue #12701
 				if (($simple_html != self::DIASPORA) || strpos($matches[2], '"') === false) {
-					return '<img src="' . $matches[1] . '" alt="' . $alt . '" title="' . $alt . '">';
+					return '<img src="' . $matches[1] . '" alt="' . $alt . '" title="' . $alt . '" class="' . (empty($alt) ? 'empty-description' : 'has-alt-description') . '">';
 				} else {
 					return '<img src="' . $matches[1] . '" alt="' . $alt . '">';
 				}
@@ -1859,8 +1856,8 @@ class BBCode
 			$text
 		);
 
-		$text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="' . DI::l10n()->t('Image/photo') . '" />', $text);
-		$text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img src="$1" alt="' . DI::l10n()->t('Image/photo') . '" />', $text);
+		$text = preg_replace("/\[img\](.*?)\[\/img\]/ism", '<img src="$1" alt="" class="empty-description"/>', $text);
+		$text = preg_replace("/\[zmg\](.*?)\[\/zmg\]/ism", '<img src="$1" alt="" class="empty-description" />', $text);
 
 		$text = self::convertImages($text, $simple_html, $uriid);
 
@@ -1924,19 +1921,20 @@ class BBCode
 
 	private static function convertVideoPlatformsToHtml(string $text, bool $try_oembed): string
 	{
-		$a = DI::app();
+		$appHelper = DI::appHelper();
+
 		$text = self::normalizeVideoLinks($text);
 
 		// Youtube extensions
 		if ($try_oembed && OEmbed::isAllowedURL('https://www.youtube.com/embed/')) {
-			$text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '<iframe width="' . $a->getThemeInfoValue('videowidth') . '" height="' . $a->getThemeInfoValue('videoheight') . '" src="https://www.youtube.com/embed/$1" frameborder="0" ></iframe>', $text);
+			$text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '<iframe width="' . $appHelper->getThemeInfoValue('videowidth') . '" height="' . $appHelper->getThemeInfoValue('videoheight') . '" src="https://www.youtube.com/embed/$1" frameborder="0" ></iframe>', $text);
 		} else {
 			$text = preg_replace("/\[youtube\]([A-Za-z0-9\-_=]+)(.*?)\[\/youtube\]/ism", '[url]https://www.youtube.com/watch?v=$1[/url]', $text);
 		}
 
 		// Vimeo extensions
 		if ($try_oembed && OEmbed::isAllowedURL('https://player.vimeo.com/video')) {
-			$text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", '<iframe width="' . $a->getThemeInfoValue('videowidth') . '" height="' . $a->getThemeInfoValue('videoheight') . '" src="https://player.vimeo.com/video/$1" frameborder="0" ></iframe>', $text);
+			$text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", '<iframe width="' . $appHelper->getThemeInfoValue('videowidth') . '" height="' . $appHelper->getThemeInfoValue('videoheight') . '" src="https://player.vimeo.com/video/$1" frameborder="0" ></iframe>', $text);
 		} else {
 			$text = preg_replace("/\[vimeo\]([0-9]+)(.*?)\[\/vimeo\]/ism", '[url]https://vimeo.com/$1[/url]', $text);
 		}

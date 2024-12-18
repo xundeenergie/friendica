@@ -11,10 +11,11 @@ use Friendica\App;
 use Friendica\App\Mode;
 use Friendica\Console\Lock;
 use Friendica\Core\Lock\Capability\ICanLock;
+use Friendica\Test\ConsoleTestCase;
 use Mockery;
 use Mockery\MockInterface;
 
-class LockConsoleTest extends ConsoleTest
+class LockConsoleTest extends ConsoleTestCase
 {
 	/**
 	 * @var App\Mode|MockInterface $appMode

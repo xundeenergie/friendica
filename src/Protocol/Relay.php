@@ -7,6 +7,7 @@
 
 namespace Friendica\Protocol;
 
+use Exception;
 use Friendica\Content\Smilies;
 use Friendica\Content\Text\BBCode;
 use Friendica\Core\L10n;
@@ -299,8 +300,6 @@ class Relay
 	 * Return a list of servers that we serve via the direct relay
 	 *
 	 * @param integer $item_id  id of the item that is sent
-	 * @param array   $contacts Previously fetched contacts
-	 * @param array   $networks Networks of the relay servers
 	 * @return array of relay servers
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */

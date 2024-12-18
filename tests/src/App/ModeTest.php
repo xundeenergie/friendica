@@ -12,13 +12,13 @@ use Friendica\App\Arguments;
 use Friendica\App\Mode;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Database\Database;
-use Friendica\Test\MockedTest;
+use Friendica\Test\MockedTestCase;
 use Friendica\Test\Util\VFSTrait;
 use Friendica\Util\BasePath;
 use Mockery;
 use Mockery\MockInterface;
 
-class ModeTest extends MockedTest
+class ModeTest extends MockedTestCase
 {
 	use VFSTrait;
 

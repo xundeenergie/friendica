@@ -23,12 +23,12 @@ class ActivityPubConversion extends BaseModule
 
 	protected function content(array $request = []): string
 	{
-		function visible_whitespace($s)
-		{
-			return '<pre>' . htmlspecialchars($s) . '</pre>';
-		}
-
 		$results = [];
+
+		$visible_whitespace = function (string $s): string {
+			return '<pre>' . htmlspecialchars($s) . '</pre>';
+		};
+
 		if (!empty($_REQUEST['source'])) {
 			try {
 				$source = json_decode($_REQUEST['source'], true);
@@ -43,11 +43,11 @@ class ActivityPubConversion extends BaseModule
 				$formatted = json_encode($source, JSON_PRETTY_PRINT);
 				$results[] = [
 					'title'   => DI::l10n()->t('Formatted'),
-					'content' => visible_whitespace(trim(var_export($formatted, true), "'")),
+					'content' => $visible_whitespace(trim(var_export($formatted, true), "'")),
 				];
 				$results[] = [
 					'title'   => DI::l10n()->t('Source'),
-					'content' => visible_whitespace(var_export($source, true))
+					'content' => $visible_whitespace(var_export($source, true))
 				];
 				$activity = JsonLD::compact($source);
 				if (!$activity) {
@@ -55,7 +55,7 @@ class ActivityPubConversion extends BaseModule
 				}
 				$results[] = [
 					'title'   => DI::l10n()->t('Activity'),
-					'content' => visible_whitespace(var_export($activity, true))
+					'content' => $visible_whitespace(var_export($activity, true))
 				];
 
 				$type = JsonLD::fetchElement($activity, '@type');
@@ -92,10 +92,6 @@ class ActivityPubConversion extends BaseModule
 					throw new \Exception('No trust for activity type "' . $type . '", so we quit now.');
 				}
 
-				if (!empty($body) && empty($object_data['raw'])) {
-					$object_data['raw'] = $body;
-				}
-
 				// Internal flag for thread completion. See Processor.php
 				if (!empty($activity['thread-completion'])) {
 					$object_data['thread-completion'] = $activity['thread-completion'];
@@ -107,14 +103,14 @@ class ActivityPubConversion extends BaseModule
 
 				$results[] = [
 					'title'   => DI::l10n()->t('Object data'),
-					'content' => visible_whitespace(var_export($object_data, true))
+					'content' => $visible_whitespace(var_export($object_data, true))
 				];
 
 				$item = ActivityPub\Processor::createItem($object_data, true);
 
 				$results[] = [
 					'title'   => DI::l10n()->t('Result Item'),
-					'content' => visible_whitespace(var_export($item, true))
+					'content' => $visible_whitespace(var_export($item, true))
 				];
 			} catch (\Throwable $e) {
 				$results[] = [

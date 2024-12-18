@@ -11,6 +11,8 @@ use Friendica\BaseEntity;
 
 /**
  * A view-only object for printing item notifications to the frontend
+ *
+ * @property-read bool $seen
  */
 class FormattedNavNotification extends BaseEntity
 {

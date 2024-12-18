@@ -7,13 +7,12 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter;
 
-use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Favorites;
-use Friendica\Test\src\Module\Api\ApiTest;
+use Friendica\Test\ApiTestCase;
 
-class FavoritesTest extends ApiTest
+class FavoritesTest extends ApiTestCase
 {
 	/**
 	 * Test the api_favorites() function.
