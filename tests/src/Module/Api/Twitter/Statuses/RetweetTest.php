@@ -8,6 +8,7 @@
 namespace Friendica\Test\src\Module\Api\Twitter\Statuses;
 
 use Friendica\App\Router;
+use Friendica\Core\Renderer;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Statuses\Retweet;
 use Friendica\Network\HTTPException\BadRequestException;
@@ -74,7 +75,10 @@ class RetweetTest extends ApiTestCase
 	 */
 	public function testApiStatusesRepeatWithSharedId()
 	{
-		$response = (new Retweet(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		// @todo: This call is needed for this test
+		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
+
+		$response = (new Retweet(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'id' => 5
 			]);

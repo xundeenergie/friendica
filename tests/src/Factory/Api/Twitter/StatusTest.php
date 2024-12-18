@@ -124,7 +124,7 @@ class StatusTest extends FixtureTestCase
 	 */
 	public function testApiFormatItems()
 	{
-		// This call is needed for this test
+		// @todo: This call is needed for this test
 		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
 
 		$posts = DI::dba()->selectToArray('post-view', ['uri-id']);

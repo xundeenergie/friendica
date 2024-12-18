@@ -8,6 +8,7 @@
 namespace Friendica\Test\src\Module\Api\Twitter\Users;
 
 use Friendica\Capabilities\ICanCreateResponses;
+use Friendica\Core\Renderer;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Users\Search;
 use Friendica\Network\HTTPException\BadRequestException;
@@ -22,7 +23,10 @@ class SearchTest extends ApiTestCase
 	 */
 	public function testApiUsersSearch()
 	{
-		$response = (new Search(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		// @todo: This call is needed for this test
+		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
+
+		$response = (new Search(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'q' => static::OTHER_USER['name']
 			]);
@@ -39,7 +43,10 @@ class SearchTest extends ApiTestCase
 	 */
 	public function testApiUsersSearchWithXml()
 	{
-		$response = (new Search(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), [], [
+		// @todo: This call is needed for this test
+		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
+
+		$response = (new Search(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), [], [
 			'extension' => ICanCreateResponses::TYPE_XML
 		]))->run($this->httpExceptionMock, [
 			'q' => static::OTHER_USER['name']

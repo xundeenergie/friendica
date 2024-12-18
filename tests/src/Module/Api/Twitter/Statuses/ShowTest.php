@@ -7,6 +7,7 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Statuses;
 
+use Friendica\Core\Renderer;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Statuses\Show;
 use Friendica\Network\HTTPException\BadRequestException;
@@ -53,7 +54,10 @@ class ShowTest extends ApiTestCase
 	 */
 	public function testApiStatusesShowWithConversation()
 	{
-		$response = (new Show(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		// @todo: This call is needed for this test
+		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
+
+		$response = (new Show(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'id'           => 1,
 				'conversation' => 1
