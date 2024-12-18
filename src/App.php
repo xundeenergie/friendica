@@ -7,6 +7,7 @@
 
 namespace Friendica;
 
+use Dice\Dice;
 use Friendica\App\Arguments;
 use Friendica\App\BaseURL;
 use Friendica\App\Mode;
@@ -50,6 +51,25 @@ class App
 	const PLATFORM = 'Friendica';
 	const CODENAME = 'Yellow Archangel';
 	const VERSION  = '2024.12-dev';
+
+	public static function fromDice(Dice $dice): self
+	{
+		return new self(
+			$dice->create(Request::class),
+			$dice->create(Authentication::class),
+			$dice->create(IManageConfigValues::class),
+			$dice->create(Mode::class),
+			$dice->create(BaseURL::class),
+			$dice->create(LoggerInterface::class),
+			$dice->create(Profiler::class),
+			$dice->create(L10n::class),
+			$dice->create(Arguments::class),
+			$dice->create(IHandleUserSessions::class),
+			$dice->create(DbaDefinition::class),
+			$dice->create(ViewDefinition::class),
+			$dice->create(AppHelper::class)
+		);
+	}
 
 	/**
 	 * @var Mode The Mode of the Application
@@ -114,7 +134,8 @@ class App
 		Arguments $args,
 		IHandleUserSessions $session,
 		DbaDefinition $dbaDefinition,
-		ViewDefinition $viewDefinition
+		ViewDefinition $viewDefinition,
+		AppHelper $appHelper = null,
 	) {
 		$this->requestId = $request->getRequestId();
 		$this->auth      = $auth;
@@ -126,7 +147,7 @@ class App
 		$this->l10n      = $l10n;
 		$this->args      = $args;
 		$this->session   = $session;
-		$this->appHelper = DI::appHelper();
+		$this->appHelper = $appHelper ?? DI::appHelper();
 
 		$this->load($dbaDefinition, $viewDefinition);
 	}

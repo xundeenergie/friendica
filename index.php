@@ -25,7 +25,7 @@ $dice = $dice->addRule(Friendica\App\Mode::class, ['call' => [['determineRunMode
 
 \Friendica\Core\Logger\Handler\ErrorHandler::register($dice->create(\Psr\Log\LoggerInterface::class));
 
-$a = \Friendica\DI::app();
+$a = \Friendica\App::fromDice($dice);
 
 \Friendica\DI::mode()->setExecutor(\Friendica\App\Mode::INDEX);
 
