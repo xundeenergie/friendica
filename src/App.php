@@ -66,8 +66,6 @@ class App
 			$dice->create(L10n::class),
 			$dice->create(Arguments::class),
 			$dice->create(IHandleUserSessions::class),
-			$dice->create(DbaDefinition::class),
-			$dice->create(ViewDefinition::class),
 			$dice->create(AppHelper::class)
 		);
 	}
@@ -140,8 +138,6 @@ class App
 		L10n $l10n,
 		Arguments $args,
 		IHandleUserSessions $session,
-		DbaDefinition $dbaDefinition,
-		ViewDefinition $viewDefinition,
 		AppHelper $appHelper,
 	) {
 		$this->container = $container;
@@ -156,14 +152,12 @@ class App
 		$this->args      = $args;
 		$this->session   = $session;
 		$this->appHelper = $appHelper;
-
-		$this->load($dbaDefinition, $viewDefinition);
 	}
 
 	/**
 	 * Load the whole app instance
 	 */
-	protected function load(DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
+	public function load(DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
 	{
 		if ($this->config->get('system', 'ini_max_execution_time') !== false) {
 			set_time_limit((int)$this->config->get('system', 'ini_max_execution_time'));
