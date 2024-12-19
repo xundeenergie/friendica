@@ -142,7 +142,7 @@ class App
 		IHandleUserSessions $session,
 		DbaDefinition $dbaDefinition,
 		ViewDefinition $viewDefinition,
-		AppHelper $appHelper = null,
+		AppHelper $appHelper,
 	) {
 		$this->container = $container;
 		$this->requestId = $request->getRequestId();
@@ -155,7 +155,7 @@ class App
 		$this->l10n      = $l10n;
 		$this->args      = $args;
 		$this->session   = $session;
-		$this->appHelper = $appHelper ?? DI::appHelper();
+		$this->appHelper = $appHelper;
 
 		$this->load($dbaDefinition, $viewDefinition);
 	}
