@@ -7,7 +7,6 @@
 
 namespace Friendica;
 
-use Exception;
 use Friendica\App\Arguments;
 use Friendica\App\BaseURL;
 use Friendica\App\Mode;
@@ -21,9 +20,7 @@ use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
 use Friendica\Module\Maintenance;
-use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Security\Authentication;
-use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\L10n;
@@ -48,7 +45,7 @@ use Psr\Log\LoggerInterface;
  * before we spit the page out.
  *
  */
-class App implements AppHelper
+class App
 {
 	const PLATFORM = 'Friendica';
 	const CODENAME = 'Yellow Archangel';
@@ -135,165 +132,6 @@ class App implements AppHelper
 	}
 
 	/**
-	 * Set the profile owner ID
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setProfileOwner() instead
-	 *
-	 * @param int $owner_id
-	 * @return void
-	 */
-	public function setProfileOwner(int $owner_id)
-	{
-		$this->appHelper->setProfileOwner($owner_id);
-	}
-
-	/**
-	 * Get the profile owner ID
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getProfileOwner() instead
-	 *
-	 * @return int
-	 */
-	public function getProfileOwner(): int
-	{
-		return $this->appHelper->getProfileOwner();
-	}
-
-	/**
-	 * Set the contact ID
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setContactId() instead
-	 *
-	 * @param int $contact_id
-	 * @return void
-	 */
-	public function setContactId(int $contact_id)
-	{
-		$this->appHelper->setContactId($contact_id);
-	}
-
-	/**
-	 * Get the contact ID
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getContactId() instead
-	 *
-	 * @return int
-	 */
-	public function getContactId(): int
-	{
-		return $this->appHelper->getContactId();
-	}
-
-	/**
-	 * Set the timezone
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setTimeZone() instead
-	 *
-	 * @param string $timezone A valid time zone identifier, see https://www.php.net/manual/en/timezones.php
-	 * @return void
-	 */
-	public function setTimeZone(string $timezone)
-	{
-		$this->appHelper->setTimeZone($timezone);
-	}
-
-	/**
-	 * Get the timezone
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getTimeZone() instead
-	 */
-	public function getTimeZone(): string
-	{
-		return $this->appHelper->getTimeZone();
-	}
-
-	/**
-	 * Set workerqueue information
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setQueue() instead
-	 *
-	 * @param array $queue
-	 * @return void
-	 */
-	public function setQueue(array $queue)
-	{
-		$this->appHelper->setQueue($queue);
-	}
-
-	/**
-	 * Fetch workerqueue information
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getQueue() instead
-	 *
-	 * @return array Worker queue
-	 */
-	public function getQueue(): array
-	{
-		return $this->appHelper->getQueue();
-	}
-
-	/**
-	 * Fetch a specific workerqueue field
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getQueueValue() instead
-	 *
-	 * @param string $index Work queue record to fetch
-	 * @return mixed Work queue item or NULL if not found
-	 */
-	public function getQueueValue(string $index)
-	{
-		return $this->appHelper->getQueueValue($index);
-	}
-
-	/**
-	 * @deprecated 2024.12 Use AppHelper::setThemeInfoValue() instead
-	 */
-	public function setThemeInfoValue(string $index, $value)
-	{
-		$this->appHelper->setThemeInfoValue($index, $value);
-	}
-
-	/**
-	 * @deprecated 2024.12 Use AppHelper::getThemeInfo() instead
-	 */
-	public function getThemeInfo()
-	{
-		return $this->appHelper->getThemeInfo();
-	}
-
-	/**
-	 * @deprecated 2024.12 Use AppHelper::getThemeInfoValue() instead
-	 */
-	public function getThemeInfoValue(string $index, $default = null)
-	{
-		return $this->appHelper->getThemeInfoValue($index, $default);
-	}
-
-	/**
-	 * Returns the current config cache of this node
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getConfigCache() instead
-	 *
-	 * @return Cache
-	 */
-	public function getConfigCache()
-	{
-		return $this->appHelper->getConfigCache();
-	}
-
-	/**
-	 * The basepath of this app
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getBasePath() instead
-	 *
-	 * @return string Base path from configuration
-	 */
-	public function getBasePath(): string
-	{
-		return $this->appHelper->getBasePath();
-	}
-
-	/**
 	 * Load the whole app instance
 	 */
 	protected function load(DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
@@ -348,69 +186,6 @@ class App implements AppHelper
 		}
 
 		$this->appHelper->setTimeZone($timezone);
-	}
-
-	/**
-	 * Returns the current theme name. May be overridden by the mobile theme name.
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getCurrentTheme() instead
-	 *
-	 * @return string Current theme name or empty string in installation phase
-	 * @throws Exception
-	 */
-	public function getCurrentTheme(): string
-	{
-		return $this->appHelper->getCurrentTheme();
-	}
-
-	/**
-	 * Returns the current mobile theme name.
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getCurrentMobileTheme() instead
-	 *
-	 * @return string Mobile theme name or empty string if installer
-	 * @throws Exception
-	 */
-	public function getCurrentMobileTheme(): string
-	{
-		return $this->appHelper->getCurrentMobileTheme();
-	}
-
-	/**
-	 * Setter for current theme name
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setCurrentTheme() instead
-	 *
-	 * @param string $theme Name of current theme
-	 */
-	public function setCurrentTheme(string $theme)
-	{
-		$this->appHelper->setCurrentTheme($theme);
-	}
-
-	/**
-	 * Setter for current mobile theme name
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setCurrentMobileTheme() instead
-	 *
-	 * @param string $theme Name of current mobile theme
-	 */
-	public function setCurrentMobileTheme(string $theme)
-	{
-		$this->appHelper->setCurrentMobileTheme($theme);
-	}
-
-	/**
-	 * Provide a sane default if nothing is chosen or the specified theme does not exist.
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getCurrentThemeStylesheetPath() instead
-	 *
-	 * @return string Current theme's stylesheet path
-	 * @throws Exception
-	 */
-	public function getCurrentThemeStylesheetPath(): string
-	{
-		return $this->appHelper->getCurrentThemeStylesheetPath();
 	}
 
 	/**
@@ -591,7 +366,7 @@ class App implements AppHelper
 
 			// Wrapping HTML responses in the theme template
 			if ($response->getHeaderLine(ICanCreateResponses::X_HEADER) === ICanCreateResponses::TYPE_HTML) {
-				$response = $page->run($this, $this->session, $this->baseURL, $this->args, $this->mode, $response, $this->l10n, $this->profiler, $this->config, $pconfig, $nav, $this->session->getLocalUserId());
+				$response = $page->run($this->appHelper, $this->session, $this->baseURL, $this->args, $this->mode, $response, $this->l10n, $this->profiler, $this->config, $pconfig, $nav, $this->session->getLocalUserId());
 			}
 
 			$this->logger->debug('Request processed sucessfully', ['response' => $response->getStatusCode(), 'address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '', 'duration' => number_format(microtime(true) - $request_start, 3)]);
@@ -603,21 +378,6 @@ class App implements AppHelper
 			$httpException->rawContent($e);
 		}
 		$page->logRuntime($this->config, 'runFrontend');
-	}
-
-	/**
-	 * Automatically redirects to relative or absolute URL
-	 * Should only be used if it isn't clear if the URL is either internal or external
-	 *
-	 * @deprecated 2024.12 Use AppHelper::redirect() instead
-	 *
-	 * @param string $toUrl The target URL
-	 *
-	 * @throws InternalServerErrorException
-	 */
-	public function redirect(string $toUrl)
-	{
-		$this->appHelper->redirect($toUrl);
 	}
 
 	/**
