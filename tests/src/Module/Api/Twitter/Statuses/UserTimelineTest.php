@@ -8,6 +8,7 @@
 namespace Friendica\Test\src\Module\Api\Twitter\Statuses;
 
 use Friendica\Capabilities\ICanCreateResponses;
+use Friendica\Core\Renderer;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Statuses\UserTimeline;
 use Friendica\Test\ApiTestCase;
@@ -21,7 +22,7 @@ class UserTimelineTest extends ApiTestCase
 	 */
 	public function testApiStatusesUserTimeline()
 	{
-		$response = (new UserTimeline(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		$response = (new UserTimeline(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'user_id'         => 43, // Public contact id
 				'max_id'          => 10,
@@ -46,7 +47,10 @@ class UserTimelineTest extends ApiTestCase
 	 */
 	public function testApiStatusesUserTimelineWithNegativePage()
 	{
-		$response = (new UserTimeline(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		// @todo: This call is needed for this test
+		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
+
+		$response = (new UserTimeline(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'user_id' => 43, // Public contact id
 				'page'    => -2,
@@ -69,7 +73,7 @@ class UserTimelineTest extends ApiTestCase
 	 */
 	public function testApiStatusesUserTimelineWithRss()
 	{
-		$response = (new UserTimeline(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), [], [
+		$response = (new UserTimeline(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), [], [
 			'extension' => ICanCreateResponses::TYPE_RSS
 		]))->run($this->httpExceptionMock);
 

@@ -7,6 +7,7 @@
 
 namespace Friendica\Test\src\Module\Api\Twitter\Users;
 
+use Friendica\Core\Renderer;
 use Friendica\DI;
 use Friendica\Module\Api\Twitter\Users\Lookup;
 use Friendica\Network\HTTPException\NotFoundException;
@@ -23,7 +24,7 @@ class LookupTest extends ApiTestCase
 	{
 		$this->expectException(NotFoundException::class);
 
-		(new Lookup(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		(new Lookup(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock);
 	}
 
@@ -34,7 +35,10 @@ class LookupTest extends ApiTestCase
 	 */
 	public function testApiUsersLookupWithUserId()
 	{
-		$response = (new Lookup(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		// @todo: This call is needed for this test
+		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
+
+		$response = (new Lookup(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'user_id' => static::OTHER_USER['id']
 			]);
