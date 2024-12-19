@@ -55,6 +55,7 @@ class App
 	public static function fromDice(Dice $dice): self
 	{
 		return new self(
+			$dice,
 			$dice->create(Request::class),
 			$dice->create(Authentication::class),
 			$dice->create(IManageConfigValues::class),
@@ -70,6 +71,11 @@ class App
 			$dice->create(AppHelper::class)
 		);
 	}
+
+	/**
+	 * @var Dice
+	 */
+	private $container;
 
 	/**
 	 * @var Mode The Mode of the Application
@@ -123,6 +129,7 @@ class App
 	private $appHelper;
 
 	private function __construct(
+		Dice $container,
 		Request $request,
 		Authentication $auth,
 		IManageConfigValues $config,
@@ -137,6 +144,7 @@ class App
 		ViewDefinition $viewDefinition,
 		AppHelper $appHelper = null,
 	) {
+		$this->container = $container;
 		$this->requestId = $request->getRequestId();
 		$this->auth      = $auth;
 		$this->config    = $config;
