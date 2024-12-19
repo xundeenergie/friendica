@@ -122,7 +122,7 @@ class App
 	 */
 	private $appHelper;
 
-	public function __construct(
+	private function __construct(
 		Request $request,
 		Authentication $auth,
 		IManageConfigValues $config,
