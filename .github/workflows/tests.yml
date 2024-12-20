@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: CC0-1.0
 
-name: Unit tests
+name: Src tests
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 jobs:
 
   tests:
-    name: Unit tests (PHP ${{ matrix.php }})
+    name: Src tests (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
 
     strategy:
@@ -41,4 +41,4 @@ jobs:
         uses: "ramsey/composer-install@v2"
 
       - name: Run Unit tests
-        run: composer run test -- --configuration tests/phpunit.xml -d memory_limit=-1;
+        run: composer run test -- tests/src --configuration tests/phpunit.xml -d memory_limit=-1
