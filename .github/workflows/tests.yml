@@ -41,4 +41,4 @@ jobs:
         uses: "ramsey/composer-install@v2"
 
       - name: Run Unit tests
-        run: composer run test:unit
+        run: composer run test -- --configuration tests/phpunit.xml -d memory_limit=-1;
