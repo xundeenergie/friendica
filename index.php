@@ -29,10 +29,7 @@ $dice = $dice->addRule(Friendica\App\Mode::class, ['call' => [['determineRunMode
 
 $a = \Friendica\App::fromDice($dice);
 
-$a->load(
-	$dice->create(\Friendica\Database\Definition\DbaDefinition::class),
-	$dice->create(\Friendica\Database\Definition\ViewDefinition::class),
-);
+$a->processRequest();
 
 \Friendica\DI::mode()->setExecutor(\Friendica\App\Mode::INDEX);
 

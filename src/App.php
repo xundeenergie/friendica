@@ -154,6 +154,14 @@ class App
 		$this->appHelper = $appHelper;
 	}
 
+	public function processRequest(): void
+	{
+		$this->load(
+			$this->container->create(DbaDefinition::class),
+			$this->container->create(ViewDefinition::class),
+		);
+	}
+
 	/**
 	 * Load the whole app instance
 	 */
