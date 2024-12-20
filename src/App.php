@@ -117,6 +117,10 @@ class App
 	private function __construct(Dice $container)
 	{
 		$this->container = $container;
+	}
+
+	public function processRequest(ServerRequestInterface $request, float $start_time): void
+	{
 		$this->requestId = $this->container->create(Request::class)->getRequestId();
 		$this->auth      = $this->container->create(Authentication::class);
 		$this->config    = $this->container->create(IManageConfigValues::class);
@@ -128,10 +132,7 @@ class App
 		$this->args      = $this->container->create(Arguments::class);
 		$this->session   = $this->container->create(IHandleUserSessions::class);
 		$this->appHelper = $this->container->create(AppHelper::class);
-	}
 
-	public function processRequest(ServerRequestInterface $request, float $start_time): void
-	{
 		$this->load(
 			$this->container->create(DbaDefinition::class),
 			$this->container->create(ViewDefinition::class),
@@ -155,7 +156,7 @@ class App
 	/**
 	 * Load the whole app instance
 	 */
-	public function load(DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
+	private function load(DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
 	{
 		if ($this->config->get('system', 'ini_max_execution_time') !== false) {
 			set_time_limit((int)$this->config->get('system', 'ini_max_execution_time'));
@@ -229,7 +230,7 @@ class App
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public function runFrontend(
+	private function runFrontend(
 		Router $router,
 		IManagePersonalConfigValues $pconfig,
 		Authentication $auth,
