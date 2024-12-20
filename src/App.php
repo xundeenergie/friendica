@@ -141,13 +141,12 @@ class App
 		$this->mode->setExecutor(Mode::INDEX);
 
 		$this->runFrontend(
-			$this->container->create(\Friendica\App\Router::class),
-			$this->container->create(\Friendica\Core\PConfig\Capability\IManagePersonalConfigValues::class),
-			$this->container->create(\Friendica\Security\Authentication::class),
-			$this->container->create(\Friendica\App\Page::class),
-			$this->container->create(\Friendica\Content\Nav::class),
-			$this->container->create(\Friendica\Module\Special\HTTPException::class),
-			new \Friendica\Util\HTTPInputData($request->getServerParams()),
+			$this->container->create(Router::class),
+			$this->container->create(IManagePersonalConfigValues::class),
+			$this->container->create(Page::class),
+			$this->container->create(Nav::class),
+			$this->container->create(ModuleHTTPException::class),
+			new HTTPInputData($request->getServerParams()),
 			$start_time,
 			$request->getServerParams()
 		);
@@ -220,7 +219,6 @@ class App
 	 *
 	 * @param Router                      $router
 	 * @param IManagePersonalConfigValues $pconfig
-	 * @param Authentication              $auth       The Authentication backend of the node
 	 * @param Page                        $page       The Friendica page printing container
 	 * @param ModuleHTTPException         $httpException The possible HTTP Exception container
 	 * @param HTTPInputData               $httpInput  A library for processing PHP input streams
@@ -233,7 +231,6 @@ class App
 	private function runFrontend(
 		Router $router,
 		IManagePersonalConfigValues $pconfig,
-		Authentication $auth,
 		Page $page,
 		Nav $nav,
 		ModuleHTTPException $httpException,
@@ -301,7 +298,7 @@ class App
 			}
 
 			if (!$this->mode->isBackend()) {
-				$auth->withSession();
+				$this->auth->withSession();
 			}
 
 			if ($this->session->isUnauthenticated()) {
