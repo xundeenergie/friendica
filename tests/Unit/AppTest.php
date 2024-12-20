@@ -18,9 +18,7 @@ class AppTest extends TestCase
 	public function testFromDiceReturnsApp(): void
 	{
 		$dice = $this->createMock(Dice::class);
-		$dice->expects($this->exactly(11))->method('create')->willReturnCallback(function($classname) {
-			return $this->createMock($classname);
-		});
+		$dice->expects($this->never())->method('create');
 
 		$app = App::fromDice($dice);
 
