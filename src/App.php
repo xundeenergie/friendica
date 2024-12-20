@@ -34,6 +34,7 @@ use Friendica\Util\DateTimeFormat;
 use Friendica\Util\HTTPInputData;
 use Friendica\Util\HTTPSignature;
 use Friendica\Util\Profiler;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -154,7 +155,7 @@ class App
 		$this->appHelper = $appHelper;
 	}
 
-	public function processRequest(): void
+	public function processRequest(ServerRequestInterface $request, float $start_time): void
 	{
 		$this->load(
 			$this->container->create(DbaDefinition::class),
@@ -162,6 +163,18 @@ class App
 		);
 
 		$this->mode->setExecutor(Mode::INDEX);
+
+		$this->runFrontend(
+			$this->container->create(\Friendica\App\Router::class),
+			$this->container->create(\Friendica\Core\PConfig\Capability\IManagePersonalConfigValues::class),
+			$this->container->create(\Friendica\Security\Authentication::class),
+			$this->container->create(\Friendica\App\Page::class),
+			$this->container->create(\Friendica\Content\Nav::class),
+			$this->container->create(\Friendica\Module\Special\HTTPException::class),
+			new \Friendica\Util\HTTPInputData($request->getServerParams()),
+			$start_time,
+			$request->getServerParams()
+		);
 	}
 
 	/**

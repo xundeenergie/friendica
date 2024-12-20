@@ -29,16 +29,4 @@ $dice = $dice->addRule(Friendica\App\Mode::class, ['call' => [['determineRunMode
 
 $a = \Friendica\App::fromDice($dice);
 
-$a->processRequest();
-
-$a->runFrontend(
-	$dice->create(\Friendica\App\Router::class),
-	$dice->create(\Friendica\Core\PConfig\Capability\IManagePersonalConfigValues::class),
-	$dice->create(\Friendica\Security\Authentication::class),
-	$dice->create(\Friendica\App\Page::class),
-	$dice->create(\Friendica\Content\Nav::class),
-	$dice->create(Friendica\Module\Special\HTTPException::class),
-	new \Friendica\Util\HTTPInputData($request->getServerParams()),
-	$start_time,
-	$request->getServerParams()
-);
+$a->processRequest($request, $start_time);
