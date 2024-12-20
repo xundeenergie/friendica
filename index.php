@@ -31,8 +31,6 @@ $a = \Friendica\App::fromDice($dice);
 
 $a->processRequest();
 
-\Friendica\DI::mode()->setExecutor(\Friendica\App\Mode::INDEX);
-
 $a->runFrontend(
 	$dice->create(\Friendica\App\Router::class),
 	$dice->create(\Friendica\Core\PConfig\Capability\IManagePersonalConfigValues::class),

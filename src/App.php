@@ -160,6 +160,8 @@ class App
 			$this->container->create(DbaDefinition::class),
 			$this->container->create(ViewDefinition::class),
 		);
+
+		$this->mode->setExecutor(Mode::INDEX);
 	}
 
 	/**
