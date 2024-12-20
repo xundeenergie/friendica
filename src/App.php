@@ -55,20 +55,7 @@ class App
 
 	public static function fromDice(Dice $dice): self
 	{
-		return new self(
-			$dice,
-			$dice->create(Request::class),
-			$dice->create(Authentication::class),
-			$dice->create(IManageConfigValues::class),
-			$dice->create(Mode::class),
-			$dice->create(BaseURL::class),
-			$dice->create(LoggerInterface::class),
-			$dice->create(Profiler::class),
-			$dice->create(L10n::class),
-			$dice->create(Arguments::class),
-			$dice->create(IHandleUserSessions::class),
-			$dice->create(AppHelper::class)
-		);
+		return new self($dice);
 	}
 
 	/**
@@ -127,32 +114,20 @@ class App
 	 */
 	private $appHelper;
 
-	private function __construct(
-		Dice $container,
-		Request $request,
-		Authentication $auth,
-		IManageConfigValues $config,
-		Mode $mode,
-		BaseURL $baseURL,
-		LoggerInterface $logger,
-		Profiler $profiler,
-		L10n $l10n,
-		Arguments $args,
-		IHandleUserSessions $session,
-		AppHelper $appHelper,
-	) {
+	private function __construct(Dice $container)
+	{
 		$this->container = $container;
-		$this->requestId = $request->getRequestId();
-		$this->auth      = $auth;
-		$this->config    = $config;
-		$this->mode      = $mode;
-		$this->baseURL   = $baseURL;
-		$this->profiler  = $profiler;
-		$this->logger    = $logger;
-		$this->l10n      = $l10n;
-		$this->args      = $args;
-		$this->session   = $session;
-		$this->appHelper = $appHelper;
+		$this->requestId = $this->container->create(Request::class)->getRequestId();
+		$this->auth      = $this->container->create(Authentication::class);
+		$this->config    = $this->container->create(IManageConfigValues::class);
+		$this->mode      = $this->container->create(Mode::class);
+		$this->baseURL   = $this->container->create(BaseURL::class);
+		$this->logger    = $this->container->create(LoggerInterface::class);
+		$this->profiler  = $this->container->create(Profiler::class);
+		$this->l10n      = $this->container->create(L10n::class);
+		$this->args      = $this->container->create(Arguments::class);
+		$this->session   = $this->container->create(IHandleUserSessions::class);
+		$this->appHelper = $this->container->create(AppHelper::class);
 	}
 
 	public function processRequest(ServerRequestInterface $request, float $start_time): void
