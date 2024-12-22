@@ -47,10 +47,11 @@ use Friendica\Network;
 use Friendica\Util;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @var string $basepath The base path of the Friendica installation without trailing slash
+ */
 $basepath = (function() {
-	$path = dirname(__FILE__, 2);
-
-	return ($realpath = realpath($path)) ? $realpath : $path;
+	return dirname(__FILE__, 2);
 })();
 
 return [
