@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: CC0-1.0
 
-name: Static Code Analysis
+name: Code Style
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 jobs:
 
   tests:
-    name: PHPStan (PHP ${{ matrix.php }})
+    name: PHP-CS-Fixer (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
 
     strategy:
@@ -37,8 +37,9 @@ jobs:
       - name: Clone addon repository
         run: git clone -b develop --single-branch https://git.friendi.ca/friendica/friendica-addons.git addon
 
-      - name: Install Composer dependencies
-        uses: "ramsey/composer-install@v2"
+      - name: Install PHP-CS-Fixer
+        run: composer install --working-dir=bin/dev/php-cs-fixer
 
-      - name: Run PHPStan
-        run: composer run phpstan
+      - name: Run PHP-CS-Fixer
+        continue-on-error: true
+        run: bin/dev/php-cs-fixer/vendor/bin/php-cs-fixer fix --diff --dry-run
