@@ -55,6 +55,9 @@ jobs:
           coverage: xdebug
           ini-values: apc.enabled=1, apc.enable_cli=1
 
+      - name: Clone addon repository
+        run: git clone -b develop --single-branch https://git.friendi.ca/friendica/friendica-addons.git addon
+
       # Install composer dependencies and handle caching in one go.
       # @link https://github.com/marketplace/actions/install-php-dependencies-with-composer
       - name: "Install Composer dependencies"
