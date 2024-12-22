@@ -12,7 +12,7 @@ on:
 jobs:
 
   tests:
-    name: Run PHPStan with PHP ${{ matrix.php }}
+    name: PHPStan PHP (${{ matrix.php }})
     runs-on: ubuntu-latest
 
     strategy:

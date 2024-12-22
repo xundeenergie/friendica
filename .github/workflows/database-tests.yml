@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: CC0-1.0
 
-name: Databese tests
+name: Database tests
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   friendica:
-    name: Tests with PHP ${{ matrix.php-versions }}
+    name: Test with PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
 
     services:
