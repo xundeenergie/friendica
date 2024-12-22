@@ -47,6 +47,12 @@ use Friendica\Network;
 use Friendica\Util;
 use Psr\Log\LoggerInterface;
 
+$basepath = (function() {
+	$path = dirname(__FILE__, 2);
+
+	return ($realpath = realpath($path)) ? $realpath : $path;
+})();
+
 return [
 	'*'                             => [
 		// marks all class result as shared for other creations, so there's just
@@ -56,7 +62,7 @@ return [
 	\Friendica\Core\Addon\Capability\ICanLoadAddons::class => [
 		'instanceOf' => \Friendica\Core\Addon\Model\AddonLoader::class,
 		'constructParams' => [
-			[Dice::INSTANCE => '$basepath'],
+			$basepath,
 			[Dice::INSTANCE => Dice::SELF],
 		],
 	],
@@ -83,7 +89,7 @@ return [
 	],
 	\Friendica\Core\Hooks\Util\StrategiesFileManager::class => [
 		'constructParams' => [
-			[Dice::INSTANCE => '$basepath'],
+			$basepath,
 		],
 		'call' => [
 			['loadConfig'],
@@ -108,7 +114,7 @@ return [
 		'instanceOf' => Config\Factory\Config::class,
 		'call'       => [
 			['createConfigFileManager', [
-				[Dice::INSTANCE => '$basepath'],
+				$basepath,
 				$_SERVER,
 			], Dice::CHAIN_CALL],
 		],
@@ -123,7 +129,7 @@ return [
 		'call' => [
 			['determineRunMode', [true, $_SERVER], Dice::CHAIN_CALL],
 			['determine', [
-				[Dice::INSTANCE => '$basepath']
+				$basepath,
 			], Dice::CHAIN_CALL],
 		],
 	],
@@ -141,7 +147,7 @@ return [
 	],
 	DbaDefinition::class => [
 		'constructParams' => [
-			[Dice::INSTANCE => '$basepath'],
+			$basepath,
 		],
 		'call' => [
 			['load', [false], Dice::CHAIN_CALL],
@@ -149,7 +155,7 @@ return [
 	],
 	ViewDefinition::class => [
 		'constructParams' => [
-			[Dice::INSTANCE => '$basepath'],
+			$basepath,
 		],
 		'call' => [
 			['load', [false], Dice::CHAIN_CALL],
@@ -187,7 +193,7 @@ return [
 	],
 	App\Page::class => [
 		'constructParams' => [
-			[Dice::INSTANCE => '$basepath'],
+			$basepath,
 		],
 	],
 	\Psr\Log\LoggerInterface::class                                    => [
@@ -246,7 +252,7 @@ return [
 	],
 	\Friendica\Core\System::class => [
 		'constructParams' => [
-			[Dice::INSTANCE => '$basepath'],
+			$basepath,
 		],
 	],
 	App\Router::class => [
