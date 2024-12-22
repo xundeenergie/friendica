@@ -2,7 +2,7 @@
 #
 # SPDX-License-Identifier: CC0-1.0
 
-name: Testing Friendica
+name: Databese tests
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   friendica:
-    name: Friendica (PHP ${{ matrix.php-versions }})
+    name: Tests with PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
 
     services:
@@ -50,7 +50,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          tools: pecl, composer:v1
+          tools: pecl, composer
           extensions: pdo_mysql, gd, zip, opcache, ctype, pcntl, ldap, apcu, memcached, redis, imagick, memcache
           coverage: xdebug
           ini-values: apc.enabled=1, apc.enable_cli=1
