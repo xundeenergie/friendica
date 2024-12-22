@@ -21,7 +21,7 @@ class MentionsTest extends ApiTestCase
 	 */
 	public function testApiStatusesMentions()
 	{
-		$response = (new Mentions(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		$response = (new Mentions(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'max_id' => 10
 			]);
@@ -39,7 +39,7 @@ class MentionsTest extends ApiTestCase
 	 */
 	public function testApiStatusesMentionsWithNegativePage()
 	{
-		$response = (new Mentions(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
+		$response = (new Mentions(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), []))
 			->run($this->httpExceptionMock, [
 				'page' => -2
 			]);
@@ -71,7 +71,7 @@ class MentionsTest extends ApiTestCase
 	 */
 	public function testApiStatusesMentionsWithRss()
 	{
-		$response = (new Mentions(DI::mstdnError(), DI::app(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), [], ['extension' => ICanCreateResponses::TYPE_RSS]))
+		$response = (new Mentions(DI::mstdnError(), DI::appHelper(), DI::l10n(), DI::baseUrl(), DI::args(), DI::logger(), DI::profiler(), DI::apiResponse(), [], ['extension' => ICanCreateResponses::TYPE_RSS]))
 			->run($this->httpExceptionMock, [
 				'page' => -2
 			]);

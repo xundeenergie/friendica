@@ -7,7 +7,7 @@
 
 namespace Friendica;
 
-use Exception;
+use Dice\Dice;
 use Friendica\App\Arguments;
 use Friendica\App\BaseURL;
 use Friendica\App\Mode;
@@ -21,9 +21,7 @@ use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
 use Friendica\Module\Maintenance;
-use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Security\Authentication;
-use Friendica\Core\Config\ValueObject\Cache;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\L10n;
@@ -36,6 +34,7 @@ use Friendica\Util\DateTimeFormat;
 use Friendica\Util\HTTPInputData;
 use Friendica\Util\HTTPSignature;
 use Friendica\Util\Profiler;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -48,11 +47,21 @@ use Psr\Log\LoggerInterface;
  * before we spit the page out.
  *
  */
-class App implements AppHelper
+class App
 {
 	const PLATFORM = 'Friendica';
 	const CODENAME = 'Yellow Archangel';
 	const VERSION  = '2024.12-dev';
+
+	public static function fromDice(Dice $dice): self
+	{
+		return new self($dice);
+	}
+
+	/**
+	 * @var Dice
+	 */
+	private $container;
 
 	/**
 	 * @var Mode The Mode of the Application
@@ -105,198 +114,48 @@ class App implements AppHelper
 	 */
 	private $appHelper;
 
-	public function __construct(
-		Request $request,
-		Authentication $auth,
-		IManageConfigValues $config,
-		Mode $mode,
-		BaseURL $baseURL,
-		LoggerInterface $logger,
-		Profiler $profiler,
-		L10n $l10n,
-		Arguments $args,
-		IHandleUserSessions $session,
-		DbaDefinition $dbaDefinition,
-		ViewDefinition $viewDefinition
-	) {
-		$this->requestId = $request->getRequestId();
-		$this->auth      = $auth;
-		$this->config    = $config;
-		$this->mode      = $mode;
-		$this->baseURL   = $baseURL;
-		$this->profiler  = $profiler;
-		$this->logger    = $logger;
-		$this->l10n      = $l10n;
-		$this->args      = $args;
-		$this->session   = $session;
-		$this->appHelper = DI::appHelper();
-
-		$this->load($dbaDefinition, $viewDefinition);
+	private function __construct(Dice $container)
+	{
+		$this->container = $container;
 	}
 
-	/**
-	 * Set the profile owner ID
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setProfileOwner() instead
-	 *
-	 * @param int $owner_id
-	 * @return void
-	 */
-	public function setProfileOwner(int $owner_id)
+	public function processRequest(ServerRequestInterface $request, float $start_time): void
 	{
-		$this->appHelper->setProfileOwner($owner_id);
-	}
+		$this->requestId = $this->container->create(Request::class)->getRequestId();
+		$this->auth      = $this->container->create(Authentication::class);
+		$this->config    = $this->container->create(IManageConfigValues::class);
+		$this->mode      = $this->container->create(Mode::class);
+		$this->baseURL   = $this->container->create(BaseURL::class);
+		$this->logger    = $this->container->create(LoggerInterface::class);
+		$this->profiler  = $this->container->create(Profiler::class);
+		$this->l10n      = $this->container->create(L10n::class);
+		$this->args      = $this->container->create(Arguments::class);
+		$this->session   = $this->container->create(IHandleUserSessions::class);
+		$this->appHelper = $this->container->create(AppHelper::class);
 
-	/**
-	 * Get the profile owner ID
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getProfileOwner() instead
-	 *
-	 * @return int
-	 */
-	public function getProfileOwner(): int
-	{
-		return $this->appHelper->getProfileOwner();
-	}
+		$this->load(
+			$this->container->create(DbaDefinition::class),
+			$this->container->create(ViewDefinition::class),
+		);
 
-	/**
-	 * Set the contact ID
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setContactId() instead
-	 *
-	 * @param int $contact_id
-	 * @return void
-	 */
-	public function setContactId(int $contact_id)
-	{
-		$this->appHelper->setContactId($contact_id);
-	}
+		$this->mode->setExecutor(Mode::INDEX);
 
-	/**
-	 * Get the contact ID
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getContactId() instead
-	 *
-	 * @return int
-	 */
-	public function getContactId(): int
-	{
-		return $this->appHelper->getContactId();
-	}
-
-	/**
-	 * Set the timezone
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setTimeZone() instead
-	 *
-	 * @param string $timezone A valid time zone identifier, see https://www.php.net/manual/en/timezones.php
-	 * @return void
-	 */
-	public function setTimeZone(string $timezone)
-	{
-		$this->appHelper->setTimeZone($timezone);
-	}
-
-	/**
-	 * Get the timezone
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getTimeZone() instead
-	 */
-	public function getTimeZone(): string
-	{
-		return $this->appHelper->getTimeZone();
-	}
-
-	/**
-	 * Set workerqueue information
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setQueue() instead
-	 *
-	 * @param array $queue
-	 * @return void
-	 */
-	public function setQueue(array $queue)
-	{
-		$this->appHelper->setQueue($queue);
-	}
-
-	/**
-	 * Fetch workerqueue information
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getQueue() instead
-	 *
-	 * @return array Worker queue
-	 */
-	public function getQueue(): array
-	{
-		return $this->appHelper->getQueue();
-	}
-
-	/**
-	 * Fetch a specific workerqueue field
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getQueueValue() instead
-	 *
-	 * @param string $index Work queue record to fetch
-	 * @return mixed Work queue item or NULL if not found
-	 */
-	public function getQueueValue(string $index)
-	{
-		return $this->appHelper->getQueueValue($index);
-	}
-
-	/**
-	 * @deprecated 2024.12 Use AppHelper::setThemeInfoValue() instead
-	 */
-	public function setThemeInfoValue(string $index, $value)
-	{
-		$this->appHelper->setThemeInfoValue($index, $value);
-	}
-
-	/**
-	 * @deprecated 2024.12 Use AppHelper::getThemeInfo() instead
-	 */
-	public function getThemeInfo()
-	{
-		return $this->appHelper->getThemeInfo();
-	}
-
-	/**
-	 * @deprecated 2024.12 Use AppHelper::getThemeInfoValue() instead
-	 */
-	public function getThemeInfoValue(string $index, $default = null)
-	{
-		return $this->appHelper->getThemeInfoValue($index, $default);
-	}
-
-	/**
-	 * Returns the current config cache of this node
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getConfigCache() instead
-	 *
-	 * @return Cache
-	 */
-	public function getConfigCache()
-	{
-		return $this->appHelper->getConfigCache();
-	}
-
-	/**
-	 * The basepath of this app
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getBasePath() instead
-	 *
-	 * @return string Base path from configuration
-	 */
-	public function getBasePath(): string
-	{
-		return $this->appHelper->getBasePath();
+		$this->runFrontend(
+			$this->container->create(Router::class),
+			$this->container->create(IManagePersonalConfigValues::class),
+			$this->container->create(Page::class),
+			$this->container->create(Nav::class),
+			$this->container->create(ModuleHTTPException::class),
+			new HTTPInputData($request->getServerParams()),
+			$start_time,
+			$request->getServerParams()
+		);
 	}
 
 	/**
 	 * Load the whole app instance
 	 */
-	protected function load(DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
+	private function load(DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
 	{
 		if ($this->config->get('system', 'ini_max_execution_time') !== false) {
 			set_time_limit((int)$this->config->get('system', 'ini_max_execution_time'));
@@ -351,69 +210,6 @@ class App implements AppHelper
 	}
 
 	/**
-	 * Returns the current theme name. May be overridden by the mobile theme name.
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getCurrentTheme() instead
-	 *
-	 * @return string Current theme name or empty string in installation phase
-	 * @throws Exception
-	 */
-	public function getCurrentTheme(): string
-	{
-		return $this->appHelper->getCurrentTheme();
-	}
-
-	/**
-	 * Returns the current mobile theme name.
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getCurrentMobileTheme() instead
-	 *
-	 * @return string Mobile theme name or empty string if installer
-	 * @throws Exception
-	 */
-	public function getCurrentMobileTheme(): string
-	{
-		return $this->appHelper->getCurrentMobileTheme();
-	}
-
-	/**
-	 * Setter for current theme name
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setCurrentTheme() instead
-	 *
-	 * @param string $theme Name of current theme
-	 */
-	public function setCurrentTheme(string $theme)
-	{
-		$this->appHelper->setCurrentTheme($theme);
-	}
-
-	/**
-	 * Setter for current mobile theme name
-	 *
-	 * @deprecated 2024.12 Use AppHelper::setCurrentMobileTheme() instead
-	 *
-	 * @param string $theme Name of current mobile theme
-	 */
-	public function setCurrentMobileTheme(string $theme)
-	{
-		$this->appHelper->setCurrentMobileTheme($theme);
-	}
-
-	/**
-	 * Provide a sane default if nothing is chosen or the specified theme does not exist.
-	 *
-	 * @deprecated 2024.12 Use AppHelper::getCurrentThemeStylesheetPath() instead
-	 *
-	 * @return string Current theme's stylesheet path
-	 * @throws Exception
-	 */
-	public function getCurrentThemeStylesheetPath(): string
-	{
-		return $this->appHelper->getCurrentThemeStylesheetPath();
-	}
-
-	/**
 	 * Frontend App script
 	 *
 	 * The App object behaves like a container and a dispatcher at the same time, including a representation of the
@@ -423,7 +219,6 @@ class App implements AppHelper
 	 *
 	 * @param Router                      $router
 	 * @param IManagePersonalConfigValues $pconfig
-	 * @param Authentication              $auth       The Authentication backend of the node
 	 * @param Page                        $page       The Friendica page printing container
 	 * @param ModuleHTTPException         $httpException The possible HTTP Exception container
 	 * @param HTTPInputData               $httpInput  A library for processing PHP input streams
@@ -433,10 +228,9 @@ class App implements AppHelper
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public function runFrontend(
+	private function runFrontend(
 		Router $router,
 		IManagePersonalConfigValues $pconfig,
-		Authentication $auth,
 		Page $page,
 		Nav $nav,
 		ModuleHTTPException $httpException,
@@ -504,7 +298,7 @@ class App implements AppHelper
 			}
 
 			if (!$this->mode->isBackend()) {
-				$auth->withSession();
+				$this->auth->withSession();
 			}
 
 			if ($this->session->isUnauthenticated()) {
@@ -591,7 +385,7 @@ class App implements AppHelper
 
 			// Wrapping HTML responses in the theme template
 			if ($response->getHeaderLine(ICanCreateResponses::X_HEADER) === ICanCreateResponses::TYPE_HTML) {
-				$response = $page->run($this, $this->session, $this->baseURL, $this->args, $this->mode, $response, $this->l10n, $this->profiler, $this->config, $pconfig, $nav, $this->session->getLocalUserId());
+				$response = $page->run($this->appHelper, $this->session, $this->baseURL, $this->args, $this->mode, $response, $this->l10n, $this->profiler, $this->config, $pconfig, $nav, $this->session->getLocalUserId());
 			}
 
 			$this->logger->debug('Request processed sucessfully', ['response' => $response->getStatusCode(), 'address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '', 'duration' => number_format(microtime(true) - $request_start, 3)]);
@@ -603,21 +397,6 @@ class App implements AppHelper
 			$httpException->rawContent($e);
 		}
 		$page->logRuntime($this->config, 'runFrontend');
-	}
-
-	/**
-	 * Automatically redirects to relative or absolute URL
-	 * Should only be used if it isn't clear if the URL is either internal or external
-	 *
-	 * @deprecated 2024.12 Use AppHelper::redirect() instead
-	 *
-	 * @param string $toUrl The target URL
-	 *
-	 * @throws InternalServerErrorException
-	 */
-	public function redirect(string $toUrl)
-	{
-		$this->appHelper->redirect($toUrl);
 	}
 
 	/**
