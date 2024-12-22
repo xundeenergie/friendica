@@ -15,28 +15,18 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
 
 require __DIR__ . '/vendor/autoload.php';
 
+$request = \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
+
 $dice = (new Dice())->addRules(include __DIR__ . '/static/dependencies.config.php');
 /** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
 $addonLoader = $dice->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
 $dice = $dice->addRules($addonLoader->getActiveAddonConfig('dependencies'));
-$dice = $dice->addRule(Friendica\App\Mode::class, ['call' => [['determineRunMode', [false, $_SERVER], Dice::CHAIN_CALL]]]);
+$dice = $dice->addRule(Friendica\App\Mode::class, ['call' => [['determineRunMode', [false, $request->getServerParams()], Dice::CHAIN_CALL]]]);
 
 \Friendica\DI::init($dice);
 
 \Friendica\Core\Logger\Handler\ErrorHandler::register($dice->create(\Psr\Log\LoggerInterface::class));
 
-$a = \Friendica\DI::app();
+$a = \Friendica\App::fromDice($dice);
 
-\Friendica\DI::mode()->setExecutor(\Friendica\App\Mode::INDEX);
-
-$a->runFrontend(
-	$dice->create(\Friendica\App\Router::class),
-	$dice->create(\Friendica\Core\PConfig\Capability\IManagePersonalConfigValues::class),
-	$dice->create(\Friendica\Security\Authentication::class),
-	$dice->create(\Friendica\App\Page::class),
-	$dice->create(\Friendica\Content\Nav::class),
-	$dice->create(Friendica\Module\Special\HTTPException::class),
-	new \Friendica\Util\HTTPInputData($_SERVER),
-	$start_time,
-	$_SERVER
-);
+$a->processRequest($request, $start_time);

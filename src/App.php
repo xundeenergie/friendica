@@ -7,6 +7,7 @@
 
 namespace Friendica;
 
+use Dice\Dice;
 use Friendica\App\Arguments;
 use Friendica\App\BaseURL;
 use Friendica\App\Mode;
@@ -33,6 +34,7 @@ use Friendica\Util\DateTimeFormat;
 use Friendica\Util\HTTPInputData;
 use Friendica\Util\HTTPSignature;
 use Friendica\Util\Profiler;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -50,6 +52,16 @@ class App
 	const PLATFORM = 'Friendica';
 	const CODENAME = 'Yellow Archangel';
 	const VERSION  = '2024.12-dev';
+
+	public static function fromDice(Dice $dice): self
+	{
+		return new self($dice);
+	}
+
+	/**
+	 * @var Dice
+	 */
+	private $container;
 
 	/**
 	 * @var Mode The Mode of the Application
@@ -102,39 +114,48 @@ class App
 	 */
 	private $appHelper;
 
-	public function __construct(
-		Request $request,
-		Authentication $auth,
-		IManageConfigValues $config,
-		Mode $mode,
-		BaseURL $baseURL,
-		LoggerInterface $logger,
-		Profiler $profiler,
-		L10n $l10n,
-		Arguments $args,
-		IHandleUserSessions $session,
-		DbaDefinition $dbaDefinition,
-		ViewDefinition $viewDefinition
-	) {
-		$this->requestId = $request->getRequestId();
-		$this->auth      = $auth;
-		$this->config    = $config;
-		$this->mode      = $mode;
-		$this->baseURL   = $baseURL;
-		$this->profiler  = $profiler;
-		$this->logger    = $logger;
-		$this->l10n      = $l10n;
-		$this->args      = $args;
-		$this->session   = $session;
-		$this->appHelper = DI::appHelper();
+	private function __construct(Dice $container)
+	{
+		$this->container = $container;
+	}
 
-		$this->load($dbaDefinition, $viewDefinition);
+	public function processRequest(ServerRequestInterface $request, float $start_time): void
+	{
+		$this->requestId = $this->container->create(Request::class)->getRequestId();
+		$this->auth      = $this->container->create(Authentication::class);
+		$this->config    = $this->container->create(IManageConfigValues::class);
+		$this->mode      = $this->container->create(Mode::class);
+		$this->baseURL   = $this->container->create(BaseURL::class);
+		$this->logger    = $this->container->create(LoggerInterface::class);
+		$this->profiler  = $this->container->create(Profiler::class);
+		$this->l10n      = $this->container->create(L10n::class);
+		$this->args      = $this->container->create(Arguments::class);
+		$this->session   = $this->container->create(IHandleUserSessions::class);
+		$this->appHelper = $this->container->create(AppHelper::class);
+
+		$this->load(
+			$this->container->create(DbaDefinition::class),
+			$this->container->create(ViewDefinition::class),
+		);
+
+		$this->mode->setExecutor(Mode::INDEX);
+
+		$this->runFrontend(
+			$this->container->create(Router::class),
+			$this->container->create(IManagePersonalConfigValues::class),
+			$this->container->create(Page::class),
+			$this->container->create(Nav::class),
+			$this->container->create(ModuleHTTPException::class),
+			new HTTPInputData($request->getServerParams()),
+			$start_time,
+			$request->getServerParams()
+		);
 	}
 
 	/**
 	 * Load the whole app instance
 	 */
-	protected function load(DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
+	private function load(DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
 	{
 		if ($this->config->get('system', 'ini_max_execution_time') !== false) {
 			set_time_limit((int)$this->config->get('system', 'ini_max_execution_time'));
@@ -198,7 +219,6 @@ class App
 	 *
 	 * @param Router                      $router
 	 * @param IManagePersonalConfigValues $pconfig
-	 * @param Authentication              $auth       The Authentication backend of the node
 	 * @param Page                        $page       The Friendica page printing container
 	 * @param ModuleHTTPException         $httpException The possible HTTP Exception container
 	 * @param HTTPInputData               $httpInput  A library for processing PHP input streams
@@ -208,10 +228,9 @@ class App
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public function runFrontend(
+	private function runFrontend(
 		Router $router,
 		IManagePersonalConfigValues $pconfig,
-		Authentication $auth,
 		Page $page,
 		Nav $nav,
 		ModuleHTTPException $httpException,
@@ -279,7 +298,7 @@ class App
 			}
 
 			if (!$this->mode->isBackend()) {
-				$auth->withSession();
+				$this->auth->withSession();
 			}
 
 			if ($this->session->isUnauthenticated()) {
