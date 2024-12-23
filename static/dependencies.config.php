@@ -22,7 +22,6 @@
  */
 
 use Dice\Dice;
-use Friendica\Core\Config;
 use Friendica\Core\Hooks\Capability\ICanCreateInstances;
 use Friendica\Core\Hooks\Capability\ICanRegisterStrategies;
 use Friendica\Core\Hooks\Model\DiceInstanceManager;
@@ -93,8 +92,8 @@ return (function(): array {
 			[Dice::INSTANCE => Dice::SELF],
 		],
 	],
-	Config\Util\ConfigFileManager::class => [
-		'instanceOf' => Config\Factory\Config::class,
+	\Friendica\Core\Config\Util\ConfigFileManager::class => [
+		'instanceOf' => \Friendica\Core\Config\Factory\Config::class,
 		'call'       => [
 			['createConfigFileManager', [
 				$basepath,
@@ -102,8 +101,8 @@ return (function(): array {
 			], Dice::CHAIN_CALL],
 		],
 	],
-	Config\ValueObject\Cache::class => [
-		'instanceOf' => Config\Factory\Config::class,
+	\Friendica\Core\Config\ValueObject\Cache::class => [
+		'instanceOf' => \Friendica\Core\Config\Factory\Config::class,
 		'call'       => [
 			['createCache', [], Dice::CHAIN_CALL],
 		],
@@ -116,8 +115,8 @@ return (function(): array {
 			], Dice::CHAIN_CALL],
 		],
 	],
-	Config\Capability\IManageConfigValues::class => [
-		'instanceOf' => Config\Model\DatabaseConfig::class,
+	\Friendica\Core\Config\Capability\IManageConfigValues::class => [
+		'instanceOf' => \Friendica\Core\Config\Model\DatabaseConfig::class,
 		'constructParams' => [
 			$_SERVER,
 		],
@@ -146,7 +145,7 @@ return (function(): array {
 	],
 	Database::class                         => [
 		'constructParams' => [
-			[Dice::INSTANCE => Config\Model\ReadOnlyFileConfig::class],
+			[Dice::INSTANCE => \Friendica\Core\Config\Model\ReadOnlyFileConfig::class],
 		],
 	],
 	/**
