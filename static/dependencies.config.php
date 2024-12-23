@@ -24,10 +24,6 @@
  */
 
 use Dice\Dice;
-use Friendica\Database\Database;
-use Friendica\Database\Definition\DbaDefinition;
-use Friendica\Database\Definition\ViewDefinition;
-use Friendica\Core\Storage\Capability\ICanWriteToStorage;
 use Friendica\Model\User\Cookie;
 use Friendica\Model\Log\ParsedLogIterator;
 use Friendica\Network;
@@ -119,7 +115,7 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 			['create', [], Dice::CHAIN_CALL],
 		]
 	],
-	DbaDefinition::class => [
+	\Friendica\Database\Definition\DbaDefinition::class => [
 		'constructParams' => [
 			$basepath,
 		],
@@ -127,7 +123,7 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 			['load', [false], Dice::CHAIN_CALL],
 		],
 	],
-	ViewDefinition::class => [
+	\Friendica\Database\Definition\ViewDefinition::class => [
 		'constructParams' => [
 			$basepath,
 		],
@@ -135,7 +131,7 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 			['load', [false], Dice::CHAIN_CALL],
 		],
 	],
-	Database::class                         => [
+	\Friendica\Database\Database::class                         => [
 		'constructParams' => [
 			[Dice::INSTANCE => \Friendica\Core\Config\Model\ReadOnlyFileConfig::class],
 		],
@@ -257,7 +253,7 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 			$cookieVars,
 		],
 	],
-	ICanWriteToStorage::class => [
+	\Friendica\Core\Storage\Capability\ICanWriteToStorage::class => [
 		'instanceOf' => \Friendica\Core\Storage\Repository\StorageManager::class,
 		'call' => [
 			['getBackend', [], Dice::CHAIN_CALL],
