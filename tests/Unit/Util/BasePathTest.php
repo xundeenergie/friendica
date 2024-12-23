@@ -16,46 +16,49 @@ class BasePathTest extends TestCase
 {
 	public static function getDataPaths(): array
 	{
+		$basePath = dirname(__DIR__, 3);
+		$configPath = $basePath . DIRECTORY_SEPARATOR . 'config';
+
 		return [
 			'fullPath' => [
 				'server' => [],
-				'baseDir' => dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config',
-				'expected' => dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config',
+				'baseDir' => $configPath,
+				'expected' => $configPath,
 			],
 			'relative' => [
 				'server' => [],
 				'baseDir' => 'config',
-				'expected' => dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config',
+				'expected' => $configPath,
 			],
 			'document_root' => [
 				'server' => [
-					'DOCUMENT_ROOT' => dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config',
+					'DOCUMENT_ROOT' => $configPath,
 				],
 				'baseDir' => '/noooop',
-				'expected' => dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config',
+				'expected' => $configPath,
 			],
 			'pwd' => [
 				'server' => [
-					'PWD' => dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config',
+					'PWD' => $configPath,
 				],
 				'baseDir' => '/noooop',
-				'expected' => dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config',
+				'expected' => $configPath,
 			],
 			'no_overwrite' => [
 				'server' => [
-					'DOCUMENT_ROOT' => dirname(__DIR__, 3),
-					'PWD' => dirname(__DIR__, 3),
+					'DOCUMENT_ROOT' => $basePath,
+					'PWD' => $basePath,
 				],
 				'baseDir' => 'config',
-				'expected' => dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config',
+				'expected' => $configPath,
 			],
 			'no_overwrite_if_invalid' => [
 				'server' => [
 					'DOCUMENT_ROOT' => '/nopopop',
-					'PWD' => dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config',
+					'PWD' => $configPath,
 				],
 				'baseDir' => '/noatgawe22fafa',
-				'expected' => dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config',
+				'expected' => $configPath,
 			]
 		];
 	}
