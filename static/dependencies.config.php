@@ -1,10 +1,11 @@
 <?php
 
-/* Copyright (C) 2010-2024, the Friendica project
- * SPDX-FileCopyrightText: 2010-2024 the Friendica project
- *
- * SPDX-License-Identifier: AGPL-3.0-or-later
- *
+// Copyright (C) 2010-2024, the Friendica project
+// SPDX-FileCopyrightText: 2010-2024 the Friendica project
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+/**
  * The configuration defines "complex" dependencies inside Friendica
  * So this classes shouldn't be simple or their dependencies are already defined here.
  *
@@ -19,6 +20,7 @@
  *
  *   - $a = new ClassA($creationPassedVariable);
  *
+ * @link https://r.je/dice
  */
 
 use Dice\Dice;
