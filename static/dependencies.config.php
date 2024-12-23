@@ -24,7 +24,6 @@
  */
 
 use Dice\Dice;
-use Friendica\Util;
 
 /**
  * @param string $basepath The base path of the Friendica installation without trailing slash
@@ -43,7 +42,7 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 			[Dice::INSTANCE => Dice::SELF],
 		],
 	],
-	Util\BasePath::class         => [
+	\Friendica\Util\BasePath::class         => [
 		'constructParams' => [
 			$basepath,
 			$serverVars,
@@ -270,7 +269,7 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 	],
 	\Friendica\Model\Log\ParsedLogIterator::class => [
 		'constructParams' => [
-			[Dice::INSTANCE => Util\ReversedFileReader::class],
+			[Dice::INSTANCE => \Friendica\Util\ReversedFileReader::class],
 		]
 	],
 	\Friendica\Core\Worker\Repository\Process::class => [
@@ -284,7 +283,7 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 		],
 	],
 	\Psr\Clock\ClockInterface::class => [
-		'instanceOf' => Util\Clock\SystemClock::class
+		'instanceOf' => \Friendica\Util\Clock\SystemClock::class
 	],
 	\Friendica\Module\Special\HTTPException::class => [
 		'constructParams' => [
