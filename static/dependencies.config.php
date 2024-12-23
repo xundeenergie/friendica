@@ -24,7 +24,6 @@
  */
 
 use Dice\Dice;
-use Friendica\Network;
 use Friendica\Util;
 
 /**
@@ -263,8 +262,8 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 			['create', [], Dice::CHAIN_CALL],
 		],
 	],
-	Network\HTTPClient\Capability\ICanSendHttpRequests::class => [
-		'instanceOf' => Network\HTTPClient\Factory\HttpClient::class,
+	\Friendica\Network\HTTPClient\Capability\ICanSendHttpRequests::class => [
+		'instanceOf' => \Friendica\Network\HTTPClient\Factory\HttpClient::class,
 		'call'       => [
 			['createClient', [], Dice::CHAIN_CALL],
 		],
