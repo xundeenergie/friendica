@@ -24,11 +24,6 @@
  */
 
 use Dice\Dice;
-use Friendica\Core\L10n;
-use Friendica\Core\Lock;
-use Friendica\Core\Session\Capability\IHandleSessions;
-use Friendica\Core\Session\Capability\IHandleUserSessions;
-use Friendica\Core\Storage\Repository\StorageManager;
 use Friendica\Database\Database;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
@@ -217,8 +212,8 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 			['createLocal', [], Dice::CHAIN_CALL],
 		],
 	],
-	Lock\Capability\ICanLock::class => [
-		'instanceOf' => Lock\Factory\Lock::class,
+	\Friendica\Core\Lock\Capability\ICanLock::class => [
+		'instanceOf' => \Friendica\Core\Lock\Factory\Lock::class,
 		'call'       => [
 			['create', [], Dice::CHAIN_CALL],
 		],
@@ -242,19 +237,19 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 			null
 		],
 	],
-	L10n::class => [
+	\Friendica\Core\L10n::class => [
 		'constructParams' => [
 			$serverVars, $getVars
 		],
 	],
-	IHandleSessions::class => [
+	\Friendica\Core\Session\Capability\IHandleSessions::class => [
 		'instanceOf' => \Friendica\Core\Session\Factory\Session::class,
 		'call' => [
 			['create', [$serverVars], Dice::CHAIN_CALL],
 			['start', [], Dice::CHAIN_CALL],
 		],
 	],
-	IHandleUserSessions::class => [
+	\Friendica\Core\Session\Capability\IHandleUserSessions::class => [
 		'instanceOf' => \Friendica\Core\Session\Model\UserSession::class,
 	],
 	Cookie::class => [
@@ -263,7 +258,7 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 		],
 	],
 	ICanWriteToStorage::class => [
-		'instanceOf' => StorageManager::class,
+		'instanceOf' => \Friendica\Core\Storage\Repository\StorageManager::class,
 		'call' => [
 			['getBackend', [], Dice::CHAIN_CALL],
 		],
