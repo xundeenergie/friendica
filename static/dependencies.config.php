@@ -37,7 +37,7 @@ use Friendica\Model\Log\ParsedLogIterator;
 use Friendica\Network;
 use Friendica\Util;
 
-return (function(): array {
+return (function(array $serverVars): array {
 	/**
 	 * @var string $basepath The base path of the Friendica installation without trailing slash
 	 */
@@ -59,7 +59,7 @@ return (function(): array {
 	Util\BasePath::class         => [
 		'constructParams' => [
 			$basepath,
-			$_SERVER
+			$serverVars,
 		]
 	],
 	DiceInstanceManager::class   => [
@@ -95,7 +95,7 @@ return (function(): array {
 		'call'       => [
 			['createConfigFileManager', [
 				$basepath,
-				$_SERVER,
+				$serverVars,
 			], Dice::CHAIN_CALL],
 		],
 	],
@@ -107,7 +107,7 @@ return (function(): array {
 	],
 	\Friendica\App\Mode::class              => [
 		'call' => [
-			['determineRunMode', [true, $_SERVER], Dice::CHAIN_CALL],
+			['determineRunMode', [true, $serverVars], Dice::CHAIN_CALL],
 			['determine', [
 				$basepath,
 			], Dice::CHAIN_CALL],
@@ -116,7 +116,7 @@ return (function(): array {
 	\Friendica\Core\Config\Capability\IManageConfigValues::class => [
 		'instanceOf' => \Friendica\Core\Config\Model\DatabaseConfig::class,
 		'constructParams' => [
-			$_SERVER,
+			$serverVars,
 		],
 	],
 	\Friendica\Core\PConfig\Capability\IManagePersonalConfigValues::class => [
@@ -154,13 +154,13 @@ return (function(): array {
 	 */
 	\Friendica\App\BaseURL::class             => [
 		'constructParams' => [
-			$_SERVER,
+			$serverVars,
 		],
 	],
 	'$hostname'                    => [
 		'instanceOf' => \Friendica\App\BaseURL::class,
 		'constructParams' => [
-			$_SERVER,
+			$serverVars,
 		],
 		'call' => [
 			['getHost', [], Dice::CHAIN_CALL],
@@ -227,7 +227,7 @@ return (function(): array {
 	\Friendica\App\Arguments::class => [
 		'instanceOf' => \Friendica\App\Arguments::class,
 		'call' => [
-			['determine', [$_SERVER, $_GET], Dice::CHAIN_CALL],
+			['determine', [$serverVars, $_GET], Dice::CHAIN_CALL],
 		],
 	],
 	\Friendica\Core\System::class => [
@@ -237,7 +237,7 @@ return (function(): array {
 	],
 	\Friendica\App\Router::class => [
 		'constructParams' => [
-			$_SERVER,
+			$serverVars,
 			__DIR__ . '/routes.config.php',
 			[Dice::INSTANCE => Dice::SELF],
 			null
@@ -245,13 +245,13 @@ return (function(): array {
 	],
 	L10n::class => [
 		'constructParams' => [
-			$_SERVER, $_GET
+			$serverVars, $_GET
 		],
 	],
 	IHandleSessions::class => [
 		'instanceOf' => \Friendica\Core\Session\Factory\Session::class,
 		'call' => [
-			['create', [$_SERVER], Dice::CHAIN_CALL],
+			['create', [$serverVars], Dice::CHAIN_CALL],
 			['start', [], Dice::CHAIN_CALL],
 		],
 	],
@@ -288,12 +288,12 @@ return (function(): array {
 	],
 	\Friendica\Core\Worker\Repository\Process::class => [
 		'constructParams' => [
-			$_SERVER
+			$serverVars
 		],
 	],
 	\Friendica\App\Request::class => [
 		'constructParams' => [
-			$_SERVER
+			$serverVars
 		],
 	],
 	\Psr\Clock\ClockInterface::class => [
@@ -301,14 +301,14 @@ return (function(): array {
 	],
 	\Friendica\Module\Special\HTTPException::class => [
 		'constructParams' => [
-			$_SERVER
+			$serverVars
 		],
 	],
 	\Friendica\Module\Api\ApiResponse::class => [
 		'constructParams' => [
-			$_SERVER,
+			$serverVars,
 			$_GET['callback'] ?? '',
 		],
 	],
 	];
-})();
+})($_SERVER);
