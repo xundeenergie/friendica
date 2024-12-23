@@ -39,7 +39,7 @@ use Friendica\Util;
 /**
  * @param string $basepath The base path of the Friendica installation without trailing slash
  */
-return (function(string $basepath, array $getVars, array $serverVars): array {
+return (function(string $basepath, array $getVars, array $serverVars, array $cookieVars): array {
 	return [
 	'*'                             => [
 		// marks all class result as shared for other creations, so there's just
@@ -257,7 +257,7 @@ return (function(string $basepath, array $getVars, array $serverVars): array {
 	],
 	Cookie::class => [
 		'constructParams' => [
-			$_COOKIE
+			$cookieVars,
 		],
 	],
 	ICanWriteToStorage::class => [
@@ -311,5 +311,6 @@ return (function(string $basepath, array $getVars, array $serverVars): array {
 })(
 	dirname(__FILE__, 2),
 	$_GET,
-	$_SERVER
+	$_SERVER,
+	$_COOKIE
 );
