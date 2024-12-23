@@ -66,16 +66,6 @@ return (function(): array {
 			[Dice::INSTANCE => Dice::SELF],
 		],
 	],
-	'$basepath'                     => [
-		'instanceOf'      => Util\BasePath::class,
-		'call'            => [
-			['getPath', [], Dice::CHAIN_CALL],
-		],
-		'constructParams' => [
-			$basepath,
-			$_SERVER
-		]
-	],
 	Util\BasePath::class         => [
 		'constructParams' => [
 			$basepath,
