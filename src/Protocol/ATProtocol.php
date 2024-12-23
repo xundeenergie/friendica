@@ -129,17 +129,26 @@ final class ATProtocol
 		}
 
 		$data = $this->get($pds . '/xrpc/' . $url, [HttpClientOptions::HEADERS => $headers]);
-		if (empty($data) || (!empty($data->code) && ($data->code < 200 || $data->code >= 400))) {
+
+		if ($data === null) {
 			$this->pConfig->set($uid, 'bluesky', 'status', self::STATUS_API_FAIL);
+
+			return null;
+		}
+
+		if (!empty($data->code) && ($data->code < 200 || $data->code >= 400)) {
 			if (!empty($data->message)) {
 				$this->pConfig->set($uid, 'bluesky', 'status-message', $data->message);
 			} elseif (!empty($data->code)) {
 				$this->pConfig->set($uid, 'bluesky', 'status-message', 'Error Code: ' . $data->code);
 			}
-		} elseif (!empty($data)) {
-			$this->pConfig->set($uid, 'bluesky', 'status', self::STATUS_SUCCESS);
-			$this->pConfig->set($uid, 'bluesky', 'status-message', '');
+
+			return $data;
 		}
+
+		$this->pConfig->set($uid, 'bluesky', 'status', self::STATUS_SUCCESS);
+		$this->pConfig->set($uid, 'bluesky', 'status-message', '');
+
 		return $data;
 	}
 
