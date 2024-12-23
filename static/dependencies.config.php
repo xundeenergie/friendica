@@ -37,7 +37,7 @@ use Friendica\Model\Log\ParsedLogIterator;
 use Friendica\Network;
 use Friendica\Util;
 
-return (function(array $serverVars): array {
+return (function(array $getVars, array $serverVars): array {
 	/**
 	 * @var string $basepath The base path of the Friendica installation without trailing slash
 	 */
@@ -150,7 +150,7 @@ return (function(array $serverVars): array {
 	 * Creates the \Friendica\App\BaseURL
 	 *
 	 * Same as:
-	 *   $baseURL = new \Friendica\App\BaseURL($configuration, $_SERVER);
+	 *   $baseURL = new \Friendica\App\BaseURL($configuration, $);
 	 */
 	\Friendica\App\BaseURL::class             => [
 		'constructParams' => [
@@ -227,7 +227,7 @@ return (function(array $serverVars): array {
 	\Friendica\App\Arguments::class => [
 		'instanceOf' => \Friendica\App\Arguments::class,
 		'call' => [
-			['determine', [$serverVars, $_GET], Dice::CHAIN_CALL],
+			['determine', [$serverVars, $getVars], Dice::CHAIN_CALL],
 		],
 	],
 	\Friendica\Core\System::class => [
@@ -245,7 +245,7 @@ return (function(array $serverVars): array {
 	],
 	L10n::class => [
 		'constructParams' => [
-			$serverVars, $_GET
+			$serverVars, $getVars
 		],
 	],
 	IHandleSessions::class => [
@@ -307,8 +307,8 @@ return (function(array $serverVars): array {
 	\Friendica\Module\Api\ApiResponse::class => [
 		'constructParams' => [
 			$serverVars,
-			$_GET['callback'] ?? '',
+			$getVars['callback'] ?? '',
 		],
 	],
 	];
-})($_SERVER);
+})($_GET, $_SERVER);
