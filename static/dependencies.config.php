@@ -22,8 +22,6 @@
  */
 
 use Dice\Dice;
-use Friendica\Core\Hooks\Capability\ICanCreateInstances;
-use Friendica\Core\Hooks\Capability\ICanRegisterStrategies;
 use Friendica\Core\Hooks\Model\DiceInstanceManager;
 use Friendica\Core\L10n;
 use Friendica\Core\Lock;
@@ -77,7 +75,7 @@ return (function(): array {
 			['loadConfig'],
 		],
 	],
-	ICanRegisterStrategies::class => [
+	\Friendica\Core\Hooks\Capability\ICanRegisterStrategies::class => [
 		'instanceOf' => DiceInstanceManager::class,
 		'constructParams' => [
 			[Dice::INSTANCE => Dice::SELF],
@@ -86,7 +84,7 @@ return (function(): array {
 	\Friendica\AppHelper::class => [
 		'instanceOf' => \Friendica\AppLegacy::class,
 	],
-	ICanCreateInstances::class   => [
+	\Friendica\Core\Hooks\Capability\ICanCreateInstances::class   => [
 		'instanceOf' => DiceInstanceManager::class,
 		'constructParams' => [
 			[Dice::INSTANCE => Dice::SELF],
