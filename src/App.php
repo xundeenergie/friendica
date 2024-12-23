@@ -123,6 +123,8 @@ class App
 	{
 		$this->setupContainerForRunningFrontend($request);
 
+		$this->registerErrorHandler();
+
 		$this->requestId = $this->container->create(Request::class)->getRequestId();
 		$this->auth      = $this->container->create(Authentication::class);
 		$this->config    = $this->container->create(IManageConfigValues::class);
@@ -167,7 +169,10 @@ class App
 		]);
 
 		\Friendica\DI::init($this->container);
+	}
 
+	private function registerErrorHandler(): void
+	{
 		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(LoggerInterface::class));
 	}
 
