@@ -47,14 +47,13 @@ use Friendica\Network;
 use Friendica\Util;
 use Psr\Log\LoggerInterface;
 
-/**
- * @var string $basepath The base path of the Friendica installation without trailing slash
- */
-$basepath = (function() {
-	return dirname(__FILE__, 2);
-})();
+return (function(): array {
+	/**
+	 * @var string $basepath The base path of the Friendica installation without trailing slash
+	 */
+	$basepath = dirname(__FILE__, 2);
 
-return [
+	return [
 	'*'                             => [
 		// marks all class result as shared for other creations, so there's just
 		// one instance for the whole execution
@@ -331,4 +330,5 @@ return [
 			$_GET['callback'] ?? '',
 		],
 	],
-];
+	];
+})();
