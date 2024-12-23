@@ -36,12 +36,10 @@ use Friendica\Model\Log\ParsedLogIterator;
 use Friendica\Network;
 use Friendica\Util;
 
-return (function(array $getVars, array $serverVars): array {
-	/**
-	 * @var string $basepath The base path of the Friendica installation without trailing slash
-	 */
-	$basepath = dirname(__FILE__, 2);
-
+/**
+ * @param string $basepath The base path of the Friendica installation without trailing slash
+ */
+return (function(string $basepath, array $getVars, array $serverVars): array {
 	return [
 	'*'                             => [
 		// marks all class result as shared for other creations, so there's just
@@ -310,4 +308,8 @@ return (function(array $getVars, array $serverVars): array {
 		],
 	],
 	];
-})($_GET, $_SERVER);
+})(
+	dirname(__FILE__, 2),
+	$_GET,
+	$_SERVER
+);
