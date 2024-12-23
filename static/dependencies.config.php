@@ -22,15 +22,10 @@
  */
 
 use Dice\Dice;
-use Friendica\App;
-use Friendica\AppHelper;
-use Friendica\AppLegacy;
-use Friendica\Core\Cache;
 use Friendica\Core\Config;
 use Friendica\Core\Hooks\Capability\ICanCreateInstances;
 use Friendica\Core\Hooks\Capability\ICanRegisterStrategies;
 use Friendica\Core\Hooks\Model\DiceInstanceManager;
-use Friendica\Core\PConfig;
 use Friendica\Core\L10n;
 use Friendica\Core\Lock;
 use Friendica\Core\Session\Capability\IHandleSessions;
@@ -39,13 +34,11 @@ use Friendica\Core\Storage\Repository\StorageManager;
 use Friendica\Database\Database;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
-use Friendica\Factory;
 use Friendica\Core\Storage\Capability\ICanWriteToStorage;
 use Friendica\Model\User\Cookie;
 use Friendica\Model\Log\ParsedLogIterator;
 use Friendica\Network;
 use Friendica\Util;
-use Psr\Log\LoggerInterface;
 
 return (function(): array {
 	/**
@@ -91,8 +84,8 @@ return (function(): array {
 			[Dice::INSTANCE => Dice::SELF],
 		],
 	],
-	AppHelper::class => [
-		'instanceOf' => AppLegacy::class,
+	\Friendica\AppHelper::class => [
+		'instanceOf' => \Friendica\AppLegacy::class,
 	],
 	ICanCreateInstances::class   => [
 		'instanceOf' => DiceInstanceManager::class,
@@ -115,7 +108,7 @@ return (function(): array {
 			['createCache', [], Dice::CHAIN_CALL],
 		],
 	],
-	App\Mode::class              => [
+	\Friendica\App\Mode::class              => [
 		'call' => [
 			['determineRunMode', [true, $_SERVER], Dice::CHAIN_CALL],
 			['determine', [
@@ -129,8 +122,8 @@ return (function(): array {
 			$_SERVER,
 		],
 	],
-	PConfig\Capability\IManagePersonalConfigValues::class => [
-		'instanceOf' => PConfig\Factory\PConfig::class,
+	\Friendica\Core\PConfig\Capability\IManagePersonalConfigValues::class => [
+		'instanceOf' => \Friendica\Core\PConfig\Factory\PConfig::class,
 		'call'       => [
 			['create', [], Dice::CHAIN_CALL],
 		]
@@ -157,18 +150,18 @@ return (function(): array {
 		],
 	],
 	/**
-	 * Creates the App\BaseURL
+	 * Creates the \Friendica\App\BaseURL
 	 *
 	 * Same as:
-	 *   $baseURL = new App\BaseURL($configuration, $_SERVER);
+	 *   $baseURL = new \Friendica\App\BaseURL($configuration, $_SERVER);
 	 */
-	App\BaseURL::class             => [
+	\Friendica\App\BaseURL::class             => [
 		'constructParams' => [
 			$_SERVER,
 		],
 	],
 	'$hostname'                    => [
-		'instanceOf' => App\BaseURL::class,
+		'instanceOf' => \Friendica\App\BaseURL::class,
 		'constructParams' => [
 			$_SERVER,
 		],
@@ -176,12 +169,12 @@ return (function(): array {
 			['getHost', [], Dice::CHAIN_CALL],
 		],
 	],
-	Cache\Type\AbstractCache::class => [
+	\Friendica\Core\Cache\Type\AbstractCache::class => [
 		'constructParams' => [
 			[Dice::INSTANCE => '$hostname'],
 		],
 	],
-	App\Page::class => [
+	\Friendica\App\Page::class => [
 		'constructParams' => [
 			$basepath,
 		],
@@ -216,14 +209,14 @@ return (function(): array {
 			['createDev', [], Dice::CHAIN_CALL],
 		],
 	],
-	Cache\Capability\ICanCache::class => [
-		'instanceOf' => Cache\Factory\Cache::class,
+	\Friendica\Core\Cache\Capability\ICanCache::class => [
+		'instanceOf' => \Friendica\Core\Cache\Factory\Cache::class,
 		'call'       => [
 			['createLocal', [], Dice::CHAIN_CALL],
 		],
 	],
-	Cache\Capability\ICanCacheInMemory::class => [
-		'instanceOf' => Cache\Factory\Cache::class,
+	\Friendica\Core\Cache\Capability\ICanCacheInMemory::class => [
+		'instanceOf' => \Friendica\Core\Cache\Factory\Cache::class,
 		'call'       => [
 			['createLocal', [], Dice::CHAIN_CALL],
 		],
@@ -234,8 +227,8 @@ return (function(): array {
 			['create', [], Dice::CHAIN_CALL],
 		],
 	],
-	App\Arguments::class => [
-		'instanceOf' => App\Arguments::class,
+	\Friendica\App\Arguments::class => [
+		'instanceOf' => \Friendica\App\Arguments::class,
 		'call' => [
 			['determine', [$_SERVER, $_GET], Dice::CHAIN_CALL],
 		],
@@ -245,7 +238,7 @@ return (function(): array {
 			$basepath,
 		],
 	],
-	App\Router::class => [
+	\Friendica\App\Router::class => [
 		'constructParams' => [
 			$_SERVER,
 			__DIR__ . '/routes.config.php',
@@ -301,7 +294,7 @@ return (function(): array {
 			$_SERVER
 		],
 	],
-	App\Request::class => [
+	\Friendica\App\Request::class => [
 		'constructParams' => [
 			$_SERVER
 		],
