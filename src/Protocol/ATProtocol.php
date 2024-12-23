@@ -223,16 +223,13 @@ final class ATProtocol
 			return null;
 		}
 
-		$data = json_decode($curlResult->getBodyString());
+		$data = json_decode($curlResult->getBodyString(), false);
+
 		if (!$curlResult->isSuccess()) {
 			$this->logger->notice('API Error', ['url' => $url, 'code' => $curlResult->getReturnCode(), 'error' => $data ?: $curlResult->getBodyString()]);
 			if (!$data) {
 				$this->pConfig->set($uid, 'bluesky', 'status', self::STATUS_API_FAIL);
-				if (!empty($data->message)) {
-					$this->pConfig->set($uid, 'bluesky', 'status-message', $data->message);
-				} elseif (!empty($data->code)) {
-					$this->pConfig->set($uid, 'bluesky', 'status-message', 'Error Code: ' . $data->code);
-				}
+
 				return null;
 			}
 			$data->code = $curlResult->getReturnCode();
