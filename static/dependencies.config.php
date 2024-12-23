@@ -72,13 +72,13 @@ return (function(): array {
 			['getPath', [], Dice::CHAIN_CALL],
 		],
 		'constructParams' => [
-			dirname(__FILE__, 2),
+			$basepath,
 			$_SERVER
 		]
 	],
 	Util\BasePath::class         => [
 		'constructParams' => [
-			dirname(__FILE__, 2),
+			$basepath,
 			$_SERVER
 		]
 	],
