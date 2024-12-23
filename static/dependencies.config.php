@@ -22,7 +22,6 @@
  */
 
 use Dice\Dice;
-use Friendica\Core\Hooks\Model\DiceInstanceManager;
 use Friendica\Core\L10n;
 use Friendica\Core\Lock;
 use Friendica\Core\Session\Capability\IHandleSessions;
@@ -62,7 +61,7 @@ return (function(array $getVars, array $serverVars): array {
 			$serverVars,
 		]
 	],
-	DiceInstanceManager::class   => [
+	\Friendica\Core\Hooks\Model\DiceInstanceManager::class   => [
 		'constructParams' => [
 			[Dice::INSTANCE => Dice::SELF],
 		]
@@ -76,7 +75,7 @@ return (function(array $getVars, array $serverVars): array {
 		],
 	],
 	\Friendica\Core\Hooks\Capability\ICanRegisterStrategies::class => [
-		'instanceOf' => DiceInstanceManager::class,
+		'instanceOf' => \Friendica\Core\Hooks\Model\DiceInstanceManager::class,
 		'constructParams' => [
 			[Dice::INSTANCE => Dice::SELF],
 		],
@@ -85,7 +84,7 @@ return (function(array $getVars, array $serverVars): array {
 		'instanceOf' => \Friendica\AppLegacy::class,
 	],
 	\Friendica\Core\Hooks\Capability\ICanCreateInstances::class   => [
-		'instanceOf' => DiceInstanceManager::class,
+		'instanceOf' => \Friendica\Core\Hooks\Model\DiceInstanceManager::class,
 		'constructParams' => [
 			[Dice::INSTANCE => Dice::SELF],
 		],
