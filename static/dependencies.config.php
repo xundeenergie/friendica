@@ -24,8 +24,6 @@
  */
 
 use Dice\Dice;
-use Friendica\Model\User\Cookie;
-use Friendica\Model\Log\ParsedLogIterator;
 use Friendica\Network;
 use Friendica\Util;
 
@@ -248,7 +246,7 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 	\Friendica\Core\Session\Capability\IHandleUserSessions::class => [
 		'instanceOf' => \Friendica\Core\Session\Model\UserSession::class,
 	],
-	Cookie::class => [
+	\Friendica\Model\User\Cookie::class => [
 		'constructParams' => [
 			$cookieVars,
 		],
@@ -271,7 +269,7 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 			['createClient', [], Dice::CHAIN_CALL],
 		],
 	],
-	ParsedLogIterator::class => [
+	\Friendica\Model\Log\ParsedLogIterator::class => [
 		'constructParams' => [
 			[Dice::INSTANCE => Util\ReversedFileReader::class],
 		]
