@@ -123,7 +123,15 @@ class App
 
 	public function processRequest(ServerRequestInterface $request, float $start_time): void
 	{
-		$this->setupContainerForRunningFrontend($request);
+		$this->setupContainerForAddons();
+
+		$this->container = $this->container->addRule(Mode::class, [
+			'call' => [
+				['determineRunMode', [false, $request->getServerParams()], Dice::CHAIN_CALL],
+			],
+		]);
+
+		$this->setupLegacyServerLocator();
 
 		$this->registerErrorHandler();
 
@@ -180,19 +188,6 @@ class App
 			$oAuth = $this->container->create(ExAuth::class);
 			$oAuth->readStdin();
 		}
-	}
-
-	private function setupContainerForRunningFrontend(ServerRequestInterface $request): void
-	{
-		$this->setupContainerForAddons();
-
-		$this->container = $this->container->addRule(Mode::class, [
-			'call' => [
-				['determineRunMode', [false, $request->getServerParams()], Dice::CHAIN_CALL],
-			],
-		]);
-
-		$this->setupLegacyServerLocator();
 	}
 
 	private function setupContainerForAddons(): void
