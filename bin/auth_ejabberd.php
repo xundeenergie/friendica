@@ -45,31 +45,13 @@ if (php_sapi_name() !== 'cli') {
 }
 
 use Dice\Dice;
-use Friendica\App\Mode;
-use Friendica\Core\Logger\Capability\LogChannel;
-use Friendica\Security\ExAuth;
-use Psr\Log\LoggerInterface;
 
 chdir(dirname(__FILE__, 2));
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__FILE__, 2) . '/vendor/autoload.php';
 
 $dice = (new Dice())->addRules(require(dirname(__FILE__, 2) . '/static/dependencies.config.php'));
-/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
-$addonLoader = $dice->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
-$dice = $dice->addRules($addonLoader->getActiveAddonConfig('dependencies'));
-$dice = $dice->addRule(LoggerInterface::class,['constructParams' => [LogChannel::AUTH_JABBERED]]);
 
-\Friendica\DI::init($dice);
-\Friendica\Core\Logger\Handler\ErrorHandler::register($dice->create(\Psr\Log\LoggerInterface::class));
+$app = \Friendica\App::fromDice($dice);
 
-// Check the database structure and possibly fixes it
-\Friendica\Core\Update::check(\Friendica\DI::basePath(), true);
-
-$appMode = $dice->create(Mode::class);
-
-if ($appMode->isNormal()) {
-	/** @var ExAuth $oAuth */
-	$oAuth = $dice->create(ExAuth::class);
-	$oAuth->readStdin();
-}
+$app->processEjabberd();
