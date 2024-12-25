@@ -50,19 +50,7 @@ use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Security\ExAuth;
 use Psr\Log\LoggerInterface;
 
-if (sizeof($_SERVER["argv"]) == 0) {
-	die();
-}
-
-$directory = dirname($_SERVER["argv"][0]);
-
-if (substr($directory, 0, 1) != DIRECTORY_SEPARATOR) {
-	$directory = $_SERVER["PWD"] . DIRECTORY_SEPARATOR . $directory;
-}
-
-$directory = realpath($directory . DIRECTORY_SEPARATOR . "..");
-
-chdir($directory);
+chdir(dirname(__FILE__, 2));
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
