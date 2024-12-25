@@ -167,7 +167,8 @@ class App
 		]);
 
 		\Friendica\DI::init($this->container);
-		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(LoggerInterface::class));
+
+		$this->registerErrorHandler();
 
 		// Check the database structure and possibly fixes it
 		\Friendica\Core\Update::check(\Friendica\DI::basePath(), true);
