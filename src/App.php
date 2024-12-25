@@ -160,9 +160,8 @@ class App
 
 	public function processEjabberd(): void
 	{
-		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
-		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
-		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
+		$this->setupContainerForAddons();
+
 		$this->container = $this->container->addRule(LoggerInterface::class,[
 			'constructParams' => [LogChannel::AUTH_JABBERED],
 		]);
@@ -184,10 +183,8 @@ class App
 
 	private function setupContainerForRunningFrontend(ServerRequestInterface $request): void
 	{
-		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
-		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
+		$this->setupContainerForAddons();
 
-		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
 		$this->container = $this->container->addRule(Mode::class, [
 			'call' => [
 				['determineRunMode', [false, $request->getServerParams()], Dice::CHAIN_CALL],
@@ -195,6 +192,14 @@ class App
 		]);
 
 		\Friendica\DI::init($this->container);
+	}
+
+	private function setupContainerForAddons(): void
+	{
+		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
+		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
+
+		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
 	}
 
 	private function registerErrorHandler(): void
