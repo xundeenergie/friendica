@@ -166,7 +166,7 @@ class App
 			'constructParams' => [LogChannel::AUTH_JABBERED],
 		]);
 
-		\Friendica\DI::init($this->container);
+		$this->setupLegacyServerLocator();
 
 		$this->registerErrorHandler();
 
@@ -192,7 +192,7 @@ class App
 			],
 		]);
 
-		\Friendica\DI::init($this->container);
+		$this->setupLegacyServerLocator();
 	}
 
 	private function setupContainerForAddons(): void
@@ -201,6 +201,11 @@ class App
 		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
 
 		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
+	}
+
+	private function setupLegacyServerLocator(): void
+	{
+		\Friendica\DI::init($this->container);
 	}
 
 	private function registerErrorHandler(): void
