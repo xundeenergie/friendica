@@ -222,7 +222,8 @@ class App
 
 		$this->setupContainerForLogger(LogChannel::DAEMON);
 
-		DI::init($this->container);
+		$this->setupLegacyServerLocator();
+
 		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(LoggerInterface::class));
 
 		if (DI::mode()->isInstall()) {
