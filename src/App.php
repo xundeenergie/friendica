@@ -39,6 +39,7 @@ use Friendica\Network\HTTPException;
 use Friendica\Protocol\ATProtocol\DID;
 use Friendica\Security\ExAuth;
 use Friendica\Security\OpenWebAuth;
+use Friendica\Util\BasePath;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\HTTPInputData;
 use Friendica\Util\HTTPSignature;
@@ -190,8 +191,11 @@ class App
 
 		$this->registerErrorHandler();
 
+		/** @var BasePath */
+		$basePath = $this->container->create(BasePath::class);
+
 		// Check the database structure and possibly fixes it
-		Update::check(DI::basePath(), true);
+		Update::check($basePath->getPath(), true);
 
 		$appMode = $this->container->create(Mode::class);
 
@@ -370,10 +374,14 @@ class App
 		$do_cron = true;
 		$last_cron = 0;
 
+		/** @var BasePath */
+		$basePath = $this->container->create(BasePath::class);
+		$path = $basePath->getPath();
+
 		// Now running as a daemon.
 		while (true) {
 			// Check the database structure and possibly fixes it
-			Update::check(DI::basePath(), true);
+			Update::check($path, true);
 
 			if (!$do_cron && ($last_cron + $wait_interval) < time()) {
 				Logger::info('Forcing cron worker call.', ['pid' => $pid]);
