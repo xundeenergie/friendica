@@ -226,7 +226,7 @@ class App
 
 		$this->setupContainerForLogger(LogChannel::DAEMON);
 
-		$this->setupLegacyServerLocator();
+		$this->setupLegacyServiceLocator();
 
 		$this->registerErrorHandler();
 
