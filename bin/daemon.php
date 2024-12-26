@@ -153,7 +153,10 @@ if (!$foreground) {
 	}
 
 	// We now are in the child process
-	register_shutdown_function('shutdown');
+	register_shutdown_function(function () {
+		posix_kill(posix_getpid(), SIGTERM);
+		posix_kill(posix_getpid(), SIGHUP);
+	});
 
 	// Make the child the main process, detach it from the terminal
 	if (posix_setsid() < 0) {
@@ -232,8 +235,3 @@ while (true) {
 	}
 }
 })($dice, $options);
-
-function shutdown() {
-	posix_kill(posix_getpid(), SIGTERM);
-	posix_kill(posix_getpid(), SIGHUP);
-}
