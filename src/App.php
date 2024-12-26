@@ -442,7 +442,7 @@ class App
 
 		$this->setupLegacyServiceLocator();
 
-		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(\Psr\Log\LoggerInterface::class));
+		$this->registerErrorHandler();
 
 		DI::mode()->setExecutor(Mode::WORKER);
 
