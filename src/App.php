@@ -444,13 +444,16 @@ class App
 
 		$this->registerErrorHandler();
 
-		DI::mode()->setExecutor(Mode::WORKER);
+		/** @var Mode */
+		$mode = $this->container->create(Mode::class);
+
+		$mode->setExecutor(Mode::WORKER);
 
 		// Check the database structure and possibly fixes it
 		Update::check(DI::basePath(), true);
 
 		// Quit when in maintenance
-		if (!DI::mode()->has(Mode::MAINTENANCEDISABLED)) {
+		if (!$mode->has(Mode::MAINTENANCEDISABLED)) {
 			return;
 		}
 
