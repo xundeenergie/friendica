@@ -125,6 +125,8 @@ class App
 	{
 		$this->setupContainerForAddons();
 
+		$this->setupContainerForLogger(LogChannel::DEFAULT);
+
 		$this->container = $this->container->addRule(Mode::class, [
 			'call' => [
 				['determineRunMode', [false, $request->getServerParams()], Dice::CHAIN_CALL],
@@ -170,9 +172,7 @@ class App
 	{
 		$this->setupContainerForAddons();
 
-		$this->container = $this->container->addRule(LoggerInterface::class,[
-			'constructParams' => [LogChannel::AUTH_JABBERED],
-		]);
+		$this->setupContainerForLogger(LogChannel::AUTH_JABBERED);
 
 		$this->setupLegacyServerLocator();
 
@@ -194,9 +194,7 @@ class App
 	{
 		$this->setupContainerForAddons();
 
-		$this->container = $this->container->addRule(LoggerInterface::class, [
-			'constructParams' => [LogChannel::CONSOLE],
-		]);
+		$this->setupContainerForLogger(LogChannel::CONSOLE);
 
 		$this->setupLegacyServerLocator();
 
@@ -211,6 +209,13 @@ class App
 		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
 
 		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
+	}
+
+	private function setupContainerForLogger(string $logChannel): void
+	{
+		$this->container = $this->container->addRule(LoggerInterface::class, [
+			'constructParams' => [$logChannel],
+		]);
 	}
 
 	private function setupLegacyServerLocator(): void
