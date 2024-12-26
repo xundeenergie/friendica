@@ -552,6 +552,7 @@ class App
 		ServerRequestInterface $request
 	) {
 		$serverVars = $request->getServerParams();
+		$queryVars  = $request->getQueryParams();
 
 		$requeststring = ($serverVars['REQUEST_METHOD'] ?? '') . ' ' . ($serverVars['REQUEST_URI'] ?? '') . ' ' . ($serverVars['SERVER_PROTOCOL'] ?? '');
 		$this->logger->debug('Request received', ['address' => $serverVars['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $serverVars['HTTP_REFERER'] ?? '', 'user-agent' => $serverVars['HTTP_USER_AGENT'] ?? '']);
@@ -592,23 +593,23 @@ class App
 			}
 
 			// ZRL
-			if (!empty($_GET['zrl']) && $this->mode->isNormal() && !$this->mode->isBackend() && !$this->session->getLocalUserId()) {
+			if (!empty($queryVars['zrl']) && $this->mode->isNormal() && !$this->mode->isBackend() && !$this->session->getLocalUserId()) {
 				// Only continue when the given profile link seems valid.
 				// Valid profile links contain a path with "/profile/" and no query parameters
-				if ((parse_url($_GET['zrl'], PHP_URL_QUERY) == '') &&
-					strpos(parse_url($_GET['zrl'], PHP_URL_PATH) ?? '', '/profile/') !== false) {
-					$this->auth->setUnauthenticatedVisitor($_GET['zrl']);
+				if ((parse_url($queryVars['zrl'], PHP_URL_QUERY) == '') &&
+					strpos(parse_url($queryVars['zrl'], PHP_URL_PATH) ?? '', '/profile/') !== false) {
+					$this->auth->setUnauthenticatedVisitor($queryVars['zrl']);
 					OpenWebAuth::zrlInit();
 				} else {
 					// Someone came with an invalid parameter, maybe as a DDoS attempt
 					// We simply stop processing here
-					$this->logger->debug('Invalid ZRL parameter.', ['zrl' => $_GET['zrl']]);
+					$this->logger->debug('Invalid ZRL parameter.', ['zrl' => $queryVars['zrl']]);
 					throw new HTTPException\ForbiddenException();
 				}
 			}
 
-			if (!empty($_GET['owt']) && $this->mode->isNormal()) {
-				$token = $_GET['owt'];
+			if (!empty($queryVars['owt']) && $this->mode->isNormal()) {
+				$token = $queryVars['owt'];
 				OpenWebAuth::init($token);
 			}
 
