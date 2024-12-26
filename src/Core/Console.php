@@ -166,8 +166,6 @@ HELP;
 
 		$className = $this->subConsoles[$command];
 
-		Friendica\DI::init($this->dice);
-
 		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
 
 		/** @var Console $subconsole */
