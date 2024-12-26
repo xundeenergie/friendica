@@ -150,7 +150,8 @@ class App
 		$this->session   = $this->container->create(IHandleUserSessions::class);
 		$this->appHelper = $this->container->create(AppHelper::class);
 
-		$this->load(
+		$this->loadSetupForFrontend(
+			$request,
 			$this->container->create(DbaDefinition::class),
 			$this->container->create(ViewDefinition::class),
 		);
@@ -241,7 +242,7 @@ class App
 	/**
 	 * Load the whole app instance
 	 */
-	private function load(DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
+	private function loadSetupForFrontend(ServerRequestInterface $request, DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
 	{
 		if ($this->config->get('system', 'ini_max_execution_time') !== false) {
 			set_time_limit((int)$this->config->get('system', 'ini_max_execution_time'));
@@ -263,7 +264,7 @@ class App
 
 		if ($this->mode->has(Mode::DBAVAILABLE)) {
 			Core\Hook::loadHooks();
-			$loader = (new Config())->createConfigFileManager($this->appHelper->getBasePath(), $_SERVER);
+			$loader = (new Config())->createConfigFileManager($this->appHelper->getBasePath(), $request->getServerParams());
 			Core\Hook::callAll('load_config', $loader);
 
 			// Hooks are now working, reload the whole definitions with hook enabled
