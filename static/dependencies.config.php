@@ -132,12 +132,6 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 			[Dice::INSTANCE => \Friendica\Core\Config\Model\ReadOnlyFileConfig::class],
 		],
 	],
-	/**
-	 * Creates the \Friendica\App\BaseURL
-	 *
-	 * Same as:
-	 *   $baseURL = new \Friendica\App\BaseURL($configuration, $);
-	 */
 	\Friendica\App\BaseURL::class => [
 		'constructParams' => [
 			$serverVars,
