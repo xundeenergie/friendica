@@ -224,7 +224,7 @@ class App
 
 		$this->setupLegacyServerLocator();
 
-		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(LoggerInterface::class));
+		$this->registerErrorHandler();
 
 		if (DI::mode()->isInstall()) {
 			die("Friendica isn't properly installed yet.\n");
