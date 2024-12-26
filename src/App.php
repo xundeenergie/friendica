@@ -440,7 +440,8 @@ class App
 
 		$this->setupContainerForLogger(LogChannel::WORKER);
 
-		DI::init($this->container);
+		$this->setupLegacyServiceLocator();
+
 		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(\Psr\Log\LoggerInterface::class));
 
 		DI::mode()->setExecutor(Mode::WORKER);
