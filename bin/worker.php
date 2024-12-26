@@ -23,9 +23,7 @@ use Friendica\DI;
 use Psr\Log\LoggerInterface;
 
 // Get options
-$shortopts = 'sn';
-$longopts = ['spawn', 'no_cron'];
-$options = getopt($shortopts, $longopts);
+$options = getopt('sn', ['spawn', 'no_cron']);
 
 // Ensure that worker.php is executed from the base path of the installation
 chdir(dirname(__DIR__));
