@@ -200,6 +200,8 @@ class App
 
 		$this->registerErrorHandler();
 
+		Core\Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
+
 		(new \Friendica\Core\Console($this->container, $argv))->execute();
 	}
 
