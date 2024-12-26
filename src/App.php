@@ -226,11 +226,14 @@ class App
 
 		$this->registerErrorHandler();
 
-		if (DI::mode()->isInstall()) {
+		/** @var Mode */
+		$mode = $this->container->create(Mode::class);
+
+		if ($mode->isInstall()) {
 			die("Friendica isn't properly installed yet.\n");
 		}
 
-		DI::mode()->setExecutor(Mode::DAEMON);
+		$mode->setExecutor(Mode::DAEMON);
 
 		DI::config()->reload();
 
