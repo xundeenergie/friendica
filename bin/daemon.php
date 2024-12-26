@@ -28,9 +28,7 @@ use Friendica\Util\DateTimeFormat;
 use Psr\Log\LoggerInterface;
 
 // Get options
-$shortopts = 'f';
-$longopts = ['foreground'];
-$options = getopt($shortopts, $longopts);
+$options = getopt('f', ['foreground']);
 
 // Ensure that daemon.php is executed from the base path of the installation
 chdir(dirname(__DIR__));
