@@ -235,13 +235,13 @@ class App
 		DI::config()->reload();
 
 		if (empty(DI::config()->get('system', 'pidfile'))) {
-			die(<<<TXT
-		Please set system.pidfile in config/local.config.php. For example:
+			die(<<< TXT
+					Please set system.pidfile in config/local.config.php. For example:
 
-			'system' => [
-				'pidfile' => '/path/to/daemon.pid',
-			],
-		TXT
+						'system' => [
+							'pidfile' => '/path/to/daemon.pid',
+						],
+					TXT
 			);
 		}
 
