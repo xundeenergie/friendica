@@ -177,7 +177,7 @@ class App
 			$this->container->create(ModuleHTTPException::class),
 			new HTTPInputData($request->getServerParams()),
 			$start_time,
-			$request->getServerParams()
+			$request
 		);
 	}
 
@@ -549,8 +549,10 @@ class App
 		ModuleHTTPException $httpException,
 		HTTPInputData $httpInput,
 		float $start_time,
-		array $server
+		ServerRequestInterface $request
 	) {
+		$server = $request->getServerParams();
+
 		$requeststring = ($server['REQUEST_METHOD'] ?? '') . ' ' . ($server['REQUEST_URI'] ?? '') . ' ' . ($server['SERVER_PROTOCOL'] ?? '');
 		$this->logger->debug('Request received', ['address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '']);
 		$request_start = microtime(true);
