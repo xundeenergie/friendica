@@ -155,6 +155,8 @@ class App
 			$this->container->create(ViewDefinition::class),
 		);
 
+		$this->registerTemplateEngine();
+
 		$this->mode->setExecutor(Mode::INDEX);
 
 		$this->runFrontend(
@@ -270,8 +272,6 @@ class App
 		}
 
 		$this->loadDefaultTimezone();
-
-		$this->registerTemplateEngine();
 	}
 
 	/**
