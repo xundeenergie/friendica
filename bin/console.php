@@ -20,7 +20,8 @@ use Psr\Log\LoggerInterface;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$dice = (new Dice())->addRules(include __DIR__ . '/../static/dependencies.config.php');
+$dice = (new Dice())->addRules(require(dirname(__DIR__) . '/static/dependencies.config.php'));
+
 /** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
 $addonLoader = $dice->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
 $dice = $dice->addRules($addonLoader->getActiveAddonConfig('dependencies'));
