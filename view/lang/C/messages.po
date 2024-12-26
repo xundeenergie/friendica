@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2024.12-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-23 10:09+0000\n"
+"POT-Creation-Date: 2024-12-26 13:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -644,10 +644,6 @@ msgstr ""
 
 #: mod/photos.php:1276
 msgid "Map"
-msgstr ""
-
-#: src/App.php:255
-msgid "Apologies but the website is unavailable at the moment."
 msgstr ""
 
 #: src/App/Page.php:241
