@@ -190,6 +190,20 @@ class App
 		}
 	}
 
+	public function processConsole(array $argv): void
+	{
+		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
+		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
+		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
+		$this->container = $this->container->addRule(LoggerInterface::class, ['constructParams' => [LogChannel::CONSOLE]]);
+
+		/// @fixme Necessary until Hooks inside the Logger can get loaded without the DI-class
+		DI::init($this->container);
+		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(\Psr\Log\LoggerInterface::class));
+
+		(new \Friendica\Core\Console($this->container, $argv))->execute();
+	}
+
 	private function setupContainerForAddons(): void
 	{
 		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
