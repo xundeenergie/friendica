@@ -235,9 +235,12 @@ class App
 
 		$mode->setExecutor(Mode::DAEMON);
 
-		DI::config()->reload();
+		/** @var IManageConfigValues */
+		$config = $this->container->create(IManageConfigValues::class);
 
-		if (empty(DI::config()->get('system', 'pidfile'))) {
+		$config->reload();
+
+		if (empty($config->get('system', 'pidfile'))) {
 			die(<<< TXT
 					Please set system.pidfile in config/local.config.php. For example:
 
@@ -248,7 +251,7 @@ class App
 			);
 		}
 
-		$pidfile = DI::config()->get('system', 'pidfile');
+		$pidfile = $config->get('system', 'pidfile');
 
 		if (in_array('start', $argv)) {
 			$mode = 'start';
@@ -358,7 +361,7 @@ class App
 		// Just to be sure that this script really runs endlessly
 		set_time_limit(0);
 
-		$wait_interval = intval(DI::config()->get('system', 'cron_interval', 5)) * 60;
+		$wait_interval = intval($config->get('system', 'cron_interval', 5)) * 60;
 
 		$do_cron = true;
 		$last_cron = 0;
