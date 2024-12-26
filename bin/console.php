@@ -31,4 +31,4 @@ $dice = $dice->addRule(LoggerInterface::class, ['constructParams' => [LogChannel
 DI::init($dice);
 \Friendica\Core\Logger\Handler\ErrorHandler::register($dice->create(\Psr\Log\LoggerInterface::class));
 
-(new Friendica\Core\Console($dice, $argv))->execute();
+(new Friendica\Core\Console($dice, $_SERVER['argv'] ?? []))->execute();
