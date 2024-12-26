@@ -121,6 +121,10 @@ class App
 
 	public function processRequest(ServerRequestInterface $request, float $start_time): void
 	{
+		$this->setupContainerForRunningFrontend($request);
+
+		$this->registerErrorHandler();
+
 		$this->requestId = $this->container->create(Request::class)->getRequestId();
 		$this->auth      = $this->container->create(Authentication::class);
 		$this->config    = $this->container->create(IManageConfigValues::class);
@@ -150,6 +154,26 @@ class App
 			$start_time,
 			$request->getServerParams()
 		);
+	}
+
+	private function setupContainerForRunningFrontend(ServerRequestInterface $request): void
+	{
+		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
+		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
+
+		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
+		$this->container = $this->container->addRule(Mode::class, [
+			'call' => [
+				['determineRunMode', [false, $request->getServerParams()], Dice::CHAIN_CALL],
+			],
+		]);
+
+		\Friendica\DI::init($this->container);
+	}
+
+	private function registerErrorHandler(): void
+	{
+		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(LoggerInterface::class));
 	}
 
 	/**
