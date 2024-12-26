@@ -10,6 +10,7 @@ parameters:
         - bin/auth_ejabberd.php
         - bin/console.php
         - bin/daemon.php
+        - bin/worker.php
         - index.php
         - src/
 
