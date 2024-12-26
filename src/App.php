@@ -449,8 +449,11 @@ class App
 
 		$mode->setExecutor(Mode::WORKER);
 
+		/** @var BasePath */
+		$basePath = $this->container->create(BasePath::class);
+
 		// Check the database structure and possibly fixes it
-		Update::check(DI::basePath(), true);
+		Update::check($basePath->getPath(), true);
 
 		// Quit when in maintenance
 		if (!$mode->has(Mode::MAINTENANCEDISABLED)) {
