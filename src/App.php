@@ -551,10 +551,10 @@ class App
 		float $start_time,
 		ServerRequestInterface $request
 	) {
-		$server = $request->getServerParams();
+		$serverVars = $request->getServerParams();
 
-		$requeststring = ($server['REQUEST_METHOD'] ?? '') . ' ' . ($server['REQUEST_URI'] ?? '') . ' ' . ($server['SERVER_PROTOCOL'] ?? '');
-		$this->logger->debug('Request received', ['address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '']);
+		$requeststring = ($serverVars['REQUEST_METHOD'] ?? '') . ' ' . ($serverVars['REQUEST_URI'] ?? '') . ' ' . ($serverVars['SERVER_PROTOCOL'] ?? '');
+		$this->logger->debug('Request received', ['address' => $serverVars['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $serverVars['HTTP_REFERER'] ?? '', 'user-agent' => $serverVars['HTTP_USER_AGENT'] ?? '']);
 		$request_start = microtime(true);
 		$request = $_REQUEST;
 
@@ -573,19 +573,19 @@ class App
 			if (!$this->mode->isInstall()) {
 				// Force SSL redirection
 				if ($this->config->get('system', 'force_ssl') &&
-					(empty($server['HTTPS']) || $server['HTTPS'] === 'off') &&
-					(empty($server['HTTP_X_FORWARDED_PROTO']) || $server['HTTP_X_FORWARDED_PROTO'] === 'http') &&
-					!empty($server['REQUEST_METHOD']) &&
-					$server['REQUEST_METHOD'] === 'GET') {
+					(empty($serverVars['HTTPS']) || $serverVars['HTTPS'] === 'off') &&
+					(empty($serverVars['HTTP_X_FORWARDED_PROTO']) || $serverVars['HTTP_X_FORWARDED_PROTO'] === 'http') &&
+					!empty($serverVars['REQUEST_METHOD']) &&
+					$serverVars['REQUEST_METHOD'] === 'GET') {
 					System::externalRedirect($this->baseURL . '/' . $this->args->getQueryString());
 				}
 				Core\Hook::callAll('init_1');
 			}
 
-			DID::routeRequest($this->args->getCommand(), $server);
+			DID::routeRequest($this->args->getCommand(), $serverVars);
 
 			if ($this->mode->isNormal() && !$this->mode->isBackend()) {
-				$requester = HTTPSignature::getSigner('', $server);
+				$requester = HTTPSignature::getSigner('', $serverVars);
 				if (!empty($requester)) {
 					OpenWebAuth::addVisitorCookieForHandle($requester);
 				}
@@ -703,12 +703,12 @@ class App
 				$response = $page->run($this->appHelper, $this->session, $this->baseURL, $this->args, $this->mode, $response, $this->l10n, $this->profiler, $this->config, $pconfig, $nav, $this->session->getLocalUserId());
 			}
 
-			$this->logger->debug('Request processed sucessfully', ['response' => $response->getStatusCode(), 'address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '', 'duration' => number_format(microtime(true) - $request_start, 3)]);
-			$this->logSlowCalls(microtime(true) - $request_start, $response->getStatusCode(), $requeststring, $server['HTTP_USER_AGENT'] ?? '');
+			$this->logger->debug('Request processed sucessfully', ['response' => $response->getStatusCode(), 'address' => $serverVars['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $serverVars['HTTP_REFERER'] ?? '', 'user-agent' => $serverVars['HTTP_USER_AGENT'] ?? '', 'duration' => number_format(microtime(true) - $request_start, 3)]);
+			$this->logSlowCalls(microtime(true) - $request_start, $response->getStatusCode(), $requeststring, $serverVars['HTTP_USER_AGENT'] ?? '');
 			System::echoResponse($response);
 		} catch (HTTPException $e) {
-			$this->logger->debug('Request processed with exception', ['response' => $e->getCode(), 'address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '', 'duration' => number_format(microtime(true) - $request_start, 3)]);
-			$this->logSlowCalls(microtime(true) - $request_start, $e->getCode(), $requeststring, $server['HTTP_USER_AGENT'] ?? '');
+			$this->logger->debug('Request processed with exception', ['response' => $e->getCode(), 'address' => $serverVars['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $serverVars['HTTP_REFERER'] ?? '', 'user-agent' => $serverVars['HTTP_USER_AGENT'] ?? '', 'duration' => number_format(microtime(true) - $request_start, 3)]);
+			$this->logSlowCalls(microtime(true) - $request_start, $e->getCode(), $requeststring, $serverVars['HTTP_USER_AGENT'] ?? '');
 			$httpException->rawContent($e);
 		}
 		$page->logRuntime($this->config, 'runFrontend');
