@@ -17,6 +17,7 @@ use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Content\Nav;
 use Friendica\Core\Config\Factory\Config;
+use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
@@ -200,7 +201,7 @@ class App
 
 		$this->registerErrorHandler();
 
-		Core\Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
+		$this->registerTemplateEngine();
 
 		(new \Friendica\Core\Console($this->container, $argv))->execute();
 	}
@@ -228,6 +229,11 @@ class App
 	private function registerErrorHandler(): void
 	{
 		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(LoggerInterface::class));
+	}
+
+	private function registerTemplateEngine(): void
+	{
+		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
 	}
 
 	/**
@@ -264,8 +270,8 @@ class App
 		}
 
 		$this->loadDefaultTimezone();
-		// Register template engines
-		Core\Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
+
+		$this->registerTemplateEngine();
 	}
 
 	/**
