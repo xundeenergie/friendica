@@ -378,6 +378,9 @@ class App
 		$basePath = $this->container->create(BasePath::class);
 		$path = $basePath->getPath();
 
+		/** @var System */
+		$system = $this->container->create(System::class);
+
 		// Now running as a daemon.
 		while (true) {
 			// Check the database structure and possibly fixes it
@@ -388,7 +391,7 @@ class App
 				$do_cron = true;
 			}
 
-			if ($do_cron || (!DI::system()->isMaxLoadReached() && Worker::entriesExists() && Worker::isReady())) {
+			if ($do_cron || (!$system->isMaxLoadReached() && Worker::entriesExists() && Worker::isReady())) {
 				Worker::spawnWorker($do_cron);
 			} else {
 				Logger::info('Cool down for 5 seconds', ['pid' => $pid]);
