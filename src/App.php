@@ -254,20 +254,20 @@ class App
 		$pidfile = $config->get('system', 'pidfile');
 
 		if (in_array('start', $argv)) {
-			$mode = 'start';
+			$daemonMode = 'start';
 		}
 
 		if (in_array('stop', $argv)) {
-			$mode = 'stop';
+			$daemonMode = 'stop';
 		}
 
 		if (in_array('status', $argv)) {
-			$mode = 'status';
+			$daemonMode = 'status';
 		}
 
 		$foreground = array_key_exists('f', $options) || array_key_exists('foreground', $options);
 
-		if (!isset($mode)) {
+		if (!isset($daemonMode)) {
 			die("Please use either 'start', 'stop' or 'status'.\n");
 		}
 
@@ -281,12 +281,12 @@ class App
 			$pid = intval(file_get_contents($pidfile));
 		}
 
-		if (empty($pid) && in_array($mode, ['stop', 'status'])) {
+		if (empty($pid) && in_array($daemonMode, ['stop', 'status'])) {
 			DI::keyValue()->set('worker_daemon_mode', false);
 			die("Pidfile wasn't found. Is the daemon running?\n");
 		}
 
-		if ($mode == 'status') {
+		if ($daemonMode == 'status') {
 			if (posix_kill($pid, 0)) {
 				die("Daemon process $pid is running.\n");
 			}
@@ -297,7 +297,7 @@ class App
 			die("Daemon process $pid isn't running.\n");
 		}
 
-		if ($mode == 'stop') {
+		if ($daemonMode == 'stop') {
 			posix_kill($pid, SIGTERM);
 
 			unlink($pidfile);
