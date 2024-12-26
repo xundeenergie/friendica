@@ -17,6 +17,7 @@ use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Content\Nav;
 use Friendica\Core\Config\Factory\Config;
+use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\DBA;
@@ -281,8 +282,11 @@ class App
 			$pid = intval(file_get_contents($pidfile));
 		}
 
+		/** @var IManageKeyValuePairs */
+		$keyValue = $this->container->create(IManageKeyValuePairs::class);
+
 		if (empty($pid) && in_array($daemonMode, ['stop', 'status'])) {
-			DI::keyValue()->set('worker_daemon_mode', false);
+			$keyValue->set('worker_daemon_mode', false);
 			die("Pidfile wasn't found. Is the daemon running?\n");
 		}
 
@@ -293,7 +297,7 @@ class App
 
 			unlink($pidfile);
 
-			DI::keyValue()->set('worker_daemon_mode', false);
+			$keyValue->set('worker_daemon_mode', false);
 			die("Daemon process $pid isn't running.\n");
 		}
 
@@ -304,7 +308,7 @@ class App
 
 			Logger::notice('Worker daemon process was killed', ['pid' => $pid]);
 
-			DI::keyValue()->set('worker_daemon_mode', false);
+			$keyValue->set('worker_daemon_mode', false);
 			die("Worker daemon process $pid was killed.\n");
 		}
 
@@ -356,7 +360,7 @@ class App
 			DBA::connect();
 		}
 
-		DI::keyValue()->set('worker_daemon_mode', true);
+		$keyValue->set('worker_daemon_mode', true);
 
 		// Just to be sure that this script really runs endlessly
 		set_time_limit(0);
