@@ -7,8 +7,9 @@ parameters:
 
     paths:
         - addon/
-        - src/
+        - bin/daemon.php
         - index.php
+        - src/
 
     excludePaths:
         analyse:
