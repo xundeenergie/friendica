@@ -47,8 +47,6 @@ use Friendica\Util\Profiler;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-
-
 /**
  * Our main application structure for the life of this page.
  *
@@ -434,6 +432,45 @@ class App
 				Logger::info('Worker jobs are calling to be forked.', ['pid' => $pid]);
 			}
 		}
+	}
+
+	public function processWorker(array $options): void
+	{
+		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
+		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
+		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
+
+		$this->container = $this->container->addRule(LoggerInterface::class, ['constructParams' => [LogChannel::WORKER]]);
+
+		DI::init($this->container);
+		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(\Psr\Log\LoggerInterface::class));
+
+		DI::mode()->setExecutor(Mode::WORKER);
+
+		// Check the database structure and possibly fixes it
+		Update::check(DI::basePath(), true);
+
+		// Quit when in maintenance
+		if (!DI::mode()->has(Mode::MAINTENANCEDISABLED)) {
+			return;
+		}
+
+		$spawn = array_key_exists('s', $options) || array_key_exists('spawn', $options);
+
+		if ($spawn) {
+			Worker::spawnWorker();
+			exit();
+		}
+
+		$run_cron = !array_key_exists('n', $options) && !array_key_exists('no_cron', $options);
+
+		$process = DI::process()->create(getmypid(), basename(__FILE__));
+
+		Worker::processQueue($run_cron, $process);
+
+		Worker::unclaimProcess($process);
+
+		DI::process()->delete($process);
 	}
 
 	private function setupContainerForAddons(): void
