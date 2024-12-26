@@ -216,7 +216,7 @@ class App
 		(new \Friendica\Core\Console($this->container, $argv))->execute();
 	}
 
-	public function processDaemon(array $options): void
+	public function processDaemon(array $argv, array $options): void
 	{
 		$this->setupContainerForAddons();
 
@@ -247,15 +247,15 @@ class App
 
 		$pidfile = DI::config()->get('system', 'pidfile');
 
-		if (in_array('start', $_SERVER['argv'])) {
+		if (in_array('start', $argv)) {
 			$mode = 'start';
 		}
 
-		if (in_array('stop', $_SERVER['argv'])) {
+		if (in_array('stop', $argv)) {
 			$mode = 'stop';
 		}
 
-		if (in_array('status', $_SERVER['argv'])) {
+		if (in_array('status', $argv)) {
 			$mode = 'status';
 		}
 
@@ -265,7 +265,7 @@ class App
 			die("Please use either 'start', 'stop' or 'status'.\n");
 		}
 
-		if (empty($_SERVER['argv'][0])) {
+		if (empty($argv[0])) {
 			die("Unexpected script behaviour. This message should never occur.\n");
 		}
 

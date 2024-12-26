@@ -31,4 +31,4 @@ $dice = (new Dice())->addRules(require(dirname(__DIR__) . '/static/dependencies.
 
 $app = \Friendica\App::fromDice($dice);
 
-$app->processDaemon($options);
+$app->processDaemon($_SERVER['argv'] ?? [], $options);
