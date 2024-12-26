@@ -438,7 +438,7 @@ class App
 	{
 		$this->setupContainerForAddons();
 
-		$this->container = $this->container->addRule(LoggerInterface::class, ['constructParams' => [LogChannel::WORKER]]);
+		$this->setupContainerForLogger(LogChannel::WORKER);
 
 		DI::init($this->container);
 		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(\Psr\Log\LoggerInterface::class));
