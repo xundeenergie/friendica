@@ -134,7 +134,7 @@ class App
 			],
 		]);
 
-		$this->setupLegacyServerLocator();
+		$this->setupLegacyServiceLocator();
 
 		$this->registerErrorHandler();
 
@@ -178,7 +178,7 @@ class App
 
 		$this->setupContainerForLogger(LogChannel::AUTH_JABBERED);
 
-		$this->setupLegacyServerLocator();
+		$this->setupLegacyServiceLocator();
 
 		$this->registerErrorHandler();
 
@@ -200,7 +200,7 @@ class App
 
 		$this->setupContainerForLogger(LogChannel::CONSOLE);
 
-		$this->setupLegacyServerLocator();
+		$this->setupLegacyServiceLocator();
 
 		$this->registerErrorHandler();
 
@@ -224,7 +224,7 @@ class App
 		]);
 	}
 
-	private function setupLegacyServerLocator(): void
+	private function setupLegacyServiceLocator(): void
 	{
 		\Friendica\DI::init($this->container);
 	}
