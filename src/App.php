@@ -20,6 +20,7 @@ use Friendica\Core\Config\Factory\Config;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
+use Friendica\Core\Worker\Repository\Process as ProcessRepository;
 use Friendica\Database\DBA;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
@@ -469,13 +470,16 @@ class App
 
 		$run_cron = !array_key_exists('n', $options) && !array_key_exists('no_cron', $options);
 
-		$process = DI::process()->create(getmypid(), basename(__FILE__));
+		/** @var ProcessRepository */
+		$processRepository = $this->container->create(ProcessRepository::class);
+
+		$process = $processRepository->create(getmypid(), 'worker.php');
 
 		Worker::processQueue($run_cron, $process);
 
 		Worker::unclaimProcess($process);
 
-		DI::process()->delete($process);
+		$processRepository->delete($process);
 	}
 
 	private function setupContainerForAddons(): void
