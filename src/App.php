@@ -190,7 +190,7 @@ class App
 		$this->registerErrorHandler();
 
 		// Check the database structure and possibly fixes it
-		\Friendica\Core\Update::check(\Friendica\DI::basePath(), true);
+		Update::check(DI::basePath(), true);
 
 		$appMode = $this->container->create(Mode::class);
 
@@ -224,7 +224,7 @@ class App
 		$this->container = $this->container->addRule(LoggerInterface::class, ['constructParams' => [Logger\Capability\LogChannel::DAEMON]]);
 
 		DI::init($this->container);
-		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(\Psr\Log\LoggerInterface::class));
+		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(LoggerInterface::class));
 
 		if (DI::mode()->isInstall()) {
 			die("Friendica isn't properly installed yet.\n");
@@ -433,7 +433,7 @@ class App
 
 	private function setupLegacyServerLocator(): void
 	{
-		\Friendica\DI::init($this->container);
+		DI::init($this->container);
 	}
 
 	private function registerErrorHandler(): void
