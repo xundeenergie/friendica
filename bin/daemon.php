@@ -33,16 +33,7 @@ $longopts = ['foreground'];
 $options = getopt($shortopts, $longopts);
 
 // Ensure that daemon.php is executed from the base path of the installation
-if (!file_exists('index.php') && (sizeof($_SERVER['argv']) != 0)) {
-	$directory = dirname($_SERVER['argv'][0]);
-
-	if (substr($directory, 0, 1) != '/') {
-		$directory = $_SERVER['PWD'] . '/' . $directory;
-	}
-	$directory = realpath($directory . '/..');
-
-	chdir($directory);
-}
+chdir(dirname(__DIR__));
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
