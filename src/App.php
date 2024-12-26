@@ -436,9 +436,7 @@ class App
 
 	public function processWorker(array $options): void
 	{
-		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
-		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
-		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
+		$this->setupContainerForAddons();
 
 		$this->container = $this->container->addRule(LoggerInterface::class, ['constructParams' => [LogChannel::WORKER]]);
 
