@@ -175,7 +175,6 @@ class App
 			$this->container->create(Page::class),
 			$this->container->create(Nav::class),
 			$this->container->create(ModuleHTTPException::class),
-			new HTTPInputData($request->getServerParams()),
 			$start_time,
 			$request
 		);
@@ -534,9 +533,7 @@ class App
 	 * @param IManagePersonalConfigValues $pconfig
 	 * @param Page                        $page       The Friendica page printing container
 	 * @param ModuleHTTPException         $httpException The possible HTTP Exception container
-	 * @param HTTPInputData               $httpInput  A library for processing PHP input streams
 	 * @param float                       $start_time The start time of the overall script execution
-	 * @param array                       $server     The $_SERVER array
 	 *
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
@@ -547,10 +544,10 @@ class App
 		Page $page,
 		Nav $nav,
 		ModuleHTTPException $httpException,
-		HTTPInputData $httpInput,
 		float $start_time,
 		ServerRequestInterface $request
 	) {
+		$httpInput  = new HTTPInputData($request->getServerParams());
 		$serverVars = $request->getServerParams();
 		$queryVars  = $request->getQueryParams();
 
