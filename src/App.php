@@ -131,7 +131,7 @@ class App
 			],
 		]);
 
-		$this->setupLegacyServerLocator();
+		$this->setupLegacyServiceLocator();
 
 		$this->registerErrorHandler();
 
@@ -174,7 +174,7 @@ class App
 			'constructParams' => [LogChannel::AUTH_JABBERED],
 		]);
 
-		$this->setupLegacyServerLocator();
+		$this->setupLegacyServiceLocator();
 
 		$this->registerErrorHandler();
 
@@ -198,7 +198,7 @@ class App
 		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
 	}
 
-	private function setupLegacyServerLocator(): void
+	private function setupLegacyServiceLocator(): void
 	{
 		\Friendica\DI::init($this->container);
 	}
