@@ -37,6 +37,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 $dice = (new Dice())->addRules(require(dirname(__DIR__) . '/static/dependencies.config.php'));
 
+(function (Dice $dice, array $options): void {
 /** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
 $addonLoader = $dice->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
 $dice = $dice->addRules($addonLoader->getActiveAddonConfig('dependencies'));
@@ -230,6 +231,7 @@ while (true) {
 		Logger::info('Worker jobs are calling to be forked.', ['pid' => $pid]);
 	}
 }
+})($dice, $options);
 
 function shutdown() {
 	posix_kill(posix_getpid(), SIGTERM);
