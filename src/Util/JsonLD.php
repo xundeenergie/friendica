@@ -228,7 +228,7 @@ class JsonLD
 				$value = 'http://schema.org#';
 			}
 			// Issue 14630: Wordpress Event Bridge uses a URL that cannot be retrieved
-			if ($value == 'https://schema.org/') {
+			if (is_int($key) && $value == 'https://schema.org/') {
 				Logger::debug('https schema.org path fixed');
 				$value = 'https://schema.org/docs/jsonldcontext.json#';
 			}
