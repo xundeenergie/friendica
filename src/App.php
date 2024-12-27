@@ -17,6 +17,7 @@ use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Content\Nav;
 use Friendica\Core\Config\Factory\Config;
+use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
@@ -125,6 +126,8 @@ class App
 	{
 		$this->setupContainerForAddons();
 
+		$this->setupContainerForLogger(LogChannel::DEFAULT);
+
 		$this->container = $this->container->addRule(Mode::class, [
 			'call' => [
 				['determineRunMode', [false, $request->getServerParams()], Dice::CHAIN_CALL],
@@ -147,10 +150,13 @@ class App
 		$this->session   = $this->container->create(IHandleUserSessions::class);
 		$this->appHelper = $this->container->create(AppHelper::class);
 
-		$this->load(
+		$this->loadSetupForFrontend(
+			$request,
 			$this->container->create(DbaDefinition::class),
 			$this->container->create(ViewDefinition::class),
 		);
+
+		$this->registerTemplateEngine();
 
 		$this->mode->setExecutor(Mode::INDEX);
 
@@ -170,9 +176,7 @@ class App
 	{
 		$this->setupContainerForAddons();
 
-		$this->container = $this->container->addRule(LoggerInterface::class,[
-			'constructParams' => [LogChannel::AUTH_JABBERED],
-		]);
+		$this->setupContainerForLogger(LogChannel::AUTH_JABBERED);
 
 		$this->setupLegacyServiceLocator();
 
@@ -190,12 +194,34 @@ class App
 		}
 	}
 
+	public function processConsole(array $argv): void
+	{
+		$this->setupContainerForAddons();
+
+		$this->setupContainerForLogger(LogChannel::CONSOLE);
+
+		$this->setupLegacyServiceLocator();
+
+		$this->registerErrorHandler();
+
+		$this->registerTemplateEngine();
+
+		(new \Friendica\Core\Console($this->container, $argv))->execute();
+	}
+
 	private function setupContainerForAddons(): void
 	{
 		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
 		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
 
 		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
+	}
+
+	private function setupContainerForLogger(string $logChannel): void
+	{
+		$this->container = $this->container->addRule(LoggerInterface::class, [
+			'constructParams' => [$logChannel],
+		]);
 	}
 
 	private function setupLegacyServiceLocator(): void
@@ -208,10 +234,15 @@ class App
 		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(LoggerInterface::class));
 	}
 
+	private function registerTemplateEngine(): void
+	{
+		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
+	}
+
 	/**
 	 * Load the whole app instance
 	 */
-	private function load(DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
+	private function loadSetupForFrontend(ServerRequestInterface $request, DbaDefinition $dbaDefinition, ViewDefinition $viewDefinition)
 	{
 		if ($this->config->get('system', 'ini_max_execution_time') !== false) {
 			set_time_limit((int)$this->config->get('system', 'ini_max_execution_time'));
@@ -233,7 +264,7 @@ class App
 
 		if ($this->mode->has(Mode::DBAVAILABLE)) {
 			Core\Hook::loadHooks();
-			$loader = (new Config())->createConfigFileManager($this->appHelper->getBasePath(), $_SERVER);
+			$loader = (new Config())->createConfigFileManager($this->appHelper->getBasePath(), $request->getServerParams());
 			Core\Hook::callAll('load_config', $loader);
 
 			// Hooks are now working, reload the whole definitions with hook enabled
@@ -242,8 +273,6 @@ class App
 		}
 
 		$this->loadDefaultTimezone();
-		// Register template engines
-		Core\Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
 	}
 
 	/**
