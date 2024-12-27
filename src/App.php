@@ -17,28 +17,37 @@ use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Content\Nav;
 use Friendica\Core\Config\Factory\Config;
+use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
+use Friendica\Database\DBA;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
+use Friendica\DI;
 use Friendica\Module\Maintenance;
 use Friendica\Security\Authentication;
 use Friendica\Core\Config\Capability\IManageConfigValues;
+use Friendica\Core\L10n;
+use Friendica\Core\Logger;
 use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
-use Friendica\Core\L10n;
 use Friendica\Core\System;
+use Friendica\Core\Update;
+use Friendica\Core\Worker;
 use Friendica\Module\Special\HTTPException as ModuleHTTPException;
 use Friendica\Network\HTTPException;
 use Friendica\Protocol\ATProtocol\DID;
 use Friendica\Security\ExAuth;
 use Friendica\Security\OpenWebAuth;
+use Friendica\Util\BasePath;
 use Friendica\Util\DateTimeFormat;
 use Friendica\Util\HTTPInputData;
 use Friendica\Util\HTTPSignature;
 use Friendica\Util\Profiler;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+
+
 
 /**
  * Our main application structure for the life of this page.
@@ -166,9 +175,8 @@ class App
 			$this->container->create(Page::class),
 			$this->container->create(Nav::class),
 			$this->container->create(ModuleHTTPException::class),
-			new HTTPInputData($request->getServerParams()),
 			$start_time,
-			$request->getServerParams()
+			$request
 		);
 	}
 
@@ -182,8 +190,11 @@ class App
 
 		$this->registerErrorHandler();
 
+		/** @var BasePath */
+		$basePath = $this->container->create(BasePath::class);
+
 		// Check the database structure and possibly fixes it
-		\Friendica\Core\Update::check(\Friendica\DI::basePath(), true);
+		Update::check($basePath->getPath(), true);
 
 		$appMode = $this->container->create(Mode::class);
 
@@ -209,6 +220,222 @@ class App
 		(new \Friendica\Core\Console($this->container, $argv))->execute();
 	}
 
+	public function processDaemon(array $argv, array $options): void
+	{
+		$this->setupContainerForAddons();
+
+		$this->setupContainerForLogger(LogChannel::DAEMON);
+
+		$this->setupLegacyServiceLocator();
+
+		$this->registerErrorHandler();
+
+		/** @var Mode */
+		$mode = $this->container->create(Mode::class);
+
+		if ($mode->isInstall()) {
+			die("Friendica isn't properly installed yet.\n");
+		}
+
+		$mode->setExecutor(Mode::DAEMON);
+
+		/** @var IManageConfigValues */
+		$config = $this->container->create(IManageConfigValues::class);
+
+		$config->reload();
+
+		if (empty($config->get('system', 'pidfile'))) {
+			die(<<< TXT
+					Please set system.pidfile in config/local.config.php. For example:
+
+						'system' => [
+							'pidfile' => '/path/to/daemon.pid',
+						],
+					TXT
+			);
+		}
+
+		$pidfile = $config->get('system', 'pidfile');
+
+		if (in_array('start', $argv)) {
+			$daemonMode = 'start';
+		}
+
+		if (in_array('stop', $argv)) {
+			$daemonMode = 'stop';
+		}
+
+		if (in_array('status', $argv)) {
+			$daemonMode = 'status';
+		}
+
+		$foreground = array_key_exists('f', $options) || array_key_exists('foreground', $options);
+
+		if (!isset($daemonMode)) {
+			die("Please use either 'start', 'stop' or 'status'.\n");
+		}
+
+		if (empty($argv[0])) {
+			die("Unexpected script behaviour. This message should never occur.\n");
+		}
+
+		$pid = null;
+
+		if (is_readable($pidfile)) {
+			$pid = intval(file_get_contents($pidfile));
+		}
+
+		/** @var IManageKeyValuePairs */
+		$keyValue = $this->container->create(IManageKeyValuePairs::class);
+
+		if (empty($pid) && in_array($daemonMode, ['stop', 'status'])) {
+			$keyValue->set('worker_daemon_mode', false);
+			die("Pidfile wasn't found. Is the daemon running?\n");
+		}
+
+		if ($daemonMode == 'status') {
+			if (posix_kill($pid, 0)) {
+				die("Daemon process $pid is running.\n");
+			}
+
+			unlink($pidfile);
+
+			$keyValue->set('worker_daemon_mode', false);
+			die("Daemon process $pid isn't running.\n");
+		}
+
+		if ($daemonMode == 'stop') {
+			posix_kill($pid, SIGTERM);
+
+			unlink($pidfile);
+
+			Logger::notice('Worker daemon process was killed', ['pid' => $pid]);
+
+			$keyValue->set('worker_daemon_mode', false);
+			die("Worker daemon process $pid was killed.\n");
+		}
+
+		if (!empty($pid) && posix_kill($pid, 0)) {
+			die("Daemon process $pid is already running.\n");
+		}
+
+		Logger::notice('Starting worker daemon.', ['pid' => $pid]);
+
+		if (!$foreground) {
+			echo "Starting worker daemon.\n";
+
+			DBA::disconnect();
+
+			// Fork a daemon process
+			$pid = pcntl_fork();
+			if ($pid == -1) {
+				echo "Daemon couldn't be forked.\n";
+				Logger::warning('Could not fork daemon');
+				exit(1);
+			} elseif ($pid) {
+				// The parent process continues here
+				if (!file_put_contents($pidfile, $pid)) {
+					echo "Pid file wasn't written.\n";
+					Logger::warning('Could not store pid file');
+					posix_kill($pid, SIGTERM);
+					exit(1);
+				}
+				echo 'Child process started with pid ' . $pid . ".\n";
+				Logger::notice('Child process started', ['pid' => $pid]);
+				exit(0);
+			}
+
+			// We now are in the child process
+			register_shutdown_function(function () {
+				posix_kill(posix_getpid(), SIGTERM);
+				posix_kill(posix_getpid(), SIGHUP);
+			});
+
+			// Make the child the main process, detach it from the terminal
+			if (posix_setsid() < 0) {
+				return;
+			}
+
+			// Closing all existing connections with the outside
+			fclose(STDIN);
+
+			// And now connect the database again
+			DBA::connect();
+		}
+
+		$keyValue->set('worker_daemon_mode', true);
+
+		// Just to be sure that this script really runs endlessly
+		set_time_limit(0);
+
+		$wait_interval = intval($config->get('system', 'cron_interval', 5)) * 60;
+
+		$do_cron = true;
+		$last_cron = 0;
+
+		/** @var BasePath */
+		$basePath = $this->container->create(BasePath::class);
+		$path = $basePath->getPath();
+
+		/** @var System */
+		$system = $this->container->create(System::class);
+
+		// Now running as a daemon.
+		while (true) {
+			// Check the database structure and possibly fixes it
+			Update::check($path, true);
+
+			if (!$do_cron && ($last_cron + $wait_interval) < time()) {
+				Logger::info('Forcing cron worker call.', ['pid' => $pid]);
+				$do_cron = true;
+			}
+
+			if ($do_cron || (!$system->isMaxLoadReached() && Worker::entriesExists() && Worker::isReady())) {
+				Worker::spawnWorker($do_cron);
+			} else {
+				Logger::info('Cool down for 5 seconds', ['pid' => $pid]);
+				sleep(5);
+			}
+
+			if ($do_cron) {
+				// We force a reconnect of the database connection.
+				// This is done to ensure that the connection don't get lost over time.
+				DBA::reconnect();
+
+				$last_cron = time();
+			}
+
+			$start = time();
+			Logger::info('Sleeping', ['pid' => $pid, 'until' => gmdate(DateTimeFormat::MYSQL, $start + $wait_interval)]);
+
+			do {
+				$seconds = (time() - $start);
+
+				// logarithmic wait time calculation.
+				// Background: After jobs had been started, they often fork many workers.
+				// To not waste too much time, the sleep period increases.
+				$arg = (($seconds + 1) / ($wait_interval / 9)) + 1;
+				$sleep = min(1000000, round(log10($arg) * 1000000, 0));
+				usleep($sleep);
+
+				$pid = pcntl_waitpid(-1, $status, WNOHANG);
+				if ($pid > 0) {
+					Logger::info('Children quit via pcntl_waitpid', ['pid' => $pid, 'status' => $status]);
+				}
+
+				$timeout = ($seconds >= $wait_interval);
+			} while (!$timeout && !Worker\IPC::JobsExists());
+
+			if ($timeout) {
+				$do_cron = true;
+				Logger::info('Woke up after $wait_interval seconds.', ['pid' => $pid, 'sleep' => $wait_interval]);
+			} else {
+				$do_cron = false;
+				Logger::info('Worker jobs are calling to be forked.', ['pid' => $pid]);
+			}
+		}
+	}
+
 	private function setupContainerForAddons(): void
 	{
 		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
@@ -226,7 +453,7 @@ class App
 
 	private function setupLegacyServiceLocator(): void
 	{
-		\Friendica\DI::init($this->container);
+		DI::init($this->container);
 	}
 
 	private function registerErrorHandler(): void
@@ -306,9 +533,7 @@ class App
 	 * @param IManagePersonalConfigValues $pconfig
 	 * @param Page                        $page       The Friendica page printing container
 	 * @param ModuleHTTPException         $httpException The possible HTTP Exception container
-	 * @param HTTPInputData               $httpInput  A library for processing PHP input streams
 	 * @param float                       $start_time The start time of the overall script execution
-	 * @param array                       $server     The $_SERVER array
 	 *
 	 * @throws HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
@@ -319,12 +544,15 @@ class App
 		Page $page,
 		Nav $nav,
 		ModuleHTTPException $httpException,
-		HTTPInputData $httpInput,
 		float $start_time,
-		array $server
+		ServerRequestInterface $request
 	) {
-		$requeststring = ($server['REQUEST_METHOD'] ?? '') . ' ' . ($server['REQUEST_URI'] ?? '') . ' ' . ($server['SERVER_PROTOCOL'] ?? '');
-		$this->logger->debug('Request received', ['address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '']);
+		$httpInput  = new HTTPInputData($request->getServerParams());
+		$serverVars = $request->getServerParams();
+		$queryVars  = $request->getQueryParams();
+
+		$requeststring = ($serverVars['REQUEST_METHOD'] ?? '') . ' ' . ($serverVars['REQUEST_URI'] ?? '') . ' ' . ($serverVars['SERVER_PROTOCOL'] ?? '');
+		$this->logger->debug('Request received', ['address' => $serverVars['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $serverVars['HTTP_REFERER'] ?? '', 'user-agent' => $serverVars['HTTP_USER_AGENT'] ?? '']);
 		$request_start = microtime(true);
 		$request = $_REQUEST;
 
@@ -343,42 +571,42 @@ class App
 			if (!$this->mode->isInstall()) {
 				// Force SSL redirection
 				if ($this->config->get('system', 'force_ssl') &&
-					(empty($server['HTTPS']) || $server['HTTPS'] === 'off') &&
-					(empty($server['HTTP_X_FORWARDED_PROTO']) || $server['HTTP_X_FORWARDED_PROTO'] === 'http') &&
-					!empty($server['REQUEST_METHOD']) &&
-					$server['REQUEST_METHOD'] === 'GET') {
+					(empty($serverVars['HTTPS']) || $serverVars['HTTPS'] === 'off') &&
+					(empty($serverVars['HTTP_X_FORWARDED_PROTO']) || $serverVars['HTTP_X_FORWARDED_PROTO'] === 'http') &&
+					!empty($serverVars['REQUEST_METHOD']) &&
+					$serverVars['REQUEST_METHOD'] === 'GET') {
 					System::externalRedirect($this->baseURL . '/' . $this->args->getQueryString());
 				}
 				Core\Hook::callAll('init_1');
 			}
 
-			DID::routeRequest($this->args->getCommand(), $server);
+			DID::routeRequest($this->args->getCommand(), $serverVars);
 
 			if ($this->mode->isNormal() && !$this->mode->isBackend()) {
-				$requester = HTTPSignature::getSigner('', $server);
+				$requester = HTTPSignature::getSigner('', $serverVars);
 				if (!empty($requester)) {
 					OpenWebAuth::addVisitorCookieForHandle($requester);
 				}
 			}
 
 			// ZRL
-			if (!empty($_GET['zrl']) && $this->mode->isNormal() && !$this->mode->isBackend() && !$this->session->getLocalUserId()) {
+			if (!empty($queryVars['zrl']) && $this->mode->isNormal() && !$this->mode->isBackend() && !$this->session->getLocalUserId()) {
 				// Only continue when the given profile link seems valid.
 				// Valid profile links contain a path with "/profile/" and no query parameters
-				if ((parse_url($_GET['zrl'], PHP_URL_QUERY) == '') &&
-					strpos(parse_url($_GET['zrl'], PHP_URL_PATH) ?? '', '/profile/') !== false) {
-					$this->auth->setUnauthenticatedVisitor($_GET['zrl']);
+				if ((parse_url($queryVars['zrl'], PHP_URL_QUERY) == '') &&
+					strpos(parse_url($queryVars['zrl'], PHP_URL_PATH) ?? '', '/profile/') !== false) {
+					$this->auth->setUnauthenticatedVisitor($queryVars['zrl']);
 					OpenWebAuth::zrlInit();
 				} else {
 					// Someone came with an invalid parameter, maybe as a DDoS attempt
 					// We simply stop processing here
-					$this->logger->debug('Invalid ZRL parameter.', ['zrl' => $_GET['zrl']]);
+					$this->logger->debug('Invalid ZRL parameter.', ['zrl' => $queryVars['zrl']]);
 					throw new HTTPException\ForbiddenException();
 				}
 			}
 
-			if (!empty($_GET['owt']) && $this->mode->isNormal()) {
-				$token = $_GET['owt'];
+			if (!empty($queryVars['owt']) && $this->mode->isNormal()) {
+				$token = $queryVars['owt'];
 				OpenWebAuth::init($token);
 			}
 
@@ -473,12 +701,12 @@ class App
 				$response = $page->run($this->appHelper, $this->session, $this->baseURL, $this->args, $this->mode, $response, $this->l10n, $this->profiler, $this->config, $pconfig, $nav, $this->session->getLocalUserId());
 			}
 
-			$this->logger->debug('Request processed sucessfully', ['response' => $response->getStatusCode(), 'address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '', 'duration' => number_format(microtime(true) - $request_start, 3)]);
-			$this->logSlowCalls(microtime(true) - $request_start, $response->getStatusCode(), $requeststring, $server['HTTP_USER_AGENT'] ?? '');
+			$this->logger->debug('Request processed sucessfully', ['response' => $response->getStatusCode(), 'address' => $serverVars['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $serverVars['HTTP_REFERER'] ?? '', 'user-agent' => $serverVars['HTTP_USER_AGENT'] ?? '', 'duration' => number_format(microtime(true) - $request_start, 3)]);
+			$this->logSlowCalls(microtime(true) - $request_start, $response->getStatusCode(), $requeststring, $serverVars['HTTP_USER_AGENT'] ?? '');
 			System::echoResponse($response);
 		} catch (HTTPException $e) {
-			$this->logger->debug('Request processed with exception', ['response' => $e->getCode(), 'address' => $server['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $server['HTTP_REFERER'] ?? '', 'user-agent' => $server['HTTP_USER_AGENT'] ?? '', 'duration' => number_format(microtime(true) - $request_start, 3)]);
-			$this->logSlowCalls(microtime(true) - $request_start, $e->getCode(), $requeststring, $server['HTTP_USER_AGENT'] ?? '');
+			$this->logger->debug('Request processed with exception', ['response' => $e->getCode(), 'address' => $serverVars['REMOTE_ADDR'] ?? '', 'request' => $requeststring, 'referer' => $serverVars['HTTP_REFERER'] ?? '', 'user-agent' => $serverVars['HTTP_USER_AGENT'] ?? '', 'duration' => number_format(microtime(true) - $request_start, 3)]);
+			$this->logSlowCalls(microtime(true) - $request_start, $e->getCode(), $requeststring, $serverVars['HTTP_USER_AGENT'] ?? '');
 			$httpException->rawContent($e);
 		}
 		$page->logRuntime($this->config, 'runFrontend');

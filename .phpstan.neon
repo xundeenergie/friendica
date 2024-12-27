@@ -7,8 +7,11 @@ parameters:
 
     paths:
         - addon/
-        - src/
+        - bin/auth_ejabberd.php
+        - bin/console.php
+        - bin/daemon.php
         - index.php
+        - src/
 
     excludePaths:
         analyse:
