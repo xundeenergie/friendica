@@ -89,9 +89,6 @@ class Router
 	/** @var bool */
 	private $isLocalUser;
 
-	/** @var float */
-	private $dice_profiler_threshold;
-
 	/** @var string */
 	private $baseRoutesFilepath;
 
@@ -124,7 +121,6 @@ class Router
 		$this->server                  = $server;
 		$this->logger                  = $logger;
 		$this->isLocalUser             = !empty($userSession->getLocalUserId());
-		$this->dice_profiler_threshold = $config->get('system', 'dice_profiler_threshold', 0);
 
 		$this->routeCollector = $routeCollector ?? new RouteCollector(new Std(), new GroupCountBased());
 
@@ -327,14 +323,16 @@ class Router
 	{
 		$moduleClass = $module_class ?? $this->getModuleClass();
 
+		$dice_profiler_threshold = $this->config->get('system', 'dice_profiler_threshold', 0);
+
 		$stamp = microtime(true);
 
 		/** @var ICanHandleRequests $module */
 		$module = $dice->create($moduleClass, $this->parameters);
 
-		if ($this->dice_profiler_threshold > 0) {
+		if ($dice_profiler_threshold > 0) {
 			$dur = floatval(microtime(true) - $stamp);
-			if ($dur >= $this->dice_profiler_threshold) {
+			if ($dur >= $dice_profiler_threshold) {
 				$this->logger->notice('Dice module creation lasts too long.', ['duration' => round($dur, 3), 'module' => $moduleClass, 'parameters' => $this->parameters]);
 			}
 		}
