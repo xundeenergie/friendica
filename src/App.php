@@ -480,18 +480,18 @@ class App
 		$pidfile = $config->get('jetstream', 'pidfile');
 
 		if (in_array('start', (array)$_SERVER['argv'])) {
-			$mode = 'start';
+			$daemonMode = 'start';
 		}
 
 		if (in_array('stop', (array)$_SERVER['argv'])) {
-			$mode = 'stop';
+			$daemonMode = 'stop';
 		}
 
 		if (in_array('status', (array)$_SERVER['argv'])) {
-			$mode = 'status';
+			$daemonMode = 'status';
 		}
 
-		if (!isset($mode)) {
+		if (!isset($daemonMode)) {
 			die("Please use either 'start', 'stop' or 'status'.\n");
 		}
 
@@ -512,11 +512,11 @@ class App
 			$pid = intval(file_get_contents($pidfile));
 		}
 
-		if (empty($pid) && in_array($mode, ['stop', 'status'])) {
+		if (empty($pid) && in_array($daemonMode, ['stop', 'status'])) {
 			die("Pidfile wasn't found. Is jetstream running?\n");
 		}
 
-		if ($mode == 'status') {
+		if ($daemonMode == 'status') {
 			if (posix_kill($pid, 0)) {
 				die("Jetstream process $pid is running.\n");
 			}
@@ -526,7 +526,7 @@ class App
 			die("Jetstream process $pid isn't running.\n");
 		}
 
-		if ($mode == 'stop') {
+		if ($daemonMode == 'stop') {
 			posix_kill($pid, SIGTERM);
 
 			unlink($pidfile);
