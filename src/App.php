@@ -450,13 +450,20 @@ class App
 
 		Addon::loadAddons();
 		Hook::loadHooks();
-		DI::config()->reload();
 
-		if (DI::mode()->isInstall()) {
+		/** @var IManageConfigValues */
+		$config = $this->container->create(IManageConfigValues::class);
+
+		$config->reload();
+
+		/** @var Mode */
+		$mode = $this->container->create(Mode::class);
+
+		if ($mode->isInstall()) {
 			die("Friendica isn't properly installed yet.\n");
 		}
 
-		if (empty(DI::config()->get('jetstream', 'pidfile'))) {
+		if (empty($config->get('jetstream', 'pidfile'))) {
 			die(<<<TXT
 		Please set jetstream.pidfile in config/local.config.php. For example:
 
@@ -470,7 +477,7 @@ class App
 			die("Bluesky has to be enabled.\n");
 		}
 
-		$pidfile = DI::config()->get('jetstream', 'pidfile');
+		$pidfile = $config->get('jetstream', 'pidfile');
 
 		if (in_array('start', (array)$_SERVER['argv'])) {
 			$mode = 'start';
