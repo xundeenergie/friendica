@@ -16,7 +16,9 @@ use Friendica\App\Request;
 use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Content\Nav;
+use Friendica\Core\Addon;
 use Friendica\Core\Config\Factory\Config;
+use Friendica\Core\Hook;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
@@ -26,6 +28,7 @@ use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
 use Friendica\DI;
 use Friendica\Module\Maintenance;
+use Friendica\Protocol\ATProtocol\Jetstream;
 use Friendica\Security\Authentication;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
@@ -433,6 +436,153 @@ class App
 				Logger::info('Worker jobs are calling to be forked.', ['pid' => $pid]);
 			}
 		}
+	}
+
+	public function processJetstream(): void
+	{
+		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
+		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
+		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
+
+		$this->container = $this->container->addRule(LoggerInterface::class, ['constructParams' => [Logger\Capability\LogChannel::DAEMON]]);
+
+		DI::init($this->container);
+		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(\Psr\Log\LoggerInterface::class));
+		Addon::loadAddons();
+		Hook::loadHooks();
+		DI::config()->reload();
+
+		if (DI::mode()->isInstall()) {
+			die("Friendica isn't properly installed yet.\n");
+		}
+
+		if (empty(DI::config()->get('jetstream', 'pidfile'))) {
+			die(<<<TXT
+		Please set jetstream.pidfile in config/local.config.php. For example:
+
+			'jetstream' => [
+				'pidfile' => '/path/to/jetstream.pid',
+			],
+		TXT);
+		}
+
+		if (!Addon::isEnabled('bluesky')) {
+			die("Bluesky has to be enabled.\n");
+		}
+
+		$pidfile = DI::config()->get('jetstream', 'pidfile');
+
+		if (in_array('start', (array)$_SERVER['argv'])) {
+			$mode = 'start';
+		}
+
+		if (in_array('stop', (array)$_SERVER['argv'])) {
+			$mode = 'stop';
+		}
+
+		if (in_array('status', (array)$_SERVER['argv'])) {
+			$mode = 'status';
+		}
+
+		if (!isset($mode)) {
+			die("Please use either 'start', 'stop' or 'status'.\n");
+		}
+
+		// Get options
+		$shortopts = 'f';
+		$longopts  = ['foreground'];
+		$options   = getopt($shortopts, $longopts);
+
+		$foreground = array_key_exists('f', $options) || array_key_exists('foreground', $options);
+
+		if (empty($_SERVER['argv'][0])) {
+			die("Unexpected script behaviour. This message should never occur.\n");
+		}
+
+		$pid = null;
+
+		if (is_readable($pidfile)) {
+			$pid = intval(file_get_contents($pidfile));
+		}
+
+		if (empty($pid) && in_array($mode, ['stop', 'status'])) {
+			die("Pidfile wasn't found. Is jetstream running?\n");
+		}
+
+		if ($mode == 'status') {
+			if (posix_kill($pid, 0)) {
+				die("Jetstream process $pid is running.\n");
+			}
+
+			unlink($pidfile);
+
+			die("Jetstream process $pid isn't running.\n");
+		}
+
+		if ($mode == 'stop') {
+			posix_kill($pid, SIGTERM);
+
+			unlink($pidfile);
+
+			Logger::notice('Jetstream process was killed', ['pid' => $pid]);
+
+			die("Jetstream process $pid was killed.\n");
+		}
+
+		if (!empty($pid) && posix_kill($pid, 0)) {
+			die("Jetstream process $pid is already running.\n");
+		}
+
+		Logger::notice('Starting jetstream daemon.', ['pid' => $pid]);
+
+		if (!$foreground) {
+			echo "Starting jetstream daemon.\n";
+
+			DBA::disconnect();
+
+			// Fork a daemon process
+			$pid = pcntl_fork();
+			if ($pid == -1) {
+				echo "Daemon couldn't be forked.\n";
+				Logger::warning('Could not fork daemon');
+				exit(1);
+			} elseif ($pid) {
+				// The parent process continues here
+				if (!file_put_contents($pidfile, $pid)) {
+					echo "Pid file wasn't written.\n";
+					Logger::warning('Could not store pid file');
+					posix_kill($pid, SIGTERM);
+					exit(1);
+				}
+				echo 'Child process started with pid ' . $pid . ".\n";
+				Logger::notice('Child process started', ['pid' => $pid]);
+				exit(0);
+			}
+
+			// We now are in the child process
+			register_shutdown_function(function (): void {
+				posix_kill(posix_getpid(), SIGTERM);
+				posix_kill(posix_getpid(), SIGHUP);
+			});
+
+			// Make the child the main process, detach it from the terminal
+			if (posix_setsid() < 0) {
+				return;
+			}
+
+			// Closing all existing connections with the outside
+			fclose(STDIN);
+
+			// And now connect the database again
+			DBA::connect();
+		}
+
+		// Just to be sure that this script really runs endlessly
+		set_time_limit(0);
+
+		// Now running as a daemon.
+		$jetstream = $this->container->create(Jetstream::class);
+		$jetstream->listen();
 	}
 
 	public function processWorker(array $options): void
