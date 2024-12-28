@@ -92,9 +92,6 @@ class Router
 	/** @var float */
 	private $dice_profiler_threshold;
 
-	/** @var Dice */
-	private $dice;
-
 	/** @var string */
 	private $baseRoutesFilepath;
 
@@ -113,11 +110,10 @@ class Router
 	 * @param IManageConfigValues $config
 	 * @param Arguments           $args
 	 * @param LoggerInterface     $logger
-	 * @param Dice                $dice
 	 * @param IHandleUserSessions $userSession
 	 * @param RouteCollector|null $routeCollector
 	 */
-	public function __construct(array $server, string $baseRoutesFilepath, L10n $l10n, ICanCache $cache, ICanLock $lock, IManageConfigValues $config, Arguments $args, LoggerInterface $logger, Dice $dice, IHandleUserSessions $userSession, RouteCollector $routeCollector = null)
+	public function __construct(array $server, string $baseRoutesFilepath, L10n $l10n, ICanCache $cache, ICanLock $lock, IManageConfigValues $config, Arguments $args, LoggerInterface $logger, IHandleUserSessions $userSession, RouteCollector $routeCollector = null)
 	{
 		$this->baseRoutesFilepath      = $baseRoutesFilepath;
 		$this->l10n                    = $l10n;
@@ -125,7 +121,6 @@ class Router
 		$this->lock                    = $lock;
 		$this->args                    = $args;
 		$this->config                  = $config;
-		$this->dice                    = $dice;
 		$this->server                  = $server;
 		$this->logger                  = $logger;
 		$this->isLocalUser             = !empty($userSession->getLocalUserId());
@@ -328,14 +323,14 @@ class Router
 		}
 	}
 
-	public function getModule(?string $module_class = null): ICanHandleRequests
+	public function getModule(Dice $dice, ?string $module_class = null): ICanHandleRequests
 	{
 		$moduleClass = $module_class ?? $this->getModuleClass();
 
 		$stamp = microtime(true);
 
 		/** @var ICanHandleRequests $module */
-		$module = $this->dice->create($moduleClass, $this->parameters);
+		$module = $dice->create($moduleClass, $this->parameters);
 
 		if ($this->dice_profiler_threshold > 0) {
 			$dur = floatval(microtime(true) - $stamp);

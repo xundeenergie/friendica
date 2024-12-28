@@ -715,7 +715,7 @@ class App
 		/** @var Router $router */
 		$router = $this->container->create(Router::class);
 
-		return $router->getModule($moduleClass);
+		return $router->getModule($this->container, $moduleClass);
 	}
 
 	/**
