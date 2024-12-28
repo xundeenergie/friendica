@@ -286,10 +286,6 @@ final class ATProtocol
 	 */
 	public function getUserDid(int $uid, bool $refresh = false): ?string
 	{
-		if (!$this->pConfig->get($uid, 'bluesky', 'post')) {
-			return null;
-		}
-
 		if (!$refresh) {
 			$did = $this->pConfig->get($uid, 'bluesky', 'did');
 			if (!empty($did)) {
