@@ -440,14 +440,14 @@ class App
 
 	public function processJetstream(): void
 	{
-		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
-		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
-		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
+		$this->setupContainerForAddons();
 
-		$this->container = $this->container->addRule(LoggerInterface::class, ['constructParams' => [Logger\Capability\LogChannel::DAEMON]]);
+		$this->setupContainerForLogger(LogChannel::DAEMON);
 
-		DI::init($this->container);
-		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(\Psr\Log\LoggerInterface::class));
+		$this->setupLegacyServiceLocator();
+
+		$this->registerErrorHandler();
+
 		Addon::loadAddons();
 		Hook::loadHooks();
 		DI::config()->reload();
