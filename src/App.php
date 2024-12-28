@@ -715,7 +715,24 @@ class App
 		/** @var Router $router */
 		$router = $this->container->create(Router::class);
 
-		return $router->getModule($this->container, $moduleClass);
+		$moduleClass = $moduleClass ?? $router->getModuleClass();
+		$parameters = $router->getParameters();
+
+		$dice_profiler_threshold = $this->config->get('system', 'dice_profiler_threshold', 0);
+
+		$stamp = microtime(true);
+
+		/** @var ICanHandleRequests $module */
+		$module = $this->container->create($moduleClass, $parameters);
+
+		if ($dice_profiler_threshold > 0) {
+			$dur = floatval(microtime(true) - $stamp);
+			if ($dur >= $dice_profiler_threshold) {
+				$this->logger->notice('Dice module creation lasts too long.', ['duration' => round($dur, 3), 'module' => $moduleClass, 'parameters' => $parameters]);
+			}
+		}
+
+		return $module;
 	}
 
 	/**

@@ -319,25 +319,9 @@ class Router
 		}
 	}
 
-	public function getModule(Dice $dice, ?string $module_class = null): ICanHandleRequests
+	public function getParameters(): array
 	{
-		$moduleClass = $module_class ?? $this->getModuleClass();
-
-		$dice_profiler_threshold = $this->config->get('system', 'dice_profiler_threshold', 0);
-
-		$stamp = microtime(true);
-
-		/** @var ICanHandleRequests $module */
-		$module = $dice->create($moduleClass, $this->parameters);
-
-		if ($dice_profiler_threshold > 0) {
-			$dur = floatval(microtime(true) - $stamp);
-			if ($dur >= $dice_profiler_threshold) {
-				$this->logger->notice('Dice module creation lasts too long.', ['duration' => round($dur, 3), 'module' => $moduleClass, 'parameters' => $this->parameters]);
-			}
-		}
-
-		return $module;
+		return $this->parameters;
 	}
 
 	/**
