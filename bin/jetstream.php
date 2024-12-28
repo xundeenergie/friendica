@@ -148,7 +148,10 @@ if (!$foreground) {
 	}
 
 	// We now are in the child process
-	register_shutdown_function('shutdown');
+	register_shutdown_function(function (): void {
+		posix_kill(posix_getpid(), SIGTERM);
+		posix_kill(posix_getpid(), SIGHUP);
+	});
 
 	// Make the child the main process, detach it from the terminal
 	if (posix_setsid() < 0) {
@@ -168,9 +171,3 @@ set_time_limit(0);
 // Now running as a daemon.
 $jetstream = $dice->create(Jetstream::class);
 $jetstream->listen();
-
-function shutdown()
-{
-	posix_kill(posix_getpid(), SIGTERM);
-	posix_kill(posix_getpid(), SIGHUP);
-}
