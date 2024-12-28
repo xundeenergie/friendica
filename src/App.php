@@ -170,7 +170,6 @@ class App
 		$this->mode->setExecutor(Mode::INDEX);
 
 		$this->runFrontend(
-			$this->container->create(Router::class),
 			$this->container->create(IManagePersonalConfigValues::class),
 			$this->container->create(Page::class),
 			$this->container->create(Nav::class),
@@ -529,7 +528,6 @@ class App
 	 *
 	 * This probably should change to limit the size of this monster method.
 	 *
-	 * @param Router                      $router
 	 * @param IManagePersonalConfigValues $pconfig
 	 * @param Page                        $page       The Friendica page printing container
 	 * @param ModuleHTTPException         $httpException The possible HTTP Exception container
@@ -539,7 +537,6 @@ class App
 	 * @throws \ImagickException
 	 */
 	private function runFrontend(
-		Router $router,
 		IManagePersonalConfigValues $pconfig,
 		Page $page,
 		Nav $nav,
@@ -674,6 +671,9 @@ class App
 
 			// Initialize module that can set the current theme in the init() method, either directly or via App->setProfileOwner
 			$page['page_title'] = $moduleName;
+
+			/** @var Router $router */
+			$router = $this->container->create(Router::class);
 
 			// The "view" module is required to show the theme CSS
 			if (!$this->mode->isInstall() && !$this->mode->has(Mode::MAINTENANCEDISABLED) && $moduleName !== 'view') {
