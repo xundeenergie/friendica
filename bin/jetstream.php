@@ -9,13 +9,6 @@
  */
 
 use Dice\Dice;
-use Friendica\Core\Addon;
-use Friendica\Core\Hook;
-use Friendica\Core\Logger;
-use Friendica\Database\DBA;
-use Friendica\DI;
-use Psr\Log\LoggerInterface;
-use Friendica\Protocol\ATProtocol\Jetstream;
 
 if (php_sapi_name() !== 'cli') {
 	header($_SERVER["SERVER_PROTOCOL"] . ' 403 Forbidden');
