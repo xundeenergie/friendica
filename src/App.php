@@ -15,6 +15,7 @@ use Friendica\App\Page;
 use Friendica\App\Request;
 use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
+use Friendica\Capabilities\ICanHandleRequests;
 use Friendica\Content\Nav;
 use Friendica\Core\Config\Factory\Config;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
@@ -672,16 +673,13 @@ class App
 			// Initialize module that can set the current theme in the init() method, either directly or via App->setProfileOwner
 			$page['page_title'] = $moduleName;
 
-			/** @var Router $router */
-			$router = $this->container->create(Router::class);
-
 			// The "view" module is required to show the theme CSS
 			if (!$this->mode->isInstall() && !$this->mode->has(Mode::MAINTENANCEDISABLED) && $moduleName !== 'view') {
-				$module = $router->getModule(Maintenance::class);
+				$module = $this->createModuleInstance(Maintenance::class);
 			} else {
 				// determine the module class and save it to the module instance
 				// @todo there's an implicit dependency due SESSION::start(), so it has to be called here (yet)
-				$module = $router->getModule();
+				$module = $this->createModuleInstance(null);
 			}
 
 			// Display can change depending on the requested language, so it shouldn't be cached whole
@@ -710,6 +708,14 @@ class App
 			$httpException->rawContent($e);
 		}
 		$page->logRuntime($this->config, 'runFrontend');
+	}
+
+	private function createModuleInstance(?string $moduleClass = null): ICanHandleRequests
+	{
+		/** @var Router $router */
+		$router = $this->container->create(Router::class);
+
+		return $router->getModule($moduleClass);
 	}
 
 	/**
