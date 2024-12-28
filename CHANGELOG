@@ -49,8 +49,13 @@ Version 2024.12 (unreleased)
     bluesky
       Added block functionality [annando]
       Added option to compleate threads [annando]
+      Fixed issue with blocking contacts [annando]
+      Improved handling of startersets [annando]
+      Improved fetching of postings [annando]
     invidious [loma-one]
     unicode_smilies [loma-one]
+    fancebox
+      Deprecated the addon [tobiasd]
 
   Closed Issues
     13270, 13943, 14121, 14126, 14145, 14174, 14212, 14244, 14281,
