@@ -15,6 +15,7 @@ use Friendica\App\Page;
 use Friendica\App\Request;
 use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
+use Friendica\Capabilities\ICanHandleRequests;
 use Friendica\Content\Nav;
 use Friendica\Core\Addon;
 use Friendica\Core\Config\Factory\Config;
@@ -172,7 +173,6 @@ class App
 		$this->mode->setExecutor(Mode::INDEX);
 
 		$this->runFrontend(
-			$this->container->create(Router::class),
 			$this->container->create(IManagePersonalConfigValues::class),
 			$this->container->create(Page::class),
 			$this->container->create(Nav::class),
@@ -732,7 +732,6 @@ class App
 	 *
 	 * This probably should change to limit the size of this monster method.
 	 *
-	 * @param Router                      $router
 	 * @param IManagePersonalConfigValues $pconfig
 	 * @param Page                        $page       The Friendica page printing container
 	 * @param ModuleHTTPException         $httpException The possible HTTP Exception container
@@ -742,7 +741,6 @@ class App
 	 * @throws \ImagickException
 	 */
 	private function runFrontend(
-		Router $router,
 		IManagePersonalConfigValues $pconfig,
 		Page $page,
 		Nav $nav,
@@ -880,11 +878,11 @@ class App
 
 			// The "view" module is required to show the theme CSS
 			if (!$this->mode->isInstall() && !$this->mode->has(Mode::MAINTENANCEDISABLED) && $moduleName !== 'view') {
-				$module = $router->getModule(Maintenance::class);
+				$module = $this->createModuleInstance(Maintenance::class);
 			} else {
 				// determine the module class and save it to the module instance
 				// @todo there's an implicit dependency due SESSION::start(), so it has to be called here (yet)
-				$module = $router->getModule();
+				$module = $this->createModuleInstance(null);
 			}
 
 			// Display can change depending on the requested language, so it shouldn't be cached whole
@@ -913,6 +911,31 @@ class App
 			$httpException->rawContent($e);
 		}
 		$page->logRuntime($this->config, 'runFrontend');
+	}
+
+	private function createModuleInstance(?string $moduleClass = null): ICanHandleRequests
+	{
+		/** @var Router $router */
+		$router = $this->container->create(Router::class);
+
+		$moduleClass = $moduleClass ?? $router->getModuleClass();
+		$parameters = $router->getParameters();
+
+		$dice_profiler_threshold = $this->config->get('system', 'dice_profiler_threshold', 0);
+
+		$stamp = microtime(true);
+
+		/** @var ICanHandleRequests $module */
+		$module = $this->container->create($moduleClass, $parameters);
+
+		if ($dice_profiler_threshold > 0) {
+			$dur = floatval(microtime(true) - $stamp);
+			if ($dur >= $dice_profiler_threshold) {
+				$this->logger->notice('Dice module creation lasts too long.', ['duration' => round($dur, 3), 'module' => $moduleClass, 'parameters' => $parameters]);
+			}
+		}
+
+		return $module;
 	}
 
 	/**
