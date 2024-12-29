@@ -21,6 +21,7 @@ use Friendica\Core\Config\Factory\Config;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
+use Friendica\Core\Worker\Repository\Process as ProcessRepository;
 use Friendica\Database\DBA;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
@@ -47,8 +48,6 @@ use Friendica\Util\HTTPSignature;
 use Friendica\Util\Profiler;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-
-
 
 /**
  * Our main application structure for the life of this page.
@@ -434,6 +433,53 @@ class App
 				Logger::info('Worker jobs are calling to be forked.', ['pid' => $pid]);
 			}
 		}
+	}
+
+	public function processWorker(array $options): void
+	{
+		$this->setupContainerForAddons();
+
+		$this->setupContainerForLogger(LogChannel::WORKER);
+
+		$this->setupLegacyServiceLocator();
+
+		$this->registerErrorHandler();
+
+		/** @var Mode */
+		$mode = $this->container->create(Mode::class);
+
+		$mode->setExecutor(Mode::WORKER);
+
+		/** @var BasePath */
+		$basePath = $this->container->create(BasePath::class);
+
+		// Check the database structure and possibly fixes it
+		Update::check($basePath->getPath(), true);
+
+		// Quit when in maintenance
+		if (!$mode->has(Mode::MAINTENANCEDISABLED)) {
+			return;
+		}
+
+		$spawn = array_key_exists('s', $options) || array_key_exists('spawn', $options);
+
+		if ($spawn) {
+			Worker::spawnWorker();
+			exit();
+		}
+
+		$run_cron = !array_key_exists('n', $options) && !array_key_exists('no_cron', $options);
+
+		/** @var ProcessRepository */
+		$processRepository = $this->container->create(ProcessRepository::class);
+
+		$process = $processRepository->create(getmypid(), 'worker.php');
+
+		Worker::processQueue($run_cron, $process);
+
+		Worker::unclaimProcess($process);
+
+		$processRepository->delete($process);
 	}
 
 	private function setupContainerForAddons(): void
