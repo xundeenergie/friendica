@@ -23,7 +23,7 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
- * Console command for starting
+ * Console command for interacting with the daemon
  */
 final class Daemon extends Console
 {
