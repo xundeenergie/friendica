@@ -19,9 +19,6 @@ if (php_sapi_name() !== 'cli') {
 
 use Dice\Dice;
 
-// Get options
-$options = getopt('f', ['foreground']);
-
 // Ensure that daemon.php is executed from the base path of the installation
 chdir(dirname(__DIR__));
 
@@ -31,4 +28,7 @@ $dice = (new Dice())->addRules(require(dirname(__DIR__) . '/static/dependencies.
 
 $app = \Friendica\App::fromDice($dice);
 
-$app->processDaemon($_SERVER['argv'] ?? [], $options ?: []);
+$argv = $_SERVER['argv'] ?? [];
+array_splice($argv, 1, 0, "daemon");
+
+$app->processConsole($argv);
