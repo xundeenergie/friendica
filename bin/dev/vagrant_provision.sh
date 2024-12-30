@@ -46,7 +46,7 @@ openssl x509 -req -days 365 -in "$SSL_DIR/xip.io.csr" -signkey "$SSL_DIR/xip.io.
 echo ">>> Add PHP repository"
 apt-get install -qq -y lsb-release ca-certificates apt-transport-https software-properties-common gnupg
 echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/sury-php.list
-wget -qO - https://packages.sury.org/php/apt.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
+wget -qO - https://packages.sury.org/php/apt.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/php.gpg
 apt update
 
 echo ">>> Installing PHP8"
