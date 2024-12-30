@@ -61,17 +61,17 @@ final class Daemon extends Console
 	protected function getHelp(): string
 	{
 		return <<<HELP
-Daemon - Interacting with the Friendica daemons
+Daemon - Interact with the Friendica daemon
 Synopsis
 	bin/console daemon [-h|--help|-?] [-v] [-a] [-f]
 
 Description
-    Interacting with the Friendica daemons
+    Interact with the Friendica daemon
 
 Options
     -h|--help|-?            Show help information
     -v                      Show more debug information.
-    -f|--foreground         Runs the daemon in the forgeground
+    -f|--foreground         Runs the daemon in the foreground
 
 Examples
 	bin/console daemon start -f

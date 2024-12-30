@@ -37,7 +37,7 @@ Commands:
 	config                 Edit site config
 	contact                Contact management
 	createdoxygen          Generate Doxygen headers
-	daemon                 Interacting with the Friendica daemons
+	daemon                 Interact with the Friendica daemon
 	dbstructure            Do database updates
 	docbloxerrorchecker    Check the file tree for DocBlox errors
 	extract                Generate translation string file for the Friendica project (deprecated)
