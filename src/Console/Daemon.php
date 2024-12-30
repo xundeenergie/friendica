@@ -55,7 +55,7 @@ final class Daemon extends Console
 		$this->basePath = $basePath;
 		$this->system   = $system;
 		$this->logger   = $logger;
-		$this->dba       = $dba;
+		$this->dba      = $dba;
 	}
 
 	protected function getHelp(): string
@@ -193,7 +193,7 @@ HELP;
 
 		$wait_interval = intval($this->config->get('system', 'cron_interval', 5)) * 60;
 
-		$do_cron = true;
+		$do_cron   = true;
 		$last_cron = 0;
 
 		$path = $this->basePath->getPath();
@@ -232,7 +232,7 @@ HELP;
 				// logarithmic wait time calculation.
 				// Background: After jobs had been started, they often fork many workers.
 				// To not waste too much time, the sleep period increases.
-				$arg = (($seconds + 1) / ($wait_interval / 9)) + 1;
+				$arg   = (($seconds + 1) / ($wait_interval / 9)) + 1;
 				$sleep = min(1000000, round(log10($arg) * 1000000, 0));
 				usleep((int)$sleep);
 
