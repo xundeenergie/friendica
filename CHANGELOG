@@ -1,9 +1,9 @@
-Version 2024.12 (unreleased)
+Version 2024.12 (2024-12-31)
   Friendica Core
     Updates to the translations AR, BG, CA, CS, DE, EO, ES, ET, FR, GD, HU, IS, IT, JA, NL, PL, RU, SV
     Updates to the documentation [annando, bmillwood, tobiasd]
     Updates to the themes (frio) [haheute]
-    Friendica Core is now REUSE complient [tobiasd]
+    Friendica Core is now REUSE compliant [tobiasd]
     General code cleanup [annando, nupplaphil, mexon]
     Improved federation with Bluesky, Hubzilla, Peertube, threads, Wordpress [annando]
     Improved the API [annando]
@@ -36,7 +36,7 @@ Version 2024.12 (unreleased)
     Fixed a bug in the installation process [tobiasd]
     Fixed schema.org issue [annando]
     Added admin info to stats module [nupplaphil]
-    Added an option to exclude postings with images without ALT text [anando]
+    Added an option to exclude postings with images without ALT text [annando]
     Added an option to hide custom emojis [annando]
     Added support for HLS [annando]
     Added devcontainer for Friendica [ne20002]
@@ -48,13 +48,13 @@ Version 2024.12 (unreleased)
   Friendica Addons
     bluesky
       Added block functionality [annando]
-      Added option to compleate threads [annando]
+      Added option to complete threads [annando]
       Fixed issue with blocking contacts [annando]
       Improved handling of startersets [annando]
       Improved fetching of postings [annando]
     invidious [loma-one]
-    unicode_smilies [loma-one]
-    fancebox
+    unicode_smileys [loma-one]
+    fancybox
       Deprecated the addon [tobiasd]
 
   Closed Issues
