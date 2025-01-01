@@ -151,7 +151,7 @@ HELP;
 		}
 
 		if ($daemonMode == "start") {
-			$this->out("Starting worker daemon");
+			$this->out("Starting Friendica daemon");
 
 			$this->daemon->start(function () {
 				$wait_interval = intval($this->config->get('system', 'cron_interval', 5)) * 60;

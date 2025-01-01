@@ -139,7 +139,7 @@ HELP;
 		}
 
 		if ($daemonMode == "start") {
-			$this->out("Starting worker daemon");
+			$this->out("Starting Jetstream daemon");
 
 			$this->daemon->start(function () {
 				$this->jetstream->listen();
