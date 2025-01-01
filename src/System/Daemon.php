@@ -5,6 +5,9 @@ namespace Friendica\System;
 use Friendica\Database\Database;
 use Psr\Log\LoggerInterface;
 
+/**
+ * class for direct interacting with the daemon commands
+ */
 final class Daemon
 {
 	private LoggerInterface $logger;
@@ -12,11 +15,21 @@ final class Daemon
 	private ?string $pidfile = null;
 	private ?int $pid = null;
 
+	/**
+	 * The PID of the current daemon (null if either not set or not found)
+	 *
+	 * @return int|null
+	 */
 	public function getPid(): ?int
 	{
 		return $this->pid;
 	}
 
+	/**
+	 * The path to the PID file (null if not set)
+	 *
+	 * @return string|null
+	 */
 	public function getPidfile(): ?string
 	{
 		return $this->pidfile;
@@ -28,7 +41,14 @@ final class Daemon
 		$this->dba    = $dba;
 	}
 
-	public function init($pidfile = null): void
+	/**
+	 * Initialize the current daemon class with a given PID file
+	 *
+	 * @param string|null $pidfile the path to the PID file - using a given path if not directly set here
+	 *
+	 * @return void
+	 */
+	public function init(string $pidfile = null): void
 	{
 		if (!empty($pidfile)) {
 			$this->pid     = null;
@@ -44,6 +64,14 @@ final class Daemon
 		}
 	}
 
+	/**
+	 * Starts the daemon
+	 *
+	 * @param callable $daemonLogic the business logic of the daemon
+	 * @param bool     $foreground  true, if started in foreground, otherwise spawned in the background
+	 *
+	 * @return bool true, if successfully started, otherwise false
+	 */
 	public function start(callable $daemonLogic, bool $foreground = false): bool
 	{
 		$this->init();
@@ -100,6 +128,11 @@ final class Daemon
 		return true;
 	}
 
+	/**
+	 * Checks, if the current daemon is running
+	 *
+	 * @return bool true, if the daemon is running, otherwise false (f.e no PID found, no PID file found, PID is not bound to a running process))
+	 */
 	public function isRunning(): bool
 	{
 		$this->init();
@@ -124,6 +157,11 @@ final class Daemon
 		}
 	}
 
+	/**
+	 * Stops the daemon, if running
+	 *
+	 * @return bool true, if the daemon was successfully stopped or is already stopped, otherwise false
+	 */
 	public function stop(): bool
 	{
 		$this->init();
@@ -133,14 +171,28 @@ final class Daemon
 			return true;
 		}
 
-		posix_kill($this->pid, SIGTERM);
-		unlink($this->pidfile);
+		if (!posix_kill($this->pid, SIGTERM)) {
+			$this->logger->warning("Cannot kill the given PID", ['pid' => $this->pid, 'pidfile' => $this->pidfile]);
+			return false;
+		}
+
+		if (!unlink($this->pidfile)) {
+			$this->logger->warning("Cannot delete the given PID file", ['pid' => $this->pid, 'pidfile' => $this->pidfile]);
+			return false;
+		}
 
 		$this->logger->notice('daemon process was killed', ['pid' => $this->pid, 'pidfile' => $this->pidfile]);
 
 		return true;
 	}
 
+	/**
+	 * Sets the current daemon to sleep and checks the status afterward
+	 *
+	 * @param int $duration the duration of time for sleeping (in milliseconds)
+	 *
+	 * @return void
+	 */
 	public function sleep(int $duration)
 	{
 		usleep($duration);
