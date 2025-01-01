@@ -83,7 +83,8 @@ HELP;
 		$this->config->reload();
 
 		if (empty($this->config->get('jetstream', 'pidfile'))) {
-			throw new RuntimeException(<<< TXT
+			throw new RuntimeException(
+				<<< TXT
 					Please set jetstream.pidfile in config/local.config.php. For example:
 
 						'jetstream' => [

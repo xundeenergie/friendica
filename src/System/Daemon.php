@@ -96,7 +96,7 @@ final class Daemon
 			if ($this->pid < 0) {
 				$this->logger->warning('Could not fork daemon');
 				return false;
-			} else if ($this->pid) {
+			} elseif ($this->pid) {
 				// The parent process continues here
 				if (!file_put_contents($this->pidfile, $this->pid)) {
 					$this->logger->warning('Could not store pid file', ['pid' => $this->pid, 'pidfile' => $this->pidfile]);
