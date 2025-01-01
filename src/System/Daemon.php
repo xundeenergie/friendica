@@ -1,5 +1,10 @@
 <?php
 
+// Copyright (C) 2010-2025, the Friendica project
+// SPDX-FileCopyrightText: 2010-2024 the Friendica project
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 namespace Friendica\System;
 
 use Friendica\Database\Database;
@@ -13,7 +18,7 @@ final class Daemon
 	private LoggerInterface $logger;
 	private Database $dba;
 	private ?string $pidfile = null;
-	private ?int $pid = null;
+	private ?int $pid        = null;
 
 	/**
 	 * The PID of the current daemon (null if either not set or not found)
@@ -91,7 +96,7 @@ final class Daemon
 			if ($this->pid < 0) {
 				$this->logger->warning('Could not fork daemon');
 				return false;
-			} elseif ($this->pid) {
+			} else if ($this->pid) {
 				// The parent process continues here
 				if (!file_put_contents($this->pidfile, $this->pid)) {
 					$this->logger->warning('Could not store pid file', ['pid' => $this->pid, 'pidfile' => $this->pidfile]);

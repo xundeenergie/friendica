@@ -38,9 +38,9 @@ use stdClass;
  */
 class Jetstream
 {
-	private $uids      = [];
-	private $self      = [];
-	private $capped    = false;
+	private $uids   = [];
+	private $self   = [];
+	private $capped = false;
 
 	/** @var LoggerInterface */
 	private $logger;
@@ -213,8 +213,8 @@ class Jetstream
 
 		if (!$this->capped && count($dids) < $did_limit) {
 			$condition = ["`uid` = ? AND `network` = ? AND EXISTS(SELECT `author-id` FROM `post-user` WHERE `author-id` = `contact`.`id` AND `post-user`.`uid` != ?)", 0, Protocol::BLUESKY, 0];
-			$contacts = Contact::selectToArray(['url'], $condition, ['order' => ['last-item' => true], 'limit' => $did_limit]);
-			$dids     = $this->addDids($contacts, $uids, $did_limit, $dids);
+			$contacts  = Contact::selectToArray(['url'], $condition, ['order' => ['last-item' => true], 'limit' => $did_limit]);
+			$dids      = $this->addDids($contacts, $uids, $did_limit, $dids);
 		}
 
 		$this->keyValue->set('jetstream_did_count', count($dids));

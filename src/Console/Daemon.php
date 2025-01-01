@@ -99,7 +99,8 @@ HELP;
 		$this->config->reload();
 
 		if (empty($this->config->get('system', 'pidfile'))) {
-			throw new RuntimeException(<<< TXT
+			throw new RuntimeException(
+				<<< TXT
 					Please set system.pidfile in config/local.config.php. For example:
 
 						'system' => [
