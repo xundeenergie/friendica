@@ -95,6 +95,7 @@ class Jetstream
 				// @todo make the path configurable
 				$this->client = new \WebSocket\Client('wss://jetstream1.us-west.bsky.network/subscribe?requireHello=true' . $cursor);
 				$this->client->setTimeout($timeout);
+				$this->client->setLogger($this->logger);
 			} catch (\WebSocket\ConnectionException $e) {
 				$this->logger->error('Error while trying to establish the connection', ['code' => $e->getCode(), 'message' => $e->getMessage()]);
 				echo "Connection wasn't established.\n";
@@ -365,7 +366,7 @@ class Jetstream
 	}
 
 	/**
-	 * Route app.bsky.feed.post commits 
+	 * Route app.bsky.feed.post commits
 	 *
 	 * @param stdClass $data message object
 	 * @param integer $drift
@@ -389,7 +390,7 @@ class Jetstream
 	}
 
 	/**
-	 * Route app.bsky.feed.repost commits 
+	 * Route app.bsky.feed.repost commits
 	 *
 	 * @param stdClass $data message object
 	 * @param integer $drift
@@ -413,7 +414,7 @@ class Jetstream
 	}
 
 	/**
-	 * Route app.bsky.feed.like commits 
+	 * Route app.bsky.feed.like commits
 	 *
 	 * @param stdClass $data message object
 	 * @return void
@@ -436,7 +437,7 @@ class Jetstream
 	}
 
 	/**
-	 * Route app.bsky.actor.profile commits 
+	 * Route app.bsky.actor.profile commits
 	 *
 	 * @param stdClass $data message object
 	 * @return void
@@ -463,7 +464,7 @@ class Jetstream
 	}
 
 	/**
-	 * Route app.bsky.graph.follow commits 
+	 * Route app.bsky.graph.follow commits
 	 *
 	 * @param stdClass $data message object
 	 * @return void
