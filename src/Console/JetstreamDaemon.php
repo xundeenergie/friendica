@@ -13,6 +13,7 @@ use Friendica\App\Mode;
 use Friendica\Core\Addon;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Asika\SimpleConsole\Console;
+use Friendica\Core\Hook;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
 use Friendica\Protocol\ATProtocol\Jetstream;
 use Friendica\System\Daemon as SysDaemon;
@@ -93,6 +94,9 @@ HELP;
 					TXT
 			);
 		}
+
+		Addon::loadAddons();
+		Hook::loadHooks();
 
 		if (!Addon::isEnabled('bluesky')) {
 			throw new RuntimeException("Bluesky has to be enabled.\n");

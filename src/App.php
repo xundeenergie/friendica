@@ -214,9 +214,6 @@ class App
 
 		$this->registerTemplateEngine();
 
-		Addon::loadAddons();
-		Hook::loadHooks();
-
 		(new \Friendica\Core\Console($this->container, $argv))->execute();
 	}
 
