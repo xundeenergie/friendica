@@ -39,6 +39,7 @@ Commands:
 	createdoxygen          Generate Doxygen headers
 	daemon                 Interact with the Friendica daemon
 	jetstream              Interact with the Jetstream daemon
+	worker                 Start worker process
 	dbstructure            Do database updates
 	docbloxerrorchecker    Check the file tree for DocBlox errors
 	extract                Generate translation string file for the Friendica project (deprecated)
@@ -79,6 +80,7 @@ HELP;
 		'createdoxygen'                     => Friendica\Console\CreateDoxygen::class,
 		'daemon'                            => Friendica\Console\Daemon::class,
 		'jetstream'                         => Friendica\Console\JetstreamDaemon::class,
+		'worker'                            => Friendica\Console\Worker::class,
 		'docbloxerrorchecker'               => Friendica\Console\DocBloxErrorChecker::class,
 		'dbstructure'                       => Friendica\Console\DatabaseStructure::class,
 		'extract'                           => Friendica\Console\Extract::class,
