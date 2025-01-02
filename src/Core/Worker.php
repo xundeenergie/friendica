@@ -1207,7 +1207,7 @@ class Worker
 		if (Worker\Daemon::isMode() && DI::config()->get('system', 'worker_fork')) {
 			self::forkProcess($do_cron);
 		} else {
-			DI::system()->run('bin/worker.php', ['no_cron' => !$do_cron]);
+			DI::system()->run('bin/console.php worker', ['no_cron' => !$do_cron]);
 		}
 		if (Worker\Daemon::isMode()) {
 			Worker\IPC::SetJobState(false);
