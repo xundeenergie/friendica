@@ -90,8 +90,8 @@ HELP;
 
 	protected function doExecute()
 	{
-		if ($this->executable != 'bin/console.php') {
-			$this->out(sprintf("Deprecated use of '%s', use '%s daemon' instead", $this->executable, 'bin/console.php'));
+		if ($this->executable !== 'bin/console.php') {
+			$this->out(sprintf("'%s' is deprecated and will removed. Please use 'bin/console.php daemon' instead", $this->executable));
 		}
 
 		if ($this->mode->isInstall()) {

@@ -77,8 +77,8 @@ HELP;
 
 	protected function doExecute()
 	{
-		if ($this->executable != 'bin/console.php') {
-			$this->out(sprintf("Deprecated use of '%s', use '%s jetstream' instead", $this->executable, 'bin/console.php'));
+		if ($this->executable !== 'bin/console.php') {
+			$this->out(sprintf("'%s' is deprecated and will removed. Please use 'bin/console.php jetstream' instead", $this->executable));
 		}
 
 		if ($this->mode->isInstall()) {
