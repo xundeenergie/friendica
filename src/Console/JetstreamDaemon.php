@@ -77,6 +77,10 @@ HELP;
 
 	protected function doExecute()
 	{
+		if ($this->executable != 'bin/console.php') {
+			$this->out(sprintf("Deprecated use of '%s', use '%s jetstream' instead", $this->executable, 'bin/console.php'));
+		}
+
 		if ($this->mode->isInstall()) {
 			throw new RuntimeException("Friendica isn't properly installed yet");
 		}
