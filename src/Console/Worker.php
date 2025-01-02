@@ -17,7 +17,7 @@ use Friendica\Core\Worker\Repository\Process as ProcessRepository;
 use Friendica\Util\BasePath;
 
 /**
- * Console command for interacting with the daemon
+ * Console command for starting worker
  */
 final class Worker extends Console
 {
@@ -57,11 +57,11 @@ Options
     -s|--spawn              Spawn an additional worker
 
 Examples
-	bin/console daemon start -f
-		Starts the daemon in the foreground
+	bin/console worker -n
+		Starts the worker without executing the cronob
 
-	bin/console daemon status
-		Gets the status of the daemon
+	bin/console worker -s
+		Starts the worker and immediately spawn another worker process
 HELP;
 	}
 
