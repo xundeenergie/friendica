@@ -17,6 +17,7 @@ use Friendica\Core\System;
 use Friendica\Core\Update;
 use Friendica\Core\Worker;
 use Friendica\Database\Database;
+use Friendica\System\Daemon as SysDaemon;
 use Friendica\Util\BasePath;
 use Friendica\Util\DateTimeFormat;
 use Psr\Log\LoggerInterface;
@@ -34,6 +35,7 @@ final class Daemon extends Console
 	private System $system;
 	private LoggerInterface $logger;
 	private Database $dba;
+	private SysDaemon $daemon;
 
 	/**
 	 * @param Mode                 $mode
@@ -43,9 +45,10 @@ final class Daemon extends Console
 	 * @param System               $system
 	 * @param LoggerInterface      $logger
 	 * @param Database             $dba
+	 * @param SysDaemon            $daemon
 	 * @param array|null           $argv
 	 */
-	public function __construct(Mode $mode, IManageConfigValues $config, IManageKeyValuePairs $keyValue, BasePath $basePath, System $system, LoggerInterface $logger, Database $dba, array $argv = null)
+	public function __construct(Mode $mode, IManageConfigValues $config, IManageKeyValuePairs $keyValue, BasePath $basePath, System $system, LoggerInterface $logger, Database $dba, SysDaemon $daemon, array $argv = null)
 	{
 		parent::__construct($argv);
 
@@ -56,6 +59,7 @@ final class Daemon extends Console
 		$this->system   = $system;
 		$this->logger   = $logger;
 		$this->dba      = $dba;
+		$this->daemon   = $daemon;
 	}
 
 	protected function getHelp(): string
@@ -63,7 +67,9 @@ final class Daemon extends Console
 		return <<<HELP
 Daemon - Interact with the Friendica daemon
 Synopsis
-	bin/console daemon [-h|--help|-?] [-v] [-a] [-f]
+	bin/console daemon start [-h|--help|-?] [-v] [-f]
+	bin/console daemon stop [-h|--help|-?] [-v]
+	bin/console daemon status [-h|--help|-?] [-v]
 
 Description
     Interact with the Friendica daemon
@@ -84,6 +90,10 @@ HELP;
 
 	protected function doExecute()
 	{
+		if ($this->executable !== 'bin/console.php') {
+			$this->out(sprintf("'%s' is deprecated and will removed. Please use 'bin/console.php daemon' instead", $this->executable));
+		}
+
 		if ($this->mode->isInstall()) {
 			throw new RuntimeException("Friendica isn't properly installed yet");
 		}
@@ -93,164 +103,125 @@ HELP;
 		$this->config->reload();
 
 		if (empty($this->config->get('system', 'pidfile'))) {
-			throw new RuntimeException(<<< TXT
+			throw new RuntimeException(
+				<<< TXT
 					Please set system.pidfile in config/local.config.php. For example:
 
 						'system' => [
 							'pidfile' => '/path/to/daemon.pid',
 						],
-					TXT);
+					TXT
+			);
 		}
 
 		$pidfile = $this->config->get('system', 'pidfile');
 
 		$daemonMode = $this->getArgument(0);
-		$foreground = $this->getOption(['f', 'foreground']);
+		$foreground = $this->getOption(['f', 'foreground']) ?? false;
 
 		if (empty($daemonMode)) {
 			throw new RuntimeException("Please use either 'start', 'stop' or 'status'");
 		}
 
-		$pid = null;
-		if (is_readable($pidfile)) {
-			$pid = intval(file_get_contents($pidfile));
-		}
-
-		if (empty($pid) && in_array($daemonMode, ['stop', 'status'])) {
-			$this->keyValue->set('worker_daemon_mode', false);
-			throw new RuntimeException("Pidfile wasn't found. Is the daemon running?");
-		}
+		$this->daemon->init($pidfile);
 
 		if ($daemonMode == 'status') {
-			if (posix_kill($pid, 0)) {
-				$this->out("Daemon process $pid is running");
-				return 0;
+			if ($this->daemon->isRunning()) {
+				$this->out(sprintf("Daemon process %s is running (%s)", $this->daemon->getPid(), $this->daemon->getPidfile()));
+			} else {
+				$this->out(sprintf("Daemon process %s isn't running (%s)", $this->daemon->getPid(), $this->daemon->getPidfile()));
 			}
-
-			unlink($pidfile);
-
-			$this->keyValue->set('worker_daemon_mode', false);
-			$this->out("Daemon process $pid isn't running.");
 			return 0;
 		}
 
 		if ($daemonMode == 'stop') {
-			posix_kill($pid, SIGTERM);
-			unlink($pidfile);
+			if (!$this->daemon->isRunning()) {
+				$this->out(sprintf("Daemon process %s isn't running (%s)", $this->daemon->getPid(), $this->daemon->getPidfile()));
+				return 0;
+			}
 
-			$this->logger->notice('Worker daemon process was killed', ['pid' => $pid]);
+			if ($this->daemon->stop()) {
+				$this->keyValue->set('worker_daemon_mode', false);
+				$this->out(sprintf("Daemon process %s was killed (%s)", $this->daemon->getPid(), $this->daemon->getPidfile()));
+				return 0;
+			}
 
-			$this->keyValue->set('worker_daemon_mode', false);
-			$this->out("Daemon process $pid was killed.");
+			return 1;
+		}
+
+		if ($this->daemon->isRunning()) {
+			$this->out(sprintf("Daemon process %s is already running (%s)", $this->daemon->getPid(), $this->daemon->getPidfile()));
+			return 1;
+		}
+
+		if ($daemonMode == "start") {
+			$this->out("Starting Friendica daemon");
+
+			$this->daemon->start(function () {
+				$wait_interval = intval($this->config->get('system', 'cron_interval', 5)) * 60;
+
+				$do_cron   = true;
+				$last_cron = 0;
+
+				$path = $this->basePath->getPath();
+
+				// Now running as a daemon.
+				while (true) {
+					// Check the database structure and possibly fixes it
+					Update::check($path, true);
+
+					if (!$do_cron && ($last_cron + $wait_interval) < time()) {
+						$this->logger->info('Forcing cron worker call.', ['pid' => $this->daemon->getPid()]);
+						$do_cron = true;
+					}
+
+					if ($do_cron || (!$this->system->isMaxLoadReached() && Worker::entriesExists() && Worker::isReady())) {
+						Worker::spawnWorker($do_cron);
+					} else {
+						$this->logger->info('Cool down for 5 seconds', ['pid' => $this->daemon->getPid()]);
+						sleep(5);
+					}
+
+					if ($do_cron) {
+						// We force a reconnect of the database connection.
+						// This is done to ensure that the connection don't get lost over time.
+						$this->dba->reconnect();
+
+						$last_cron = time();
+					}
+
+					$start = time();
+					$this->logger->info('Sleeping', ['pid' => $this->daemon->getPid(), 'until' => gmdate(DateTimeFormat::MYSQL, $start + $wait_interval)]);
+
+					do {
+						$seconds = (time() - $start);
+
+						// logarithmic wait time calculation.
+						// Background: After jobs had been started, they often fork many workers.
+						// To not waste too much time, the sleep period increases.
+						$arg   = (($seconds + 1) / ($wait_interval / 9)) + 1;
+						$sleep = min(1000000, round(log10($arg) * 1000000, 0));
+
+						$this->daemon->sleep((int)$sleep);
+
+						$timeout = ($seconds >= $wait_interval);
+					} while (!$timeout && !Worker\IPC::JobsExists());
+
+					if ($timeout) {
+						$do_cron = true;
+						$this->logger->info('Woke up after $wait_interval seconds.', ['pid' => $this->daemon->getPid(), 'sleep' => $wait_interval]);
+					} else {
+						$do_cron = false;
+						$this->logger->info('Worker jobs are calling to be forked.', ['pid' => $this->daemon->getPid()]);
+					}
+				}
+			}, $foreground);
+
 			return 0;
 		}
 
-		$this->logger->notice('Starting worker daemon', ['pid' => $pid]);
-
-		if (!$foreground) {
-			$this->out("Starting worker daemon");
-			$this->dba->disconnect();
-
-			// Fork a daemon process
-			$pid = pcntl_fork();
-			if ($pid == -1) {
-				$this->logger->warning('Could not fork daemon');
-				throw new RuntimeException("Daemon couldn't be forked");
-			} elseif ($pid) {
-				// The parent process continues here
-				if (!file_put_contents($pidfile, $pid)) {
-					posix_kill($pid, SIGTERM);
-					$this->logger->warning('Could not store pid file');
-					throw new RuntimeException("Pid file wasn't written");
-				}
-				$this->out("Child process started with pid $pid");
-				$this->logger->notice('Child process started', ['pid' => $pid]);
-				return 0;
-			}
-
-			// We now are in the child process
-			register_shutdown_function(function () {
-				posix_kill(posix_getpid(), SIGTERM);
-				posix_kill(posix_getpid(), SIGHUP);
-			});
-
-			// Make the child the main process, detach it from the terminal
-			if (posix_setsid() < 0) {
-				return 0;
-			}
-
-			// Closing all existing connections with the outside
-			fclose(STDIN);
-
-			// And now connect the database again
-			$this->dba->connect();
-		}
-
-		$this->keyValue->set('worker_daemon_mode', true);
-
-		// Just to be sure that this script really runs endlessly
-		set_time_limit(0);
-
-		$wait_interval = intval($this->config->get('system', 'cron_interval', 5)) * 60;
-
-		$do_cron   = true;
-		$last_cron = 0;
-
-		$path = $this->basePath->getPath();
-
-		// Now running as a daemon.
-		while (true) {
-			// Check the database structure and possibly fixes it
-			Update::check($path, true);
-
-			if (!$do_cron && ($last_cron + $wait_interval) < time()) {
-				$this->logger->info('Forcing cron worker call.', ['pid' => $pid]);
-				$do_cron = true;
-			}
-
-			if ($do_cron || (!$this->system->isMaxLoadReached() && Worker::entriesExists() && Worker::isReady())) {
-				Worker::spawnWorker($do_cron);
-			} else {
-				$this->logger->info('Cool down for 5 seconds', ['pid' => $pid]);
-				sleep(5);
-			}
-
-			if ($do_cron) {
-				// We force a reconnect of the database connection.
-				// This is done to ensure that the connection don't get lost over time.
-				$this->dba->reconnect();
-
-				$last_cron = time();
-			}
-
-			$start = time();
-			$this->logger->info('Sleeping', ['pid' => $pid, 'until' => gmdate(DateTimeFormat::MYSQL, $start + $wait_interval)]);
-
-			do {
-				$seconds = (time() - $start);
-
-				// logarithmic wait time calculation.
-				// Background: After jobs had been started, they often fork many workers.
-				// To not waste too much time, the sleep period increases.
-				$arg   = (($seconds + 1) / ($wait_interval / 9)) + 1;
-				$sleep = min(1000000, round(log10($arg) * 1000000, 0));
-				usleep((int)$sleep);
-
-				$pid = pcntl_waitpid(-1, $status, WNOHANG);
-				if ($pid > 0) {
-					$this->logger->info('Children quit via pcntl_waitpid', ['pid' => $pid, 'status' => $status]);
-				}
-
-				$timeout = ($seconds >= $wait_interval);
-			} while (!$timeout && !Worker\IPC::JobsExists());
-
-			if ($timeout) {
-				$do_cron = true;
-				$this->logger->info('Woke up after $wait_interval seconds.', ['pid' => $pid, 'sleep' => $wait_interval]);
-			} else {
-				$do_cron = false;
-				$this->logger->info('Worker jobs are calling to be forked.', ['pid' => $pid]);
-			}
-		}
+		$this->err('Invalid command');
+		$this->out($this->getHelp());
+		return 1;
 	}
 }

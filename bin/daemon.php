@@ -5,6 +5,8 @@
  * SPDX-FileCopyrightText: 2010-2024 the Friendica project
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
+ *
+ * @deprecated 2025.01 use bin/console.php daemon instead
  */
 
 /**

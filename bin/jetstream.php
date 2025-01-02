@@ -6,6 +6,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  *
+ * @deprecated 2025.01 use bin/console.php jetstream instead
  */
 
 use Dice\Dice;
@@ -24,4 +25,7 @@ $dice = (new Dice())->addRules(require(dirname(__DIR__) . '/static/dependencies.
 
 $app = \Friendica\App::fromDice($dice);
 
-$app->processJetstream();
+$argv = $_SERVER['argv'] ?? [];
+array_splice($argv, 1, 0, "jetstream");
+
+$app->processConsole($argv);
