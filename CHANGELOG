@@ -1,5 +1,7 @@
 Version 2025.02 (unreleased)
   Friendica Core
+    Deprecated bin/daemon in favor of bin/console daemon (PR 14642) [nupplaphil]
+    Deprecated bin/jetstream in favor of bin/console jetstream (PR 14655) [nupplaphil]
 
   Friendica Addons
 
