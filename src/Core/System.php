@@ -164,9 +164,10 @@ class System
 	 * Executes a child process with 'proc_open'
 	 *
 	 * @param string $command The command to execute
-	 * @param array  $args    Arguments to pass to the command ( [ 'key' => value, 'key2' => value2, ... ]
+	 * @param array  $args    Arguments to pass to the command ( ['arg1', 'arg2', ... ] )
+	 * @param array  $options Options to pass to the command ( [ 'key' => value, 'key2' => value2, ... ]
 	 */
-	public function run(string $command, array $args)
+	public function run(string $command, array $args = [], array $options = [])
 	{
 		if (!function_exists('proc_open')) {
 			$this->logger->warning('"proc_open" not available - quitting');
@@ -175,7 +176,11 @@ class System
 
 		$cmdline = $this->config->get('config', 'php_path', 'php') . ' ' . escapeshellarg($command);
 
-		foreach ($args as $key => $value) {
+		foreach ($args as $argumment) {
+			$cmdline .= ' ' . $argumment;
+		}
+
+		foreach ($options as $key => $value) {
 			if (!is_null($value) && is_bool($value) && !$value) {
 				continue;
 			}

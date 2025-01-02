@@ -115,7 +115,7 @@ class Daemon
 	private static function spawn()
 	{
 		Logger::notice('Starting new daemon process');
-		DI::system()->run('bin/console.php daemon', ['start']);
+		DI::system()->run('bin/console.php', ['start']);
 		Logger::notice('New daemon process started');
 	}
 }
