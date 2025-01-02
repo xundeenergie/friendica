@@ -225,6 +225,8 @@ class App
 
 		$this->registerErrorHandler();
 
+		$this->registerTemplateEngine();
+
 		/** @var Mode */
 		$mode = $this->container->create(Mode::class);
 
