@@ -1,5 +1,6 @@
 Version 2025.02 (unreleased)
   Friendica Core
+    Deprecated bin/deamon in favor of bin/console deamon (PR 14642) [nupplaphil]
 
   Friendica Addons
 
