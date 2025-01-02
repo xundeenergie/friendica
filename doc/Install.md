@@ -290,11 +290,11 @@ Once you have installed Friendica and created an admin account as part of the pr
 #### worker alternative: daemon
 Otherwise, you’ll need to use the command line on your remote server and start the Friendica daemon (background task) using the following command:
 
-    cd /path/to/friendica; php bin/daemon.php start
+    cd /path/to/friendica; php bin/console.php daemon start
 
 Once started, you can check the daemon status using the following command:
 
-    cd /path/to/friendica; php bin/daemon.php status
+    cd /path/to/friendica; php bin/console.php daemon status
 
 After a server restart or any other failure, the daemon needs to be restarted.
 This could be achieved by a cronjob.
