@@ -157,8 +157,11 @@ class Media
 	public static function getAttachElement(string $href, int $length, string $type, string $title = ''): string
 	{
 		$media = self::fetchAdditionalData([
-			'type' => self::DOCUMENT, 'url' => $href,
-			'size' => $length, 'mimetype' => $type, 'description' => $title
+			'type'        => self::DOCUMENT,
+			'url'         => $href,
+			'size'        => $length,
+			'mimetype'    => $type,
+			'description' => $title
 		]);
 
 		return '[attach]href="' . $media['url'] . '" length="' . $media['size'] .
@@ -184,7 +187,7 @@ class Media
 		}
 
 		// Fetch the mimetype or size if missing.
-		if (Network::isValidHttpUrl($media['url']) && empty($media['mimetype']) && !in_array($media['type'], [self::IMAGE, self::HLS])) {
+		if (Network::isValidHttpUrl($media['url']) && (empty($media['mimetype']) || $media['type'] == self::HTML) && !in_array($media['type'], [self::IMAGE, self::HLS])) {
 			$timeout = DI::config()->get('system', 'xrd_timeout');
 			try {
 				$curlResult = DI::httpClient()->head($media['url'], [HttpClientOptions::ACCEPT_CONTENT => HttpClientAccept::AS_DEFAULT, HttpClientOptions::TIMEOUT => $timeout, HttpClientOptions::REQUEST => HttpClientRequest::CONTENTTYPE]);
@@ -194,8 +197,8 @@ class Media
 					$curlResult = DI::httpClient()->get($media['url'], HttpClientAccept::AS_DEFAULT, [HttpClientOptions::TIMEOUT => $timeout]);
 				}
 				if ($curlResult->isSuccess()) {
-					if (empty($media['mimetype'])) {
-						$media['mimetype'] = $curlResult->getContentType() ?? '';
+					if (!empty($curlResult->getContentType())) {
+						$media['mimetype'] = $curlResult->getContentType();
 					}
 					if (empty($media['size'])) {
 						$media['size'] = (int)($curlResult->getHeader('Content-Length')[0] ?? strlen($curlResult->getBodyString() ?? ''));
@@ -419,9 +422,9 @@ class Media
 			$media['preview-width'] = $data['images'][0]['width'] ?? null;
 			$media['blurhash'] = $data['images'][0]['blurhash'] ?? null;
 			$media['description'] = $data['text'] ?? null;
-			$media['name'] = $data['title'] ?? null;	
+			$media['name'] = $data['title'] ?? null;
 		}
-		
+
 		$media['type'] = self::HTML;
 		$media['size'] = $data['size'] ?? null;
 		$media['author-url'] = $data['author_url'] ?? null;
@@ -612,20 +615,29 @@ class Media
 					$body = str_replace($picture[0], '', $body);
 					$image = str_replace(['-1.', '-2.'], '-0.', $picture[2]);
 					$attachments[$image] = [
-						'uri-id' => $uriid, 'type' => self::IMAGE, 'url' => $image,
-						'preview' => $picture[2], 'description' => $picture[3]
+						'uri-id'      => $uriid,
+						'type'        => self::IMAGE,
+						'url'         => $image,
+						'preview'     => $picture[2],
+						'description' => $picture[3]
 					];
 				} elseif (self::isLinkToPhoto($picture[1], $picture[2])) {
 					$body = str_replace($picture[0], '', $body);
 					$attachments[$picture[1]] = [
-						'uri-id' => $uriid, 'type' => self::IMAGE, 'url' => $picture[1],
-						'preview' => $picture[2], 'description' => $picture[3]
+						'uri-id'      => $uriid,
+						'type'        => self::IMAGE,
+						'url'         => $picture[1],
+						'preview'     => $picture[2],
+						'description' => $picture[3]
 					];
 				} elseif ($removepicturelinks) {
 					$body = str_replace($picture[0], '', $body);
 					$attachments[$picture[1]] = [
-						'uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $picture[1],
-						'preview' => $picture[2], 'description' => $picture[3]
+						'uri-id'      => $uriid,
+						'type'        => self::UNKNOWN,
+						'url'         => $picture[1],
+						'preview'     => $picture[2],
+						'description' => $picture[3]
 					];
 				}
 			}
@@ -644,20 +656,29 @@ class Media
 					$body = str_replace($picture[0], '', $body);
 					$image = str_replace(['-1.', '-2.'], '-0.', $picture[2]);
 					$attachments[$image] = [
-						'uri-id' => $uriid, 'type' => self::IMAGE, 'url' => $image,
-						'preview' => $picture[2], 'description' => null
+						'uri-id'      => $uriid,
+						'type'        => self::IMAGE,
+						'url'         => $image,
+						'preview'     => $picture[2],
+						'description' => null
 					];
 				} elseif (self::isLinkToPhoto($picture[1], $picture[2])) {
 					$body = str_replace($picture[0], '', $body);
 					$attachments[$picture[1]] = [
-						'uri-id' => $uriid, 'type' => self::IMAGE, 'url' => $picture[1],
-						'preview' => $picture[2], 'description' => null
+						'uri-id'      => $uriid,
+						'type'        => self::IMAGE,
+						'url'         => $picture[1],
+						'preview'     => $picture[2],
+						'description' => null
 					];
 				} elseif ($removepicturelinks) {
 					$body = str_replace($picture[0], '', $body);
 					$attachments[$picture[1]] = [
-						'uri-id' => $uriid, 'type' => self::UNKNOWN, 'url' => $picture[1],
-						'preview' => $picture[2], 'description' => null
+						'uri-id'      => $uriid,
+						'type'        => self::UNKNOWN,
+						'url'         => $picture[1],
+						'preview'     => $picture[2],
+						'description' => null
 					];
 				}
 			}
