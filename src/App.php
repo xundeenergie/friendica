@@ -18,6 +18,7 @@ use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Capabilities\ICanHandleRequests;
 use Friendica\Content\Nav;
 use Friendica\Core\Config\Factory\Config;
+use Friendica\Core\Container;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\Definition\DbaDefinition;
@@ -59,13 +60,13 @@ class App
 	const CODENAME = 'Interrupted Fern';
 	const VERSION  = '2025.02-dev';
 
-	public static function fromDice(Dice $dice): self
+	public static function fromContainer(Container $container): self
 	{
-		return new self($dice);
+		return new self($container);
 	}
 
 	/**
-	 * @var Dice
+	 * @var Container
 	 */
 	private $container;
 
@@ -120,26 +121,20 @@ class App
 	 */
 	private $appHelper;
 
-	private function __construct(Dice $container)
+	private function __construct(Container $container)
 	{
 		$this->container = $container;
 	}
 
 	public function processRequest(ServerRequestInterface $request, float $start_time): void
 	{
-		$this->setupContainerForAddons();
-
-		$this->setupContainerForLogger(LogChannel::DEFAULT);
-
-		$this->container = $this->container->addRule(Mode::class, [
+		$this->container->addRule(Mode::class, [
 			'call' => [
 				['determineRunMode', [false, $request->getServerParams()], Dice::CHAIN_CALL],
 			],
 		]);
 
-		$this->setupLegacyServiceLocator();
-
-		$this->registerErrorHandler();
+		$this->container->setup(LogChannel::APP, false);
 
 		$this->requestId = $this->container->create(Request::class)->getRequestId();
 		$this->auth      = $this->container->create(Authentication::class);
@@ -175,13 +170,7 @@ class App
 
 	public function processEjabberd(): void
 	{
-		$this->setupContainerForAddons();
-
-		$this->setupContainerForLogger(LogChannel::AUTH_JABBERED);
-
-		$this->setupLegacyServiceLocator();
-
-		$this->registerErrorHandler();
+		$this->container->setup(LogChannel::AUTH_JABBERED, false);
 
 		/** @var BasePath */
 		$basePath = $this->container->create(BasePath::class);
@@ -196,46 +185,6 @@ class App
 			$oAuth = $this->container->create(ExAuth::class);
 			$oAuth->readStdin();
 		}
-	}
-
-	public function processConsole(array $argv): void
-	{
-		$this->setupContainerForAddons();
-
-		$this->setupContainerForLogger(LogChannel::CONSOLE);
-
-		$this->setupLegacyServiceLocator();
-
-		$this->registerErrorHandler();
-
-		$this->registerTemplateEngine();
-
-		(new \Friendica\Core\Console($this->container, $argv))->execute();
-	}
-
-	private function setupContainerForAddons(): void
-	{
-		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
-		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
-
-		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
-	}
-
-	private function setupContainerForLogger(string $logChannel): void
-	{
-		$this->container = $this->container->addRule(LoggerInterface::class, [
-			'constructParams' => [$logChannel],
-		]);
-	}
-
-	private function setupLegacyServiceLocator(): void
-	{
-		DI::init($this->container);
-	}
-
-	private function registerErrorHandler(): void
-	{
-		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(LoggerInterface::class));
 	}
 
 	private function registerTemplateEngine(): void

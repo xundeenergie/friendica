@@ -28,9 +28,8 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 $dice = (new Dice())->addRules(require(dirname(__DIR__) . '/static/dependencies.config.php'));
 
-$app = \Friendica\App::fromDice($dice);
-
 $argv = $_SERVER['argv'] ?? [];
 array_splice($argv, 1, 0, "daemon");
 
-$app->processConsole($argv);
+$container = \Friendica\Core\Container::fromDice($dice);
+\Friendica\Core\Console::create($container, $_SERVER['argv'] ?? [])->execute();

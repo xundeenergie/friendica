@@ -20,7 +20,7 @@ class AppTest extends TestCase
 		$dice = $this->createMock(Dice::class);
 		$dice->expects($this->never())->method('create');
 
-		$app = App::fromDice($dice);
+		$app = App::fromContainer($dice);
 
 		$this->assertInstanceOf(App::class, $app);
 	}

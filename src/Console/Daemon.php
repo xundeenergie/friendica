@@ -9,10 +9,11 @@ declare(strict_types=1);
 
 namespace Friendica\Console;
 
+use Asika\SimpleConsole\CommandArgsException;
 use Friendica\App\Mode;
 use Friendica\Core\Config\Capability\IManageConfigValues;
-use Asika\SimpleConsole\Console;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
+use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Core\System;
 use Friendica\Core\Update;
 use Friendica\Core\Worker;
@@ -26,8 +27,10 @@ use RuntimeException;
 /**
  * Console command for interacting with the daemon
  */
-final class Daemon extends Console
+final class Daemon extends AbstractConsole
 {
+	public const LOG_CHANNEL = LogChannel::DAEMON;
+
 	private Mode $mode;
 	private IManageConfigValues $config;
 	private IManageKeyValuePairs $keyValue;
@@ -98,6 +101,8 @@ HELP;
 			throw new RuntimeException("Friendica isn't properly installed yet");
 		}
 
+		$this->logger->warning('blah!');
+
 		$this->mode->setExecutor(Mode::DAEMON);
 
 		$this->config->reload();
@@ -120,7 +125,7 @@ HELP;
 		$foreground = $this->getOption(['f', 'foreground']) ?? false;
 
 		if (empty($daemonMode)) {
-			throw new RuntimeException("Please use either 'start', 'stop' or 'status'");
+			throw new CommandArgsException("Please use either 'start', 'stop' or 'status'");
 		}
 
 		$this->daemon->init($pidfile);

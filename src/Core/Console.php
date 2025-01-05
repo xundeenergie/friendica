@@ -10,6 +10,7 @@ namespace Friendica\Core;
 use Dice\Dice;
 use Friendica;
 use Friendica\App;
+use Friendica\Core\Logger\Capability\LogChannel;
 
 /**
  * Description of Console
@@ -23,7 +24,7 @@ class Console extends \Asika\SimpleConsole\Console
 	/**
 	 * @var Dice The DI library
 	 */
-	protected $dice;
+	protected $container;
 
 	protected function getHelp()
 	{
@@ -106,14 +107,18 @@ HELP;
 	/**
 	 * CliInput Friendica constructor.
 	 *
-	 * @param Dice $dice The DI library
-	 * @param array $argv
+	 * @param Container $container The Friendica container
 	 */
-	public function __construct(Dice $dice, array $argv = null)
+	public function __construct(Container $container, array $argv = null)
 	{
 		parent::__construct($argv);
 
-		$this->dice = $dice;
+		$this->container = $container;
+	}
+
+	public static function create(Container $container, array $argv = null): Console
+	{
+		return new static($container, $argv);
 	}
 
 	protected function doExecute(): int
@@ -172,8 +177,14 @@ HELP;
 
 		$className = $this->subConsoles[$command];
 
+		if (is_subclass_of($className, Friendica\Console\AbstractConsole::class)) {
+			$this->container->setup($className::LOG_CHANNEL);
+		} else {
+			$this->container->setup(LogChannel::CONSOLE);
+		}
+
 		/** @var Console $subconsole */
-		$subconsole = $this->dice->create($className, [$subargs]);
+		$subconsole = $this->container->create($className, [$subargs]);
 
 		foreach ($this->options as $name => $value) {
 			$subconsole->setOption($name, $value);
@@ -181,5 +192,4 @@ HELP;
 
 		return $subconsole;
 	}
-
 }
