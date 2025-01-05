@@ -93,9 +93,7 @@ HELP;
 
 	protected function doExecute()
 	{
-		if (substr($this->executable, -strlen('bin/console.php')) !== 'bin/console.php') {
-			$this->out(sprintf("'%s' is deprecated and will removed. Please use 'bin/console.php daemon' instead", $this->executable));
-		}
+		$this->checkDeprecated('daemon');
 
 		if ($this->mode->isInstall()) {
 			throw new RuntimeException("Friendica isn't properly installed yet");

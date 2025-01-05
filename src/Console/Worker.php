@@ -69,9 +69,7 @@ HELP;
 
 	protected function doExecute()
 	{
-		if ($this->executable !== 'bin/console.php') {
-			$this->out(sprintf("'%s' is deprecated and will removed. Please use 'bin/console.php worker' instead", $this->executable));
-		}
+		$this->checkDeprecated('worker');
 
 		$this->mode->setExecutor(Mode::WORKER);
 

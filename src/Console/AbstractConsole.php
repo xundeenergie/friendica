@@ -23,4 +23,16 @@ abstract class AbstractConsole extends Console
 	 * @var string
 	 */
 	public const LOG_CHANNEL = LogChannel::CONSOLE;
+
+	/**
+	 * Checks, if the Console command was executed outside of`bin/console.php` and prints the correct execution
+	 *
+	 * @param string $command the current command
+	 */
+	protected function checkDeprecated(string $command): void
+	{
+		if (substr($this->executable, -strlen('bin/console.php')) !== 'bin/console.php') {
+			$this->out(sprintf("'%s' is deprecated and will removed. Please use 'bin/console.php %s' instead", $this->executable, $command));
+		}
+	}
 }
