@@ -17,10 +17,10 @@ class AppTest extends TestCase
 {
 	public function testFromDiceReturnsApp(): void
 	{
-		$dice = $this->createMock(Container::class);
-		$dice->expects($this->never())->method('create');
+		$container = $this->createMock(Container::class);
+		$container->expects($this->never())->method('create');
 
-		$app = App::fromContainer($dice);
+		$app = App::fromContainer($container);
 
 		$this->assertInstanceOf(App::class, $app);
 	}
