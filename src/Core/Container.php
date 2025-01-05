@@ -3,11 +3,16 @@
 namespace Friendica\Core;
 
 use Dice\Dice;
+use Friendica\Core\Addon\Capability\ICanLoadAddons;
 use Friendica\Core\Logger\Capability\LogChannel;
+use Friendica\Core\Logger\Handler\ErrorHandler;
 use Friendica\DI;
 use Psr\Log\LoggerInterface;
 
-final class Container
+/**
+ * Wrapper for the Dice class to make some basic setups
+ */
+class Container
 {
 	private Dice $container;
 
@@ -16,10 +21,25 @@ final class Container
 		$this->container = $container;
 	}
 
+	/**
+	 * Creates an instance with Dice
+	 *
+	 * @param Dice $container
+	 *
+	 * @return self
+	 */
 	public static function fromDice(Dice $container): self {
 		return new static($container);
 	}
 
+	/**
+	 * Initialize the container with the given parameters
+	 *
+	 * @param string $logChannel The Log Channel of this call
+	 * @param bool   $withTemplateEngine true, if the template engine should be set too
+	 *
+	 * @return void
+	 */
 	public function setup(string $logChannel = LogChannel::DEFAULT, bool $withTemplateEngine = true)
 	{
 		$this->setupContainerForAddons();
@@ -32,11 +52,27 @@ final class Container
 		}
 	}
 
+	/**
+	 * Returns a fully constructed object based on $name using $args and $share as constructor arguments if supplied
+	 * @param string $name  name The name of the class to instantiate
+	 * @param array  $args  An array with any additional arguments to be passed into the constructor upon instantiation
+	 * @param array  $share a list of defined in shareInstances for objects higher up the object graph, should only be used internally
+	 * @return object A fully constructed object based on the specified input arguments
+	 *
+	 * @see Dice::create()
+	 */
 	public function create(string $name, array $args = [], array $share = []): object
 	{
 		return $this->container->create($name, $args, $share);
 	}
 
+	/**
+	 * Add a rule $rule to the class $name
+	 * @param string $name The name of the class to add the rule for
+	 * @param array  $rule The container can be fully configured using rules provided by associative arrays. See {@link https://r.je/dice.html#example3} for a description of the rules.
+	 *
+	 * @see Dice::addRule()
+	 */
 	public function addRule(string $name, array $rule):void
 	{
 		$this->container = $this->container->addRule($name, $rule);
@@ -44,8 +80,8 @@ final class Container
 
 	private function setupContainerForAddons(): void
 	{
-		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
-		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
+		/** @var ICanLoadAddons $addonLoader */
+		$addonLoader = $this->container->create(ICanLoadAddons::class);
 
 		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
 	}
@@ -64,7 +100,7 @@ final class Container
 
 	private function registerErrorHandler(): void
 	{
-		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(LoggerInterface::class));
+		ErrorHandler::register($this->container->create(LoggerInterface::class));
 	}
 
 	private function registerTemplateEngine(): void
