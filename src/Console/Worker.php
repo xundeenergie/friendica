@@ -60,7 +60,7 @@ Options
 
 Examples
 	bin/console worker -n
-		Starts the worker without executing the cronob
+		Starts the worker without executing other recurring tasks
 
 	bin/console worker -s
 		Starts the worker and immediately spawn another worker process
