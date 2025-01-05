@@ -7,7 +7,6 @@
 
 namespace Friendica\Core;
 
-use Dice\Dice;
 use Friendica;
 use Friendica\App;
 use Friendica\Core\Logger\Capability\LogChannel;
@@ -19,12 +18,12 @@ class Console extends \Asika\SimpleConsole\Console
 {
 	// Disables the default help handling
 	protected $helpOptions       = [];
-	protected $customHelpOptions = ['h', 'help', '?'];
+	protected array $customHelpOptions = ['h', 'help', '?'];
 
 	/**
-	 * @var Dice The DI library
+	 * @var Container The Container
 	 */
-	protected $container;
+	protected Container $container;
 
 	protected function getHelp()
 	{
@@ -70,7 +69,7 @@ HELP;
 		return $help;
 	}
 
-	protected $subConsoles = [
+	protected array $subConsoles = [
 		'addon'                             => Friendica\Console\Addon::class,
 		'archivecontact'                    => Friendica\Console\ArchiveContact::class,
 		'autoinstall'                       => Friendica\Console\AutomaticInstallation::class,
@@ -118,7 +117,7 @@ HELP;
 
 	public static function create(Container $container, array $argv = null): Console
 	{
-		return new static($container, $argv);
+		return new self($container, $argv);
 	}
 
 	protected function doExecute(): int

@@ -37,7 +37,7 @@ class Container
 	 */
 	public static function fromDice(Dice $container): self
 	{
-		return new static($container);
+		return new self($container);
 	}
 
 	/**
