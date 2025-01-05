@@ -17,7 +17,7 @@ use Friendica\Core\Logger\Capability\LogChannel;
 class Console extends \Asika\SimpleConsole\Console
 {
 	// Disables the default help handling
-	protected $helpOptions       = [];
+	protected $helpOptions             = [];
 	protected array $customHelpOptions = ['h', 'help', '?'];
 
 	/**
