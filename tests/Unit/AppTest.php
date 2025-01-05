@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class AppTest extends TestCase
 {
-	public function testFromDiceReturnsApp(): void
+	public function testFromContainerReturnsApp(): void
 	{
 		$container = $this->createMock(Container::class);
 		$container->expects($this->never())->method('create');
