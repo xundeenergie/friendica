@@ -27,4 +27,4 @@ $argv = $_SERVER['argv'] ?? [];
 array_splice($argv, 1, 0, "jetstream");
 
 $container = \Friendica\Core\Container::fromDice($dice);
-\Friendica\Core\Console::create($container, $_SERVER['argv'] ?? [])->execute();
+\Friendica\Core\Console::create($container, $argv)->execute();

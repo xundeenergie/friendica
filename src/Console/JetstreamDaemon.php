@@ -24,7 +24,7 @@ use RuntimeException;
  */
 final class JetstreamDaemon extends AbstractConsole
 {
-	public const LOG_CHANNEL = LogChannel::AUTH_JABBERED;
+	public const LOG_CHANNEL = LogChannel::DAEMON;
 
 	private Mode $mode;
 	private IManageConfigValues $config;
