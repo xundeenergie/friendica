@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2025.02-dev\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-01 23:33+0000\n"
+"POT-Creation-Date: 2025-01-04 20:55-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -646,7 +646,7 @@ msgstr ""
 msgid "Map"
 msgstr ""
 
-#: src/App.php:397
+#: src/App.php:394
 msgid "Apologies but the website is unavailable at the moment."
 msgstr ""
 
@@ -765,15 +765,15 @@ msgstr ""
 msgid "No system theme config value set."
 msgstr ""
 
-#: src/BaseModule.php:393
+#: src/BaseModule.php:395
 msgid "The form security token was not correct. This probably happened because the form has been opened for too long (>3 hours) before submitting it."
 msgstr ""
 
-#: src/BaseModule.php:420
+#: src/BaseModule.php:422
 msgid "All contacts"
 msgstr ""
 
-#: src/BaseModule.php:425 src/Content/Conversation/Factory/Channel.php:32
+#: src/BaseModule.php:427 src/Content/Conversation/Factory/Channel.php:32
 #: src/Content/Widget.php:254 src/Core/ACL.php:182 src/Module/Contact.php:395
 #: src/Module/Privacy/PermissionTooltip.php:150
 #: src/Module/Privacy/PermissionTooltip.php:172
@@ -781,16 +781,16 @@ msgstr ""
 msgid "Followers"
 msgstr ""
 
-#: src/BaseModule.php:430 src/Content/Widget.php:255 src/Module/Contact.php:398
+#: src/BaseModule.php:432 src/Content/Widget.php:255 src/Module/Contact.php:398
 #: src/Module/Settings/Channels.php:145
 msgid "Following"
 msgstr ""
 
-#: src/BaseModule.php:435 src/Content/Widget.php:256 src/Module/Contact.php:401
+#: src/BaseModule.php:437 src/Content/Widget.php:256 src/Module/Contact.php:401
 msgid "Mutual friends"
 msgstr ""
 
-#: src/BaseModule.php:443
+#: src/BaseModule.php:445
 msgid "Common"
 msgstr ""
 
@@ -1835,7 +1835,7 @@ msgstr ""
 msgid "Create new group"
 msgstr ""
 
-#: src/Content/Item.php:322 src/Model/Item.php:3281
+#: src/Content/Item.php:322 src/Model/Item.php:3297
 msgid "event"
 msgstr ""
 
@@ -1843,7 +1843,7 @@ msgstr ""
 msgid "status"
 msgstr ""
 
-#: src/Content/Item.php:331 src/Model/Item.php:3283
+#: src/Content/Item.php:331 src/Model/Item.php:3299
 #: src/Module/Post/Tag/Add.php:109
 msgid "photo"
 msgstr ""
@@ -2040,7 +2040,7 @@ msgid "Create an account"
 msgstr ""
 
 #: src/Content/Nav.php:247 src/Module/Help.php:53
-#: src/Module/Settings/TwoFactor/AppSpecific.php:119
+#: src/Module/Settings/TwoFactor/AppSpecific.php:118
 #: src/Module/Settings/TwoFactor/Index.php:125
 #: src/Module/Settings/TwoFactor/Recovery.php:96
 #: src/Module/Settings/TwoFactor/Verify.php:135 view/theme/vier/theme.php:228
@@ -2245,8 +2245,8 @@ msgstr ""
 msgid "<a href=\"%1$s\" target=\"_blank\" rel=\"noopener noreferrer\">%2$s</a> %3$s"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:926 src/Model/Item.php:4080
-#: src/Model/Item.php:4086 src/Model/Item.php:4087
+#: src/Content/Text/BBCode.php:926 src/Model/Item.php:4096
+#: src/Model/Item.php:4102 src/Model/Item.php:4103
 msgid "Link to source"
 msgstr ""
 
@@ -2834,7 +2834,7 @@ msgstr ""
 msgid "Could not connect to database."
 msgstr ""
 
-#: src/Core/L10n.php:426 src/Model/Item.php:2324
+#: src/Core/L10n.php:426 src/Model/Item.php:2340
 msgid "Undetermined"
 msgstr ""
 
@@ -3376,92 +3376,92 @@ msgstr ""
 msgid "Happy Birthday %s"
 msgstr ""
 
-#: src/Model/Item.php:2331
+#: src/Model/Item.php:2347
 #, php-format
 msgid "%s (%s - %s): %s"
 msgstr ""
 
-#: src/Model/Item.php:2333
+#: src/Model/Item.php:2349
 #, php-format
 msgid "%s (%s): %s"
 msgstr ""
 
-#: src/Model/Item.php:2336
+#: src/Model/Item.php:2352
 #, php-format
 msgid ""
 "Detected languages in this post:\n"
 "%s"
 msgstr ""
 
-#: src/Model/Item.php:3285
+#: src/Model/Item.php:3301
 msgid "activity"
 msgstr ""
 
-#: src/Model/Item.php:3287
+#: src/Model/Item.php:3303
 msgid "comment"
 msgstr ""
 
-#: src/Model/Item.php:3290 src/Module/Post/Tag/Add.php:109
+#: src/Model/Item.php:3306 src/Module/Post/Tag/Add.php:109
 msgid "post"
 msgstr ""
 
-#: src/Model/Item.php:3463
+#: src/Model/Item.php:3479
 #, php-format
 msgid "%s is blocked"
 msgstr ""
 
-#: src/Model/Item.php:3465
+#: src/Model/Item.php:3481
 #, php-format
 msgid "%s is ignored"
 msgstr ""
 
-#: src/Model/Item.php:3467
+#: src/Model/Item.php:3483
 #, php-format
 msgid "Content from %s is collapsed"
 msgstr ""
 
-#: src/Model/Item.php:3471
+#: src/Model/Item.php:3487
 msgid "Sensitive content"
 msgstr ""
 
-#: src/Model/Item.php:3980
+#: src/Model/Item.php:3996
 msgid "bytes"
 msgstr ""
 
-#: src/Model/Item.php:4011
+#: src/Model/Item.php:4027
 #, php-format
 msgid "%2$s (%3$d%%, %1$d vote)"
 msgid_plural "%2$s (%3$d%%, %1$d votes)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:4013
+#: src/Model/Item.php:4029
 #, php-format
 msgid "%2$s (%1$d vote)"
 msgid_plural "%2$s (%1$d votes)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:4018
+#: src/Model/Item.php:4034
 #, php-format
 msgid "%d voter. Poll end: %s"
 msgid_plural "%d voters. Poll end: %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:4020
+#: src/Model/Item.php:4036
 #, php-format
 msgid "%d voter."
 msgid_plural "%d voters."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:4022
+#: src/Model/Item.php:4038
 #, php-format
 msgid "Poll end: %s"
 msgstr ""
 
-#: src/Model/Item.php:4063 src/Model/Item.php:4064
+#: src/Model/Item.php:4079 src/Model/Item.php:4080
 msgid "View on separate page"
 msgstr ""
 
@@ -9544,7 +9544,7 @@ msgstr ""
 
 #: src/Module/Settings/Channels.php:177 src/Module/Settings/Channels.php:198
 #: src/Module/Settings/Display.php:350
-#: src/Module/Settings/TwoFactor/AppSpecific.php:124
+#: src/Module/Settings/TwoFactor/AppSpecific.php:123
 msgid "Description"
 msgstr ""
 
@@ -10446,55 +10446,54 @@ msgid "App-specific password generation failed: This description already exists.
 msgstr ""
 
 #: src/Module/Settings/TwoFactor/AppSpecific.php:80
-#, php-format
-msgid "New app-specific password generated: %s"
+msgid "New app-specific password generated."
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:87
+#: src/Module/Settings/TwoFactor/AppSpecific.php:86
 msgid "App-specific passwords successfully revoked."
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:97
+#: src/Module/Settings/TwoFactor/AppSpecific.php:96
 msgid "App-specific password successfully revoked."
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:118
+#: src/Module/Settings/TwoFactor/AppSpecific.php:117
 msgid "Two-factor app-specific passwords"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:120
+#: src/Module/Settings/TwoFactor/AppSpecific.php:119
 msgid "<p>App-specific passwords are randomly generated passwords used instead your regular password to authenticate your account on third-party applications that don't support two-factor authentication.</p>"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:121
+#: src/Module/Settings/TwoFactor/AppSpecific.php:120
 msgid "Make sure to copy your new app-specific password now. You won’t be able to see it again!"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:125
+#: src/Module/Settings/TwoFactor/AppSpecific.php:124
 msgid "Last Used"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:126
+#: src/Module/Settings/TwoFactor/AppSpecific.php:125
 msgid "Revoke"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:127
+#: src/Module/Settings/TwoFactor/AppSpecific.php:126
 msgid "Revoke All"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:130
+#: src/Module/Settings/TwoFactor/AppSpecific.php:129
 msgid "When you generate a new app-specific password, you must use it right away, it will be shown to you once after you generate it."
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:131
+#: src/Module/Settings/TwoFactor/AppSpecific.php:130
 msgid "Generate new app-specific password"
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:132
+#: src/Module/Settings/TwoFactor/AppSpecific.php:131
 msgid "Friendiqa on my Fairphone 2..."
 msgstr ""
 
-#: src/Module/Settings/TwoFactor/AppSpecific.php:133
+#: src/Module/Settings/TwoFactor/AppSpecific.php:132
 msgid "Generate"
 msgstr ""
 
