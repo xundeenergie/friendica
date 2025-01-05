@@ -77,8 +77,7 @@ class AppSpecific extends BaseSettings
 						$this->baseUrl->redirect('settings/2fa/app_specific?t=' . self::getFormSecurityToken('settings_2fa_password'));
 					} else {
 						$this->appSpecificPassword = AppSpecificPassword::generateForUser($this->session->getLocalUserId(), $request['description'] ?? '');
-						$this->systemMessages->addInfo($this->t('New app-specific password generated: %s', $this->appSpecificPassword['plaintext_password']));
-						$this->baseUrl->redirect('settings/2fa/app_specific?t=' . self::getFormSecurityToken('settings_2fa_password'));
+						$this->systemMessages->addInfo($this->t('New app-specific password generated.'));
 					}
 
 					break;
