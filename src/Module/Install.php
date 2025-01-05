@@ -165,7 +165,6 @@ class Install extends BaseModule
 
 				break;
 		}
-		DI::baseUrl()->redirect('install?pass=' . $this->currentWizardStep);
 	}
 
 	protected function content(array $request = []): string
