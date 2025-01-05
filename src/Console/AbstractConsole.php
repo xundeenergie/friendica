@@ -22,5 +22,5 @@ abstract class AbstractConsole extends Console
 	 *
 	 * @var string
 	 */
-	public const LOG_CHANNEL = LogChannel::class;
+	public const LOG_CHANNEL = LogChannel::CONSOLE;
 }
