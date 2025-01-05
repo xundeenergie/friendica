@@ -53,6 +53,6 @@ require dirname(__FILE__, 2) . '/vendor/autoload.php';
 $dice = (new Dice())->addRules(require(dirname(__FILE__, 2) . '/static/dependencies.config.php'));
 
 $container = \Friendica\Core\Container::fromDice($dice);
-$app = \Friendica\App::fromContainer($container);
+$app       = \Friendica\App::fromContainer($container);
 
 $app->processEjabberd();

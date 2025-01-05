@@ -5,7 +5,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Friendica\Core;
 
@@ -35,7 +35,8 @@ class Container
 	 *
 	 * @return self
 	 */
-	public static function fromDice(Dice $container): self {
+	public static function fromDice(Dice $container): self
+	{
 		return new static($container);
 	}
 
@@ -80,7 +81,7 @@ class Container
 	 *
 	 * @see Dice::addRule()
 	 */
-	public function addRule(string $name, array $rule):void
+	public function addRule(string $name, array $rule): void
 	{
 		$this->container = $this->container->addRule($name, $rule);
 	}
