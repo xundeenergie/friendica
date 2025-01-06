@@ -133,7 +133,7 @@ class PushSubscription extends BaseApi
 		$this->response->addJsonContent([]);
 	}
 
-	protected function rawContent(array $request = []): void
+	protected function get(array $request = []): void
 	{
 		$this->checkAllowedScope(self::SCOPE_PUSH);
 		$uid         = self::getCurrentUserID();

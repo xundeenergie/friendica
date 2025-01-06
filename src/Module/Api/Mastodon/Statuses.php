@@ -350,7 +350,7 @@ class Statuses extends BaseApi
 	/**
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 */
-	protected function rawContent(array $request = [])
+	protected function get(array $request = [])
 	{
 		$uid = self::getCurrentUserID();
 
