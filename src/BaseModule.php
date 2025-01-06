@@ -237,7 +237,7 @@ abstract class BaseModule implements ICanHandleRequests
 			case Router::GET:
 				$this->get($request);
 				break;
-			}
+		}
 
 		$timestamp = microtime(true);
 		// "rawContent" is especially meant for technical endpoints.
