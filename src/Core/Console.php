@@ -16,6 +16,17 @@ use Friendica\Core\Logger\Capability\LogChannel;
  */
 class Console extends \Asika\SimpleConsole\Console
 {
+	/** @var string The default executable for a console call */
+	private const CONSOLE_EXECUTABLE = 'bin/console.php';
+
+	/**
+	 * @return string The default executable for a console call
+	 */
+	public static function getDefaultExecutable(): string
+	{
+		return self::CONSOLE_EXECUTABLE;
+	}
+
 	// Disables the default help handling
 	protected $helpOptions             = [];
 	protected array $customHelpOptions = ['h', 'help', '?'];
