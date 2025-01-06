@@ -6,7 +6,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  *
- * @deprecated 2025.01 use bin/console.php daemon instead
+ * @deprecated 2025.02 use bin/console.php daemon instead
  */
 
 /**

@@ -8,7 +8,7 @@
  *
  * Starts the background processing
  *
- * @deprecated 2025.01 use bin/console.php worker instead
+ * @deprecated 2025.02 use bin/console.php worker instead
  */
 
 if (php_sapi_name() !== 'cli') {
