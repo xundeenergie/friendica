@@ -12,9 +12,9 @@ namespace Friendica\Console;
 use Friendica\App\Mode;
 use Friendica\Core\Addon;
 use Friendica\Core\Config\Capability\IManageConfigValues;
-use Asika\SimpleConsole\Console;
 use Friendica\Core\Hook;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
+use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Protocol\ATProtocol\Jetstream;
 use Friendica\System\Daemon as SysDaemon;
 use RuntimeException;
@@ -22,8 +22,10 @@ use RuntimeException;
 /**
  * Console command for interacting with the daemon
  */
-final class JetstreamDaemon extends Console
+final class JetstreamDaemon extends AbstractConsole
 {
+	public const LOG_CHANNEL = LogChannel::DAEMON;
+
 	private Mode $mode;
 	private IManageConfigValues $config;
 	private IManageKeyValuePairs $keyValue;
@@ -77,9 +79,7 @@ HELP;
 
 	protected function doExecute()
 	{
-		if ($this->executable !== 'bin/console.php') {
-			$this->out(sprintf("'%s' is deprecated and will removed. Please use 'bin/console.php jetstream' instead", $this->executable));
-		}
+		$this->checkDeprecated('jetstream');
 
 		if ($this->mode->isInstall()) {
 			throw new RuntimeException("Friendica isn't properly installed yet");

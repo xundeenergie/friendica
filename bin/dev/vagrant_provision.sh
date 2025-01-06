@@ -129,7 +129,7 @@ bin/console user password "$USER_NICK" "$USER_PASSW"
 # create cronjob - activate if you have enough memory in you dev VM
 # cronjob runs as www-data user
 echo ">>> Installing cronjob"
-echo "*/10 * * * *    www-data    cd /vagrant; /usr/bin/php bin/worker.php" >> /etc/cron.d/friendica
+echo "*/10 * * * *    www-data    cd /vagrant; /usr/bin/php bin/console.php worker" >> /etc/cron.d/friendica
 
 # friendica needs write access to /tmp
 chmod 777 /tmp

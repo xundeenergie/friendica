@@ -9,10 +9,11 @@ declare(strict_types=1);
 
 namespace Friendica\Console;
 
+use Asika\SimpleConsole\CommandArgsException;
 use Friendica\App\Mode;
 use Friendica\Core\Config\Capability\IManageConfigValues;
-use Asika\SimpleConsole\Console;
 use Friendica\Core\KeyValueStorage\Capability\IManageKeyValuePairs;
+use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Core\System;
 use Friendica\Core\Update;
 use Friendica\Core\Worker;
@@ -26,8 +27,10 @@ use RuntimeException;
 /**
  * Console command for interacting with the daemon
  */
-final class Daemon extends Console
+final class Daemon extends AbstractConsole
 {
+	public const LOG_CHANNEL = LogChannel::DAEMON;
+
 	private Mode $mode;
 	private IManageConfigValues $config;
 	private IManageKeyValuePairs $keyValue;
@@ -90,9 +93,7 @@ HELP;
 
 	protected function doExecute()
 	{
-		if ($this->executable !== 'bin/console.php') {
-			$this->out(sprintf("'%s' is deprecated and will removed. Please use 'bin/console.php daemon' instead", $this->executable));
-		}
+		$this->checkDeprecated('daemon');
 
 		if ($this->mode->isInstall()) {
 			throw new RuntimeException("Friendica isn't properly installed yet");
@@ -120,7 +121,7 @@ HELP;
 		$foreground = $this->getOption(['f', 'foreground']) ?? false;
 
 		if (empty($daemonMode)) {
-			throw new RuntimeException("Please use either 'start', 'stop' or 'status'");
+			throw new CommandArgsException("Please use either 'start', 'stop' or 'status'");
 		}
 
 		$this->daemon->init($pidfile);

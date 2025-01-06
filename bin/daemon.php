@@ -6,7 +6,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-or-later
  *
- * @deprecated 2025.01 use bin/console.php daemon instead
+ * @deprecated 2025.02 use bin/console.php daemon instead
  */
 
 /**
@@ -28,9 +28,8 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 $dice = (new Dice())->addRules(require(dirname(__DIR__) . '/static/dependencies.config.php'));
 
-$app = \Friendica\App::fromDice($dice);
-
 $argv = $_SERVER['argv'] ?? [];
 array_splice($argv, 1, 0, "daemon");
 
-$app->processConsole($argv);
+$container = \Friendica\Core\Container::fromDice($dice);
+\Friendica\Core\Console::create($container, $argv)->execute();

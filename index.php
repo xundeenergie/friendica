@@ -19,6 +19,7 @@ $request = \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
 
 $dice = (new Dice())->addRules(require(__DIR__ . '/static/dependencies.config.php'));
 
-$app = \Friendica\App::fromDice($dice);
+$container = \Friendica\Core\Container::fromDice($dice);
+$app       = \Friendica\App::fromContainer($container);
 
 $app->processRequest($request, $start_time);

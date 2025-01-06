@@ -7,6 +7,8 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  *
  * Starts the background processing
+ *
+ * @deprecated 2025.02 use bin/console.php worker instead
  */
 
 if (php_sapi_name() !== 'cli') {
@@ -16,9 +18,6 @@ if (php_sapi_name() !== 'cli') {
 
 use Dice\Dice;
 
-// Get options
-$options = getopt('sn', ['spawn', 'no_cron']);
-
 // Ensure that worker.php is executed from the base path of the installation
 chdir(dirname(__DIR__));
 
@@ -26,6 +25,8 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 $dice = (new Dice())->addRules(require(dirname(__DIR__) . '/static/dependencies.config.php'));
 
-$app = \Friendica\App::fromDice($dice);
+$argv = $_SERVER['argv'] ?? [];
+array_splice($argv, 1, 0, "worker");
 
-$app->processWorker($options ?: []);
+$container = \Friendica\Core\Container::fromDice($dice);
+\Friendica\Core\Console::create($container, $argv)->execute();

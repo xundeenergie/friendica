@@ -18,9 +18,9 @@ use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Capabilities\ICanHandleRequests;
 use Friendica\Content\Nav;
 use Friendica\Core\Config\Factory\Config;
+use Friendica\Core\Container;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
-use Friendica\Core\Worker\Repository\Process as ProcessRepository;
 use Friendica\Database\Definition\DbaDefinition;
 use Friendica\Database\Definition\ViewDefinition;
 use Friendica\Module\Maintenance;
@@ -31,7 +31,6 @@ use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\System;
 use Friendica\Core\Update;
-use Friendica\Core\Worker;
 use Friendica\Module\Special\HTTPException as ModuleHTTPException;
 use Friendica\Network\HTTPException;
 use Friendica\Protocol\ATProtocol\DID;
@@ -61,13 +60,13 @@ class App
 	const CODENAME = 'Interrupted Fern';
 	const VERSION  = '2025.02-dev';
 
-	public static function fromDice(Dice $dice): self
+	public static function fromContainer(Container $container): self
 	{
-		return new self($dice);
+		return new self($container);
 	}
 
 	/**
-	 * @var Dice
+	 * @var Container
 	 */
 	private $container;
 
@@ -122,26 +121,20 @@ class App
 	 */
 	private $appHelper;
 
-	private function __construct(Dice $container)
+	private function __construct(Container $container)
 	{
 		$this->container = $container;
 	}
 
 	public function processRequest(ServerRequestInterface $request, float $start_time): void
 	{
-		$this->setupContainerForAddons();
-
-		$this->setupContainerForLogger(LogChannel::DEFAULT);
-
-		$this->container = $this->container->addRule(Mode::class, [
+		$this->container->addRule(Mode::class, [
 			'call' => [
 				['determineRunMode', [false, $request->getServerParams()], Dice::CHAIN_CALL],
 			],
 		]);
 
-		$this->setupLegacyServiceLocator();
-
-		$this->registerErrorHandler();
+		$this->container->setup(LogChannel::APP, false);
 
 		$this->requestId = $this->container->create(Request::class)->getRequestId();
 		$this->auth      = $this->container->create(Authentication::class);
@@ -177,13 +170,7 @@ class App
 
 	public function processEjabberd(): void
 	{
-		$this->setupContainerForAddons();
-
-		$this->setupContainerForLogger(LogChannel::AUTH_JABBERED);
-
-		$this->setupLegacyServiceLocator();
-
-		$this->registerErrorHandler();
+		$this->container->setup(LogChannel::AUTH_JABBERED, false);
 
 		/** @var BasePath */
 		$basePath = $this->container->create(BasePath::class);
@@ -198,95 +185,6 @@ class App
 			$oAuth = $this->container->create(ExAuth::class);
 			$oAuth->readStdin();
 		}
-	}
-
-	public function processConsole(array $argv): void
-	{
-		$this->setupContainerForAddons();
-
-		$this->setupContainerForLogger(LogChannel::CONSOLE);
-
-		$this->setupLegacyServiceLocator();
-
-		$this->registerErrorHandler();
-
-		$this->registerTemplateEngine();
-
-		(new \Friendica\Core\Console($this->container, $argv))->execute();
-	}
-
-	public function processWorker(array $options): void
-	{
-		$this->setupContainerForAddons();
-
-		$this->setupContainerForLogger(LogChannel::WORKER);
-
-		$this->setupLegacyServiceLocator();
-
-		$this->registerErrorHandler();
-
-		$this->registerTemplateEngine();
-
-		/** @var Mode */
-		$mode = $this->container->create(Mode::class);
-
-		$mode->setExecutor(Mode::WORKER);
-
-		/** @var BasePath */
-		$basePath = $this->container->create(BasePath::class);
-
-		// Check the database structure and possibly fixes it
-		Update::check($basePath->getPath(), true);
-
-		// Quit when in maintenance
-		if (!$mode->has(Mode::MAINTENANCEDISABLED)) {
-			return;
-		}
-
-		$spawn = array_key_exists('s', $options) || array_key_exists('spawn', $options);
-
-		if ($spawn) {
-			Worker::spawnWorker();
-			exit();
-		}
-
-		$run_cron = !array_key_exists('n', $options) && !array_key_exists('no_cron', $options);
-
-		/** @var ProcessRepository */
-		$processRepository = $this->container->create(ProcessRepository::class);
-
-		$process = $processRepository->create(getmypid(), 'worker.php');
-
-		Worker::processQueue($run_cron, $process);
-
-		Worker::unclaimProcess($process);
-
-		$processRepository->delete($process);
-	}
-
-	private function setupContainerForAddons(): void
-	{
-		/** @var \Friendica\Core\Addon\Capability\ICanLoadAddons $addonLoader */
-		$addonLoader = $this->container->create(\Friendica\Core\Addon\Capability\ICanLoadAddons::class);
-
-		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
-	}
-
-	private function setupContainerForLogger(string $logChannel): void
-	{
-		$this->container = $this->container->addRule(LoggerInterface::class, [
-			'constructParams' => [$logChannel],
-		]);
-	}
-
-	private function setupLegacyServiceLocator(): void
-	{
-		DI::init($this->container);
-	}
-
-	private function registerErrorHandler(): void
-	{
-		\Friendica\Core\Logger\Handler\ErrorHandler::register($this->container->create(LoggerInterface::class));
 	}
 
 	private function registerTemplateEngine(): void

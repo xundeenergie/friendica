@@ -7,23 +7,34 @@
 
 namespace Friendica\Core;
 
-use Dice\Dice;
 use Friendica;
 use Friendica\App;
+use Friendica\Core\Logger\Capability\LogChannel;
 
 /**
  * Description of Console
  */
 class Console extends \Asika\SimpleConsole\Console
 {
-	// Disables the default help handling
-	protected $helpOptions       = [];
-	protected $customHelpOptions = ['h', 'help', '?'];
+	/** @var string The default executable for a console call */
+	private const CONSOLE_EXECUTABLE = 'bin/console.php';
 
 	/**
-	 * @var Dice The DI library
+	 * @return string The default executable for a console call
 	 */
-	protected $dice;
+	public static function getDefaultExecutable(): string
+	{
+		return self::CONSOLE_EXECUTABLE;
+	}
+
+	// Disables the default help handling
+	protected $helpOptions             = [];
+	protected array $customHelpOptions = ['h', 'help', '?'];
+
+	/**
+	 * @var Container The Container
+	 */
+	protected Container $container;
 
 	protected function getHelp()
 	{
@@ -39,6 +50,7 @@ Commands:
 	createdoxygen          Generate Doxygen headers
 	daemon                 Interact with the Friendica daemon
 	jetstream              Interact with the Jetstream daemon
+	worker                 Start worker process
 	dbstructure            Do database updates
 	docbloxerrorchecker    Check the file tree for DocBlox errors
 	extract                Generate translation string file for the Friendica project (deprecated)
@@ -68,7 +80,7 @@ HELP;
 		return $help;
 	}
 
-	protected $subConsoles = [
+	protected array $subConsoles = [
 		'addon'                             => Friendica\Console\Addon::class,
 		'archivecontact'                    => Friendica\Console\ArchiveContact::class,
 		'autoinstall'                       => Friendica\Console\AutomaticInstallation::class,
@@ -79,6 +91,7 @@ HELP;
 		'createdoxygen'                     => Friendica\Console\CreateDoxygen::class,
 		'daemon'                            => Friendica\Console\Daemon::class,
 		'jetstream'                         => Friendica\Console\JetstreamDaemon::class,
+		'worker'                            => Friendica\Console\Worker::class,
 		'docbloxerrorchecker'               => Friendica\Console\DocBloxErrorChecker::class,
 		'dbstructure'                       => Friendica\Console\DatabaseStructure::class,
 		'extract'                           => Friendica\Console\Extract::class,
@@ -104,14 +117,18 @@ HELP;
 	/**
 	 * CliInput Friendica constructor.
 	 *
-	 * @param Dice $dice The DI library
-	 * @param array $argv
+	 * @param Container $container The Friendica container
 	 */
-	public function __construct(Dice $dice, array $argv = null)
+	public function __construct(Container $container, array $argv = null)
 	{
 		parent::__construct($argv);
 
-		$this->dice = $dice;
+		$this->container = $container;
+	}
+
+	public static function create(Container $container, array $argv = null): Console
+	{
+		return new self($container, $argv);
 	}
 
 	protected function doExecute(): int
@@ -170,8 +187,14 @@ HELP;
 
 		$className = $this->subConsoles[$command];
 
+		if (is_subclass_of($className, Friendica\Console\AbstractConsole::class)) {
+			$this->container->setup($className::LOG_CHANNEL);
+		} else {
+			$this->container->setup(LogChannel::CONSOLE);
+		}
+
 		/** @var Console $subconsole */
-		$subconsole = $this->dice->create($className, [$subargs]);
+		$subconsole = $this->container->create($className, [$subargs]);
 
 		foreach ($this->options as $name => $value) {
 			$subconsole->setOption($name, $value);
@@ -179,5 +202,4 @@ HELP;
 
 		return $subconsole;
 	}
-
 }
