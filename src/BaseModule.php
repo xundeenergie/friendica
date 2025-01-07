@@ -165,6 +165,19 @@ abstract class BaseModule implements ICanHandleRequests
 	}
 
 	/**
+	 * Module GET method to process submitted data
+	 *
+	 * Extend this method if the module is supposed to process GET requests.
+	 * Doesn't display any content
+	 *
+	 * @param string[] $request The $_REQUEST content
+	 * @return void
+	 */
+	protected function get(array $request = [])
+	{
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function run(ModuleHTTPException $httpException, array $request = []): ResponseInterface
@@ -221,6 +234,9 @@ abstract class BaseModule implements ICanHandleRequests
 			case Router::PUT:
 				$this->put($request);
 				return $this->response->generate();
+			case Router::GET:
+				$this->get($request);
+				break;
 		}
 
 		$timestamp = microtime(true);
