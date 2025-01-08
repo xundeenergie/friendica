@@ -27,7 +27,7 @@ final class DiceContainer implements Container
 
 		$dice = (new Dice())->addRules(require($path));
 
-		return static::fromDice($dice);
+		return new self($dice);
 	}
 
 	private Dice $container;
@@ -35,18 +35,6 @@ final class DiceContainer implements Container
 	private function __construct(Dice $container)
 	{
 		$this->container = $container;
-	}
-
-	/**
-	 * Creates an instance with Dice
-	 *
-	 * @param Dice $container
-	 *
-	 * @return self
-	 */
-	public static function fromDice(Dice $container): self
-	{
-		return new self($container);
 	}
 
 	/**

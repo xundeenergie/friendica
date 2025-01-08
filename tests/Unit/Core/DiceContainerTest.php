@@ -50,33 +50,4 @@ class DiceContainerTest extends TestCase
 
 		$this->assertInstanceOf(NullLogger::class, $container->create(LoggerInterface::class));
 	}
-
-	public function testFromDiceReturnsContainer(): void
-	{
-		$dice = $this->createMock(Dice::class);
-		$dice->expects($this->never())->method('create');
-
-		$container = DiceContainer::fromDice($dice);
-
-		$this->assertInstanceOf(Container::class, $container);
-	}
-
-	public function testCreateFromContainer(): void
-	{
-		$dice = $this->createMock(Dice::class);
-		$dice->expects($this->once())->method('create')->with(LoggerInterface::class)->willReturn(new NullLogger());
-
-		$container = DiceContainer::fromDice($dice);
-
-		$this->assertInstanceOf(NullLogger::class, $container->create(LoggerInterface::class));
-	}
-
-	public function testAddRuleFromContainer(): void
-	{
-		$dice = $this->createMock(Dice::class);
-		$dice->expects($this->once())->method('addRule')->with(LoggerInterface::class, ['constructParams' => ['console']])->willReturn($dice);
-
-		$container = DiceContainer::fromDice($dice);
-		$container->addRule(LoggerInterface::class, ['constructParams' => ['console']]);
-	}
 }
