@@ -9,46 +9,13 @@ declare(strict_types=1);
 
 namespace Friendica\Core;
 
-use Dice\Dice;
-use Friendica\Core\Addon\Capability\ICanLoadAddons;
 use Friendica\Core\Logger\Capability\LogChannel;
-use Friendica\Core\Logger\Handler\ErrorHandler;
-use Friendica\DI;
-use Psr\Log\LoggerInterface;
 
 /**
- * Wrapper for the Dice class to make some basic setups
+ * Dependency Injection Container
  */
-class Container
+interface Container
 {
-	public static function fromBasePath(string $basePath): self
-	{
-		$path = $basePath . '/static/dependencies.config.php';
-
-		$dice = (new Dice())->addRules(require($path));
-
-		return static::fromDice($dice);
-	}
-
-	private Dice $container;
-
-	private function __construct(Dice $container)
-	{
-		$this->container = $container;
-	}
-
-	/**
-	 * Creates an instance with Dice
-	 *
-	 * @param Dice $container
-	 *
-	 * @return self
-	 */
-	public static function fromDice(Dice $container): self
-	{
-		return new self($container);
-	}
-
 	/**
 	 * Initialize the container with the given parameters
 	 *
@@ -57,17 +24,7 @@ class Container
 	 *
 	 * @return void
 	 */
-	public function setup(string $logChannel = LogChannel::DEFAULT, bool $withTemplateEngine = true)
-	{
-		$this->setupContainerForAddons();
-		$this->setupContainerForLogger($logChannel);
-		$this->setupLegacyServiceLocator();
-		$this->registerErrorHandler();
-
-		if ($withTemplateEngine) {
-			$this->registerTemplateEngine();
-		}
-	}
+	public function setup(string $logChannel = LogChannel::DEFAULT, bool $withTemplateEngine = true): void;
 
 	/**
 	 * Returns a fully constructed object based on $name using $args and $share as constructor arguments if supplied
@@ -78,10 +35,7 @@ class Container
 	 *
 	 * @see Dice::create()
 	 */
-	public function create(string $name, array $args = [], array $share = []): object
-	{
-		return $this->container->create($name, $args, $share);
-	}
+	public function create(string $name, array $args = [], array $share = []): object;
 
 	/**
 	 * Add a rule $rule to the class $name
@@ -90,38 +44,5 @@ class Container
 	 *
 	 * @see Dice::addRule()
 	 */
-	public function addRule(string $name, array $rule): void
-	{
-		$this->container = $this->container->addRule($name, $rule);
-	}
-
-	private function setupContainerForAddons(): void
-	{
-		/** @var ICanLoadAddons $addonLoader */
-		$addonLoader = $this->container->create(ICanLoadAddons::class);
-
-		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
-	}
-
-	private function setupContainerForLogger(string $logChannel): void
-	{
-		$this->container = $this->container->addRule(LoggerInterface::class, [
-			'constructParams' => [$logChannel],
-		]);
-	}
-
-	private function setupLegacyServiceLocator(): void
-	{
-		DI::init($this->container);
-	}
-
-	private function registerErrorHandler(): void
-	{
-		ErrorHandler::register($this->container->create(LoggerInterface::class));
-	}
-
-	private function registerTemplateEngine(): void
-	{
-		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
-	}
+	public function addRule(string $name, array $rule): void;
 }

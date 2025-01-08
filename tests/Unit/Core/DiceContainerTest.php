@@ -11,12 +11,13 @@ namespace Core;
 
 use Dice\Dice;
 use Friendica\Core\Container;
+use Friendica\Core\DiceContainer;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class ContainerTest extends TestCase
+class DiceContainerTest extends TestCase
 {
 	public function testFromBasePathReturnsContainer(): void
 	{
@@ -26,7 +27,7 @@ class ContainerTest extends TestCase
 			],
 		]);
 
-		$container = Container::fromBasePath($root->url());
+		$container = DiceContainer::fromBasePath($root->url());
 
 		$this->assertInstanceOf(Container::class, $container);
 	}
@@ -45,7 +46,7 @@ class ContainerTest extends TestCase
 			],
 		]);
 
-		$container = Container::fromBasePath($root->url());
+		$container = DiceContainer::fromBasePath($root->url());
 
 		$this->assertInstanceOf(NullLogger::class, $container->create(LoggerInterface::class));
 	}
@@ -55,7 +56,7 @@ class ContainerTest extends TestCase
 		$dice = $this->createMock(Dice::class);
 		$dice->expects($this->never())->method('create');
 
-		$container = Container::fromDice($dice);
+		$container = DiceContainer::fromDice($dice);
 
 		$this->assertInstanceOf(Container::class, $container);
 	}
@@ -65,7 +66,7 @@ class ContainerTest extends TestCase
 		$dice = $this->createMock(Dice::class);
 		$dice->expects($this->once())->method('create')->with(LoggerInterface::class)->willReturn(new NullLogger());
 
-		$container = Container::fromDice($dice);
+		$container = DiceContainer::fromDice($dice);
 
 		$this->assertInstanceOf(NullLogger::class, $container->create(LoggerInterface::class));
 	}
@@ -75,7 +76,7 @@ class ContainerTest extends TestCase
 		$dice = $this->createMock(Dice::class);
 		$dice->expects($this->once())->method('addRule')->with(LoggerInterface::class, ['constructParams' => ['console']])->willReturn($dice);
 
-		$container = Container::fromDice($dice);
+		$container = DiceContainer::fromDice($dice);
 		$container->addRule(LoggerInterface::class, ['constructParams' => ['console']]);
 	}
 }

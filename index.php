@@ -15,7 +15,8 @@ require __DIR__ . '/vendor/autoload.php';
 
 $request = \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
 
-$container = \Friendica\Core\Container::fromBasePath(__DIR__);
-$app       = \Friendica\App::fromContainer($container);
+$container = \Friendica\Core\DiceContainer::fromBasePath(__DIR__);
+
+$app = \Friendica\App::fromContainer($container);
 
 $app->processRequest($request, $start_time);

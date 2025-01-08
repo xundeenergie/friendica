@@ -15,7 +15,7 @@ if (php_sapi_name() !== 'cli') {
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$container = \Friendica\Core\Container::fromBasePath(dirname(__DIR__));
+$container = \Friendica\Core\DiceContainer::fromBasePath(dirname(__DIR__));
 
 $app = \Friendica\App::fromContainer($container);
 

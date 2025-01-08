@@ -24,7 +24,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 $argv = $_SERVER['argv'] ?? [];
 array_splice($argv, 1, 0, "worker");
 
-$container = \Friendica\Core\Container::fromBasePath(dirname(__DIR__));
+$container = \Friendica\Core\DiceContainer::fromBasePath(dirname(__DIR__));
 
 $app = \Friendica\App::fromContainer($container);
 
