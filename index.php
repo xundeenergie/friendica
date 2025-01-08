@@ -5,8 +5,6 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-use Dice\Dice;
-
 $start_time = microtime(true);
 
 if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
@@ -17,9 +15,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 $request = \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
 
-$dice = (new Dice())->addRules(require(__DIR__ . '/static/dependencies.config.php'));
-
-$container = \Friendica\Core\Container::fromDice($dice);
+$container = \Friendica\Core\Container::fromBasePath(__DIR__);
 $app       = \Friendica\App::fromContainer($container);
 
 $app->processRequest($request, $start_time);

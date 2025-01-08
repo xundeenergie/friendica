@@ -21,9 +21,18 @@ use Psr\Log\LoggerInterface;
  */
 class Container
 {
+	public static function fromBasePath(string $basePath): self
+	{
+		$path = $basePath . '/static/dependencies.config.php';
+
+		$dice = (new Dice())->addRules(require($path));
+
+		return static::fromDice($dice);
+	}
+
 	private Dice $container;
 
-	protected function __construct(Dice $container)
+	private function __construct(Dice $container)
 	{
 		$this->container = $container;
 	}
