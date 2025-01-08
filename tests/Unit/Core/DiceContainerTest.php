@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Core;
 
-use Dice\Dice;
 use Friendica\Core\Container;
 use Friendica\Core\DiceContainer;
 use org\bovigo\vfs\vfsStream;
