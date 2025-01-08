@@ -168,6 +168,11 @@ class App
 		);
 	}
 
+	public function processConsole(array $argv): void
+	{
+		(\Friendica\Core\Console::create($this->container, $argv))->execute();
+	}
+
 	public function processEjabberd(): void
 	{
 		$this->container->setup(LogChannel::AUTH_JABBERED, false);

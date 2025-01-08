@@ -32,4 +32,7 @@ $argv = $_SERVER['argv'] ?? [];
 array_splice($argv, 1, 0, "daemon");
 
 $container = \Friendica\Core\Container::fromDice($dice);
-\Friendica\Core\Console::create($container, $argv)->execute();
+
+$app = \Friendica\App::fromContainer($container);
+
+$app->processConsole($argv);
