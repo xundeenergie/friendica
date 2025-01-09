@@ -40,6 +40,8 @@ final class DiceContainer implements Container
 	/**
 	 * Initialize the container with the given parameters
 	 *
+	 * @deprecated
+	 *
 	 * @param string $logChannel The Log Channel of this call
 	 * @param bool   $withTemplateEngine true, if the template engine should be set too
 	 *
