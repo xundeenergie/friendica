@@ -10,7 +10,6 @@ namespace Friendica\Core;
 use Friendica\DI;
 use Friendica\Core\Logger\Type\WorkerLogger;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 
 /**
  * Logger functions
