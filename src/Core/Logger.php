@@ -191,21 +191,4 @@ class Logger
 	{
 		self::getInstance()->debug($message, $context);
 	}
-
-	/**
-	 * An alternative logger for development.
-	 *
-	 * Works largely as log() but allows developers
-	 * to isolate particular elements they are targeting
-	 * personally without background noise
-	 *
-	 * @param string $message Message to log
-	 * @param string $level Logging level
-	 * @return void
-	 * @throws \Exception
-	 */
-	public static function devLog(string $message, string $level = LogLevel::DEBUG)
-	{
-		DI::devLogger()->log($level, $message);
-	}
 }
