@@ -11,7 +11,6 @@ namespace Friendica\Core;
 
 use Dice\Dice;
 use Friendica\DI;
-use Psr\Log\LoggerInterface;
 
 /**
  * Wrapper for the Dice class to make some basic setups
@@ -39,13 +38,10 @@ final class DiceContainer implements Container
 	 *
 	 * @deprecated
 	 *
-	 * @param string $logChannel The Log Channel of this call
-	 *
 	 * @return void
 	 */
-	public function setup(string $logChannel): void
+	public function setup(): void
 	{
-		$this->setupContainerForLogger($logChannel);
 		$this->setupLegacyServiceLocator();
 	}
 
@@ -73,13 +69,6 @@ final class DiceContainer implements Container
 	public function addRule(string $name, array $rule): void
 	{
 		$this->container = $this->container->addRule($name, $rule);
-	}
-
-	private function setupContainerForLogger(string $logChannel): void
-	{
-		$this->container = $this->container->addRule(LoggerInterface::class, [
-			'constructParams' => [$logChannel],
-		]);
 	}
 
 	private function setupLegacyServiceLocator(): void

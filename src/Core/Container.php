@@ -19,11 +19,9 @@ interface Container
 	 *
 	 * @deprecated
 	 *
-	 * @param string $logChannel The Log Channel of this call
-	 *
 	 * @return void
 	 */
-	public function setup(string $logChannel): void;
+	public function setup(): void;
 
 	/**
 	 * Returns a fully constructed object based on $name using $args and $share as constructor arguments if supplied

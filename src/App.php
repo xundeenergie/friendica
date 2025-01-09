@@ -138,7 +138,9 @@ class App
 
 		$this->setupContainerForAddons();
 
-		$this->container->setup(LogChannel::APP);
+		$this->setupContainerForLogger(LogChannel::APP);
+
+		$this->container->setup();
 
 		$this->registerErrorHandler();
 
@@ -178,6 +180,10 @@ class App
 	{
 		$this->setupContainerForAddons();
 
+		$this->setupContainerForLogger($this->determineLogChannel($argv));
+
+		$this->container->setup();
+
 		$this->registerErrorHandler();
 
 		$this->registerTemplateEngine();
@@ -189,7 +195,9 @@ class App
 	{
 		$this->setupContainerForAddons();
 
-		$this->container->setup(LogChannel::AUTH_JABBERED);
+		$this->setupContainerForLogger(LogChannel::AUTH_JABBERED);
+
+		$this->container->setup();
 
 		$this->registerErrorHandler();
 
@@ -216,6 +224,30 @@ class App
 		foreach ($addonLoader->getActiveAddonConfig('dependencies') as $name => $rule) {
 			$this->container->addRule($name, $rule);
 		}
+	}
+
+	private function determineLogChannel(array $argv): string
+	{
+		$command = strtolower($argv[1]) ?? '';
+
+		if ($command === 'daemon' || $command === 'jetstream') {
+			return LogChannel::DAEMON;
+		}
+
+		if ($command === 'worker') {
+			return LogChannel::WORKER;
+		}
+
+		// @TODO Add support for jetstream
+
+		return LogChannel::CONSOLE;
+	}
+
+	private function setupContainerForLogger(string $logChannel): void
+	{
+		$this->container->addRule(LoggerInterface::class, [
+			'constructParams' => [$logChannel],
+		]);
 	}
 
 	private function registerErrorHandler(): void
