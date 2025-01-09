@@ -305,8 +305,8 @@ abstract class DI
 	public static function flushLogger()
 	{
 		$flushDice = self::$dice
-			->addRule(LoggerInterface::class, self::$dice->getRule(LoggerInterface::class))
-			->addRule('$devLogger', self::$dice->getRule('$devLogger'));
+			->addRule(LoggerInterface::class, self::$dice->getRule(LoggerInterface::class));
+
 		static::init($flushDice);
 	}
 

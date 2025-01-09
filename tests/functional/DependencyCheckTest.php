@@ -118,18 +118,6 @@ class DependencyCheckTest extends FixtureTestCase
 		self::assertInstanceOf(LoggerInterface::class, $logger);
 	}
 
-	public function testDevLogger()
-	{
-		/** @var IManageConfigValues $config */
-		$config = $this->dice->create(IManageConfigValues::class);
-		$config->set('system', 'dlogfile', $this->root->url() . '/friendica.log');
-
-		/** @var LoggerInterface $logger */
-		$logger = $this->dice->create('$devLogger', ['dev']);
-
-		self::assertInstanceOf(LoggerInterface::class, $logger);
-	}
-
 	public function testCache()
 	{
 		/** @var ICanCache $cache */
