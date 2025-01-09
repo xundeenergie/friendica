@@ -9,7 +9,6 @@ namespace Friendica\Core;
 
 use Friendica;
 use Friendica\App;
-use Friendica\Core\Logger\Capability\LogChannel;
 
 /**
  * Description of Console
