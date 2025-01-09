@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Friendica\Core;
 
 use Dice\Dice;
-use Friendica\Core\Addon\Capability\ICanLoadAddons;
 use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Core\Logger\Handler\ErrorHandler;
 use Friendica\DI;
@@ -43,19 +42,14 @@ final class DiceContainer implements Container
 	 * @deprecated
 	 *
 	 * @param string $logChannel The Log Channel of this call
-	 * @param bool   $withTemplateEngine true, if the template engine should be set too
 	 *
 	 * @return void
 	 */
-	public function setup(string $logChannel = LogChannel::DEFAULT, bool $withTemplateEngine = true): void
+	public function setup(string $logChannel = LogChannel::DEFAULT): void
 	{
 		$this->setupContainerForLogger($logChannel);
 		$this->setupLegacyServiceLocator();
 		$this->registerErrorHandler();
-
-		if ($withTemplateEngine) {
-			$this->registerTemplateEngine();
-		}
 	}
 
 	/**
@@ -99,10 +93,5 @@ final class DiceContainer implements Container
 	private function registerErrorHandler(): void
 	{
 		ErrorHandler::register($this->container->create(LoggerInterface::class));
-	}
-
-	private function registerTemplateEngine(): void
-	{
-		Renderer::registerTemplateEngine('Friendica\Render\FriendicaSmartyEngine');
 	}
 }

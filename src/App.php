@@ -175,6 +175,8 @@ class App
 	{
 		$this->setupContainerForAddons();
 
+		$this->registerTemplateEngine();
+
 		(\Friendica\Core\Console::create($this->container, $argv))->execute();
 	}
 
@@ -183,6 +185,8 @@ class App
 		$this->setupContainerForAddons();
 
 		$this->container->setup(LogChannel::AUTH_JABBERED, false);
+
+		$this->registerTemplateEngine();
 
 		/** @var BasePath */
 		$basePath = $this->container->create(BasePath::class);

@@ -22,11 +22,10 @@ interface Container
 	 * @deprecated
 	 *
 	 * @param string $logChannel The Log Channel of this call
-	 * @param bool   $withTemplateEngine true, if the template engine should be set too
 	 *
 	 * @return void
 	 */
-	public function setup(string $logChannel = LogChannel::DEFAULT, bool $withTemplateEngine = true): void;
+	public function setup(string $logChannel = LogChannel::DEFAULT): void;
 
 	/**
 	 * Returns a fully constructed object based on $name using $args and $share as constructor arguments if supplied
