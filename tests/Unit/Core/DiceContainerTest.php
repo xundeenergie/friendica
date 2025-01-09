@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Core;
+namespace Friendica\Test\Unit\Core;
 
 use Friendica\Core\Container;
 use Friendica\Core\DiceContainer;
