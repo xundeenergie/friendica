@@ -324,14 +324,6 @@ abstract class DI
 	}
 
 	/**
-	 * @return LoggerInterface
-	 */
-	public static function devLogger()
-	{
-		return self::$dice->create('$devLogger');
-	}
-
-	/**
 	 * @return \Friendica\Core\Logger\Type\WorkerLogger
 	 */
 	public static function workerLogger()
