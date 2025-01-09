@@ -17,6 +17,7 @@ use Friendica\App\Router;
 use Friendica\Capabilities\ICanCreateResponses;
 use Friendica\Capabilities\ICanHandleRequests;
 use Friendica\Content\Nav;
+use Friendica\Core\Addon\Capability\ICanLoadAddons;
 use Friendica\Core\Config\Factory\Config;
 use Friendica\Core\Container;
 use Friendica\Core\Renderer;
@@ -134,6 +135,8 @@ class App
 			],
 		]);
 
+		$this->setupContainerForAddons();
+
 		$this->container->setup(LogChannel::APP, false);
 
 		$this->requestId = $this->container->create(Request::class)->getRequestId();
@@ -170,11 +173,15 @@ class App
 
 	public function processConsole(array $argv): void
 	{
+		$this->setupContainerForAddons();
+
 		(\Friendica\Core\Console::create($this->container, $argv))->execute();
 	}
 
 	public function processEjabberd(): void
 	{
+		$this->setupContainerForAddons();
+
 		$this->container->setup(LogChannel::AUTH_JABBERED, false);
 
 		/** @var BasePath */
@@ -189,6 +196,16 @@ class App
 			/** @var ExAuth $oAuth */
 			$oAuth = $this->container->create(ExAuth::class);
 			$oAuth->readStdin();
+		}
+	}
+
+	private function setupContainerForAddons(): void
+	{
+		/** @var ICanLoadAddons $addonLoader */
+		$addonLoader = $this->container->create(ICanLoadAddons::class);
+
+		foreach ($addonLoader->getActiveAddonConfig('dependencies') as $name => $rule) {
+			$this->container->addRule($name, $rule);
 		}
 	}
 

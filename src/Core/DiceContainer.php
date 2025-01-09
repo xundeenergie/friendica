@@ -49,7 +49,6 @@ final class DiceContainer implements Container
 	 */
 	public function setup(string $logChannel = LogChannel::DEFAULT, bool $withTemplateEngine = true): void
 	{
-		$this->setupContainerForAddons();
 		$this->setupContainerForLogger($logChannel);
 		$this->setupLegacyServiceLocator();
 		$this->registerErrorHandler();
@@ -83,14 +82,6 @@ final class DiceContainer implements Container
 	public function addRule(string $name, array $rule): void
 	{
 		$this->container = $this->container->addRule($name, $rule);
-	}
-
-	private function setupContainerForAddons(): void
-	{
-		/** @var ICanLoadAddons $addonLoader */
-		$addonLoader = $this->container->create(ICanLoadAddons::class);
-
-		$this->container = $this->container->addRules($addonLoader->getActiveAddonConfig('dependencies'));
 	}
 
 	private function setupContainerForLogger(string $logChannel): void
