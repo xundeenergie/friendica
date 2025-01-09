@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Friendica\Core;
 
 use Dice\Dice;
-use Friendica\DI;
 
 /**
  * Wrapper for the Dice class to make some basic setups
@@ -42,7 +41,7 @@ final class DiceContainer implements Container
 	 */
 	public function setup(): void
 	{
-		$this->setupLegacyServiceLocator();
+		// this method can be removed
 	}
 
 	/**
@@ -71,8 +70,17 @@ final class DiceContainer implements Container
 		$this->container = $this->container->addRule($name, $rule);
 	}
 
-	private function setupLegacyServiceLocator(): void
+	/**
+	 * Only used to inject Dice into DI class
+	 *
+	 * @see \Friendica\DI
+	 *
+	 * @internal
+	 *
+	 * @deprecated
+	 */
+	public function getDice(): Dice
 	{
-		DI::init($this->container);
+		return $this->container;
 	}
 }

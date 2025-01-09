@@ -27,6 +27,7 @@ use Friendica\Database\Definition\ViewDefinition;
 use Friendica\Module\Maintenance;
 use Friendica\Security\Authentication;
 use Friendica\Core\Config\Capability\IManageConfigValues;
+use Friendica\Core\DiceContainer;
 use Friendica\Core\L10n;
 use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Core\Logger\Handler\ErrorHandler;
@@ -140,7 +141,7 @@ class App
 
 		$this->setupContainerForLogger(LogChannel::APP);
 
-		$this->container->setup();
+		$this->setupLegacyServiceLocator();
 
 		$this->registerErrorHandler();
 
@@ -182,7 +183,7 @@ class App
 
 		$this->setupContainerForLogger($this->determineLogChannel($argv));
 
-		$this->container->setup();
+		$this->setupLegacyServiceLocator();
 
 		$this->registerErrorHandler();
 
@@ -197,7 +198,7 @@ class App
 
 		$this->setupContainerForLogger(LogChannel::AUTH_JABBERED);
 
-		$this->container->setup();
+		$this->setupLegacyServiceLocator();
 
 		$this->registerErrorHandler();
 
@@ -248,6 +249,13 @@ class App
 		$this->container->addRule(LoggerInterface::class, [
 			'constructParams' => [$logChannel],
 		]);
+	}
+
+	private function setupLegacyServiceLocator(): void
+	{
+		if ($this->container instanceof DiceContainer) {
+			DI::init($this->container->getDice());
+		}
 	}
 
 	private function registerErrorHandler(): void
