@@ -11,7 +11,6 @@ namespace Friendica\Core;
 
 use Dice\Dice;
 use Friendica\Core\Logger\Capability\LogChannel;
-use Friendica\Core\Logger\Handler\ErrorHandler;
 use Friendica\DI;
 use Psr\Log\LoggerInterface;
 
@@ -49,7 +48,6 @@ final class DiceContainer implements Container
 	{
 		$this->setupContainerForLogger($logChannel);
 		$this->setupLegacyServiceLocator();
-		$this->registerErrorHandler();
 	}
 
 	/**
@@ -88,10 +86,5 @@ final class DiceContainer implements Container
 	private function setupLegacyServiceLocator(): void
 	{
 		DI::init($this->container);
-	}
-
-	private function registerErrorHandler(): void
-	{
-		ErrorHandler::register($this->container->create(LoggerInterface::class));
 	}
 }

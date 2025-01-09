@@ -29,6 +29,7 @@ use Friendica\Security\Authentication;
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\L10n;
 use Friendica\Core\Logger\Capability\LogChannel;
+use Friendica\Core\Logger\Handler\ErrorHandler;
 use Friendica\Core\PConfig\Capability\IManagePersonalConfigValues;
 use Friendica\Core\System;
 use Friendica\Core\Update;
@@ -137,7 +138,9 @@ class App
 
 		$this->setupContainerForAddons();
 
-		$this->container->setup(LogChannel::APP, false);
+		$this->container->setup(LogChannel::APP);
+
+		$this->registerErrorHandler();
 
 		$this->requestId = $this->container->create(Request::class)->getRequestId();
 		$this->auth      = $this->container->create(Authentication::class);
@@ -175,6 +178,8 @@ class App
 	{
 		$this->setupContainerForAddons();
 
+		$this->registerErrorHandler();
+
 		$this->registerTemplateEngine();
 
 		(\Friendica\Core\Console::create($this->container, $argv))->execute();
@@ -184,9 +189,9 @@ class App
 	{
 		$this->setupContainerForAddons();
 
-		$this->container->setup(LogChannel::AUTH_JABBERED, false);
+		$this->container->setup(LogChannel::AUTH_JABBERED);
 
-		$this->registerTemplateEngine();
+		$this->registerErrorHandler();
 
 		/** @var BasePath */
 		$basePath = $this->container->create(BasePath::class);
@@ -211,6 +216,11 @@ class App
 		foreach ($addonLoader->getActiveAddonConfig('dependencies') as $name => $rule) {
 			$this->container->addRule($name, $rule);
 		}
+	}
+
+	private function registerErrorHandler(): void
+	{
+		ErrorHandler::register($this->container->create(LoggerInterface::class));
 	}
 
 	private function registerTemplateEngine(): void
