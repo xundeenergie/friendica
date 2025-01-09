@@ -15,15 +15,6 @@ namespace Friendica\Core;
 interface Container
 {
 	/**
-	 * Initialize the container with the given parameters
-	 *
-	 * @deprecated
-	 *
-	 * @return void
-	 */
-	public function setup(): void;
-
-	/**
 	 * Returns a fully constructed object based on $name using $args and $share as constructor arguments if supplied
 	 * @param string $name  name The name of the class to instantiate
 	 * @param array  $args  An array with any additional arguments to be passed into the constructor upon instantiation
