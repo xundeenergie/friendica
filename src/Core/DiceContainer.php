@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Friendica\Core;
 
 use Dice\Dice;
-use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\DI;
 use Psr\Log\LoggerInterface;
 
@@ -44,7 +43,7 @@ final class DiceContainer implements Container
 	 *
 	 * @return void
 	 */
-	public function setup(string $logChannel = LogChannel::DEFAULT): void
+	public function setup(string $logChannel): void
 	{
 		$this->setupContainerForLogger($logChannel);
 		$this->setupLegacyServiceLocator();

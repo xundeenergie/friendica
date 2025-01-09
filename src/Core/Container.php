@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace Friendica\Core;
 
-use Friendica\Core\Logger\Capability\LogChannel;
-
 /**
  * Dependency Injection Container
  */
@@ -25,7 +23,7 @@ interface Container
 	 *
 	 * @return void
 	 */
-	public function setup(string $logChannel = LogChannel::DEFAULT): void;
+	public function setup(string $logChannel): void;
 
 	/**
 	 * Returns a fully constructed object based on $name using $args and $share as constructor arguments if supplied
