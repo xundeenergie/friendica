@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Friendica\Core\Logger\Factory;
 
 use Friendica\Core\Config\Capability\IManageConfigValues;
+use Friendica\Core\Logger\Type\ProfilerLogger;
+use Friendica\Util\Profiler;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -18,22 +20,42 @@ use Psr\Log\NullLogger;
  */
 final class LoggerFactory
 {
+	private IManageConfigValues $config;
+
 	private bool $debug;
+
+	private bool $profiling;
 
 	private LoggerInterface $logger;
 
 	public function __construct(IManageConfigValues $config)
 	{
-		$this->debug = (bool) $config->get('system', 'debugging') ?? false;
+		$this->config = $config;
+
+		$this->debug     = (bool) $config->get('system', 'debugging') ?? false;
+		$this->profiling = (bool) $config->get('system', 'profiling') ?? false;
 	}
 
 	public function create(): LoggerInterface
 	{
 		if (! isset($this->logger)) {
-			$this->logger = $this->createLogger();
+			$this->logger = $this->createProfiledLogger();
 		}
 
 		return $this->logger;
+	}
+
+	private function createProfiledLogger(): LoggerInterface
+	{
+		$logger = $this->createLogger();
+
+		if ($this->profiling === true) {
+			$profiler = new Profiler($this->config);
+
+			$logger = new ProfilerLogger($logger, $profiler);
+		}
+
+		return $logger;
 	}
 
 	private function createLogger(): LoggerInterface

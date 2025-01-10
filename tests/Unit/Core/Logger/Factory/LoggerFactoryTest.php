@@ -11,6 +11,7 @@ namespace Friendica\Test\Unit\Core\Logger\Factory;
 
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Logger\Factory\LoggerFactory;
+use Friendica\Core\Logger\Type\ProfilerLogger;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -34,10 +35,25 @@ class LoggerFactoryTest extends TestCase
 	public function testCreateWithDebugDisabledReturnsNullLogger(): void
 	{
 		$config = $this->createStub(IManageConfigValues::class);
-		$config->method('get')->willReturn(false);
+		$config->method('get')->willReturnMap([
+			['system', 'debugging', null, false],
+		]);
 
 		$factory = new LoggerFactory($config);
 
 		$this->assertInstanceOf(NullLogger::class, $factory->create());
+	}
+
+	public function testCreateWithProfilerEnabledReturnsProfilerLogger(): void
+	{
+		$config = $this->createStub(IManageConfigValues::class);
+		$config->method('get')->willReturnMap([
+			['system', 'debugging', null, false],
+			['system', 'profiling', null, true],
+		]);
+
+		$factory = new LoggerFactory($config);
+
+		$this->assertInstanceOf(ProfilerLogger::class, $factory->create());
 	}
 }
