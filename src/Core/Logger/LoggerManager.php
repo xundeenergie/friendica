@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Friendica\Core\Logger\Factory;
+namespace Friendica\Core\Logger;
 
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Logger\Capability\LogChannel;
@@ -18,9 +18,9 @@ use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
 
 /**
- * The logger factory for the core logging instances
+ * Manager for the core logging instances
  */
-final class LoggerFactory
+final class LoggerManager
 {
 	private IManageConfigValues $config;
 
@@ -44,7 +44,10 @@ final class LoggerFactory
 		$this->profiling  = (bool) $config->get('system', 'profiling') ?? false;
 	}
 
-	public function create(): LoggerInterface
+	/**
+	 * (Creates and) Returns the logger instance
+	 */
+	public function getLogger(): LoggerInterface
 	{
 		if (! isset($this->logger)) {
 			$this->logger = $this->createProfiledLogger();
