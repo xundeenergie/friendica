@@ -10,9 +10,11 @@ declare(strict_types=1);
 namespace Friendica\Core\Logger\Factory;
 
 use Friendica\Core\Config\Capability\IManageConfigValues;
+use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Core\Logger\Type\ProfilerLogger;
 use Friendica\Util\Profiler;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
 
 /**
@@ -24,6 +26,10 @@ final class LoggerFactory
 
 	private bool $debug;
 
+	private string $logLevel;
+
+	private string $logChannel;
+
 	private bool $profiling;
 
 	private LoggerInterface $logger;
@@ -32,8 +38,10 @@ final class LoggerFactory
 	{
 		$this->config = $config;
 
-		$this->debug     = (bool) $config->get('system', 'debugging') ?? false;
-		$this->profiling = (bool) $config->get('system', 'profiling') ?? false;
+		$this->debug      = (bool) $config->get('system', 'debugging') ?? false;
+		$this->logLevel   = (string) $config->get('system', 'loglevel') ?? LogLevel::NOTICE;
+		$this->logChannel = LogChannel::DEFAULT;
+		$this->profiling  = (bool) $config->get('system', 'profiling') ?? false;
 	}
 
 	public function create(): LoggerInterface
@@ -47,7 +55,12 @@ final class LoggerFactory
 
 	private function createProfiledLogger(): LoggerInterface
 	{
-		$logger = $this->createLogger();
+		// Always return NullLogger if debug is disabled
+		if ($this->debug === false) {
+			$logger = new NullLogger();
+		} else {
+			$logger = $this->createLogger($this->logLevel, $this->logChannel);
+		}
 
 		if ($this->profiling === true) {
 			$profiler = new Profiler($this->config);
@@ -58,13 +71,8 @@ final class LoggerFactory
 		return $logger;
 	}
 
-	private function createLogger(): LoggerInterface
+	private function createLogger(string $logLevel, string $logChannel): LoggerInterface
 	{
-		// Always return NullLogger if debug is disabled
-		if ($this->debug === false) {
-			return new NullLogger();
-		}
-
 		return new NullLogger();
 	}
 }
