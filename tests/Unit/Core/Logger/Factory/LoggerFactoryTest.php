@@ -21,4 +21,11 @@ class LoggerFactoryTest extends TestCase
 
 		$this->assertInstanceOf(LoggerInterface::class, $factory->create());
 	}
+
+	public function testLoggerFactoryCreateReturnsSameObject(): void
+	{
+		$factory = new LoggerFactory();
+
+		$this->assertSame($factory->create(), $factory->create());
+	}
 }

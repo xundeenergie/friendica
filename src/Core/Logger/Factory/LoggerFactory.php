@@ -17,8 +17,14 @@ use Psr\Log\NullLogger;
  */
 final class LoggerFactory
 {
+	private LoggerInterface $logger;
+
 	public function create(): LoggerInterface
 	{
-		return new NullLogger();
+		if (! isset($this->logger)) {
+			$this->logger = new NullLogger();
+		}
+
+		return $this->logger;
 	}
 }
