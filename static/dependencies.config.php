@@ -187,12 +187,6 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 				\Friendica\Core\Logger\Capability\IHaveCallIntrospections::IGNORE_CLASS_LIST,
 			],
 		],
-		'$devLogger' => [
-			'instanceOf' => \Friendica\Core\Logger\Factory\StreamLogger::class,
-			'call' => [
-				['createDev', [], Dice::CHAIN_CALL],
-			],
-		],
 		\Friendica\Core\Cache\Capability\ICanCache::class => [
 			'instanceOf' => \Friendica\Core\Cache\Factory\Cache::class,
 			'call' => [

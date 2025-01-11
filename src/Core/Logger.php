@@ -10,7 +10,6 @@ namespace Friendica\Core;
 use Friendica\DI;
 use Friendica\Core\Logger\Type\WorkerLogger;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 
 /**
  * Logger functions
@@ -190,22 +189,5 @@ class Logger
 	public static function debug(string $message, array $context = [])
 	{
 		self::getInstance()->debug($message, $context);
-	}
-
-	/**
-	 * An alternative logger for development.
-	 *
-	 * Works largely as log() but allows developers
-	 * to isolate particular elements they are targeting
-	 * personally without background noise
-	 *
-	 * @param string $message Message to log
-	 * @param string $level Logging level
-	 * @return void
-	 * @throws \Exception
-	 */
-	public static function devLog(string $message, string $level = LogLevel::DEBUG)
-	{
-		DI::devLogger()->log($level, $message);
 	}
 }
