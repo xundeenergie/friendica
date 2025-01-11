@@ -146,10 +146,6 @@ class App
 
 		$this->registerErrorHandler();
 
-		/** @var LoggerManager */
-		$loggerManager = $this->container->create(LoggerManager::class);
-		$loggerManager->changeLogChannel(LogChannel::APP);
-
 		$this->requestId = $this->container->create(Request::class)->getRequestId();
 		$this->auth      = $this->container->create(Authentication::class);
 		$this->config    = $this->container->create(IManageConfigValues::class);
@@ -251,9 +247,9 @@ class App
 
 	private function setupContainerForLogger(string $logChannel): void
 	{
-		$this->container->addRule(LoggerInterface::class, [
-			'constructParams' => [$logChannel],
-		]);
+		/** @var LoggerManager */
+		$loggerManager = $this->container->create(LoggerManager::class);
+		$loggerManager->changeLogChannel($logChannel);
 	}
 
 	private function setupLegacyServiceLocator(): void

@@ -9,15 +9,29 @@ declare(strict_types=1);
 
 namespace Friendica\Core\Logger\Factory;
 
+use Friendica\Core\Config\Capability\IManageConfigValues;
+use Friendica\Core\Hooks\Capability\ICanCreateInstances;
+use Friendica\Util\Profiler;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
-use Psr\Log\NullLogger;
 
 /**
  * Manager for the core logging instances
  */
 final class LegacyLoggerFactory implements LoggerFactory
 {
+	private ICanCreateInstances $instanceCreator;
+
+	private IManageConfigValues $config;
+
+	private Profiler $profiler;
+
+	public function __construct(ICanCreateInstances $instanceCreator, IManageConfigValues $config, Profiler $profiler)
+	{
+		$this->instanceCreator = $instanceCreator;
+		$this->config          = $config;
+		$this->profiler        = $profiler;
+	}
+
 	/**
 	 * Creates and returns a PSR-3 Logger instance.
 	 *
@@ -28,6 +42,8 @@ final class LegacyLoggerFactory implements LoggerFactory
 	 */
 	public function createLogger(string $logLevel, string $logChannel): LoggerInterface
 	{
-		return new NullLogger();
+		$factory = new Logger($logChannel);
+
+		return $factory->create($this->instanceCreator, $this->config, $this->profiler);
 	}
 }

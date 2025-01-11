@@ -11,6 +11,7 @@ namespace Friendica\Test\Unit\Core\Logger;
 
 use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Logger\Capability\LogChannel;
+use Friendica\Core\Logger\Factory\LoggerFactory;
 use Friendica\Core\Logger\LoggerManager;
 use Friendica\Core\Logger\Type\ProfilerLogger;
 use PHPUnit\Framework\TestCase;
@@ -25,7 +26,10 @@ class LoggerManagerTest extends TestCase
 		$reflectionProperty->setAccessible(true);
 		$reflectionProperty->setValue(null, null);
 
-		$factory = new LoggerManager($this->createStub(IManageConfigValues::class));
+		$factory = new LoggerManager(
+			$this->createStub(IManageConfigValues::class),
+			$this->createStub(LoggerFactory::class)
+		);
 
 		$this->assertInstanceOf(LoggerInterface::class, $factory->getLogger());
 	}
@@ -36,7 +40,10 @@ class LoggerManagerTest extends TestCase
 		$reflectionProperty->setAccessible(true);
 		$reflectionProperty->setValue(null, null);
 
-		$factory = new LoggerManager($this->createStub(IManageConfigValues::class));
+		$factory = new LoggerManager(
+			$this->createStub(IManageConfigValues::class),
+			$this->createStub(LoggerFactory::class)
+		);
 
 		$this->assertSame($factory->getLogger(), $factory->getLogger());
 	}
@@ -52,7 +59,10 @@ class LoggerManagerTest extends TestCase
 		$reflectionProperty->setAccessible(true);
 		$reflectionProperty->setValue(null, null);
 
-		$factory = new LoggerManager($config);
+		$factory = new LoggerManager(
+			$config,
+			$this->createStub(LoggerFactory::class)
+		);
 
 		$this->assertInstanceOf(NullLogger::class, $factory->getLogger());
 	}
@@ -69,7 +79,10 @@ class LoggerManagerTest extends TestCase
 		$reflectionProperty->setAccessible(true);
 		$reflectionProperty->setValue(null, null);
 
-		$factory = new LoggerManager($config);
+		$factory = new LoggerManager(
+			$config,
+			$this->createStub(LoggerFactory::class)
+		);
 
 		$this->assertInstanceOf(ProfilerLogger::class, $factory->getLogger());
 	}
@@ -86,7 +99,10 @@ class LoggerManagerTest extends TestCase
 		$reflectionProperty->setAccessible(true);
 		$reflectionProperty->setValue(null, null);
 
-		$factory = new LoggerManager($config);
+		$factory = new LoggerManager(
+			$config,
+			$this->createStub(LoggerFactory::class)
+		);
 
 		$logger1 = $factory->getLogger();
 
