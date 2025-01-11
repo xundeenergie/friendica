@@ -34,7 +34,7 @@ var DzFactory = function (max_imagesize) {
 					const targetTextarea = document.getElementById(textareaElementId);
 					if (targetTextarea.setRangeText) {
 						//if setRangeText function is supported by current browser
-						let u = "[upload-"+file.name+"]";
+						let u = "[upload-" + file.name + "]";
 						targetTextarea.setRangeText(serverResponse, targetTextarea.value.indexOf(u), targetTextarea.value.indexOf(u)+u.length, "end");
 					} else {
 						targetTextarea.focus();
