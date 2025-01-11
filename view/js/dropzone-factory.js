@@ -25,7 +25,7 @@ var DzFactory = function (max_imagesize) {
 			accept: function(file, done) {
 					const targetTextarea = document.getElementById(textareaElementId);
 					if (targetTextarea.setRangeText) {
-						targetTextarea.setRangeText("\n[upload-"+file.name+"]\n",targetTextarea.selectionStart,targetTextarea.selectionEnd,"end");
+						targetTextarea.setRangeText("\n[upload-" + file.name + "]\n", targetTextarea.selectionStart, targetTextarea.selectionEnd, "end");
 					}
 				done();
 			},
