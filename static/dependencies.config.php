@@ -162,6 +162,13 @@ return (function(string $basepath, array $getVars, array $serverVars, array $coo
 				['create', [], Dice::CHAIN_CALL],
 			],
 		],
+		'$LoggerInterface' => [
+			'shared' => false,
+			'instanceOf' => \Friendica\Core\Logger\LoggerManager::class,
+			'call' => [
+				['getLogger', [], Dice::CHAIN_CALL],
+			],
+		],
 		\Friendica\Core\Logger\Type\SyslogLogger::class => [
 			'instanceOf' => \Friendica\Core\Logger\Factory\SyslogLogger::class,
 			'call' => [

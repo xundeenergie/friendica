@@ -19,6 +19,7 @@ use Friendica\Capabilities\ICanHandleRequests;
 use Friendica\Content\Nav;
 use Friendica\Core\Config\Factory\Config;
 use Friendica\Core\Container;
+use Friendica\Core\Logger\LoggerManager;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\Definition\DbaDefinition;
@@ -135,6 +136,10 @@ class App
 		]);
 
 		$this->container->setup(LogChannel::APP, false);
+
+		/** @var LoggerManager */
+		$loggerManager = $this->container->create(LoggerManager::class);
+		$loggerManager->changeLogChannel(LogChannel::APP);
 
 		$this->requestId = $this->container->create(Request::class)->getRequestId();
 		$this->auth      = $this->container->create(Authentication::class);

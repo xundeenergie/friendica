@@ -22,17 +22,23 @@ use Psr\Log\NullLogger;
  */
 final class LoggerManager
 {
+	/**
+	 * Workaround: $logger must be static
+	 * because Dice always creates a new LoggerManager object
+	 *
+	 * @var LoggerInterface|null
+	 */
+	private static $logger = null;
+
 	private IManageConfigValues $config;
 
 	private bool $debug;
 
 	private string $logLevel;
 
-	private string $logChannel;
-
 	private bool $profiling;
 
-	private LoggerInterface $logger;
+	private string $logChannel;
 
 	public function __construct(IManageConfigValues $config)
 	{
@@ -40,8 +46,15 @@ final class LoggerManager
 
 		$this->debug      = (bool) $config->get('system', 'debugging') ?? false;
 		$this->logLevel   = (string) $config->get('system', 'loglevel') ?? LogLevel::NOTICE;
-		$this->logChannel = LogChannel::DEFAULT;
 		$this->profiling  = (bool) $config->get('system', 'profiling') ?? false;
+		$this->logChannel = LogChannel::DEFAULT;
+	}
+
+	public function changeLogChannel(string $logChannel): void
+	{
+		$this->logChannel = $logChannel;
+
+		self::$logger = null;
 	}
 
 	/**
@@ -49,11 +62,11 @@ final class LoggerManager
 	 */
 	public function getLogger(): LoggerInterface
 	{
-		if (! isset($this->logger)) {
-			$this->logger = $this->createProfiledLogger();
+		if (self::$logger === null) {
+			self::$logger = $this->createProfiledLogger();
 		}
 
-		return $this->logger;
+		return self::$logger;
 	}
 
 	private function createProfiledLogger(): LoggerInterface
