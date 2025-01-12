@@ -230,7 +230,7 @@ class App
 
 	private function determineLogChannel(array $argv): string
 	{
-		$command = strtolower($argv[1]) ?? '';
+		$command = strtolower($argv[1] ?? '');
 
 		if ($command === 'daemon' || $command === 'jetstream') {
 			return LogChannel::DAEMON;
