@@ -543,7 +543,7 @@ class Worker
 
 		$logger = DI::logger();
 
-		if ($logger instanceOf WorkerLogger) {
+		if ($logger instanceof WorkerLogger) {
 			$logger->setFunctionName($funcname);
 		}
 

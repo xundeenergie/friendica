@@ -55,9 +55,9 @@ final class LoggerManager
 		$this->config  = $config;
 		$this->factory = $factory;
 
-		$this->debug      = (bool) $config->get('system', 'debugging') ?? false;
-		$this->logLevel   = (string) $config->get('system', 'loglevel') ?? LogLevel::NOTICE;
-		$this->profiling  = (bool) $config->get('system', 'profiling') ?? false;
+		$this->debug     = (bool) $config->get('system', 'debugging') ?? false;
+		$this->logLevel  = (string) $config->get('system', 'loglevel') ?? LogLevel::NOTICE;
+		$this->profiling = (bool) $config->get('system', 'profiling') ?? false;
 	}
 
 	public function changeLogChannel(string $logChannel): void
