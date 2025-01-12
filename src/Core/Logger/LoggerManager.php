@@ -35,8 +35,6 @@ final class LoggerManager
 	/**
 	 * Workaround: $logChannel must be static
 	 * because Dice always creates a new LoggerManager object
-	 *
-	 * @var LoggerInterface|null
 	 */
 	private static string $logChannel = LogChannel::DEFAULT;
 
@@ -55,9 +53,9 @@ final class LoggerManager
 		$this->config  = $config;
 		$this->factory = $factory;
 
-		$this->debug     = (bool) $config->get('system', 'debugging') ?? false;
+		$this->debug     = (bool) $config->get('system', 'debugging')  ?? false;
 		$this->logLevel  = (string) $config->get('system', 'loglevel') ?? LogLevel::NOTICE;
-		$this->profiling = (bool) $config->get('system', 'profiling') ?? false;
+		$this->profiling = (bool) $config->get('system', 'profiling')  ?? false;
 	}
 
 	public function changeLogChannel(string $logChannel): void
