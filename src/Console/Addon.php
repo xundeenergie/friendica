@@ -60,9 +60,9 @@ HELP;
 	{
 		parent::__construct($argv);
 
-		$this->appMode     = $appMode;
-		$this->l10n        = $l10n;
-		$this->dba         = $dba;
+		$this->appMode = $appMode;
+		$this->l10n    = $l10n;
+		$this->dba     = $dba;
 
 		AddonCore::loadAddons();
 	}
@@ -124,7 +124,7 @@ HELP;
 
 		foreach (AddonCore::getAvailableList() as $addon) {
 			$addon_name = $addon[0];
-			$enabled = AddonCore::isEnabled($addon_name);
+			$enabled    = AddonCore::isEnabled($addon_name);
 
 			if ($subCmd === 'all') {
 				$table->addRow([$addon_name, $enabled ? 'enabled' : 'disabled']);
