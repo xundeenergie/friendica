@@ -140,7 +140,7 @@ class App
 
 		$this->setupContainerForAddons();
 
-		$this->setupContainerForLogger(LogChannel::APP);
+		$this->setupLogChannel(LogChannel::APP);
 
 		$this->setupLegacyServiceLocator();
 
@@ -182,7 +182,7 @@ class App
 	{
 		$this->setupContainerForAddons();
 
-		$this->setupContainerForLogger($this->determineLogChannel($argv));
+		$this->setupLogChannel($this->determineLogChannel($argv));
 
 		$this->setupLegacyServiceLocator();
 
@@ -197,7 +197,7 @@ class App
 	{
 		$this->setupContainerForAddons();
 
-		$this->setupContainerForLogger(LogChannel::AUTH_JABBERED);
+		$this->setupLogChannel(LogChannel::AUTH_JABBERED);
 
 		$this->setupLegacyServiceLocator();
 
@@ -245,7 +245,7 @@ class App
 		return LogChannel::CONSOLE;
 	}
 
-	private function setupContainerForLogger(string $logChannel): void
+	private function setupLogChannel(string $logChannel): void
 	{
 		/** @var LoggerManager */
 		$loggerManager = $this->container->create(LoggerManager::class);
