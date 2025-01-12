@@ -19,57 +19,11 @@ use Psr\Log\LoggerInterface;
 class Logger
 {
 	/**
-	 * LoggerInterface The default Logger type
-	 *
-	 * @var string
-	 */
-	const TYPE_LOGGER = LoggerInterface::class;
-	/**
-	 * WorkerLogger A specific worker logger type, which can be enabled
-	 *
-	 * @var string
-	 */
-	const TYPE_WORKER = WorkerLogger::class;
-	/**
-	 * @var string $type LoggerInterface The current logger type
-	 */
-	private static $type = self::TYPE_LOGGER;
-
-	/**
 	 * @return LoggerInterface|WorkerLogger
 	 */
 	private static function getInstance()
 	{
-		if (self::$type === self::TYPE_LOGGER) {
-			return DI::logger();
-		} else {
-			return DI::workerLogger();
-		}
-	}
-
-	/**
-	 * Enable additional logging for worker usage
-	 *
-	 * @deprecated
-	 *
-	 * @param string $functionName The worker function, which got called
-	 *
-	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
-	 */
-	public static function enableWorker(string $functionName)
-	{
-		self::$type = self::TYPE_WORKER;
-		DI::workerLogger()->setFunctionName($functionName);
-	}
-
-	/**
-	 * Disable additional logging for worker usage
-	 *
-	 * @deprecated
-	 */
-	public static function disableWorker()
-	{
-		self::$type = self::TYPE_LOGGER;
+		return DI::logger();
 	}
 
 	/**
