@@ -9,6 +9,7 @@ namespace Friendica;
 
 use Dice\Dice;
 use Friendica\Core\Logger\Capability\ICheckLoggerSettings;
+use Friendica\Core\Logger\LoggerManager;
 use Friendica\Core\Logger\Util\LoggerSettingsCheck;
 use Friendica\Core\Session\Capability\IHandleSessions;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
@@ -324,11 +325,18 @@ abstract class DI
 	}
 
 	/**
+	 * @deprecated 2025.02 Use `DI::loggerManager()` and `DI::logger()` instead
+	 *
 	 * @return \Friendica\Core\Logger\Type\WorkerLogger
 	 */
 	public static function workerLogger()
 	{
 		return self::$dice->create(Core\Logger\Type\WorkerLogger::class);
+	}
+
+	public static function loggerManager(): LoggerManager
+	{
+		return self::$dice->create(LoggerManager::class);
 	}
 
 	//

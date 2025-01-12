@@ -13,6 +13,7 @@ use Friendica\Core\Config\Capability\IManageConfigValues;
 use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Core\Logger\Factory\LoggerFactory;
 use Friendica\Core\Logger\Type\ProfilerLogger;
+use Friendica\Core\Logger\Type\WorkerLogger;
 use Friendica\Util\Profiler;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -31,6 +32,14 @@ final class LoggerManager
 	 */
 	private static $logger = null;
 
+	/**
+	 * Workaround: $logChannel must be static
+	 * because Dice always creates a new LoggerManager object
+	 *
+	 * @var LoggerInterface|null
+	 */
+	private static string $logChannel = LogChannel::DEFAULT;
+
 	private IManageConfigValues $config;
 
 	private LoggerFactory $factory;
@@ -41,8 +50,6 @@ final class LoggerManager
 
 	private bool $profiling;
 
-	private string $logChannel;
-
 	public function __construct(IManageConfigValues $config, LoggerFactory $factory)
 	{
 		$this->config  = $config;
@@ -51,14 +58,12 @@ final class LoggerManager
 		$this->debug      = (bool) $config->get('system', 'debugging') ?? false;
 		$this->logLevel   = (string) $config->get('system', 'loglevel') ?? LogLevel::NOTICE;
 		$this->profiling  = (bool) $config->get('system', 'profiling') ?? false;
-		$this->logChannel = LogChannel::DEFAULT;
 	}
 
 	public function changeLogChannel(string $logChannel): void
 	{
-		$this->logChannel = $logChannel;
-
-		self::$logger = null;
+		self::$logChannel = $logChannel;
+		self::$logger     = null;
 	}
 
 	/**
@@ -67,25 +72,30 @@ final class LoggerManager
 	public function getLogger(): LoggerInterface
 	{
 		if (self::$logger === null) {
-			self::$logger = $this->createProfiledLogger();
+			self::$logger = $this->createLogger();
 		}
 
 		return self::$logger;
 	}
 
-	private function createProfiledLogger(): LoggerInterface
+	private function createLogger(): LoggerInterface
 	{
 		// Always create NullLogger if debug is disabled
 		if ($this->debug === false) {
 			$logger = new NullLogger();
 		} else {
-			$logger = $this->factory->createLogger($this->logLevel, $this->logChannel);
+			$logger = $this->factory->createLogger($this->logLevel, self::$logChannel);
 		}
 
 		if ($this->profiling === true) {
 			$profiler = new Profiler($this->config);
 
 			$logger = new ProfilerLogger($logger, $profiler);
+		}
+
+		// Decorate Logger as WorkerLogger for BC
+		if (self::$logChannel === LogChannel::WORKER) {
+			$logger = new WorkerLogger($logger);
 		}
 
 		return $logger;

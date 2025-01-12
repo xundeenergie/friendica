@@ -13,6 +13,8 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Logger functions
+ *
+ * @deprecated 2025.02 Use constructor injection or `DI::logger()` instead
  */
 class Logger
 {
@@ -48,6 +50,8 @@ class Logger
 	/**
 	 * Enable additional logging for worker usage
 	 *
+	 * @deprecated
+	 *
 	 * @param string $functionName The worker function, which got called
 	 *
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
@@ -60,6 +64,8 @@ class Logger
 
 	/**
 	 * Disable additional logging for worker usage
+	 *
+	 * @deprecated
 	 */
 	public static function disableWorker()
 	{

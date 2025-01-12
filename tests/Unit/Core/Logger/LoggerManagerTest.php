@@ -14,6 +14,7 @@ use Friendica\Core\Logger\Capability\LogChannel;
 use Friendica\Core\Logger\Factory\LoggerFactory;
 use Friendica\Core\Logger\LoggerManager;
 use Friendica\Core\Logger\Type\ProfilerLogger;
+use Friendica\Core\Logger\Type\WorkerLogger;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -87,7 +88,7 @@ class LoggerManagerTest extends TestCase
 		$this->assertInstanceOf(ProfilerLogger::class, $factory->getLogger());
 	}
 
-	public function testChangeChannelReturnsDifferentLogger(): void
+	public function testChangeLogChannelReturnsDifferentLogger(): void
 	{
 		$config = $this->createStub(IManageConfigValues::class);
 		$config->method('get')->willReturnMap([
@@ -109,5 +110,27 @@ class LoggerManagerTest extends TestCase
 		$factory->changeLogChannel(LogChannel::CONSOLE);
 
 		$this->assertNotSame($logger1, $factory->getLogger());
+	}
+
+	public function testChangeLogChannelToWorkerReturnsWorkerLogger(): void
+	{
+		$config = $this->createStub(IManageConfigValues::class);
+		$config->method('get')->willReturnMap([
+			['system', 'debugging', null, false],
+			['system', 'profiling', null, true],
+		]);
+
+		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
+		$reflectionProperty->setAccessible(true);
+		$reflectionProperty->setValue(null, null);
+
+		$factory = new LoggerManager(
+			$config,
+			$this->createStub(LoggerFactory::class)
+		);
+
+		$factory->changeLogChannel(LogChannel::WORKER);
+
+		$this->assertInstanceOf(WorkerLogger::class, $factory->getLogger());
 	}
 }
