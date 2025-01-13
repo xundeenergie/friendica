@@ -20,6 +20,7 @@ use Friendica\Content\Nav;
 use Friendica\Core\Addon\Capability\ICanLoadAddons;
 use Friendica\Core\Config\Factory\Config;
 use Friendica\Core\Container;
+use Friendica\Core\Logger\LoggerManager;
 use Friendica\Core\Renderer;
 use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\Definition\DbaDefinition;
@@ -139,7 +140,7 @@ class App
 
 		$this->setupContainerForAddons();
 
-		$this->setupContainerForLogger(LogChannel::APP);
+		$this->setupLogChannel(LogChannel::APP);
 
 		$this->setupLegacyServiceLocator();
 
@@ -181,7 +182,7 @@ class App
 	{
 		$this->setupContainerForAddons();
 
-		$this->setupContainerForLogger($this->determineLogChannel($argv));
+		$this->setupLogChannel($this->determineLogChannel($argv));
 
 		$this->setupLegacyServiceLocator();
 
@@ -196,7 +197,7 @@ class App
 	{
 		$this->setupContainerForAddons();
 
-		$this->setupContainerForLogger(LogChannel::AUTH_JABBERED);
+		$this->setupLogChannel(LogChannel::AUTH_JABBERED);
 
 		$this->setupLegacyServiceLocator();
 
@@ -229,7 +230,7 @@ class App
 
 	private function determineLogChannel(array $argv): string
 	{
-		$command = strtolower($argv[1]) ?? '';
+		$command = strtolower($argv[1] ?? '');
 
 		if ($command === 'daemon' || $command === 'jetstream') {
 			return LogChannel::DAEMON;
@@ -244,11 +245,11 @@ class App
 		return LogChannel::CONSOLE;
 	}
 
-	private function setupContainerForLogger(string $logChannel): void
+	private function setupLogChannel(string $logChannel): void
 	{
-		$this->container->addRule(LoggerInterface::class, [
-			'constructParams' => [$logChannel],
-		]);
+		/** @var LoggerManager */
+		$loggerManager = $this->container->create(LoggerManager::class);
+		$loggerManager->changeLogChannel($logChannel);
 	}
 
 	private function setupLegacyServiceLocator(): void
