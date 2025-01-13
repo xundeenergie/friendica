@@ -23,30 +23,30 @@ class LoggerManagerTest extends TestCase
 {
 	public function testGetLoggerReturnsPsrLogger(): void
 	{
-		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
-		$reflectionProperty->setAccessible(true);
-		$reflectionProperty->setValue(null, null);
-
 		$factory = new LoggerManager(
 			$this->createStub(IManageConfigValues::class),
 			$this->createStub(LoggerFactory::class)
 		);
 
 		$this->assertInstanceOf(LoggerInterface::class, $factory->getLogger());
+
+		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
+		$reflectionProperty->setAccessible(true);
+		$reflectionProperty->setValue(null, null);
 	}
 
 	public function testGetLoggerReturnsSameObject(): void
 	{
-		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
-		$reflectionProperty->setAccessible(true);
-		$reflectionProperty->setValue(null, null);
-
 		$factory = new LoggerManager(
 			$this->createStub(IManageConfigValues::class),
 			$this->createStub(LoggerFactory::class)
 		);
 
 		$this->assertSame($factory->getLogger(), $factory->getLogger());
+
+		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
+		$reflectionProperty->setAccessible(true);
+		$reflectionProperty->setValue(null, null);
 	}
 
 	public function testGetLoggerWithDebugDisabledReturnsNullLogger(): void
@@ -56,16 +56,16 @@ class LoggerManagerTest extends TestCase
 			['system', 'debugging', null, false],
 		]);
 
-		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
-		$reflectionProperty->setAccessible(true);
-		$reflectionProperty->setValue(null, null);
-
 		$factory = new LoggerManager(
 			$config,
 			$this->createStub(LoggerFactory::class)
 		);
 
 		$this->assertInstanceOf(NullLogger::class, $factory->getLogger());
+
+		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
+		$reflectionProperty->setAccessible(true);
+		$reflectionProperty->setValue(null, null);
 	}
 
 	public function testGetLoggerWithProfilerEnabledReturnsProfilerLogger(): void
@@ -76,16 +76,16 @@ class LoggerManagerTest extends TestCase
 			['system', 'profiling', null, true],
 		]);
 
-		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
-		$reflectionProperty->setAccessible(true);
-		$reflectionProperty->setValue(null, null);
-
 		$factory = new LoggerManager(
 			$config,
 			$this->createStub(LoggerFactory::class)
 		);
 
 		$this->assertInstanceOf(ProfilerLogger::class, $factory->getLogger());
+
+		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
+		$reflectionProperty->setAccessible(true);
+		$reflectionProperty->setValue(null, null);
 	}
 
 	public function testChangeLogChannelReturnsDifferentLogger(): void
@@ -95,10 +95,6 @@ class LoggerManagerTest extends TestCase
 			['system', 'debugging', null, false],
 			['system', 'profiling', null, true],
 		]);
-
-		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
-		$reflectionProperty->setAccessible(true);
-		$reflectionProperty->setValue(null, null);
 
 		$factory = new LoggerManager(
 			$config,
@@ -110,6 +106,10 @@ class LoggerManagerTest extends TestCase
 		$factory->changeLogChannel(LogChannel::CONSOLE);
 
 		$this->assertNotSame($logger1, $factory->getLogger());
+
+		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
+		$reflectionProperty->setAccessible(true);
+		$reflectionProperty->setValue(null, null);
 	}
 
 	public function testChangeLogChannelToWorkerReturnsWorkerLogger(): void
@@ -120,10 +120,6 @@ class LoggerManagerTest extends TestCase
 			['system', 'profiling', null, true],
 		]);
 
-		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
-		$reflectionProperty->setAccessible(true);
-		$reflectionProperty->setValue(null, null);
-
 		$factory = new LoggerManager(
 			$config,
 			$this->createStub(LoggerFactory::class)
@@ -132,5 +128,9 @@ class LoggerManagerTest extends TestCase
 		$factory->changeLogChannel(LogChannel::WORKER);
 
 		$this->assertInstanceOf(WorkerLogger::class, $factory->getLogger());
+
+		$reflectionProperty = new \ReflectionProperty(LoggerManager::class, 'logger');
+		$reflectionProperty->setAccessible(true);
+		$reflectionProperty->setValue(null, null);
 	}
 }
