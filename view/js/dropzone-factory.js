@@ -35,7 +35,13 @@ var DzFactory = function (max_imagesize) {
 					if (targetTextarea.setRangeText) {
 						//if setRangeText function is supported by current browser
 						let u = "[upload-" + file.name + "]";
-						targetTextarea.setRangeText(serverResponse, targetTextarea.value.indexOf(u), targetTextarea.value.indexOf(u) + u.length, "end");
+						let c = targetTextarea.selectionStart;
+						if (c > targetTextarea.value.indexOf(u)) {
+							c = c + serverResponse.length - u.length;
+						}
+						targetTextarea.setRangeText(serverResponse, targetTextarea.value.indexOf(u), targetTextarea.value.indexOf(u) + u.length);
+						targetTextarea.selectionStart = c;
+						targetTextarea.selectionEnd = c;
 					} else {
 						targetTextarea.focus();
 						document.execCommand('insertText', false /*no UI*/, serverResponse);
