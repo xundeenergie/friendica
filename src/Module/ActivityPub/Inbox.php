@@ -58,6 +58,55 @@ class Inbox extends BaseApi
 
 	protected function post(array $request = [])
 	{
+		    // Roh-Body auslesen
+		    // Roh-Body auslesen
+    $raw = file_get_contents('php://input');
+
+    // JSON decodieren
+    $data = json_decode($raw, true);
+
+    // Pretty Print oder fallback
+    if ($data === null) {
+        $pretty = $raw;
+    } else {
+        $pretty = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    }
+
+    // User-ID aus Parametern ermitteln (falls vorhanden)
+   // $user_id = isset($parameters['uid']) ? $parameters['uid'] : 'unknown';
+    // Actor extrahieren
+    $actor_uri = $data['actor'] ?? 'unknown';
+
+    // URL zerlegen
+    $parsed = parse_url($actor_uri);
+    $domain = $parsed['host'] ?? 'unknown';
+
+    // letzten Pfadteil als Username
+    $path_parts = explode('/', rtrim($parsed['path'] ?? '', '/'));
+    $username = end($path_parts) ?: 'unknown';
+
+    // Verzeichnis: /tmp/inbox_actors/{domain}/{username}
+    $dir = "/var/www/soc.schuerz.at/log/ap_inbox_from_{$domain}/{$username}";
+    if (!is_dir($dir)) {
+        mkdir($dir, 0775, true);
+    }
+
+    // Dateiname mit Timestamp
+    $timestamp = date('Ymd_His');
+    $aplogfilename = "{$dir}/activity_{$timestamp}.json";
+
+
+    // Inbox URL (falls bekannt)
+    $inbox_url = isset($parameters['inbox_url']) ? $parameters['inbox_url'] : 'unknown';
+
+    // Inhalt für die Datei
+    $content = "User-ID: {$user_id}\nInbox-URL: {$inbox_url}\n\n{$pretty}\n";
+    // Inhalt für die Datei
+    $content = "Actor: {$actor_uri}\nInbox URL: {$_SERVER['REQUEST_URI']}\n\n{$pretty}\n";
+
+    // Schreiben
+    file_put_contents($aplogfilename, $content, LOCK_EX);
+
 		$postdata = Network::postdata();
 
 		if (empty($postdata)) {
