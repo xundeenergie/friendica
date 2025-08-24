@@ -59,11 +59,14 @@ class Inbox extends BaseApi
 	protected function post(array $request = [])
 	{
 		    // Roh-Body auslesen
-		    // Roh-Body auslesen
     $raw = file_get_contents('php://input');
 
     // JSON decodieren
     $data = json_decode($raw, true);
+
+    if (!is_array($data)) {
+        $data = []; // fallback if JSON invalid
+    }
 
     // Pretty Print oder fallback
     if ($data === null) {
@@ -72,8 +75,6 @@ class Inbox extends BaseApi
         $pretty = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
 
-    // User-ID aus Parametern ermitteln (falls vorhanden)
-   // $user_id = isset($parameters['uid']) ? $parameters['uid'] : 'unknown';
     // Actor extrahieren
     $actor_uri = $data['actor'] ?? 'unknown';
 
@@ -85,27 +86,33 @@ class Inbox extends BaseApi
     $path_parts = explode('/', rtrim($parsed['path'] ?? '', '/'));
     $username = end($path_parts) ?: 'unknown';
 
-    // Verzeichnis: /tmp/inbox_actors/{domain}/{username}
-    $dir = "/var/www/soc.schuerz.at/log/ap_inbox_from_{$domain}/{$username}";
+    // Verzeichnis aus Friendica-Konfiguration ableiten
+    //$baseDir = $a->config['system']['tmpdir'] ?? ($a->config['system']['directory'] ?? '/tmp/friendica');
+    // Basisverzeichnis für Logs
+    $baseDir = DI::appHelper()->getBasePath();
+
+    $dir = $baseDir . "/log/inbox_debug_{$domain}/{$username}";
+    $this->logger->info('aplogdir', [$dir] ?? '');
+    //$dir = "/var/www/soc.schuerz.at/log/ap_inbox_from_{$domain}/{$username}";
     if (!is_dir($dir)) {
         mkdir($dir, 0775, true);
     }
 
     // Dateiname mit Timestamp
     $timestamp = date('Ymd_His');
-    $aplogfilename = "{$dir}/activity_{$timestamp}.json";
+    $gzipFile = "{$dir}/activity_{$timestamp}.json.gz";
 
+    // Gzip schreiben
+    $gz = gzopen($gzipFile, 'w9'); // 'w9' = maximale Kompression
+    if ($gz) {
+        gzwrite($gz, $pretty);
+        gzclose($gz);
+    } else {
+        error_log("Cannot create gzip file: {$gzipFile}");
+    }
 
-    // Inbox URL (falls bekannt)
-    $inbox_url = isset($parameters['inbox_url']) ? $parameters['inbox_url'] : 'unknown';
-
-    // Inhalt für die Datei
-    $content = "User-ID: {$user_id}\nInbox-URL: {$inbox_url}\n\n{$pretty}\n";
-    // Inhalt für die Datei
-    $content = "Actor: {$actor_uri}\nInbox URL: {$_SERVER['REQUEST_URI']}\n\n{$pretty}\n";
-
-    // Schreiben
-    file_put_contents($aplogfilename, $content, LOCK_EX);
+    // Alte Dateien aufräumen (älter als 2 Tage)
+    debug_cleanup_old_files($dir, 2);
 
 		$postdata = Network::postdata();
 
@@ -144,4 +151,24 @@ class Inbox extends BaseApi
 
 		throw new \Friendica\Network\HTTPException\AcceptedException();
 	}
+
 }
+
+/**
+ * Löscht Dateien in $dir, die älter als $days Tage sind
+ */
+function debug_cleanup_old_files(string $dir, int $days)
+{
+    if (!is_dir($dir)) return;
+
+    $files = glob($dir . '/*.json');
+    $now = time();
+    $max_age = $days * 24 * 60 * 60;
+
+    foreach ($files as $file) {
+	if (is_file($file) && ($now - filemtime($file)) > $max_age) {
+	    unlink($file);
+	}
+    }
+}
+
