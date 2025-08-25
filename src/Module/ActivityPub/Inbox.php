@@ -58,61 +58,57 @@ class Inbox extends BaseApi
 
 	protected function post(array $request = [])
 	{
-		    // Roh-Body auslesen
-    $raw = file_get_contents('php://input');
+		/*
+		 * Log Activitypub Inbox JSON to special logdir
+		 */
+		// Roh-Body auslesen
+		$raw = file_get_contents('php://input');
 
-    // JSON decodieren
-    $data = json_decode($raw, true);
+		// JSON decodieren
+		$data = json_decode($raw, true);
+		if (!is_array($data)) {
+			$data = []; // fallback if JSON invalid
+		}
 
-    if (!is_array($data)) {
-        $data = []; // fallback if JSON invalid
-    }
+		// Pretty Print oder fallback
+		if ($data === null) {
+			$pretty = $raw;
+		} else {
+			$pretty = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+		}
 
-    // Pretty Print oder fallback
-    if ($data === null) {
-        $pretty = $raw;
-    } else {
-        $pretty = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-    }
+		// Actor extrahieren
+		$actor_uri = $data['actor'] ?? 'unknown';
 
-    // Actor extrahieren
-    $actor_uri = $data['actor'] ?? 'unknown';
+		// URL zerlegen
+		$parsed = parse_url($actor_uri);
+		$domain = $parsed['host'] ?? 'unknown';
 
-    // URL zerlegen
-    $parsed = parse_url($actor_uri);
-    $domain = $parsed['host'] ?? 'unknown';
+		// letzten Pfadteil als Username
+		$path_parts = explode('/', rtrim($parsed['path'] ?? '', '/'));
+		$username = end($path_parts) ?: 'unknown';
 
-    // letzten Pfadteil als Username
-    $path_parts = explode('/', rtrim($parsed['path'] ?? '', '/'));
-    $username = end($path_parts) ?: 'unknown';
+		// Basisverzeichnis für Logs
+		$dir = DI::appHelper()->getBasePath() . "/log/inbox_debug_{$domain}/{$username}";
+		if (!is_dir($dir)) {
+			mkdir($dir, 0775, true);
+		}
 
-    // Verzeichnis aus Friendica-Konfiguration ableiten
-    //$baseDir = $a->config['system']['tmpdir'] ?? ($a->config['system']['directory'] ?? '/tmp/friendica');
-    // Basisverzeichnis für Logs
-    $baseDir = DI::appHelper()->getBasePath();
+		// Dateiname mit Timestamp
+		//$timestamp = date('Ymd_His');
+		$gzipFile = "{$dir}/activity_{" . date('Ymd_His') . "}.json.gz";
 
-    $dir = $baseDir . "/log/inbox_debug_{$domain}/{$username}";
-    $this->logger->info('aplogdir', [$dir] ?? '');
-    //$dir = "/var/www/soc.schuerz.at/log/ap_inbox_from_{$domain}/{$username}";
-    if (!is_dir($dir)) {
-        mkdir($dir, 0775, true);
-    }
+		// Gzip schreiben
+		$gz = gzopen($gzipFile, 'w9'); // 'w9' = maximale Kompression
+		if ($gz) {
+			gzwrite($gz, $pretty);
+			gzclose($gz);
+		} else {
+			error_log("Cannot create gzip file: {$gzipFile}");
+		}
 
-    // Dateiname mit Timestamp
-    $timestamp = date('Ymd_His');
-    $gzipFile = "{$dir}/activity_{$timestamp}.json.gz";
-
-    // Gzip schreiben
-    $gz = gzopen($gzipFile, 'w9'); // 'w9' = maximale Kompression
-    if ($gz) {
-        gzwrite($gz, $pretty);
-        gzclose($gz);
-    } else {
-        error_log("Cannot create gzip file: {$gzipFile}");
-    }
-
-    // Alte Dateien aufräumen (älter als 2 Tage)
-    debug_cleanup_old_files($dir, 2);
+		// Alte Dateien aufräumen (älter als 2 Tage)
+		debug_cleanup_old_files($dir, 2);
 
 		$postdata = Network::postdata();
 
@@ -159,16 +155,16 @@ class Inbox extends BaseApi
  */
 function debug_cleanup_old_files(string $dir, int $days)
 {
-    if (!is_dir($dir)) return;
+	if (!is_dir($dir)) return;
 
-    $files = glob($dir . '/*.json');
-    $now = time();
-    $max_age = $days * 24 * 60 * 60;
+	$files = glob($dir . '/*.json');
+	$now = time();
+	$max_age = $days * 24 * 60 * 60;
 
-    foreach ($files as $file) {
-	if (is_file($file) && ($now - filemtime($file)) > $max_age) {
-	    unlink($file);
+	foreach ($files as $file) {
+		if (is_file($file) && ($now - filemtime($file)) > $max_age) {
+			unlink($file);
+		}
 	}
-    }
 }
 
