@@ -415,8 +415,12 @@ class PostMedia extends BaseRepository
 		} elseif ($this->pConfig->get($uid, 'system', 'embed_media', false) && $postMedia->hasEmbedHtml() && !$postMedia->isPhoto()) {
 			$media = $this->getEmbedIframe($postMedia);
 		} else {
-			/// @todo Move the template to /content as well
-			$media = Renderer::replaceMacros(Renderer::getMarkupTemplate($postMedia->type == Post\Media::HLS ? 'hls_top.tpl' : 'video_top.tpl'), [
+			if ($this->config->get('system', 'videojs')) {
+				$template = 'content/videojs.tpl';
+			} else {
+				$template = $postMedia->type == Post\Media::HLS ? 'content/hls.tpl' : 'content/video.tpl';
+			}
+			$media = Renderer::replaceMacros(Renderer::getMarkupTemplate($template), [
 				'$video' => [
 					'id'          => $postMedia->id,
 					'src'         => (string)$postMedia->url,
@@ -425,6 +429,7 @@ class PostMedia extends BaseRepository
 					'mime'        => (string)$postMedia->mimetype,
 					'height'      => $height,
 					'width'       => $width,
+					'style'       => 'aspect-ratio:' . $postMedia->width . '/' . $postMedia->height . ';',
 					'description' => $postMedia->description,
 				],
 			]);

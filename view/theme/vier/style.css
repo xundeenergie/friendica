@@ -3300,6 +3300,7 @@ fbrowser.photo .photo-album-image-wrapper { margin-left: 10px; }
 }
 
 iframe.embed,
+.video-top-wrapper,
 video {
 	max-width: 100%;
 	max-height: calc(100vh - 150px);

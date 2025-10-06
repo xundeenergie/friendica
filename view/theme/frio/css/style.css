@@ -66,6 +66,7 @@ section hr {
 	border-color: rgba(238, 238, 238, $contentbg_transp);
 }
 iframe.embed,
+.video-top-wrapper,
 video {
 	max-width: 100%;
 	max-height: calc(100vh - 260px);
