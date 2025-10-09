@@ -479,18 +479,20 @@ class Media
 		$media['embed-html']      = $data['embed']['html']    ?? null;
 		$media['embed-height']    = $data['embed']['height']  ?? null;
 		$media['embed-width']     = $data['embed']['width']   ?? null;
+		$media['page-type']       = $data['pagetype']         ?? null;
 		$media['language']        = $data['language']         ?? null;
 		$media['published']       = $data['published']        ?? null;
 		$media['modified']        = $data['modified']         ?? null;
+		$media['schematypes']     = isset($data['schematypes']) ? json_encode($data['schematypes']) : null;
 
 		if (DI::config()->get('system', 'add_page_media')) {
-			if (!empty($data['audio'])) {
+			if (isset($data['audio']) && sizeof($data['audio']) == 1) {
 				foreach ($data['audio'] as $entry) {
 					self::insertMedia($entry, $media['uri-id']);
 				}
 			}
 
-			if (!empty($data['video'])) {
+			if (isset($data['video']) && sizeof($data['video']) == 1) {
 				foreach ($data['video'] as $entry) {
 					self::insertMedia($entry, $media['uri-id']);
 				}

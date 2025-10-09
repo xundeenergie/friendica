@@ -150,6 +150,8 @@ class PostMedia extends BaseRepository
 			'embed-html'      => $PostMedia->embedHtml,
 			'embed-height'    => $PostMedia->embedHeight,
 			'embed-width'     => $PostMedia->embedWidth,
+			'page-type'       => $PostMedia->pageType,
+			'schematypes'     => $PostMedia->schemaTypes ? json_encode($PostMedia->schemaTypes) : null,
 			'attach-id'       => $PostMedia->attachId,
 			'language'        => $PostMedia->language,
 			'published'       => $PostMedia->published,
@@ -367,10 +369,10 @@ class PostMedia extends BaseRepository
 				$player = $this->getAudioAttachment($media);
 			} elseif (in_array($media->type, [Post\Media::VIDEO, Post\Media::HLS])) {
 				$player = $this->getVideoAttachment($media, $uid);
-			} elseif ($allow_embed && !empty($media->playerUrl)) {
+			} elseif ($allow_embed && $media->hasPlayerUrl() && $media->hasPlayerHeight()) {
 				$player = $this->getPlayerIframe($media);
-			} elseif ($allow_embed && !empty($media->embedHtml)) {
-				$player = '<span class="embedded-media">' . $this->getEmbedIframe($media) . '</span>';
+			} elseif ($allow_embed && $media->hasEmbedHtml() && !$media->isPhoto()) {
+				$player = $this->getEmbedIframe($media);
 			} else {
 				$player = $this->getLinkAttachment($media);
 			}
@@ -408,9 +410,9 @@ class PostMedia extends BaseRepository
 			$width  = '100%';
 		}
 
-		if ($this->pConfig->get($uid, 'system', 'embed_media', false) && ($postMedia->playerUrl != '') && ($postMedia->playerHeight > 0)) {
+		if ($this->pConfig->get($uid, 'system', 'embed_media', false) && $postMedia->hasPlayerUrl() && $postMedia->hasPlayerHeight()) {
 			$media = $this->getPlayerIframe($postMedia);
-		} elseif ($this->pConfig->get($uid, 'system', 'embed_media', false) && ($postMedia->embedHtml != '')) {
+		} elseif ($this->pConfig->get($uid, 'system', 'embed_media', false) && $postMedia->hasEmbedHtml() && !$postMedia->isPhoto()) {
 			$media = $this->getEmbedIframe($postMedia);
 		} else {
 			/// @todo Move the template to /content as well
@@ -436,22 +438,33 @@ class PostMedia extends BaseRepository
 			return '';
 		}
 
-		$div_style    = '';
 		$iframe_style = '';
-		$height       = min($this->config->get('system', 'max_height'), $postMedia->playerHeight);
+		$height       = '100%';
+		$width        = '100%';
 
-		if ($postMedia->playerWidth != 0 && $postMedia->playerHeight != 0 && $postMedia->playerWidth > $this->config->get('system', 'max_width') && $postMedia->playerWidth > $postMedia->playerHeight) {
-			$factor = round($postMedia->playerHeight / $postMedia->playerWidth, 2) * 100;
-			$height = '100%';
-			$iframe_style .= 'position:absolute;left:0px;top:0px;';
-			$div_style .= 'position:relative;padding-bottom:' . $factor . '%;';
+		if ($postMedia->isVideo()) {
+			if ($postMedia->hasPlayerWidth() && $postMedia->hasPlayerHeight()) {
+				$iframe_style .= 'aspect-ratio:' . $postMedia->playerWidth . '/' . $postMedia->playerHeight . ';';
+				if ($postMedia->playerWidth < $postMedia->playerHeight) {
+					$height = $postMedia->playerHeight;
+					$width  = '';
+				} else {
+					$height = '';
+				}
+			}
+		} else {
+			if ($postMedia->hasPlayerHeight()) {
+				$height = $postMedia->playerHeight . 'px';
+			}
+			if ($postMedia->hasPlayerWidth()) {
+				$width = $postMedia->playerWidth . 'px';
+			}
 		}
 
 		return Renderer::replaceMacros(Renderer::getMarkupTemplate('content/iframe.tpl'), [
 			'src'          => $postMedia->playerUrl,
 			'height'       => $height,
-			'width'        => $postMedia->embedWidth && $postMedia->embedWidth <= $this->config->get('system', 'max_width') ? $postMedia->embedWidth : '100%',
-			'div_style'    => $div_style,
+			'width'        => $width,
 			'iframe_style' => $iframe_style,
 		]);
 	}
@@ -462,11 +475,35 @@ class PostMedia extends BaseRepository
 			return '';
 		}
 
+		$iframe_style = '';
+		$height       = '100%';
+		$width        = '100%';
+
+		if ($postMedia->isVideo()) {
+			if ($postMedia->hasEmbedWidth() && $postMedia->hasEmbedHeight()) {
+				$iframe_style .= 'aspect-ratio:' . $postMedia->embedWidth . '/' . $postMedia->embedHeight . ';';
+				if ($postMedia->embedWidth < $postMedia->embedHeight) {
+					$height = $postMedia->embedHeight;
+					$width  = '';
+				} else {
+					$height = '';
+				}
+			}
+		} else {
+			if ($postMedia->hasEmbedHeight()) {
+				$height = $postMedia->embedHeight . 'px';
+			}
+			if ($postMedia->hasEmbedWidth()) {
+				$width = $postMedia->embedWidth . 'px';
+			}
+		}
+
 		return Renderer::replaceMacros(Renderer::getMarkupTemplate($postMedia->embedHeight ? 'content/embed-iframe.tpl' : 'content/embed-iframe-resize.tpl'), [
-			'id'     => 'iframe-' . hash('md5', $postMedia->embedHtml),
-			'src'    => $postMedia->embedHtml,
-			'height' => $postMedia->embedHeight + 20,
-			'width'  => $postMedia->embedWidth && $postMedia->embedWidth <= $this->config->get('system', 'max_width') ? $postMedia->embedWidth : '100%',
+			'id'           => 'iframe-' . hash('md5', $postMedia->embedHtml),
+			'src'          => $postMedia->embedHtml,
+			'height'       => $height,
+			'width'        => $width,
+			'iframe_style' => $iframe_style,
 		]);
 	}
 

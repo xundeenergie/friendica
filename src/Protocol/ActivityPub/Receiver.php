@@ -1867,9 +1867,10 @@ class Receiver
 	 * @param array       $urls   The object URL list
 	 * @param string|null $icon   The icon URL to use for the attachments
 	 * @param array       $player Embedded player data (url, width, height)
+	 * @param array       $embed  oEmbed data (html, width, height)
 	 * @return array an array of attachments
 	 */
-	private static function processAttachmentUrls(array $urls, ?string $icon, array $player): array
+	private static function processAttachmentUrls(array $urls, ?string $icon, array $player, array $embed): array
 	{
 		$attachments = [];
 		foreach ($urls as $key => $url) {
@@ -1918,30 +1919,27 @@ class Receiver
 			} elseif ($mediatype == 'application/x-mpegURL') {
 				// PeerTube uses HLS streams for video. We prefer HLS streams over the video file itself.
 				// But we still store the video file as an attachment to be used by the API which currently does not support HLS streams.
-				$attachments = array_merge($attachments, self::processAttachmentUrls($url['as:tag'], $icon, []));
+				$attachments = array_merge($attachments, self::processAttachmentUrls($url['as:tag'], $icon, [], []));
 
 				$attachment = ['type' => $filetype, 'mediaType' => $mediatype, 'url' => $href, 'height' => $height, 'width' => $width, 'size' => null, 'name' => '', 'image' => $icon];
-				if (!empty($player)) {
+				if (is_array($player)) {
 					$attachment['player-url']    = $player['embed']  ?? null;
 					$attachment['player-height'] = $player['height'] ?? null;
 					$attachment['player-width']  = $player['width']  ?? null;
-
-					if (is_null($attachment['player-height']) && is_null($attachment['player-width'])) {
-						foreach ($attachments as $media) {
-							if (isset($media['height']) && isset($media['width'])) {
-								if ($media['height'] > $attachment['player-height'] || $media['width'] > $attachment['player-width']) {
-									$attachment['player-height'] = $media['height'];
-									$attachment['player-width']  = $media['width'];
-								}
-							}
-						}
-					}
 
 					if (!$height && !$width) {
 						$attachment['height'] = $attachment['player-height'];
 						$attachment['width']  = $attachment['player-width'];
 					}
 				}
+
+				if (is_array($embed)) {
+					$attachment['embed-type']   = $embed['type']   ?? null;
+					$attachment['embed-html']   = $embed['html']   ?? null;
+					$attachment['embed-height'] = $embed['height'] ?? null;
+					$attachment['embed-width']  = $embed['width']  ?? null;
+				}
+
 				DI::logger()->info('Adding video attachment', ['attachment' => $attachment]);
 				$attachments[] = $attachment;
 			}
@@ -2130,8 +2128,13 @@ class Receiver
 			} else {
 				$player = [];
 			}
+			if (isset($siteinfo['embed'])) {
+				$embed = $siteinfo['embed'];
+			} else {
+				$embed = [];
+			}
 
-			$object_data['attachments'] = array_merge($object_data['attachments'], self::processAttachmentUrls($object['as:url'] ?? [], self::processIcon($object), $player));
+			$object_data['attachments'] = array_merge($object_data['attachments'], self::processAttachmentUrls($object['as:url'] ?? [], self::processIcon($object), $player, $embed));
 		}
 
 		$object_data['can-comment'] = JsonLD::fetchElement($object, 'pt:commentsEnabled', '@value');

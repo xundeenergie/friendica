@@ -44,7 +44,7 @@ use Friendica\Database\DBA;
 
 // This file is required several times during the test in DbaDefinition which justifies this condition
 if (!defined('DB_UPDATE_VERSION')) {
-	define('DB_UPDATE_VERSION', 1582);
+	define('DB_UPDATE_VERSION', 1583);
 }
 
 return [
@@ -1441,6 +1441,8 @@ return [
 			"embed-html" => ["type" => "text", "comment" => "HTML embed code for this media"],
 			"embed-height" => ["type" => "smallint unsigned", "comment" => "Height of the embed"],
 			"embed-width" => ["type" => "smallint unsigned", "comment" => "Width of the embed"],
+			"page-type" => ["type" => "varchar(30)", "comment" => "Type of the page (e.g. article, website)"],
+			"schematypes" => ["type" => "varchar(255)", "comment" => "Schema types of the page as JSON string"],
 			"language" => ["type" => "char(3)", "comment" => "Language information about this media in the ISO 639 format"],
 			"published" => ["type" => "datetime", "comment" => "Publification date of this media"],
 			"modified" => ["type" => "datetime", "comment" => "Modification date of this media"],

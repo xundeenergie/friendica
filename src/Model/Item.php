@@ -3034,7 +3034,7 @@ class Item
 		if (!empty($sharedSplitAttachments)) {
 			$s    = self::addGallery($s, $sharedSplitAttachments['visual']);
 			$s    = self::addVisualAttachments($sharedSplitAttachments['visual'], $shared_item, $s, true, $uid);
-			$s    = self::addLinkAttachment($shared_uri_id ?: $item['uri-id'], $sharedSplitAttachments, $body, $s, true, $quote_shared_links, $uid);
+			$s    = self::addLinkAttachment($shared_uri_id ?: $item['uri-id'], $sharedSplitAttachments, $body, $s, true, $quote_shared_links, $uid, $shared_item);
 			$s    = self::addNonVisualAttachments($sharedSplitAttachments['additional'], $item, $s);
 			$body = BBCode::removeSharedData($body);
 		}
@@ -3047,7 +3047,7 @@ class Item
 
 		$s = self::addGallery($s, $itemSplitAttachments['visual']);
 		$s = self::addVisualAttachments($itemSplitAttachments['visual'], $item, $s, false, $uid);
-		$s = self::addLinkAttachment($item['uri-id'], $itemSplitAttachments, $body, $s, false, $shared_links, $uid);
+		$s = self::addLinkAttachment($item['uri-id'], $itemSplitAttachments, $body, $s, false, $shared_links, $uid, $item);
 		$s = self::addNonVisualAttachments($itemSplitAttachments['additional'], $item, $s);
 		$s = self::addQuestions($item, $s);
 
@@ -3359,16 +3359,18 @@ class Item
 	 * @param bool         $shared
 	 * @param array        $ignore_links A list of URLs to ignore
 	 * @param int          $uid
+	 * @param array        $item
 	 * @return string modified content
 	 * @throws InternalServerErrorException
 	 * @throws ServiceUnavailableException
 	 */
-	private static function addLinkAttachment(int $uriid, array $attachments, string $body, string $content, bool $shared, array $ignore_links, int $uid): string
+	private static function addLinkAttachment(int $uriid, array $attachments, string $body, string $content, bool $shared, array $ignore_links, int $uid, array $item): string
 	{
 		DI::profiler()->startRecording('rendering');
 		// Don't show a preview when there is a visual attachment (audio or video)
-		$types   = $attachments['visual']->column('type');
-		$preview = !in_array(PostMedia::TYPE_IMAGE, $types) && !in_array(PostMedia::TYPE_VIDEO, $types);
+		$types     = $attachments['visual']->column('type');
+		$preview   = !in_array(PostMedia::TYPE_IMAGE, $types) && !in_array(PostMedia::TYPE_VIDEO, $types);
+		$has_media = in_array($item['post-type'] ?? null, [Item::PT_AUDIO, Item::PT_VIDEO]);
 
 		/** @var ?PostMedia $attachment */
 		$attachment = null;
@@ -3409,6 +3411,7 @@ class Item
 				'embed_html'    => $attachment->embedHtml,
 				'embed_width'   => $attachment->embedWidth,
 				'embed_height'  => $attachment->embedHeight,
+				'page_type'     => $attachment->pageType,
 			];
 
 			if ($preview && $attachment->preview) {
@@ -3460,7 +3463,7 @@ class Item
 
 				// @todo Use a template
 				$preview_mode = DI::pConfig()->get($uid, 'system', 'preview_mode', BBCode::PREVIEW_LARGE);
-				if ($preview_mode != BBCode::PREVIEW_NONE && !self::containsEmbed($body, $data['url'])) {
+				if (!$has_media && $preview_mode != BBCode::PREVIEW_NONE && !self::containsEmbed($body, $data['url'])) {
 					$rendered = BBCode::convertAttachment('', BBCode::INTERNAL, $data, $uriid, $preview_mode, DI::pConfig()->get($uid, 'system', 'embed_remote_media', false));
 				} elseif (!self::containsLink($content, $data['url'], Post\Media::HTML)) {
 					$rendered = Renderer::replaceMacros(Renderer::getMarkupTemplate('content/link.tpl'), [

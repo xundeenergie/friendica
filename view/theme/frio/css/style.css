@@ -65,10 +65,10 @@ aside hr,
 section hr {
 	border-color: rgba(238, 238, 238, $contentbg_transp);
 }
-iframe,
+iframe.embed,
 video {
 	max-width: 100%;
-	max-height: 85vh;
+	max-height: calc(100vh - 260px);
 }
 blockquote {
 	font-size: inherit;

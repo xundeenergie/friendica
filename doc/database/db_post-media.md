@@ -37,6 +37,8 @@ Fields
 | embed-html      | HTML embed code for this media                                                      | text              | YES  |     | NULL    |                |
 | embed-height    | Height of the embed                                                                 | smallint unsigned | YES  |     | NULL    |                |
 | embed-width     | Width of the embed                                                                  | smallint unsigned | YES  |     | NULL    |                |
+| page-type       | Type of the page (e.g. article, website)                                            | varchar(30)       | YES  |     | NULL    |                |
+| schematypes     | Schema types of the page as JSON string                                             | varchar(255)      | YES  |     | NULL    |                |
 | language        | Language information about this media in the ISO 639 format                         | char(3)           | YES  |     | NULL    |                |
 | published       | Publification date of this media                                                    | datetime          | YES  |     | NULL    |                |
 | modified        | Modification date of this media                                                     | datetime          | YES  |     | NULL    |                |

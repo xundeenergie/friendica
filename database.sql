@@ -1,6 +1,6 @@
 -- ------------------------------------------
 -- Friendica 2025.07-rc (Interrupted Fern)
--- DB_UPDATE_VERSION 1582
+-- DB_UPDATE_VERSION 1583
 -- ------------------------------------------
 
 
@@ -1436,6 +1436,8 @@ CREATE TABLE IF NOT EXISTS `post-media` (
 	`embed-html` text COMMENT 'HTML embed code for this media',
 	`embed-height` smallint unsigned COMMENT 'Height of the embed',
 	`embed-width` smallint unsigned COMMENT 'Width of the embed',
+	`page-type` varchar(30) COMMENT 'Type of the page (e.g. article, website)',
+	`schematypes` varchar(255) COMMENT 'Schema types of the page as JSON string',
 	`language` char(3) COMMENT 'Language information about this media in the ISO 639 format',
 	`published` datetime COMMENT 'Publification date of this media',
 	`modified` datetime COMMENT 'Modification date of this media',

@@ -158,6 +158,10 @@ class Processor
 		$data['player-url']    = $attachment['player-url']    ?? null;
 		$data['player-height'] = $attachment['player-height'] ?? null;
 		$data['player-width']  = $attachment['player-width']  ?? null;
+		$data['embed-type']    = $attachment['embed-type']    ?? null;
+		$data['embed-html']    = $attachment['embed-html']    ?? null;
+		$data['embed-width']   = $attachment['embed-width']   ?? null;
+		$data['embed-height']  = $attachment['embed-height']  ?? null;
 
 		Post\Media::insert($data);
 	}
