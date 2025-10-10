@@ -19,6 +19,7 @@ use Friendica\Core\Session\Capability\IHandleUserSessions;
 use Friendica\Database\Database;
 use Friendica\Database\DBA;
 use Friendica\Module\BaseModeration;
+use Friendica\Moderation\Entity\Report;
 use Friendica\Module\Response;
 use Friendica\Navigation\SystemMessages;
 use Friendica\Util\DateTimeFormat;
@@ -41,6 +42,27 @@ class Reports extends BaseModeration
 	{
 		// @todo check if POST is really used here
 		$this->content($request);
+	}
+
+	// A copy of the one in Report/Create.php - please consolidate!
+	public function getReportCategoryName(int $category): string
+	{
+		switch ($category) {
+			case Report::CATEGORY_SPAM:
+				return $this->t('Spam');
+			case Report::CATEGORY_ILLEGAL:
+				return $this->t('Illegal Content');
+			case Report::CATEGORY_SAFETY:
+				return $this->t('Community Safety');
+			case Report::CATEGORY_UNWANTED:
+				return $this->t('Unwanted Content/Behavior');
+			case Report::CATEGORY_VIOLATION:
+				return $this->t('Rules Violation');
+			case Report::CATEGORY_OTHER:
+				return $this->t('Other');
+			default:
+				return "";
+		};
 	}
 
 	protected function content(array $request = []): string
@@ -72,8 +94,9 @@ LIMIT ?, ?",
 
 		$reports = [];
 		while ($report = $this->database->fetch($query)) {
-			$report['posts']   = [];
-			$report['created'] = DateTimeFormat::local($report['created'], DateTimeFormat::MYSQL);
+			$report['posts']    = [];
+			$report['created']  = DateTimeFormat::local($report['created'], DateTimeFormat::MYSQL);
+			$report['category'] = self::getReportCategoryName($report['category-id']);
 
 			$reports[$report['id']] = $report;
 		}

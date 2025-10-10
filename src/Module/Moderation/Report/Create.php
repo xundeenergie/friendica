@@ -298,28 +298,32 @@ class Create extends BaseModule
 		]);
 	}
 
+	// A copy of the one in Moderation/Reports.php - please consolidate!
+	public function getReportCategoryName(int $category): string
+	{
+		switch ($category) {
+			case Report::CATEGORY_SPAM:
+				return $this->t('Spam');
+			case Report::CATEGORY_ILLEGAL:
+				return $this->t('Illegal Content');
+			case Report::CATEGORY_SAFETY:
+				return $this->t('Community Safety');
+			case Report::CATEGORY_UNWANTED:
+				return $this->t('Unwanted Content/Behavior');
+			case Report::CATEGORY_VIOLATION:
+				return $this->t('Rules Violation');
+			case Report::CATEGORY_OTHER:
+				return $this->t('Other');
+			default:
+				return "";
+		};
+	}
+
 	private function getAside(array $request): string
 	{
 		$contact = null;
 		if (!empty($request['cid'])) {
 			$contact = Contact::getById($request['cid']);
-		}
-
-		switch ($request['category'] ?? 0) {
-			case Report::CATEGORY_SPAM:      $category = $this->t('Spam');
-				break;
-			case Report::CATEGORY_ILLEGAL:   $category = $this->t('Illegal Content');
-				break;
-			case Report::CATEGORY_SAFETY:    $category = $this->t('Community Safety');
-				break;
-			case Report::CATEGORY_UNWANTED:  $category = $this->t('Unwanted Content/Behavior');
-				break;
-			case Report::CATEGORY_VIOLATION: $category = $this->t('Rules Violation');
-				break;
-			case Report::CATEGORY_OTHER:     $category = $this->t('Other');
-				break;
-
-			default: $category = '';
 		}
 
 		if (!empty($request['rule-ids'])) {
@@ -339,7 +343,7 @@ class Create extends BaseModule
 			],
 
 			'$contact'  => $contact,
-			'$category' => $category,
+			'$category' => self::getReportCategoryName($request['category'] ?? 0),
 			'$rules'    => $rules ?? [],
 			'$comment'  => BBCode::convertForUriId($contact['uri-id'] ?? 0, $this->session->get('report_comment') ?? '', BBCode::EXTERNAL),
 			'$posts'    => count($request['uri-ids'] ?? []),
