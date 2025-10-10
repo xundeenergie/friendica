@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2025.07-rc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-06 18:57+0200\n"
+"POT-Creation-Date: 2025-10-10 20:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -440,7 +440,7 @@ msgstr ""
 #: src/Module/FriendSuggest.php:132 src/Module/Install.php:219
 #: src/Module/Install.php:259 src/Module/Install.php:296
 #: src/Module/Invite.php:162 src/Module/Item/Compose.php:188
-#: src/Module/Moderation/Item/Source.php:74
+#: src/Module/Moderation/Item/Source.php:75
 #: src/Module/Moderation/Report/Create.php:153
 #: src/Module/Moderation/Report/Create.php:168
 #: src/Module/Moderation/Report/Create.php:196
@@ -1073,7 +1073,7 @@ msgstr ""
 #: src/Content/ContactSelector.php:122
 #: src/Module/Moderation/Users/Active.php:82
 #: src/Module/Moderation/Users/Blocked.php:82
-#: src/Module/Moderation/Users/Create.php:58
+#: src/Module/Moderation/Users/Create.php:59
 #: src/Module/Moderation/Users/Deleted.php:69
 #: src/Module/Moderation/Users/Index.php:89
 #: src/Module/Moderation/Users/Index.php:109
@@ -2223,9 +2223,11 @@ msgstr ""
 #: src/Module/Moderation/Blocklist/Server/Import.php:105
 #: src/Module/Moderation/Blocklist/Server/Index.php:84
 #: src/Module/Moderation/Item/Delete.php:47
+#: src/Module/Moderation/Item/Source.php:71
 #: src/Module/Moderation/Reports.php:99 src/Module/Moderation/Summary.php:64
 #: src/Module/Moderation/Users/Active.php:89
 #: src/Module/Moderation/Users/Blocked.php:89
+#: src/Module/Moderation/Users/Create.php:47
 #: src/Module/Moderation/Users/Deleted.php:66
 #: src/Module/Moderation/Users/Index.php:96
 msgid "Moderation"
@@ -2259,33 +2261,33 @@ msgstr ""
 msgid "last"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:900
+#: src/Content/Text/BBCode.php:909
 #, php-format
 msgid "<a href=\"%1$s\" target=\"_blank\" rel=\"noopener noreferrer\">%2$s</a> %3$s"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:928 src/Model/Item.php:3618
-#: src/Model/Item.php:3624 src/Model/Item.php:3625
+#: src/Content/Text/BBCode.php:937 src/Model/Item.php:3622
+#: src/Model/Item.php:3628 src/Model/Item.php:3629
 msgid "Link to source"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:1718 src/Content/Text/HTML.php:901
+#: src/Content/Text/BBCode.php:1727 src/Content/Text/HTML.php:901
 msgid "Click to open/close"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:1773
+#: src/Content/Text/BBCode.php:1782
 msgid "$1 wrote:"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:1847 src/Content/Text/BBCode.php:1848
+#: src/Content/Text/BBCode.php:1856 src/Content/Text/BBCode.php:1857
 msgid "Encrypted content"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:2164
+#: src/Content/Text/BBCode.php:2173
 msgid "Invalid source protocol"
 msgstr ""
 
-#: src/Content/Text/BBCode.php:2183
+#: src/Content/Text/BBCode.php:2192
 msgid "Invalid link protocol"
 msgstr ""
 
@@ -2487,7 +2489,7 @@ msgid "Post to group"
 msgstr ""
 
 #: src/Content/Widget/VCard.php:99 src/Model/Contact.php:1266
-#: src/Model/Profile.php:441 src/Module/Moderation/Item/Source.php:80
+#: src/Model/Profile.php:441 src/Module/Moderation/Item/Source.php:81
 msgid "Mention"
 msgstr ""
 
@@ -3437,44 +3439,44 @@ msgstr ""
 msgid "Sensitive content"
 msgstr ""
 
-#: src/Model/Item.php:3518
+#: src/Model/Item.php:3522
 msgid "bytes"
 msgstr ""
 
-#: src/Model/Item.php:3549
+#: src/Model/Item.php:3553
 #, php-format
 msgid "%2$s (%3$d%%, %1$d vote)"
 msgid_plural "%2$s (%3$d%%, %1$d votes)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3551
+#: src/Model/Item.php:3555
 #, php-format
 msgid "%2$s (%1$d vote)"
 msgid_plural "%2$s (%1$d votes)"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3556
+#: src/Model/Item.php:3560
 #, php-format
 msgid "%d voter. Poll end: %s"
 msgid_plural "%d voters. Poll end: %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3558
+#: src/Model/Item.php:3562
 #, php-format
 msgid "%d voter."
 msgid_plural "%d voters."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Model/Item.php:3560
+#: src/Model/Item.php:3564
 #, php-format
 msgid "Poll end: %s"
 msgstr ""
 
-#: src/Model/Item.php:3601 src/Model/Item.php:3602
+#: src/Model/Item.php:3605 src/Model/Item.php:3606
 msgid "View on separate page"
 msgstr ""
 
@@ -3896,7 +3898,6 @@ msgstr ""
 #: src/Module/Admin/Site.php:442 src/Module/Admin/Storage.php:124
 #: src/Module/Admin/Summary.php:183 src/Module/Admin/Themes/Details.php:82
 #: src/Module/Admin/Themes/Index.php:103 src/Module/Admin/Tos.php:63
-#: src/Module/Moderation/Users/Create.php:47
 #: src/Module/Moderation/Users/Pending.php:82
 msgid "Administration"
 msgstr ""
@@ -5704,7 +5705,7 @@ msgstr ""
 msgid "Delete Item"
 msgstr ""
 
-#: src/Module/BaseModeration.php:110 src/Module/Moderation/Item/Source.php:71
+#: src/Module/BaseModeration.php:110 src/Module/Moderation/Item/Source.php:72
 msgid "Item Source"
 msgstr ""
 
@@ -6184,7 +6185,6 @@ msgstr ""
 #: src/Module/Moderation/Reports.php:105
 #: src/Module/Moderation/Users/Active.php:82
 #: src/Module/Moderation/Users/Blocked.php:82
-#: src/Module/Moderation/Users/Create.php:56
 #: src/Module/Moderation/Users/Deleted.php:69
 #: src/Module/Moderation/Users/Index.php:89
 #: src/Module/Moderation/Users/Index.php:109
@@ -6745,7 +6745,7 @@ msgid "Result Item"
 msgstr ""
 
 #: src/Module/Debug/ActivityPubConversion.php:117
-#: src/Module/Moderation/Item/Source.php:82
+#: src/Module/Moderation/Item/Source.php:83
 #: src/Module/Security/TwoFactor/Verify.php:84
 msgid "Error"
 msgid_plural "Errors"
@@ -7653,54 +7653,54 @@ msgstr ""
 msgid "The GUID of the item you want to delete."
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:72
+#: src/Module/Moderation/Item/Source.php:73
 msgid "Item Id"
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:73
+#: src/Module/Moderation/Item/Source.php:74
 msgid "Item URI"
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:75
+#: src/Module/Moderation/Item/Source.php:76
 msgid "Terms"
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:76
+#: src/Module/Moderation/Item/Source.php:77
 msgid "Tag"
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:77
+#: src/Module/Moderation/Item/Source.php:78
 #: src/Module/Moderation/Users/Active.php:82
 #: src/Module/Moderation/Users/Blocked.php:82
 #: src/Module/Moderation/Users/Index.php:89
 msgid "Type"
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:78
+#: src/Module/Moderation/Item/Source.php:79
 msgid "Term"
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:79
+#: src/Module/Moderation/Item/Source.php:80
 msgid "URL"
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:81
+#: src/Module/Moderation/Item/Source.php:82
 msgid "Implicit Mention"
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:83
+#: src/Module/Moderation/Item/Source.php:84
 msgid "Item not found"
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:84
+#: src/Module/Moderation/Item/Source.php:85
 msgid "No source recorded"
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:85
+#: src/Module/Moderation/Item/Source.php:86
 msgid "Please make sure the <code>debug.store_source</code> config key is set in <code>config/local.config.php</code> for future items to have sources."
 msgstr ""
 
-#: src/Module/Moderation/Item/Source.php:87
+#: src/Module/Moderation/Item/Source.php:88
 msgid "Item Guid"
 msgstr ""
 
@@ -8041,27 +8041,20 @@ msgid "User \"%s\" unblocked"
 msgstr ""
 
 #: src/Module/Moderation/Users/Create.php:48
-msgid "New User"
+#: src/Module/Moderation/Users/Create.php:50
+msgid "Create user"
 msgstr ""
 
 #: src/Module/Moderation/Users/Create.php:49
-msgid "Add User"
-msgstr ""
-
-#: src/Module/Moderation/Users/Create.php:56
-msgid "Name of the new user."
+msgid "Type in the details for the new user to be created."
 msgstr ""
 
 #: src/Module/Moderation/Users/Create.php:57
-msgid "Nickname"
-msgstr ""
-
-#: src/Module/Moderation/Users/Create.php:57
-msgid "Nickname of the new user."
+msgid "Display name"
 msgstr ""
 
 #: src/Module/Moderation/Users/Create.php:58
-msgid "Email address of the new user."
+msgid "Nickname"
 msgstr ""
 
 #: src/Module/Moderation/Users/Deleted.php:67
