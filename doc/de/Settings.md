@@ -47,10 +47,9 @@ Mehr Informationen zum Übersetzungsprozess von Friendica findest du [auf dieser
 
 Hier kann das Theme bestimmt werden, welches standardmäßig zum Anzeigen der Seite verwendet werden soll.
 Nutzer können in ihren Einstellungen andere Themes wählen.
-Derzeit ist das "vier" Theme das vorausgewählte Theme.
+Derzeit ist das "frio" Theme das vorausgewählte Theme.
 
 Für mobile Geräte kannst du ein spezielles Theme wählen, wenn das Standardtheme ungeeignet für mobile Geräte sein sollte.
-Das `vier` Theme z.B. unterstützt kleine Anzeigen und benötigt kein zusätzliches mobiles Theme.
 
 ### Registrierung
 

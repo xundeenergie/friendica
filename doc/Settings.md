@@ -54,11 +54,10 @@ See [this help page](/help/translations) for more information about the translat
 
 Choose a theme to be the default system theme.
 This can be over-ridden by user profiles.
-Default theme is `vier` at the moment.
+Default theme is `frio` at the moment.
 
 You may also want to set a special theme for mobile interfaces.
-Which may or may not be necessary depending of the mobile friendliness of the desktop theme you have chosen.
-The `vier` theme for instance is mobile friendly.
+It may or may not be necessary depending of the mobile friendliness of the desktop theme you have chosen.
 
 ### Registration
 
