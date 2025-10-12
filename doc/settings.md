@@ -423,5 +423,5 @@ Say you have a subdirectory for tests and put Friendica into a further subdirect
 
 ## Other exceptions
 
-Furthermore there are some experimental settings, you can read-up in the [Config values that can only be set in config/local.config.php](help/Config) section of the documentation.
+Furthermore there are some experimental settings, you can read-up in the [Config values that can only be set in config/local.config.php](help/config) section of the documentation.
 

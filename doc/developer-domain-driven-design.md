@@ -2,7 +2,7 @@ Domain-Driven-Design
 ==============
 
 * [Home](help)
-  * [Developer Intro](help/Developers-Intro)
+  * [Developer Intro](help/developers-intro)
 
 Friendica uses class structures inspired by Domain-Driven-Design programming patterns.
 This page is meant to explain what it means in practical terms for Friendica development.
@@ -85,7 +85,7 @@ class Model
     {
         $this->dba = $dba;
     }
-    
+
     function save()
     {
         return $this->dba->update('table', get_object_vars($this), ['id' => $this->id]);
@@ -136,7 +136,7 @@ class Factory
 
     public function create()
     {
-        return new Model($this->dba);    
+        return new Model($this->dba);
     }
 }
 
@@ -170,7 +170,7 @@ class Model
     {
         $this->dba = $dba;
     }
-    
+
     function save()
     {
         return $this->dba->update('table', get_object_vars($this), ['id' => $this->id]);
@@ -191,7 +191,7 @@ class Factory
 
     public function create()
     {
-        return new Model($this->dba);    
+        return new Model($this->dba);
     }
 }
 
@@ -223,7 +223,7 @@ class Repository extends Factory
 
     public function create()
     {
-        return new Model($this->dba);    
+        return new Model($this->dba);
     }
 
     public function save(Model $model)

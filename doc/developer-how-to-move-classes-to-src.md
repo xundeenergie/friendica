@@ -2,9 +2,9 @@ How To Move Classes to `src`
 ==============
 
 * [Home](help)
-  * [Developer Intro](help/Developers-Intro)
+  * [Developer Intro](help/developers-intro)
 
-Friendica uses [Composer](help/Composer) to manage autoloading.
+Friendica uses [Composer](help/composer) to manage autoloading.
 This means that all the PHP class files moved to the `src` folder will be [automatically included](help/autoloader) when the class it defines is first used in the flow.
 This is an improvement over the current `require` usage since files will be included on an actual usage basis instead of the presence of a `require` call.
 
@@ -105,4 +105,4 @@ Most of the time it's used for debugging purposes but there can be instances whe
 ## Related
 
 * [Class autoloading](help/autoloader)
-* [Using Composer](help/Composer)
+* [Using Composer](help/composer)

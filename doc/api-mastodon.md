@@ -11,7 +11,7 @@ Authentication is the same as described in [Using the APIs](help/api#Authenticat
 
 ## Clients
 
-Please find a list of supported apps at [FAQ](help/FAQ#clients).
+Please find a list of supported apps at [FAQ](help/faq#clients).
 
 ## Entities
 

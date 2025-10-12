@@ -1,7 +1,7 @@
 Friendica BBCode tags reference
 ========================
 
-* [Creating posts](help/Text_editor)
+* [Creating posts](help/text-editor)
 
 ## Inline
 

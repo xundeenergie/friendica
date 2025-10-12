@@ -33,7 +33,7 @@ The Big Empty Textarea is where you write your new post.
 You can simply enter your text there and click the "Share" button, and your new post will be public on your profile page and shared to your contact.
 
 If plain text is not so exciting to you, Friendica understands BBCode to spice up your posts: bold, italic, images, links, lists..
-See [BBCode tags reference](help/BBCode) page to see all what you can do.
+See [BBCode tags reference](help/bbcode) page to see all what you can do.
 
 The icons under the text area are there to help you to write posts quickly, but vary depending on the theme:
 
@@ -70,7 +70,7 @@ These icons can change depending on the theme. Some examples:
     <td>&nbsp;</td>
 </tr>
 </table>
-<i><b>*</b> how to [upload](help/FAQ#upload) files</i>
+<i><b>*</b> how to [upload](help/faq#upload) files</i>
 <p style="clear:both;">&nbsp;</p>
 
 **<img src="doc/img/lock.png" width="32" height="32" alt="lock icon"  style="vertical-align:middle;"> The Lock / Permissions**
@@ -95,4 +95,4 @@ Click again on "show" or "don't show" to switch it off.
 
 You can search for contacts or circles with the search box.
 
-See also [Circles and Privacy](help/Circles-and-Privacy)
+See also [Circles and Privacy](help/circles-and-privacy)

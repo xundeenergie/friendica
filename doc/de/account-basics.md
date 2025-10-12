@@ -75,7 +75,7 @@ Bitte prüfe den Posteingang (inkl. dem Spam-Ordner).
 Gib auf der "Login"-Seite die Informationen ein, die Du mit der oben genannten Email erhalten hast.
 Du kannst entweder Deinen Spitznamen oder die Email-Adresse als Login-Namen nutzen.
 
-Wenn Du Deinen Account nutzt, um unterschiedliche '[Seiten](help/Pages)' zu verwalten, die die gleiche Email-Adresse verwenden, dann nutze bitte den Spitznamen des Accounts, der verwaltet werden soll.
+Wenn Du Deinen Account nutzt, um unterschiedliche '[Seiten](help/pages)' zu verwalten, die die gleiche Email-Adresse verwenden, dann nutze bitte den Spitznamen des Accounts, der verwaltet werden soll.
 
 *Wenn* Dein Account OpenID nutzt, dann kannst Du Deine OpenID-Adresse als Login-Name nutzen und das Passwort-Feld frei lassen.
 Du wirst zu Deinem OpenID-Anbieter weitergeleitet, wo Du Deine Anmeldung abschließt.
@@ -109,9 +109,9 @@ Ein ['Tipp für neue Mitglieder'](newmember)-Link zeigt sich in den ersten beide
 
 ## Schau Dir ebenfalls folgende Seiten an
 
-* [Circles und Privatssphäre](help/Circles-and-Privacy)
+* [Circles und Privatssphäre](help/circles-and-privacy)
 
-* [Account löschen](help/Remove-Account)
+* [Account löschen](help/remove-account)
 
 ### Der eigene Friendica-Knoten
 Wenn Du Deinen eigenen Friendica-Knoten auf einem Server aufsetzen willst, kannst Du das ebenfalls machen.

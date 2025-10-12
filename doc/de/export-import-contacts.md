@@ -2,7 +2,7 @@
 
 * [Home](help)
 
-Zusätzlich zum [Umziehen des Accounts](help/Move-Account) kannst du die Liste der von dir gefolgten Kontakte exportieren und importieren.
+Zusätzlich zum [Umziehen des Accounts](help/move-account) kannst du die Liste der von dir gefolgten Kontakte exportieren und importieren.
 Die exportierte Liste wird als CSV Datei in einem zu anderen Plattformen, z.B. Mastodon, Misskey oder Pleroma, kompatiblen Format gespeichert.
 
 ## Export der gefolgten Kontakte

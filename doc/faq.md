@@ -3,16 +3,16 @@ Frequently Asked Questions - FAQ
 
 * [Home](help)
 
-* **[Where I can find help?](help/FAQ#help)**
-* **[Why do I get warnings about certificates?](help/FAQ#ssl)**
-* **[How can I upload images, files, links, videos and sound files to posts?](help/FAQ#upload)**
-* **[Is it possible to have different avatars per profile?](help/FAQ#avatars)**
-* **[How can I view Friendica in a certain language?](help/FAQ#language)**
-* **[How do blocked, ignored, archived and hidden contacts behave?](help/FAQ#contacts)**
-* **[What happens when an account is removed? Is it truly deleted?](help/FAQ#removed)**
-* **[Can I subscribe to a hashtag?](help/FAQ#hashtag)**
-* **[How to create an RSS feed of the stream?](help/FAQ#rss)**
-* **[What friendica clients can I use?](help/FAQ#clients)**
+* **[Where I can find help?](help/faq#help)**
+* **[Why do I get warnings about certificates?](help/faq#ssl)**
+* **[How can I upload images, files, links, videos and sound files to posts?](help/faq#upload)**
+* **[Is it possible to have different avatars per profile?](help/faq#avatars)**
+* **[How can I view Friendica in a certain language?](help/faq#language)**
+* **[How do blocked, ignored, archived and hidden contacts behave?](help/faq#contacts)**
+* **[What happens when an account is removed? Is it truly deleted?](help/faq#removed)**
+* **[Can I subscribe to a hashtag?](help/faq#hashtag)**
+* **[How to create an RSS feed of the stream?](help/faq#rss)**
+* **[What friendica clients can I use?](help/faq#clients)**
 
 
 <a name="help"></a>
@@ -44,12 +44,12 @@ These warnings can have three reasons:
 2. The server has a self-signed certificate (not recommended).
 3. The certificate is expired.
 
-We recommend to talk to the admin(s) of the affected friendica server. (Admins, please see the respective section of the [admin manual](help/SSL).)
+We recommend to talk to the admin(s) of the affected friendica server. (Admins, please see the respective section of the [admin manual](help/ssl).)
 
 <a name="upload"></a>
 ### How can I upload images, files, links, videos and sound files to posts?
 
-You can upload images from your computer using the [editor](help/Text_editor).
+You can upload images from your computer using the [editor](help/text-editor).
 An overview of all uploaded images is listed at *yourpage.com/profile/profilename/photos*.
 On that page, you can also upload images directly and choose if your contacts will receive a message about this upload.
 
@@ -104,7 +104,7 @@ When a certain language is forced, the language remains until session is closed.
 ### How do blocked, ignored, archived and hidden contacts behave?
 
 These are various categories of contacts that are restricted in some way.
-Many of these types are related to [Safety](help/Safety).
+Many of these types are related to [Safety](help/safety).
 
 ##### Blocked
 
@@ -174,7 +174,7 @@ Example: Friendica Support
 <a name="clients"></a>
 ### What friendica clients can I use?
 
-Friendica supports [Mastodon API](help/API-Mastodon) and [Twitter API | gnusocial](help/api).
+Friendica supports [Mastodon API](help/api-mastodon) and [Twitter API | gnusocial](help/api).
 This means you can use some of the Mastodon and Twitter clients for Friendica.
 The available features are client specific and may differ.
 Clients dedicated to Friendica are marked in **bold**.

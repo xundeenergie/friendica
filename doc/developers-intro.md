@@ -41,7 +41,7 @@ If you have seen Friendica you probably have ideas to improve it, haven't you?
 
 ## Programming
 
-Friendica uses an implementation of [Domain-Driven-Design](help/Developer-Domain-Driven-Design), please make sure to check out the provided links for hints at the expected code architecture.
+Friendica uses an implementation of [Domain-Driven-Design](help/developer-domain-driven-design), please make sure to check out the provided links for hints at the expected code architecture.
 
 ### Composer
 
@@ -67,8 +67,8 @@ If you want to have git automatically update the dependencies with composer, you
 just place it into `.git/hooks/post-merge` and make it executable.
 
 * [Class autoloading](help/autoloader)
-* [Using Composer](help/Composer)
-* [How To Move Classes to `src`](help/Developer-How-To-Move-Classes-to-src)
+* [Using Composer](help/composer)
+* [How To Move Classes to `src`](help/developer-how-to-move-classes-to-src)
 
 ### Coding standards
 

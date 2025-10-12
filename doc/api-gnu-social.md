@@ -7,11 +7,11 @@
 
 Friendica provides the following endpoints defined in [the official GNU Social Twitter-like API reference](https://gnusocial.net/doc/twitterapi).
 
-Authentication is the same as described in [Using the APIs](help/api#Authentication).
+Authentication is the same as described in [Using the APIs](help/api#authentication).
 
 ## Entities
 
-These endpoints use the [Friendica API entities](help/API-Entities).
+These endpoints use the [Friendica API entities](help/api-entities).
 
 ## Implemented endpoints
 

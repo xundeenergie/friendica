@@ -3,11 +3,11 @@ Häufig gestellte Fragen (Admin) - FAQ
 
 * [Zur Startseite der Hilfe](help)
 
-* **[Kann ich mehrere Domains mit den selben Dateien aufsetzen?](help/FAQ-admin#multiple)**
-* **[Wo kann ich den Quellcode von Friendica, Addons und Themes finden?](help/FAQ-admin#sources)**
-* **[Ich habe meine E-Mail Adresse geändern und jetzt ist das Admin Panel verschwunden?](help/FAQ-admin#adminaccount1)**
-* **[Kann es mehr als einen Admin auf einer Friendica Instanz geben?](help/FAQ-admin#adminaccount2)**
-* **[Die Datenbank Struktur schein nicht aktuell zu sein. Was kann ich tun?](help/FAQ-admin#dbupdate)**
+* **[Kann ich mehrere Domains mit den selben Dateien aufsetzen?](help/faq-admin#multiple)**
+* **[Wo kann ich den Quellcode von Friendica, Addons und Themes finden?](help/faq-admin#sources)**
+* **[Ich habe meine E-Mail Adresse geändern und jetzt ist das Admin Panel verschwunden?](help/faq-admin#adminaccount1)**
+* **[Kann es mehr als einen Admin auf einer Friendica Instanz geben?](help/faq-admin#adminaccount2)**
+* **[Die Datenbank Struktur schein nicht aktuell zu sein. Was kann ich tun?](help/faq-admin#dbupdate)**
 
 
 <a name="multiple"></a>

@@ -7,17 +7,17 @@
 
 Friendica provides the following specific endpoints.
 
-Authentication is the same as described in [Using the APIs](help/api#Authentication).
+Authentication is the same as described in [Using the APIs](help/api#authentication).
 
 ## Entities
 
-These endpoints uses the [Friendica API entities](help/API-Entities).
+These endpoints uses the [Friendica API entities](help/api-entities).
 
 ## Endpoints
 
 ### GET api/friendica/events
 
-Returns a list of [Event](help/API-Entities#Event) entities for the current logged in user.
+Returns a list of [Event](help/api-entities#event) entities for the current logged in user.
 
 #### Parameters
 
@@ -52,7 +52,7 @@ Delete event from calendar (not the message)
 
 ### GET api/externalprofile/show
 
-Returns a [Contact](help/API-Entities#Contact) entity for the provided profile URL.
+Returns a [Contact](help/api-entities#contact) entity for the provided profile URL.
 
 #### Parameters
 
@@ -60,7 +60,7 @@ Returns a [Contact](help/API-Entities#Contact) entity for the provided profile U
 
 ### GET api/statuses/public_timeline
 
-Returns a list of public [Items](help/API-Entities#Item) posted on this node.
+Returns a list of public [Items](help/api-entities#item) posted on this node.
 Equivalent of the local community page.
 
 #### Parameters
@@ -79,7 +79,7 @@ Equivalent of the local community page.
 
 ### GET api/statuses/networkpublic_timeline
 
-Returns a list of public [Items](help/API-Entities#Item) this node is aware of.
+Returns a list of public [Items](help/api-entities#item) this node is aware of.
 Equivalent of the global community page.
 
 #### Parameters
@@ -206,7 +206,7 @@ Deprecated Twitter received direct message list endpoint.
 
 ### GET api/direct_messages/all
 
-Returns all [Private Messages](help/API-Entities#Private+message).
+Returns all [Private Messages](help/api-entities#private+message).
 
 #### Parameters
 
@@ -219,7 +219,7 @@ Returns all [Private Messages](help/API-Entities#Private+message).
 
 ### GET api/direct_messages/conversation
 
-Returns all replies of a single private message conversation. Returns [Private Messages](help/API-Entities#Private+message)
+Returns all replies of a single private message conversation. Returns [Private Messages](help/api-entities#private+message)
 
 #### Parameters
 
@@ -233,7 +233,7 @@ Returns all replies of a single private message conversation. Returns [Private M
 
 ### GET api/direct_messages/sent
 
-Deprecated Twitter sent direct message list endpoint. Returns [Private Messages](help/API-Entities#Private+message).
+Deprecated Twitter sent direct message list endpoint. Returns [Private Messages](help/api-entities#private+message).
 
 #### Parameters
 
@@ -300,7 +300,7 @@ On error:
 
 ### GET api/friendica/direct_messages_search (GET; AUTH)
 
-Returns [Private Messages](help/API-Entities#Private+message) matching the provided search string.
+Returns [Private Messages](help/api-entities#private+message) matching the provided search string.
 
 #### Parameters
 
@@ -339,7 +339,7 @@ Array of:
 
 * `name`: name of the circle
 * `gid`: id of the circle
-* `user`: array of [Contacts](help/API-Entities#Contact)
+* `user`: array of [Contacts](help/api-entities#contact)
 
 ### POST api/friendica/circle_create
 
@@ -357,7 +357,7 @@ JSON data as Array like the result of [GET api/friendica/circle_show](#GET+api%2
 
 * `gid`
 * `name`
-* List of [Contacts](help/API-Entities#Contact)
+* List of [Contacts](help/api-entities#contact)
 
 #### Return values
 
@@ -386,7 +386,7 @@ JSON data as array like the result of [GET api/friendica/circle_show](#GET+api%2
 
 * `gid`
 * `name`
-* List of [Contacts](help/API-Entities#Contact)
+* List of [Contacts](help/api-entities#contact)
 
 #### Return values
 
@@ -423,7 +423,7 @@ Array of:
 
 ### GET api/friendica/notifications
 
-Return last 50 [Notifications](help/API-Entities#Notification) for the current user, ordered by date with unseen item on top.
+Return last 50 [Notifications](help/api-entities#notification) for the current user, ordered by date with unseen item on top.
 
 #### Parameters
 
@@ -439,7 +439,7 @@ Set notification as seen.
 
 #### Return values
 
-If the note is linked to an item, returns an [Item](help/API-Entities#Item).
+If the note is linked to an item, returns an [Item](help/api-entities#item).
 
 Otherwise, a success status is returned:
 
@@ -449,7 +449,7 @@ Otherwise, a success status is returned:
 
 ### GET api/friendica/photo
 
-Returns a [Photo](help/API-Entities#Photo).
+Returns a [Photo](help/api-entities#photo).
 
 #### Parameters
 
@@ -523,7 +523,7 @@ xml:
 
 ### GET api/friendica/photos/list
 
-Returns the API user's [Photo List Items](help/API-Entities#Photo+List+Item).
+Returns the API user's [Photo List Items](help/api-entities#photo+list+item).
 
 #### Return values
 
@@ -772,7 +772,7 @@ On success:
 
 ### GET api/friendica/profile/show
 
-Returns the [Profile](help/API-Entities#Profile) data of the authenticated user.
+Returns the [Profile](help/api-entities#profile) data of the authenticated user.
 
 #### Return values
 

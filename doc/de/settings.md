@@ -415,4 +415,4 @@ Mal angenommen, du hast ein Unterverzeichnis tests und willst Friendica in ein w
 ## Weitere Ausnahmen
 
 Es gibt noch einige experimentelle Einstellungen, die nur in der ``config/local.config.php`` Datei konfiguriert werden können.
-Im [Konfigurationswerte, die nur in der config/local.config.php gesetzt werden können (EN)](help/Config) Artikel kannst du mehr darüber erfahren.
+Im [Konfigurationswerte, die nur in der config/local.config.php gesetzt werden können (EN)](help/config) Artikel kannst du mehr darüber erfahren.

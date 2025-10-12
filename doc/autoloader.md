@@ -2,13 +2,13 @@ Autoloader with Composer
 ==========
 
 * [Home](help)
-  * [Developer Intro](help/Developers-Intro)
+  * [Developer Intro](help/developers-intro)
 
 Friendica uses [Composer](https://getcomposer.org) to manage dependencies libraries and the class autoloader both for libraries and namespaced Friendica classes.
 
 It's a command-line tool that downloads required libraries into the `vendor` folder and makes any namespaced class in `src` available through the whole application.
 
-* [Using Composer](help/Composer)
+* [Using Composer](help/composer)
 
 ## A quick introduction to class autoloading
 
@@ -198,5 +198,5 @@ So you can think of namespaces as folders in a Unix file system, with global sco
 
 ## Related
 
-* [Using Composer](help/Composer)
-* [How To Move Classes to `src`](help/Developer-How-To-Move-Classes-to-src)
+* [Using Composer](help/composer)
+* [How To Move Classes to `src`](help/developer-how-to-move-classes-to-src)

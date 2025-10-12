@@ -3,16 +3,16 @@ Häufig gestellte Fragen - FAQ
 
 * [Zur Startseite der Hilfe](help)
 
-* **[Wo finde ich Hilfe?](help/FAQ#help)**
-* **[Warum erhalte ich Warnungen über fehlende Zertifikate?](help/FAQ#ssl)**
-* **[Wie kann ich Bilder, Dateien, Links, Video und Audio in Beiträge einfügen?](help/FAQ#upload)**
-* **[Ist es möglich, bei mehreren Profilen verschiedene Avatare (Nutzerbilder) zu haben?](help/FAQ#avatars)**
-* **[Wie kann ich Friendica in einer bestimmten Sprache ansehen?](help/FAQ#language)**
-* **[Was ist der Unterschied zwischen blockierten|ignorierten|archivierten|versteckten Kontakten?](help/FAQ#contacts)**
-* **[Was passiert, wenn ein Account gelöscht ist? Ist dieser richtig gelöscht?](help/FAQ#removed)**
-* **[Kann ich einem Hashtag folgen?](help/FAQ#hashtag)**
-* **[Wie kann ich einen RSS-Feed meiner Netzwerkseite (Stream) erstellen?](help/FAQ#rss)**
-* **[Gibt es Clients für Friendica?](help/FAQ#clients)**
+* **[Wo finde ich Hilfe?](help/faq#help)**
+* **[Warum erhalte ich Warnungen über fehlende Zertifikate?](help/faq#ssl)**
+* **[Wie kann ich Bilder, Dateien, Links, Video und Audio in Beiträge einfügen?](help/faq#upload)**
+* **[Ist es möglich, bei mehreren Profilen verschiedene Avatare (Nutzerbilder) zu haben?](help/faq#avatars)**
+* **[Wie kann ich Friendica in einer bestimmten Sprache ansehen?](help/faq#language)**
+* **[Was ist der Unterschied zwischen blockierten|ignorierten|archivierten|versteckten Kontakten?](help/faq#contacts)**
+* **[Was passiert, wenn ein Account gelöscht ist? Ist dieser richtig gelöscht?](help/faq#removed)**
+* **[Kann ich einem Hashtag folgen?](help/faq#hashtag)**
+* **[Wie kann ich einen RSS-Feed meiner Netzwerkseite (Stream) erstellen?](help/faq#rss)**
+* **[Gibt es Clients für Friendica?](help/faq#clients)**
 
 
 <a name="help"></a>
@@ -50,7 +50,7 @@ Diese Warnungen können drei Gründe haben:
 *(SSL (Secure Socket Layer) ist eine Technologie, die Daten auf ihrem Weg zwischen zwei Computern verschlüsselt.)*
 
 Wenn Du noch kein SSL-Zertifikat hast, dann gibt es drei Wege, eines zu erhalten: kauf Dir eines, hole Dir ein kostenloses (z.B. bei StartSSL, WoSign, hoffentlich bald auch letsencrypt) oder kreiere Dein eigenes (nicht empfohlen).
-[Weitere Informationen über die Einrichtung von SSL und warum es schlecht ist, selbst-signierte Zertifikate zu nutzen, findest Du hier.](help/SSL)
+[Weitere Informationen über die Einrichtung von SSL und warum es schlecht ist, selbst-signierte Zertifikate zu nutzen, findest Du hier.](help/ssl)
 
 Sei Dir bewusst, dass Browser-Warnungen über Sicherheitslücken etwas sind, wodurch neue Nutzer schnell das Vertrauen in das gesamte Friendica-Projekt verlieren können.
 Aus diesem Grund wird Friendica Red nur SSL-Zertifikate eines anerkannten Anbieters (CA, certificate authority) akzeptieren und nicht zu Seiten verbinden, die kein SSL nutzen.
@@ -68,7 +68,7 @@ Andere erlauben nur kostenpflichtige Zertifikate als eigenes Angebot bzw. von an
 <a name="upload"></a>
 ### Wie kann ich Bilder, Dateien, Links, Video und Audio in Beiträge einfügen?
 
-Bilder können direkt im [Beitragseditor](help/Text_editor) vom Computer hochgeladen werden.
+Bilder können direkt im [Beitragseditor](help/text-editor) vom Computer hochgeladen werden.
 Eine Übersicht aller Bilder, die auf Deinem Server liegen, findest Du unter <i>deineSeite.de/profile/profilname/photos</i>.
 Dort kannst Du auch direkt Bilder hochladen und festlegen, ob Deine Kontakte eine Nachricht über das neue Bild bekommen.
 
@@ -180,7 +180,7 @@ Beispiel: Friendica Support
 <a name="clients">
 ### Gibt es Clients für Friendica?
 
-Friendica unterstützt [Mastodon API](help/API-Mastodon) und [Twitter API | gnusocial](help/api).
+Friendica unterstützt [Mastodon API](help/api-mastodon) und [Twitter API | gnusocial](help/api).
 Das bedeutet, du kannst einge der Mastodon und Twitter Clients für Friendica verwenden.
 Die verfügbaren Features sind Abhängig vom Client, so dass diese teils unterschiedlich sein können.
 

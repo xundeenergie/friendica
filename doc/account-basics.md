@@ -97,13 +97,13 @@ This might be necessary, e.g. if your node suffers a severe hardware problem and
 See Also
 ---
 
-* [Profiles](help/Profiles)
+* [Profiles](help/profiles)
 
-* [Global Directory](help/Making-Friends#The+Directories)
+* [Global Directory](help/making-friends#The+Directories)
 
-* [Circles and Privacy](help/Circles-and-Privacy)
+* [Circles and Privacy](help/circles-and-privacy)
 
-* [Move Account](help/Move-Account)
+* [Move Account](help/move-account)
 
-* [Remove Account](help/Remove-Account)
+* [Remove Account](help/remove-account)
 

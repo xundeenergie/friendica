@@ -2,7 +2,7 @@ Using Composer
 ==============
 
 * [Home](help)
-  * [Developer Intro](help/Developers-Intro)
+  * [Developer Intro](help/developers-intro)
 
 Friendica uses [Composer](https://getcomposer.org) to manage dependencies libraries and the class autoloader both for libraries and namespaced Friendica classes.
 
@@ -55,7 +55,7 @@ If you don't need to use any third-party library, then you don't need to use Com
 
 #### Adding a third-party library to Friendica
 
-Does your shiny new [Addon](help/Addons) need to rely on a third-party library not required by Friendica yet?
+Does your shiny new [Addon](help/addons) need to rely on a third-party library not required by Friendica yet?
 First of all, this library should be available on [Packagist](https://packagist.org) so that Composer knows how to fetch it directly just by mentioning its name in `composer.json`.
 
 This file is the configuration of Friendica for Composer. It lists details about the Friendica project, but also a list of required dependencies and their target version.
@@ -117,4 +117,4 @@ $> COMPOSER_HOME=/var/tmp/composer sudo -u [web user] bin/composer.phar [mode]
 ## Related
 
 * [Class autoloading](help/autoloader)
-* [How To Move Classes to `src`](help/Developer-How-To-Move-Classes-to-src)
+* [How To Move Classes to `src`](help/developer-how-to-move-classes-to-src)

@@ -6,10 +6,10 @@
 
 Friendica offers multiple API endpoints to interface with third-party applications:
 
-- [Twitter](help/API-Twitter)
-- [Mastodon](help/API-Mastodon)
-- [Friendica-specific](help/API-Friendica)
-- [GNU Social](help/API-GNU-Social)
+- [Twitter](help/api-twitter)
+- [Mastodon](help/api-mastodon)
+- [Friendica-specific](help/api-friendica)
+- [GNU Social](help/api-gnu-social)
 
 ## Usage
 

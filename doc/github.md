@@ -72,5 +72,5 @@ There is a console command called *typo* for this.
 
 	$> php bin/console.php typo
 
-Check out how to work with [our Vagrant](help/Vagrant) to save a lot of setup time!
+Check out how to work with [our Vagrant](help/vagrant) to save a lot of setup time!
 

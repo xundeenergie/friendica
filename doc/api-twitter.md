@@ -7,11 +7,11 @@
 
 Friendica provides the following endpoints defined in the [official Twitter API reference](https://developer.twitter.com/en/docs/api-reference-index).
 
-Authentication is the same as described in [Using the APIs](help/api#Authentication).
+Authentication is the same as described in [Using the APIs](help/api#authentication).
 
 ## Entities
 
-These endpoints use the [Friendica API entities](help/API-Entities).
+These endpoints use the [Friendica API entities](help/api-entities).
 
 ## Different behaviour
 
@@ -27,7 +27,7 @@ These endpoints use the [Friendica API entities](help/API-Entities).
 
 * `cursor`
 * `trim_user`
-* `contributor_details` 
+* `contributor_details`
 * `place_id`
 * `display_coordinates`
 * `include_rts`: To-Do
@@ -57,7 +57,7 @@ These endpoints use the [Friendica API entities](help/API-Entities).
         - `skip_status`
 - [POST api/account/update_profile_image](https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/post-account-update_profile_image)
     - Additional parameter:
-        - `profile_id` (optional):  Numerical id of the profile for which the image should be used, default is changing the default profile. 
+        - `profile_id` (optional):  Numerical id of the profile for which the image should be used, default is changing the default profile.
 
 
 - [POST api/statuses/update](https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update)
@@ -163,7 +163,7 @@ These endpoints use the [Friendica API entities](help/API-Entities).
     - Unsupported parameter:
         - `skip_status`: No status is returned even if it isn't set to true.
     - Caveats:
-        - `cursor` trumps `since_id` trumps `max_id` if any combination is provided. 
+        - `cursor` trumps `since_id` trumps `max_id` if any combination is provided.
         - `user_id` must be the ID of a contact associated with a local user account.
         - `screen_name` must be associated with a local user account.
         - `screen_name` trumps `user_id` if both are provided (undocumented Twitter behavior).
@@ -243,8 +243,8 @@ These endpoints use the [Friendica API entities](help/API-Entities).
 
 
 - [POST statuses/filter](https://developer.twitter.com/en/docs/tweets/filter-realtime/api-reference/post-statuses-filter)
-  
-  
+
+
 - [GET statuses/mentions_timeline](https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-mentions_timeline)
 
 
@@ -258,10 +258,10 @@ These endpoints use the [Friendica API entities](help/API-Entities).
 
 
 - [GET statuses/sample](https://developer.twitter.com/en/docs/tweets/sample-realtime/api-reference/get-statuses-sample)
-  
+
 
 - [GET compliance/firehose](https://developer.twitter.com/en/docs/tweets/compliance/api-reference/compliance-firehose)
- 
+
 
 - [DELETE custom_profiles/destroy.json](https://developer.twitter.com/en/docs/direct-messages/custom-profiles/api-reference/delete-profile)
 - [GET custom_profiles/:id](https://developer.twitter.com/en/docs/direct-messages/custom-profiles/api-reference/get-profile)
@@ -275,8 +275,8 @@ These endpoints use the [Friendica API entities](help/API-Entities).
 - [POST direct_messages/events/new (message_create)](https://developer.twitter.com/en/docs/direct-messages/sending-and-receiving/api-reference/new-event)
 - [POST direct_messages/indicate_typing](https://developer.twitter.com/en/docs/direct-messages/typing-indicator-and-read-receipts/api-reference/new-typing-indicator)
 - [POST direct_messages/mark_read](https://developer.twitter.com/en/docs/direct-messages/typing-indicator-and-read-receipts/api-reference/new-read-receipt)
-  
-  
+
+
 - [DELETE direct_messages/welcome_messages/destroy](https://developer.twitter.com/en/docs/direct-messages/welcome-messages/api-reference/delete-welcome-message)
 - [DELETE direct_messages/welcome_messages/rules/destroy](https://developer.twitter.com/en/docs/direct-messages/welcome-messages/api-reference/delete-welcome-message-rule)
 - [PUT direct_messages/welcome_messages/update](https://developer.twitter.com/en/docs/direct-messages/welcome-messages/api-reference/update-welcome-message)
@@ -299,8 +299,8 @@ These endpoints use the [Friendica API entities](help/API-Entities).
 - [GET trends/available](https://developer.twitter.com/en/docs/trends/locations-with-trending-topics/api-reference/get-trends-available)
 - [GET trends/closest](https://developer.twitter.com/en/docs/trends/locations-with-trending-topics/api-reference/get-trends-closest)
 - [GET trends/place](https://developer.twitter.com/en/docs/trends/trends-for-location/api-reference/get-trends-place)
- 
- 
+
+
 - [GET geo/id/:place_id](https://developer.twitter.com/en/docs/geo/place-information/api-reference/get-geo-id-place_id)
 - [GET geo/reverse_geocode](https://developer.twitter.com/en/docs/geo/places-near-location/api-reference/get-geo-reverse_geocode)
 - [GET geo/search](https://developer.twitter.com/en/docs/geo/places-near-location/api-reference/get-geo-search)
