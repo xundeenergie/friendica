@@ -12,7 +12,7 @@ This kind of functionality requires a bit more of the host system than the typic
 Not every PHP/MySQL hosting provider will be able to support Friendica.
 Many will.
 
-But **please** review the [requirements](#requirements) and confirm these with your hosting provider prior to installation.
+But **please** review the requirements below and confirm these with your hosting provider prior to installation.
 
 ## Support
 If you encounter installation issues, please let us know via the [helper](http://forum.friendi.ca/profile/helpers) or the [developer](https://forum.friendi.ca/profile/developers) group or [file an issue](https://github.com/friendica/friendica/issues).
@@ -123,7 +123,7 @@ Then use the following script using the password you just generated:
 
 Friendica needs the permission to create and delete fields and tables in its own database.
 
-Please check the [troubleshooting](#troubleshooting) section if running on MySQL 5.7.17 or newer.
+Please check the Troubleshooting section below if running on MySQL 5.7.17 or newer.
 
 ### Option A: Run the installer
 
