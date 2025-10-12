@@ -303,7 +303,7 @@ This could be achieved by a cronjob.
 ### (RECOMMENDED) Logging & Log Rotation
 
 At this point it is recommended that you set up logging and logrotation.
-To do so please visit [Settings](help/Settings) and search the 'Logs' section for more information.
+To do so please visit [Settings](help/settings) and search the 'Logs' section for more information.
 
 ### (RECOMMENDED) Set up a backup plan
 

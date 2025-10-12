@@ -4,7 +4,7 @@ Neue Freunde finden
 * [Zur Startseite der Hilfe](help)
 
 Hier siehst Du die Kontaktvorschläge.
-Wenn Du Dich mal verirrt hast, kannst Du <a href="help/Quick-Start-makingnewfriends">diesen Link klicken</a> und wieder hierher kommen.
+Wenn Du Dich mal verirrt hast, kannst Du <a href="help/quick-start-making-new-friends">diesen Link klicken</a> und wieder hierher kommen.
 
 Diese Seite funktioniert in etwa wie die Seite für Kontaktvorschläge in Facebook.
 Jeder auf dieser Liste hat zugestimmt, als Kontaktvorschlag zu erscheinen.
@@ -21,7 +21,7 @@ Jetzt, nachdem Du jemanden hinzugefügt hast, weißt Du vielleicht nicht mehr, w
 Klicke einfach auf den Link oben auf dieser Seite und Du gelangst zur Seite mit den Kontaktvorschlägen zurück, um weitere Personen hinzuzufügen.
 
 Du willst nicht einfach Personen hinzufügen, die du nicht kennst?
-Kein Problem - an dieser Stelle kommen wir zu den <a href="help/Quick-Start-groupsandpages">Gruppen und Seiten</a>.
+Kein Problem - an dieser Stelle kommen wir zu den <a href="help/quick-start-groups-and-pages">Gruppen und Seiten</a>.
 
 <iframe src="contact/suggestions" width="950" height="600"></iframe>
 
