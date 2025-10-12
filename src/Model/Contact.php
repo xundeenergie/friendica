@@ -3753,10 +3753,11 @@ class Contact
 	 */
 	public static function canReceivePrivateMessages(array $contact): bool
 	{
-		$protocol = $contact['network'] ?? $contact['protocol'] ?? Protocol::PHANTOM;
-		$self     = $contact['self']    ?? false;
+		$protocol = $contact['network']      ?? $contact['protocol'] ?? Protocol::PHANTOM;
+		$self     = $contact['self']         ?? false;
+		$type     = $contact['contact-type'] ?? Contact::TYPE_UNKNOWN;
 
-		return in_array($protocol, [Protocol::DFRN, Protocol::DIASPORA, Protocol::ACTIVITYPUB]) && !$self;
+		return in_array($protocol, [Protocol::DFRN, Protocol::DIASPORA, Protocol::ACTIVITYPUB]) && !$self && ($type != Contact::TYPE_COMMUNITY);
 	}
 
 	/**

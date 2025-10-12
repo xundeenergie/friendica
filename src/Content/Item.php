@@ -396,14 +396,12 @@ class Item
 
 		$cid       = 0;
 		$pcid      = $item['author-id'];
-		$network   = '';
 		$rel       = 0;
 		$condition = ['uid' => $this->userSession->getLocalUserId(), 'uri-id' => $item['author-uri-id']];
-		$contact   = DBA::selectFirst('contact', ['id', 'network', 'rel'], $condition);
+		$contact   = DBA::selectFirst('contact', ['id', 'network', 'rel', 'contact-type', 'protocol', 'self'], $condition);
 		if (DBA::isResult($contact)) {
-			$cid     = $contact['id'];
-			$network = $contact['network'];
-			$rel     = $contact['rel'];
+			$cid = $contact['id'];
+			$rel = $contact['rel'];
 		}
 
 		if (!empty($pcid)) {
@@ -423,7 +421,7 @@ class Item
 			$contact_url = 'contact/' . $cid;
 			$posts_link  = $contact_url . '/posts';
 
-			if (in_array($network, [Protocol::ACTIVITYPUB, Protocol::DFRN, Protocol::DIASPORA])) {
+			if (Contact::canReceivePrivateMessages($contact)) {
 				$pm_url = 'message/new/' . $cid;
 			}
 		}
