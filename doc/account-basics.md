@@ -99,7 +99,7 @@ See Also
 
 * [Profiles](help/profiles)
 
-* [Global Directory](help/making-friends#The+Directories)
+* [Global Directory](help/making-friends#the+directories)
 
 * [Circles and Privacy](help/circles-and-privacy)
 

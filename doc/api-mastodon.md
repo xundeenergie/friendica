@@ -7,7 +7,7 @@
 
 Friendica provides the following endpoints defined in [the official Mastodon API reference](https://docs.joinmastodon.org/api/).
 
-Authentication is the same as described in [Using the APIs](help/api#Authentication).
+Authentication is the same as described in [Using the APIs](help/api#authentication).
 
 ## Clients
 
