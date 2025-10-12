@@ -207,7 +207,7 @@ class Channels extends BaseSettings
 			'exclude_tags' => ["new_exclude_tags", $this->t("Exclude Tags"), '', $exclude_tags_translation],
 			'min_size'     => ["new_min_size", $this->t("Minimum Size"), '', $this->t('Minimum post size. Leave empty for no minimum size. The size is calculated without links, attached posts, mentions or hashtags.')],
 			'max_size'     => ["new_max_size", $this->t("Maximum Size"), '', $this->t('Maximum post size. Leave empty for no maximum size. The size is calculated without links, attached posts, mentions or hashtags.')],
-			'text_search'  => ["new_text_search", $this->t("Full Text Search"), '', $this->t('Search terms for the body, supports the "boolean mode" operators from MariaDB. See the help for a complete list of operators and additional keywords: %s', '<a href="help/Channels">help/Channels</a>')],
+			'text_search'  => ["new_text_search", $this->t("Full Text Search"), '', $this->t('Search terms for the body, supports the "boolean mode" operators from MariaDB. See the help for a complete list of operators and additional keywords: %s', '<a href="help/channels">help/channels</a>')],
 			'image'        => ['new_image', $this->t("Images"), false, $this->t("Check to display images in the channel.")],
 			'video'        => ["new_video", $this->t("Videos"), false, $this->t("Check to display videos in the channel.")],
 			'audio'        => ["new_audio", $this->t("Audio"), false, $this->t("Check to display audio in the channel.")],
