@@ -1,5 +1,4 @@
-Installing Connectors
-==================================================
+# Installing Connectors
 
 * [Home](help)
 
@@ -8,8 +7,7 @@ Friendica uses add-ons to connect to some networks, such as Tumblr or Bluesky.
 All of these add-ons require an account on the target network.
 In addition, you (or usually the server administrator) will need to obtain an API key to allow authenticated access to your Friendica server.
 
-Site configuration
----
+## Site configuration
 
 Addons need to be installed by the site administrator before they can be used.
 This is done through the site administration panel.
@@ -20,8 +18,7 @@ Other connectors, such as Bluesky, don't require an API key at all.
 
 You can find more information about specific requirements on each addon's settings page, either on the admin page or the user page.
 
-Bluesky Jetstream
----
+## Bluesky Jetstream
 
 To further improve connectivity to Bluesky, Admins can choose to enable 'Jetstream' connectivity.
 Jetstream is a service that connects to the Bluesky firehose.

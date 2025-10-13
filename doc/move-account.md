@@ -1,5 +1,4 @@
-How to move your account between servers
-============
+# How to move your account between servers
 
 * [Home](help)
 
@@ -14,13 +13,12 @@ How to move your account between servers
 * Load your saved account file and click "Import".
 * After the move, the account on the old server will not work reliably anymore, and should be not used.
 
+## Friendica contacts
 
-Friendica contacts
----
 Friendica will recreate your account on the new server, with your contacts and circles.
 A message is sent to Friendica contacts, to inform them about your move:
 If your contacts are running on an updated server, your details on their side will be automatically updated.
 
-Diaspora contacts
----
+## Diaspora contacts
+
 Newer Diaspora servers are able to process "account migration" messages.

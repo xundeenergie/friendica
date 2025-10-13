@@ -1,10 +1,8 @@
-Keyboard shortcuts in Friendica
-=======================
+# Keyboard shortcuts in Friendica
 
 * [Home](help)
 
-General
--------
+## General
 
 * j: Scroll to next thread
 * k: Scroll to previous thread

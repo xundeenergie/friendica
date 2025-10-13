@@ -1,11 +1,10 @@
-Hilfe
-=====
+# Hilfe
 
 **Dokumentation für Benutzer**
 
 * Allgemeine Funktionen - Erste Schritte
 	* [Account - Basics](help/account-basics)
-	* [Schnellstart für neue Benutzer](help/quick-start-guide)
+	* [Schnellstart für neue Benutzer](help/quick-start/guide)
 	* [Beiträge erstellen](help/text-editor)
 	* [Referenz der BBCode Elemente](help/bbcode)
 	* [Beiträge kommentieren, einordnen und löschen](help/text-comment)

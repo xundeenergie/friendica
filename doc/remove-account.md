@@ -1,5 +1,4 @@
-Remove Account
-==============
+# Remove Account
 
 * [Home](help)
 

@@ -1,11 +1,10 @@
-Help
-====
+# Help
 
-**User Manual**
+## User Manual
 
 * General functions - first steps
 	* [Account Basics](help/account-basics)
-	* [New User Quick Start](help/quick-qtart-guide)
+	* [New User Quick Start](help/quick-start/guide)
 	* [Creating posts](help/text-editor)
 	* [BBCode tag reference](help/bbcode)
 	* [Comment, sort and delete posts](help/text-comment)
@@ -26,7 +25,7 @@ Help
 	* [Delete your account](help/remove-account)
 	* [Frequently asked questions (FAQ)](help/faq)
 
-**Admin Manual**
+## Admin Manual
 
 * [Install](help/install)
 * [Update](help/update)
@@ -40,7 +39,7 @@ Help
 * [Administration Tools](help/tools)
 * [Admin FAQ](help/faq-admin)
 
-**Developer Manual**
+## Developer Manual
 
 * [Get started](help/developers-intro)
 * Set up development environment
@@ -65,7 +64,7 @@ Help
 	* [Database schema documentation](help/database)
 	* [Class Autoloading](help/autoloader)
 
-**Links**
+## Links
 
 * Website: [https://friendi.ca](https://friendi.ca)
 * Help Group: [@helpers@forum.friendi.ca](https://forum.friendi.ca/~helpers)
@@ -73,9 +72,7 @@ Help
 * IRC: [https://web.libera.chat/?channels=#friendica](https://web.libera.chat/?channels=#friendica)
 * Matrix: [https://matrix.to/#/#friendi.ca:matrix.org](https://matrix.to/#/#friendi.ca:matrix.org)
 * Mailing List: [https://mailman.friendi.ca/mailman/listinfo/support-friendi.ca](http://mailman.friendi.ca/mailman/listinfo/support-friendi.ca)
-
-
-**About**
+## About
 
 * [Server Information](friendica)
 * [Terms of Service](tos)

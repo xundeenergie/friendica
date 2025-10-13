@@ -1,5 +1,4 @@
-Friendica mit SSL nutzen
-=====================================
+# Friendica mit SSL nutzen
 
 * [Zur Startseite der Hilfe](help)
 
@@ -47,9 +46,9 @@ Wenn ja, dann lies weiter.
 
 Wenn du einen eigenen Server betreibst und den Nameserver kontrollierst, könnte auch die Initiative "Let's encrypt" interessant für dich werden.
 Sie bietet nicht nur freie SSL Zertifikate sondern auch einen automatisierten Prozess zum Erneuern der Zertifikate.
-Um letsencrypt Zertifikate verwenden zu können, musst du dir einen Client auf deinem Server installieren.
-Eine Anleitung zum offiziellen Client findet du [hier](https://certbot.eff.org/).
-Falls du dir andere Clients anschauen willst, kannst du einen Blick in diese [Liste von alternativen letsencrypt Clients](https://letsencrypt.org/docs/client-options/).
+Um LetsEncrypt Zertifikate verwenden zu können, musst du dir einen Client auf deinem Server installieren.
+Eine Anleitung zum offiziellen Client findest du [hier](https://certbot.eff.org/).
+Falls du dir andere Clients anschauen willst, kannst du einen Blick in diese [Liste von alternativen LetsEncrypt Clients](https://letsencrypt.org/docs/client-options/).
 
 ## Webserver-Einstellungen
 
@@ -62,32 +61,37 @@ Wenn du fertig bist, kannst du auf der Testseite [SSL-Labs](https://www.ssllabs.
 
 ## Friendica Konfigurieren
 
-Wenn du deine Friendica Instanz über https erreichen kannst solltest du ein paar Einstellungen vornehmen um sicher zu stellen, dass deine Nutzer ausschließlich über https zugreifen können.
+Wenn du deine Friendica Instanz über https erreichen kannst solltest du ein paar Einstellungen vornehmen um sicherzustellen, dass deine Nutzer ausschließlich über https zugreifen können.
 
 ### Webserver-Umleitungen
 
 Dies ist der einfachste Weg den Zugriff für die ganze Webseite abzusichern.
-Jedes Mal wenn ein Nutzer Friendica aufruft wird er permanent vom Webserver auf die abgesicherte Seite umgeleitet.
+Jedes Mal, wenn ein Nutzer Friendica aufruft wird er permanent vom Webserver auf die abgesicherte Seite umgeleitet.
 
 Wenn du den Apache Webserver verwendest, aktiviere die Module rewrite und ssl (bei einem Shared-Hosting Prider sollte dies bereits der Fall sein):
 
-        sudo a2enmod rewrite ssl
+```sh
+sudo a2enmod rewrite ssl
+```
 
-und füge die folgenden Zeilen zur .htaccess Datei im Wurzelverzeichnis deiner Friendica Instanz hinzu:
+und füge die folgenden Zeilen zur `.htaccess` Datei im Wurzelverzeichnis deiner Friendica Instanz hinzu:
 
-        RewriteEngine On
-        RewriteCond %{SERVER_PORT} 80
-        RewriteRule ^(.*)$ https://your.friendica.domain/$1 [R=301,L]
+```
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://your.friendica.domain/$1 [R=301,L]
+```
 
 (Dank an [url=https://github.com/AlfredSK]AlfredSK[/url]).
 
 Bei nginx solltest du deinen Server folgendermaßen konfigurieren ([documentation](https://www.nginx.com/blog/creating-nginx-rewrite-rules/)):
-
-        server {
-             listen 80;
-             server_name your.friendica.domain;
-             return 301 https://$server_name$request_uri;
-        }
+```
+server {
+    listen 80;
+    server_name your.friendica.domain;
+    return 301 https://$server_name$request_uri;
+}
+```
 
 ### SSL Einstellungen
 

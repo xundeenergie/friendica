@@ -1,5 +1,4 @@
-Friendica Storage Backend Addon development
-===========================================
+# Friendica Storage Backend Addon development
 
 * [Home](help)
 

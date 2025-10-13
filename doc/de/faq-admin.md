@@ -1,5 +1,4 @@
-Häufig gestellte Fragen (Admin) - FAQ
-==============
+# Häufig gestellte Fragen (Admin) - FAQ
 
 * [Zur Startseite der Hilfe](help)
 
@@ -11,7 +10,7 @@ Häufig gestellte Fragen (Admin) - FAQ
 
 
 <a name="multiple"></a>
-### Kann ich mehrere Domains mit den selben Dateien aufsetzen?
+## Kann ich mehrere Domains mit den selben Dateien aufsetzen?
 
 Ja, das ist möglich.
 Es ist allerdings nicht möglich, eine Datenbank durch zwei Domains zu nutzen.
@@ -19,7 +18,7 @@ Solange Du Deine config/local.config.php allerdings so einrichtest, dass das Sys
 Alle Cache-Aspekte und der Zugriffsschutz können pro Instanz konfiguriert werden.
 
 <a name="sources"></a>
-### Wo kann ich den Quellcode von Friendica, Addons und Themes finden?
+## Wo kann ich den Quellcode von Friendica, Addons und Themes finden?
 
 Du kannst den Friendica-Quellcode [hier](https://github.com/friendica/friendica) finden.
 Dort findest Du immer die aktuellste stabile Version von Friendica.
@@ -30,12 +29,12 @@ Addons findest Du auf [dieser Seite](https://github.com/friendica/friendica-addo
 Wenn Du neue Themen suchst, findest Du sie auf [github.com/bkil/friendica-themes](https://github.com/bkil/friendica-themes).
 
 <a name="adminaccount1"></a>
-### Ich habe meine E-Mail Adresse geändern und jetzt ist das Admin Panel verschwunden?
+## Ich habe meine E-Mail Adresse geändern und jetzt ist das Admin Panel verschwunden?
 
 Bitte aktualisiere deine E-Mail Adresse in der <tt>config/local.config.php</tt> Datei.
 
 <a name="adminaccount2"></a>
-### Kann es mehr als einen Admin auf einer Friendica Instanz geben?
+## Kann es mehr als einen Admin auf einer Friendica Instanz geben?
 
 Ja.
 Du kannst in der <tt>config/local.config.php</tt> Datei mehrere E-Mail Adressen auflisten.
@@ -46,7 +45,7 @@ Die aufgelisteten Adressen werden wie folgt durch Kommas voneinander getrennt:
 ```
 
 <a name="dbupdate"></a>
-### Die Datenbank Struktur schein nicht aktuell zu sein. Was kann ich tun?
+## Die Datenbank Struktur schein nicht aktuell zu sein. Was kann ich tun?
 
 Rufe bitte im Admin Panel den Punkt [DB Updates](/admin/dbsync/) auf und folge dem Link *Datenbank Struktur überprüfen*.
 Damit wird ein Hintergrundprozess gestartet der die Struktur deiner Datenbank überprüft und gegebenenfalls aktualisiert.

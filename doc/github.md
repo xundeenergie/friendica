@@ -1,12 +1,10 @@
-Friendica on GitHub
-===================
+# Friendica on GitHub
 
 * [Home](help)
 
 Here is how you can work on the code with us. If you have any questions please write to the Friendica developers' group.
 
-Introduction to the workflow with our GitHub repository
--------------------------------------------------------
+## Introduction to the workflow with our GitHub repository
 
 1. Install git on the system you will be developing on.
 2. Create your own [GitHub](https://github.com) account.
@@ -17,8 +15,7 @@ Follow the instructions provided here: [http://help.github.com/fork-a-repo/](htt
 6. Commit your changes to your fork.
 Then go to your GitHub page and create a "Pull request" to notify us to merge your work.
 
-Our Git Branches
-----------------
+## Our Git Branches
 
 There are two relevant branches in the main repo on GitHub:
 
@@ -26,8 +23,7 @@ There are two relevant branches in the main repo on GitHub:
 2. develop: This branch contains the latest code.
 This is what you want to work with.
 
-Fast-forwarding
----------------
+## Fast-forwarding
 
 Fast forwarding is enabled by default in git.
 When you merge with fast-forwarding it does not add a new commit to mark when you've performed the merge and how.
@@ -37,8 +33,7 @@ This is done by running "git merge --no-ff".
 [Here](https://stackoverflow.com/questions/5519007/how-do-i-make-git-merges-default-be-no-ff-no-commit) is an explanation on how to configure git to turn off fast-forwarding by default.
 You can find some more background reading [here](http://nvie.com/posts/a-successful-git-branching-model/).
 
-Release branches
-----------------
+## Release branches
 
 A release branch is created when the develop branch contains all features it should have.
 A release branch is used for a few things.
@@ -55,8 +50,7 @@ If you were to merge develop into release-3.4 at this point, features and bug-fi
 This might introduce new bugs, too.
 Which defeats the purpose of the release branch.
 
-Some important reminders
-------------------------
+## Some important reminders
 
 1. Please pull in any changes from the project repository and merge them with your work **before** issuing a pull request.
 We reserve the right to reject any patch which results in a large number of merge conflicts.
@@ -69,8 +63,9 @@ Don't hesitate to ask us in case of doubt.
 
 3. Check your code for typos.
 There is a console command called *typo* for this.
-
-	$> php bin/console.php typo
+```sh
+php bin/console.php typo
+```
 
 Check out how to work with [our Vagrant](help/vagrant) to save a lot of setup time!
 

@@ -1,5 +1,4 @@
-Erste Schritte...
-==========
+# Erste Schritte...
 
 * [Zur Startseite der Hilfe](help)
 
@@ -20,17 +19,15 @@ Wenn Du Deinen Beitrag ("Post") geschrieben hast, kannst Du auf das "Schloss"-Sy
 Wenn Du dieses Symbol nicht anklickst, ist Dein Beitrag öffentlich, bzw. es werden deine Grundeinstellungen verwendet, wenn diese nicht öffentlich sind.
 
 Ein öffentlicher Beitrag ist sichbar für
-<ul>
-	<li>Besucher Deines Profils</li>
-	<li>Besucher Deiner "Gemeinschafts"-Seite</li>
-	<li>Besucher der Profile Deiner Kontakte</li>
-	<li>Suchmaschinen</li>
-</ul>
+- Besucher Deines Profils
+- Besucher Deiner "Gemeinschafts"-Seite
+- Besucher der Profile Deiner Kontakte
+- Suchmaschinen
+
 Auch wenn Du Deinen Server so konfiguriert hast, dass der Zugriff von außerhalb des Friendica-Netzwerks theoretisch nicht möglich ist, so ist Dein Beitrag über die Profile Deiner Kontakte sichtbar, wenn deren Knoten solche Zugriffe zulassen.
 
 <!--Das bedeutet, dass jeder, der Dein Profil ansieht, den Beitrag sehen kann. Außerdem auch jene, die den "Community"-Tab Deines Servers oder auf dem "Netzwerk"-Tab ("Beiträge Deiner Kontakte") eines befreundeten Kontakts betrachten.-->
 
-Probiere es doch einfach mal aus. Wenn Du fertig bist, schauen wir uns den <a href="help/quick-start-network">"Netzwerk"-Tab</a> an.
+Probiere es doch einfach mal aus. Wenn Du fertig bist, schauen wir uns den ["Netzwerk"-Tab](help/quick-start/network) an.
 
 <iframe src="login" width="950" height="600"></iframe>
-

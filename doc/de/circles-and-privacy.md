@@ -1,5 +1,4 @@
-Circles und Privatsphäre
-==================
+# Circles und Privatsphäre
 
 * [Zur Startseite der Hilfe](help)
 
@@ -45,9 +44,9 @@ Standardmäßig geht Friendica davon aus, dass alle deine Beiträge privat sein 
 Aus diesem Grund erstellt Friendica nach der Anmeldung eine Circle, in die automatisch alle deine Kontakte hinzugefügt werden.
 Alle deine Beiträge sind nur auf diese Circle beschränkt.
 
-Beachte, dass diese Einstellung von deinem Seiten-Administrator überschrieben werden kann, was bedeutet, dass alle deine Beiträge standardmäßig "öffentlich" sind (bspw. für das gesamte Internet).
+Beachte, dass diese Einstellung von deinem Seiten-Administrator überschrieben werden kann, was bedeutet, dass alle deine Beiträge standardmäßig "öffentlich" sind (beispielweise für das gesamte Internet).
 
-Wenn du deine Beiträge standardmäßig "öffentlich" haben willst, dann kannst du deine Standardzugriffsrechte auf deiner Einstellungseite ändern.
+Wenn du deine Beiträge standardmäßig "öffentlich" haben willst, dann kannst du deine Standardzugriffsrechte auf deiner Einstellungsseite ändern.
 Dort kannst du außerdem festlegen, welchen Circles standardmäßig deine Beiträge erhalten oder in welche Circle deine neuen Kontakte standardmäßig eingeordnet werden.
 
 **Fragen der Privatssphäre, die zu beachten sind**
@@ -64,19 +63,18 @@ Du musst **sehr** vorsichtig sein, wenn du Mitglieder anderer Netzwerke in einer
 Wenn du auf die "Kontakt bearbeiten"-Seite einer Person gehst, zeigen wir dir, ob sie Mitglied eines unsicheren Netzwerks ist oder nicht.
 
 Sobald du einen Post erstellt hast, kannst du die Zugriffsrechte nicht mehr ändern.
-Innerhalb von Sekunden ist dieser an viele verschiedene Personen verschickt worden - möglicherweise bereits an alle Addressierten.
+Innerhalb von Sekunden ist dieser an viele verschiedene Personen verschickt worden - möglicherweise bereits an alle Adressierten.
 Wenn du versehentlich eine Nachricht erstellt hast und sie zurücknehmen willst, dann ist es das beste, diese zu löschen.
 Wir senden eine Löschmitteilung an jeden, der deine Nachricht erhalten hat - und das sollte die Nachricht genauso schnell löschen, wie sie zunächst erstellt wurde.
 In vielen Fällen wird sie in weniger als einer Minute aus dem Internet gelöscht.
 Nochmals: das gilt für Friendica-Netzwerke.
 Sobald eine Nachricht an ein anderes Netzwerk geschickt wurde, kann es nicht mehr so schnell gelöscht werden und in manchen Fällen auch gar nicht mehr.
 
-Wenn du das bisher noch nicht wusstest, dann empfehlen wir dir, deine Freunde dazu zu ermutigen, auch Friendica zu nutzen, da alle diese Privatsphären-Einstellungen innerhalb eines privatsphärenbewussten Netzwerk viel besser funktionieren.
+Wenn du das bisher noch nicht wusstest, dann empfehlen wir dir, deine Freunde dazu zu ermutigen, auch Friendica zu nutzen, da alle diese Privatsphären-Einstellungen innerhalb eines privatsphärenbewussten Netzwerks viel besser funktionieren.
 Viele andere Netzwerke, mit denen sich Friendica verbinden kann, bieten keine Kontrolle über die Privatsphäre.
 
 
-Profile, Fotos und die Privatsphäre
-=============================
+# Profile, Fotos und die Privatsphäre
 
 Die dezentralisierte Natur von Friendica (statt eine Webseite zu haben, die alles kontrolliert, gibt es viele Webseiten, die Information austauschen) hat in der Kommunikation mit anderen Seiten einige Konsequenzen.
 Du solltest dir über einige Dinge bewusst sein, um am besten entscheiden zu können, wie du mit deiner Privatsphäre umgehst.
@@ -90,7 +88,7 @@ Wir können die Identität von Friendica-Nutzern prüfen, da es hierfür einen M
 Deine Freunde anderer Netzwerke werden deine privaten Fotos nicht sehen können, da wir deren Identität nicht überprüfen können.
 
 Unsere Entwickler arbeiten an einer Lösung, um deinen Freunden den Zugriff zu ermöglichen - unabhängig, zu welchem Netzwerk sie gehören.
-Wir nehmen hingegen Privatsphäre ernst und agieren nicht wie andere Netzwerke, die __nur so tun__ als ob deine Fotos privat sind, sie aber trotzdem anderen ohne Identitätsprüfung zeigen.
+Wir nehmen hingegen Privatsphäre ernst und agieren nicht wie andere Netzwerke, die __nur so tun__, als ob deine Fotos privat sind, sie aber trotzdem anderen ohne Identitätsprüfung zeigen.
 
 **Profile**
 

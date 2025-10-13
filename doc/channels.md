@@ -1,5 +1,4 @@
-Channels
-=====
+# Channels
 
 * [Home](help)
 
@@ -18,8 +17,7 @@ On the contact page you can define the channel frequency for every contact. The 
 * Display only few posts: When a contact creates a lot of posts in a short period, this setting reduces the number of displayed posts in every channel.
 * Never display posts: Posts from this contact will never be displayed in any channel.
 
-Predefined Channels
----
+## Predefined Channels
 
 * For you: Posts from contacts you interact with and who interact with you. In detail, it consists of:
     * Posts from people you interact with on a more than average level.
@@ -38,8 +36,7 @@ Predefined Channels
 * Audio: Posts with audio.
 * Videos: Posts with videos.
 
-User defined Channels
----
+## User defined Channels
 
 In the "Channels" settings you can create your own channels.
 
@@ -54,8 +51,7 @@ Each channel is defined by these values:
 * Full Text Search: This can be used to include or exclude content, based on the content and some additional keywords. It uses the "boolean mode" operators from MariaDB: https://mariadb.com/kb/en/full-text-index-overview/#in-boolean-mode
 * Images, Videos, Audio: When selected, you will see content with the selected media type. This can be combined. If none of these fields are checked, you will see any content, with or without attached media.
 
-Additional keywords for the full text search
----
+## Additional keywords for the full text search
 
 Additionally to the search for content, there are keywords that can be used in the full text search.
 Alternatives are presented with "|".

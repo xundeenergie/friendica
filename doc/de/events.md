@@ -6,7 +6,6 @@ Veranstaltungen sind spezielle Postings.
 Die Veranstaltungen, die Du und deine Kontakte teilen, können unter [/events](/events) auf deiner Instanz aufgefunden werden.
 Um da hinzukommen gehe über den Tab "Veranstalltungen", abhänig von dem Theme, das du benutzt, ist der eventuell ein zusätzlicher link im Navigationsmenü der Seite vorhanden.
 
-
 ## Veranstaltungsübersicht
 
 Die Übersichtsseite zeigt den Kalender des aktuellen Monats an, plus einige Tage am Beginn und am Ende.

@@ -1,5 +1,4 @@
-Config values that can only be set in config/local.config.php
-==========================================================
+# Config values that can only be set in config/local.config.php
 
 * [Home](help)
 

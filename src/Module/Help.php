@@ -114,6 +114,13 @@ class Help extends BaseModule
 	{
 		$baseName = basename($fileName);
 		$dirName  = dirname($fileName);
+		// An ugly hack to get the guide, which is inside a directory now, working again in German
+		// A non-hacky solution could be found, but if this file is being deleted soon when switching to mkdocs then...?
+		if (strpos($dirName, "quick-start")) {
+			if (file_exists("doc/$lang/quick-start/$baseName")) {
+				return file_get_contents("doc/$lang/quick-start/$baseName");
+			}
+		}
 		if (file_exists("$dirName/$lang/$baseName")) {
 			return file_get_contents("$dirName/$lang/$baseName");
 		}

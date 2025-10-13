@@ -1,5 +1,4 @@
-Using SSL with Friendica
-=====================================
+# Using SSL with Friendica
 
 * [Home](help)
 
@@ -49,7 +48,7 @@ If you run your own server, we recommend to check out the ["Let's Encrypt" initi
 Not only do they offer free SSL certificates, but also a way to automate their renewal.
 You need to install a client software on your server to use it.
 Instructions for the official client are [here](https://certbot.eff.org/).
-Depending on your needs, you might want to look at the [list of alternative letsencrypt clients](https://letsencrypt.org/docs/client-options/).
+Depending on your needs, you might want to look at the [list of alternative LetsEncrypt clients](https://letsencrypt.org/docs/client-options/).
 
 ## Web server settings
 
@@ -70,22 +69,26 @@ This is the simplest way to enforce site-wide secure access.
 Every time a user tries to access any Friendica page by any mean (manual address bar entry or link), the web server issues a Permanent Redirect response with the secure protocol prepended to the requested URL.
 
 With Apache, enable the modules rewrite and ssl (with a shared hosting provider, this should be enabled already):
-
-        sudo a2enmod rewrite ssl
+```sh
+sudo a2enmod rewrite ssl
+```
 
 Add the following lines to the .htaccess file in the root folder of your Friendica instance (thanks to [AlfredSK](https://github.com/AlfredSK)):
 
-        RewriteEngine On
-        RewriteCond %{SERVER_PORT} 80
-        RewriteRule ^(.*)$ https://your.friendica.domain/$1 [R=301,L]
+```
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://your.friendica.domain/$1 [R=301,L]
+```
 
 With nginx, configure your server directive this way ([documentation](https://www.nginx.com/blog/creating-nginx-rewrite-rules/)):
-
-        server {
-             listen 80;
-             server_name your.friendica.domain;
-             return 301 https://$server_name$request_uri;
-        }
+```
+server {
+    listen 80;
+    server_name your.friendica.domain;
+    return 301 https://$server_name$request_uri;
+}
+```
 
 ### SSL Settings
 

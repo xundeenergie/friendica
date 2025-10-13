@@ -1,5 +1,4 @@
-Friendica translations
-======================
+# Friendica translations
 
 * [Home](help)
 
@@ -30,7 +29,7 @@ We currently support the gettext version 0.19.8.1 and actively check new transla
 
 If you don't use this version, it's possible that our checks fail (f.e. because of tiny differences at linebreaks).
 In case you do have a Docker environment, you can easily update the translations with the following command:
-```shell
+```sh
 docker run --rm -v $PWD:/data -w /data friendicaci/transifex bin/run_xgettext.sh
 ```
 
@@ -43,9 +42,10 @@ Once you have added new translation strings in your code changes, please run `bi
 If you have the `friendica-addons` repository in the `addon` directory of your Friendica cloned repository, just run `bin/run_xgettext.sh -a <addon_name>` from the base Friendica directory.
 
 Otherwise:
-
-	cd /path/to/friendica-addons/<addon_name>
-	/path/to/friendica/bin/run_xgettext.sh -s
+```sh
+cd /path/to/friendica-addons/<addon_name>
+/path/to/friendica/bin/run_xgettext.sh -s
+```
 
 In either case, you need to commit the updated `<addon_name>/lang/C/messages.po` to your working branch.
 
@@ -65,17 +65,19 @@ After installation of the client, you should have a `tx` command available on yo
 To use it, first create a configuration file with your credentials.
 On Linux this file should be placed into your home directory `~/.transifexrc`.
 The content of the file should be something like the following:
-
-    [https://app.transifex.com]
-    username = user
-    token =
-    password = p@ssw0rd
-    hostname = https://app.transifex.com
+```toml
+[https://app.transifex.com]
+username = user
+token =
+password = p@ssw0rd
+hostname = https://app.transifex.com
+```
 
 Since Friendica version 3.5.1 we ship configuration files for the Transifex client in the core repository and the addon repository in `.tx/config`.
 To update the PO files after you have translated strings of e.g. Esperanto on the Transifex website you can use `tx` to download the updated PO file in the right location.
-
-    $> tx pull -l eo
+```sh
+tx pull -l eo
+```
 
 Then run `bin/console po2php view/lang/<language>/messages.po` to update the related `strings.php` file and commit both files to your working branch.
 

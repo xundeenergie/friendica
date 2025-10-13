@@ -1,5 +1,4 @@
-How-to: Performance verbessern
-==========
+# How-to: Performance verbessern
 
 * [Zur Startseite der Hilfe](help)
 
@@ -9,27 +8,25 @@ Eine kleine Anleitung, um die Performance einer Friendica-Seite zu verbessern.
 
 Wenn du Fragen zu den folgenden Anweisungen oder zu anderen Themen hast, dann kannst du jederzeit beim Friendica-Support unter https://forum.friendi.ca/profile/helpers nachfragen.
 
-Systemeinstellungen
----------------
+## Systemeinstellungen
 
-Geh auf /admin/site in deinem System und ändere die folgenden Werte:
+Geh auf `/admin/site` in deinem System und ändere die folgenden Werte:
 
     setze "Qualität des JPEG Bildes" auf 50.
 
-Dieser Wert reduziert die Daten, die vom Server an den Client geschickt werden. 
+Dieser Wert reduziert die Daten, die vom Server an den Client geschickt werden.
 50 ist ein Wert, der die Bildqualität nicht zu stark beeinflusst.
 
     setze "Intervall zum Vervollständigen von OStatus Unterhaltungen" auf "niemals"
 
-Wenn du viele OStatus-Kontakte hast, dann kann die Vervollständigung von Unterhaltungen sehr zeitraubend sein. 
+Wenn du viele OStatus-Kontakte hast, dann kann die Vervollständigung von Unterhaltungen sehr zeitraubend sein.
 Der Nachteil: Du siehst nicht jede Antwort einer OStatus-Unterhaltung. Aus diesem Grund ist die Option "Beim Empfang von Nachrichten" in der Regel ein guter Kompromiss.
 
     setze "Nutze MySQL full text engine".
 
 Wenn du MyISAM (Standardeinstellung) oder InnoDB mit MariaDB 10 nutzt, dann beschleunigt dies die Suche.
 
-Addons
---------
+## Addons
 
 Aktiviere die folgenden Addons:
 
@@ -55,8 +52,7 @@ Wenn es aktiviert ist, dann siehst du Werte wie die folgenden auf jeder deiner S
 
 Diese Werte zeigen deine Performance-Probleme.
 
-Webserver
-----------
+## Webserver
 
 Wenn du einen Apache-Webserver nutzt, aktiviere bitte die folgenden Module:
 
@@ -80,7 +76,7 @@ Weitere Informationen findest du hier: http://httpd.apache.org/docs/2.2/mod/mod_
 
 Dieses Modul komprimiert den Datenverkehr (Traffic) zwischen dem Webserver und dem Client.
 
-Aktiviere das Modul "mod_deflate" durch die Eingabe "a2enmod deflate" als root.
+Aktiviere das Modul `mod_deflate` durch die Eingabe `a2enmod deflate` als root.
 
 Weitere Informationen findest du hier: http://httpd.apache.org/docs/2.2/mod/mod_deflate.html
 
@@ -89,9 +85,9 @@ Weitere Informationen findest du hier: http://httpd.apache.org/docs/2.2/mod/mod_
 
 **FCGI**
 
-Wenn du Apache nutzt, dann denk darüber nach, FCGI zu nutzen. 
+Wenn du Apache nutzt, dann denk darüber nach, FCGI zu nutzen.
 Wenn du eine Debian-basierte Distribution nutzt, dann wirst du die Pakete "php5-cgi" und "libapache2-mod-fcgid" benötigen.
-Nutze externe Dokumente, um eine detailiertere Erklärung für die Einrichtung eines Systems auf FCGI-Basis zu erhalten.
+Nutze externe Dokumente, um eine detailliertere Erklärung für die Einrichtung eines Systems auf FCGI-Basis zu erhalten.
 
 ### Database
 

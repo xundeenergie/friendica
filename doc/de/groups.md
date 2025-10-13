@@ -1,5 +1,4 @@
-Gruppen
-=====
+# Gruppen
 
 * [Zur Startseite der Hilfe](help)
 

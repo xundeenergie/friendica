@@ -1,5 +1,4 @@
-Friendica Addon/Entwicklung
-==============
+# Friendica Addon/Entwicklung
 
 * [Zur Startseite der Hilfe](help)
 
@@ -28,15 +27,14 @@ Registriere deine Addon-Hooks während der Installation.
 
     \Friendica\Core\Hook::register($hookname, $file, $function);
 
-$hookname ist ein String und entspricht einem bekannten Friendica-Hook.
+`$hookname` ist ein String und entspricht einem bekannten Friendica-Hook.
 
-$file steht für den Pfadnamen, der relativ zum Top-Level-Friendicaverzeichnis liegt.
-Das *sollte* "addon/addon_name/addon_name.php' sein.
+$file steht für den Pfadnamen, der relativ zum Top-Level-Friendica-Verzeichnis liegt.
+Das *sollte* `addon/addon_name/addon_name.php` sein.
 
 $function ist ein String und der Name der Funktion, die ausgeführt wird, wenn der Hook aufgerufen wird.
 
-Argumente
----
+## Argumente
 
 Deine Hook-Callback-Funktion wird mit höchstens einem Argumenten aufgerufen
 
@@ -51,8 +49,7 @@ Diese Information ist speziell auf den Hook bezogen, der aktuell bearbeitet wird
 Achte darauf, diese mit "&" zu deklarieren, wenn du sie bearbeiten willst.
 
 
-Module
----
+## Module
 
 Addons können auch als "Module" agieren und alle Seitenanfragen für eine bestimte URL abfangen.
 Um ein Addon als Modul zu nutzen, ist es nötig, die Funktion "addon_name_module()" zu definieren, die keine Argumente benötigt und nichts weiter machen muss.
@@ -72,8 +69,7 @@ Sie können auch `addon_name_post()` umfassen, welches vor der content-Funktion 
 Du kannst ebenso `addon_name_init()` nutzen, was oft frühzeitig aufgerufen wird und das Modul initialisert.
 
 
-Derzeitige Hooks
----
+## Derzeitige Hooks
 
 **'authenticate'** - wird aufgerufen, wenn sich der User einloggt.
     $b ist ein Array
@@ -189,8 +185,7 @@ Dieser Hook kann dafür verwendet werden, alternative Erkennungsfunktionen einzu
  - wird aufgerufen nachdem in include/nav,php der Inhalt des Navigations Menüs erzeugt wurde.
  - $b ist ein Array, das $nav wiederspiegelt.
 
-Komplette Liste der Hook-Callbacks
----
+## Komplette Liste der Hook-Callbacks
 
 Eine komplette Liste aller Hook-Callbacks mit den zugehörigen Dateien (am 01-Apr-2018 generiert): Bitte schau in die Quellcodes für Details zu Hooks, die oben nicht dokumentiert sind.
 

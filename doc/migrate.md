@@ -1,5 +1,4 @@
-Migrating to a new server installation
-===============
+# Migrating to a new server installation
 
 * [Home](help)
 
@@ -39,9 +38,9 @@ Before transferring your database, you may want to clean it up; ensure the expir
 After adjusting these settings, the database cleaning up processes will be initiated according to your configured daily cron job.
 
 To review the size of your database, log into MySQL with ``mysql -p`` run the following query:
-````
+```sql
 SELECT table_schema AS "Database", SUM(data_length + index_length) / 1024 / 1024 / 1024 AS "Size (GB)" FROM information_schema.TABLES GROUP BY table_schema;
-````
+```
 
 You should see an output like this:
 ````
@@ -89,4 +88,3 @@ If you are unable to login to your newly migrated Friendica installation, check 
 If still unable to resolve the problem, it's likely an issue with your [installation](Install).
 In this case, you may try to an entirely new Friendica installation on your new server, but use a different FQDN and DNS name.
 Once you have this up and running, take it offline and purge the database and configuration file and try migrating to this installation.
-

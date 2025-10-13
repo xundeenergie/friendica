@@ -1,18 +1,16 @@
-Used Protocols
-===============
+# Used Protocols
 
 * [Home](help)
 
-Friendicas DFRN Protocol
----
+## Friendicas DFRN Protocol
 
 * [Document with the DFRN specification](spec/dfrn2.pdf)
 * [Schema of the contact request process](spec/dfrn2_contact_request.png)
 * [Schema of the contact request confirmation](spec/dfrn2_contact_confirmation.png)
 * [Description of the message flow](help/message-flow)
 
-ActivityStreams
----
+## ActivityStreams
+
 
 Friendica is using ActivityStreams in version 1.0 for its activities and object types.
 Additional types are used for non standard activities.
@@ -20,8 +18,7 @@ Additional types are used for non standard activities.
 * [Link to the specification](http://activitystrea.ms/head/activity-schema.html)
 * [List of used ActivityStreams verbs and object types.](https://github.com/friendica/friendica/wiki/ActivityStreams)
 
-Portable Contacts
----
+## Portable Contacts
 
 Portable Contacts is used for friends lists.
 

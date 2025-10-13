@@ -1,5 +1,4 @@
-Chats
-=====
+# Chats
 
 * [Zur Startseite der Hilfe](help)
 

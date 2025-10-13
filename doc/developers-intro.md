@@ -6,7 +6,7 @@
 
 Do you want to help us improve Friendica?
 Here we have compiled some hints on how to get started and some tasks to help you choose.
-A project like Friendica is the sum of many different contributions.
+A project like Friendica is the sum of many contributions.
 **Very different skills are required to make good software, not all of them involve coding!**
 We are looking for helpers in all areas, whether you write text or code, whether you spread the word to convince people or design new icons.
 Whether you feel like an expert or like a newbie - join us with your ideas!

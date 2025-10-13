@@ -1,5 +1,4 @@
-Freunde finden
-==============
+# Freunde finden
 
 * [Zur Startseite der Hilfe](help)
 
@@ -12,23 +11,23 @@ Das Verzeichnis ist in zwei Teile aufgeteilt.
 Wenn du auf den "Verzeichnis"-Button klickst, wirst du zunächst alle Mitglieder deines Servers sehen, die sich dazu entschlossen haben, angezeigt zu werden.
 Außerdem siehst du dort einen Link zum globalen Verzeichnis.
 Wenn du dich durch das globale Verzeichnis klickst, siehst du alle Nutzer weltweit auf allen Servern, die sich entschlossen haben, im Verzeichnis zu erscheinen.
-Du wirst außerdem den Link "Show Community Groups" sehen, welcher dich zu Gruppen und Fan-Seiten führt.
+Du wirst zudem den Link "Show Community Groups" sehen, welcher dich zu Gruppen und Fan-Seiten führt.
 Du verbindest dich mit Personen und Gruppen auf die gleiche Art, wobei Gruppen deine Anfrage automatisch annehmen, wohingegen ein Mensch dich erst manuell bestätigen muss.
 
 *Mit anderen Friendica-Nutzern verbinden*
 
 Besuche ihr Profil.
 Direkt unter dem Profilfoto ist das Wort "Verbinden" (bzw. "Connect" in einem englischsprachigem Profil).
-Klicke drauf und du gelangst zur "Verbinden"-Seite.
+Klicke darauf und du gelangst zur "Verbinden"-Seite.
 Dort wirst du nach deiner Identitätsadresse gefragt.
 Das ist nötig, damit die Seite dein Profil finden kann.
 
 *Was kommt in die Box?*
 
 Wenn deine Friendica-Seite "demo.friendica.com" heißt und dein Nutzername/Spitzname auf der Seite "bob" ist, dann wäre es "bob@demo.friendica.com".
-Wie du siehst, sieht es wie eine Email-Adresse aus.
+Wie du siehst, sieht es wie eine E-Mail-Adresse aus.
 Das ist beabsichtigt, da sich die Leute das so leichter merken können.
-Du *kannst* auch die URL deiner Startseite eintragen, wie z.B. "http://demo.friendica.com/profile/bob", aber der Email-Adressen-Stil ist einfacher.
+Du *kannst* auch die URL deiner Startseite eintragen, wie z.B. "http://demo.friendica.com/profile/bob", aber der E-Mail-Adressen-Stil ist einfacher.
 
 Wenn du die "Verbinden"-Seite bestätigt hast, kommst du zurück zu deiner Seite, um dort die Anfrage zu bestätigen.
 Wenn du das gemacht hast, können beide Seiten miteinander kommunizieren, um den Prozess abzuschließen (sobald dein neuer Freund die Anfrage bestätigt hat).
@@ -45,7 +44,7 @@ Wenn du z.B. "bob" auf quitter.se (eine GNU Social-Seite) kennst, dann kannst du
 Tatsächlich kannst du jedem und jeder Website folgen, der/die einen Syndication-Feed (RSS/Atom etc.) zur Verfügung stellt.
 Wenn wir einen Informationsstrom und einen Namen dazu finden, können wir auch versuchen, uns damit zu verbinden.
 
-Wenn du deine Email-Postfachverbindung auf deiner Einstellungsseite konfiguriert hast, dann kannst du die Email-Adresse jeder Person eintragen, die dir schon eine Nachricht an dein Postfach geschickt hat und bereits in deinem sozialen Stream erscheint.
+Wenn du deine E-Mail-Postfachverbindung auf deiner Einstellungsseite konfiguriert hast, dann kannst du die E-Mail-Adresse jeder Person eintragen, die dir schon eine Nachricht an dein Postfach geschickt hat und bereits in deinem sozialen Stream erscheint.
 Du kannst diesen Personen außerdem von Friendica aus antworten.
 
 Leute können sich ebenfalls von anderen Netzwerken aus mit dir befreunden.

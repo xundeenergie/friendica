@@ -1,5 +1,4 @@
-Autoloader with Composer
-==========
+# Autoloader with Composer
 
 * [Home](help)
   * [Developer Intro](help/developers-intro)
@@ -10,7 +9,7 @@ It's a command-line tool that downloads required libraries into the `vendor` fol
 
 * [Using Composer](help/composer)
 
-## A quick introduction to class autoloading
+## A quick introduction to class auto-loading
 
 The autoloader dynamically includes the file defining a class when it is first referenced, either by instantiating an object or simply making sure that it is available, without the need to explicitly use "require_once".
 
@@ -87,7 +86,7 @@ class ItemsManager extends BaseManager {
 ```
 
 Even though we didn't explicitly include the `src/BaseManager.php` file, the autoloader will when this class is first defined, because it is referenced as a parent class.
-It works with the "BaseManager" example here and it works when we need to call static methods:
+It works with the "BaseManager" example here, and it works when we need to call static methods:
 
 ```php
 // src/Dfrn.php
@@ -153,7 +152,7 @@ class Diaspora {
 }
 ```
 
-if you use that class in many places of the code and you don't want to write the full path to the class every time, you can use the "use" PHP keyword
+if you use that class in many places of the code, and you don't want to write the full path to the class every time, you can use the "use" PHP keyword
 
 ```php
 // src/Diaspora.php

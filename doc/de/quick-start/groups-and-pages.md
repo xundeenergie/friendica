@@ -1,5 +1,4 @@
-Gruppen und Seiten
-==========
+# Gruppen und Seiten
 
 * [Zur Startseite der Hilfe](help)
 
@@ -19,8 +18,6 @@ Suche Dir einfach eine Gruppe und füge sie so hinzu, wie Du auch normale Freund
 Es gibt eine Menge Gruppen.
 Solltest Du beim Stöbern durch die vielen Gruppen nicht wieder hierher zurück finden, so nutze einfach den Link oben auf dieser Seite.
 
-Wenn Du einige Gruppen hinzugefügt hast, gehe <a href="help/quick-start-finally">weiter zum nächsten Schritt</a>.
+Wenn Du einige Gruppen hinzugefügt hast, gehe [weiter zum nächsten Schritt](help/quick-start/finally).
 
 <iframe src="https://dir.friendica.social/group" width="950" height="600"></iframe>
-
-

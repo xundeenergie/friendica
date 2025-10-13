@@ -1,8 +1,6 @@
-Account - Basics
-==============
+# Account - Basics
 
 * [Zur Startseite der Hilfe](help)
-
 
 ## Registrierung
 
@@ -19,15 +17,12 @@ Falls du keine [OpenID-Adresse](https://de.wikipedia.org/wiki/OpenID">OpenID-Adr
 Solltest du eine OpenID Adresse haben, kannst Du sie im ersten Feld eintragen und "Registrieren" klicken.
 Friendica wird versuchen, so viele Informationen wie möglich von Deinem OpenID-Provider zu übernehmen, um diese in Dein Profil auf dieser Seite einzutragen.
 
-
 ### Dein vollständiger Name
 
 Bitte trage bei "vollständiger Name" Deinen **gewünschten Namen** ein, wie er über deinen Beiträgen angezeigt werden soll.
-Du kannst deinen echten Namen eintragen, kannst Dir aber auch einen Namen ausdenken. Einen Zwang zu dem sogenannten Klarnamen gibt es nicht.
+Du kannst deinen echten Namen eintragen, kannst dir aber auch einen Namen ausdenken. Einen Zwang zu dem sogenannten Klarnamen gibt es nicht.
 
-
-
-### Email-Adresse
+### E-Mail-Adresse
 
 Bitte trage eine richtige Email-Adresse ein.
 Dies ist die einzige persönliche Information, die korrekt sein muss.
@@ -51,23 +46,21 @@ Durch die Art, wie der Spitzname genutzt wird, gibt es bestimmte Einschränkunge
 
 Dieser Spitzname wird an vielen Stellen genutzt, um Deinen Account zu identifizieren, daher ist es nicht möglich ihn später zu ändern.
 
-
 ### Verzeichnis-Eintrag
 
 Das Registrierungsformular erlaubt es dir, direkt auszuwählen, ob Du im [Onlineverzeichnis](https://dir.friendica.social/) (Friendica Directory) aufgelistet wirst oder nicht.
-Das ist wie ein Telefonbuch und Du entscheidest, ob du darin eingetragen werden möchtest, oder nicht.
+Das ist wie ein Telefonbuch und du entscheidest, ob du darin eingetragen werden möchtest, oder nicht.
 
-* Wir bitten dich, "Ja" zu wählen, damit Andere Dich finden können, so wie Du sie finden kannst
+* Wir bitten dich, "Ja" zu wählen, damit Andere dich finden können, so wie Du sie finden kannst
 * Wählst Du "Nein", bist Du für Andere *nicht einfach auffindbar*
 
 Was auch immer Du wählst, kann jederzeit nach dem Login in Deinen Account-Einstellungen geändert werden.
-
 
 ### Registrierung
 
 Sobald Du die nötigen Informationen eingegeben hast, klicke auf "Registrieren".
 Eine Email mit den Registrierungsdetails und Deinem Initialpasswort wird an die hinterlegte Email-Adresse geschickt.
-Bitte prüfe den Posteingang (inkl. dem Spam-Ordner).
+Bitte prüfe den Posteingang (inklusive dem Spam-Ordner).
 
 
 ## Login-Seite
@@ -78,7 +71,7 @@ Du kannst entweder Deinen Spitznamen oder die Email-Adresse als Login-Namen nutz
 Wenn Du Deinen Account nutzt, um unterschiedliche '[Seiten](help/pages)' zu verwalten, die die gleiche Email-Adresse verwenden, dann nutze bitte den Spitznamen des Accounts, der verwaltet werden soll.
 
 *Wenn* Dein Account OpenID nutzt, dann kannst Du Deine OpenID-Adresse als Login-Name nutzen und das Passwort-Feld frei lassen.
-Du wirst zu Deinem OpenID-Anbieter weitergeleitet, wo Du Deine Anmeldung abschließt.
+Du wirst zu deinem OpenID-Anbieter weitergeleitet, wo Du Deine Anmeldung abschließt.
 
 Wenn Du OpenID nicht nutzt, dann gib Dein Passwort ein, das Du mit der Registrierungsmail erhalten hast.
 Das Passwort muss genau so geschrieben werden, wie es in der Email steht; Groß- und Kleinschreibung wird beachtet.

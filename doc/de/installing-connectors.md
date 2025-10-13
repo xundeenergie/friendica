@@ -1,5 +1,4 @@
-Konnektoren installieren
-==================================================
+# Konnektoren installieren
 
 * [Zur Startseite der Hilfe](help)
 
@@ -19,8 +18,7 @@ Andere Konnektoren, wie Bluesky, benötigen überhaupt keinen API-Schlüssel.
 
 Weitere Informationen zu den spezifischen Anforderungen findest du auf der Einstellungsseite des jeweiligen Addons, entweder auf der Verwaltungsseite oder auf der Benutzerseite.
 
-Bluesky Jetstream
----
+## Bluesky Jetstream
 
 Um die Konnektivität mit Bluesky weiter zu verbessern, kann die „Jetstream“-Konnektivität aktiviert werden.
 Jetstream ist ein Dienst, der sich mit dem Bluesky-Firehose verbindet.

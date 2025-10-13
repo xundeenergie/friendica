@@ -1,13 +1,11 @@
-Circles and Privacy
-==================
+# Circles and Privacy
 
 * [Home](help)
-
 
 Circles are merely collections of friends.
 But Friendica uses these to unlock some very powerful features.
 
-**Setting Up Circles**
+## Setting Up Circles
 
 To create a circle, visit your Friendica "Contacts" page and select "Create a new circle".
 Give the circle a name.
@@ -21,7 +19,7 @@ Below that is another box containing all of your friends who are *not* members o
 If you click on a photo of a person who isn't in the circle, they will be put into the circle.
 If you click on a photo of a person who is in the circle, they will be removed from it.
 
-**Access Control**
+## Access Control
 
 Once you have created a circle, you may use it in any access control list.
 This is the little lock icon beneath the status update box on your home page.
@@ -40,7 +38,7 @@ You will see that since you are only viewing a certain circle of people, your st
 This is how you keep your future employers from seeing what you write to your drinking buddies.
 You can override this setting, but this makes it easy to separate your conversations into different friend circles.
 
-**Default Post Privacy**
+## Default Post Privacy
 
 By default, Friendica assumes that you want all of your posts to be private.
 Therefore, when you sign up, Friendica creates a circle for you that it will automatically add all of your contacts to.
@@ -51,7 +49,7 @@ Note that this behaviour can be overridden by your site admin, in which case you
 If you want your posts to be "public" by default, you can change your default post permissions on your Settings page.
 You also have the option to change which circles you post to by default or which circle your new contacts get placed into by default.
 
-**Privacy Concerns To Be Aware Of**
+## Privacy Concerns To Be Aware Of
 
 These private conversations work best when your friends are Friendica members.
 We know who else can see the conversations - nobody, *unless* your friends cut and paste the messages and send them to others.
@@ -66,20 +64,18 @@ If you look at the Contact Edit page for any person, we will tell you whether or
 Once you have created a post, you can not change the permissions assigned.
 Within seconds it has been delivered to lots of people - and perhaps everybody it was addressed to.
 If you mistakenly created a message and wish to take it back, the best you can do is delete it.
-We will send out a delete notification to everybody who received the message - and this should wipe out the message with the same speed as it was initially propagated.
+We will send out a deleted notification to everybody who received the message - and this should wipe out the message with the same speed as it was initially propagated.
 In most cases, it will be completely wiped from the Internet - in under a minute.
 Again, this applies to Friendica networks.
 Once a message spreads to other networks, it may not be removed quickly, and in some cases, it may not be removed at all.
 
 
-
-Profiles, Photos, and Privacy
-=============================
+# Profiles, Photos, and Privacy
 
 The decentralised nature of Friendica (many websites exchanging information rather than one website which controls everything) has some implications with privacy as it relates to people on other sites.
 There are things you should be aware of, so you can decide best how to interact privately.
 
-**Photos**
+## Photos
 
 Sharing photos privately is a problem.
 We can only share them __privately__ with Friendica members.
@@ -90,7 +86,7 @@ Your friends on other networks will be blocked from viewing these private photos
 Our developers are working on solutions to allow access to your friends - no matter what network they are on.
 However we take privacy seriously and don't behave like some networks that __pretend__ your photos are private, but make them available to others without proof of identity.
 
-**Profiles**
+## Profiles
 
 Your profile and "wall" may also be visited by your friends from other networks, and you can block access to these by web visitors that Friendica doesn't know.
 Be aware that this could include some of your friends on other networks.

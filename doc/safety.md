@@ -1,5 +1,4 @@
-Safety
-======
+# Safety
 
 * [Home](help)
 
@@ -8,8 +7,7 @@ These servers support a diverse global community of millions of users.
 Inevitably, some of these users are malicious.
 Friendica provides several features to keep you safe from abuse and harrassment.
 
-Terms of Service
----
+## Terms of Service
 
 Each instance is entitled to define its own Terms of Service, also often called a Code of Conduct.
 These terms include rules for behaviour.
@@ -21,8 +19,7 @@ Remember that conversations frequently involve participants from different insta
 Participants are only bound by the rules of the server where they have an account, not by the rules of your server.
 Terms of Service may even be completely incompatible.
 
-Reporting
----
+## Reporting
 
 Your local administrators are responsible for ensuring a safe online environment for all users on your server.
 They rely on reports from users to highlight behaviour that puts other users at risk.
@@ -32,8 +29,7 @@ You will be given an opportunity to select the type of problem you are seeing.
 Your local administrator then has the option of blocking that user for all users on your local instance.
 If a remote server is a constant source of abuse and their administrators are unable or unwilling to control their users behaviour, your administrator can even block the entire remote server.
 
-Ignoring
----
+## Ignoring
 
 Once you have become friends, if you find the person constantly sends you spam or worthless information, you can "Ignore" them - without breaking off the friendship or even alerting them to the fact that you aren't interested in anything they are saying.
 In many ways they are like a "follower" - but they don't know this.
@@ -45,8 +41,7 @@ Some servers are frequent sources of abusive or other unwanted behaviour.
 For this reason you can also choose to ignore entire servers.
 Users on that server can still follow you as normal.
 
-Blocking
----
+## Blocking
 
 You can also "block" a person.
 This completely blocks communications with that person.
@@ -66,8 +61,7 @@ In some cases this could lead to retaliation.
 There are several other ways someone can determine that you have blocked them, and see your public posts despite the block.
 For example, they can simply log out and view your posts.
 
-Archiving
----
+## Archiving
 
 Archiving is similar to blocking.
 However, existing posts this person made before being archived will be visible in your stream.

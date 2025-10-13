@@ -1,5 +1,4 @@
-Friendica strategy Hooks
-===========================================
+# Friendica strategy Hooks
 
 * [Home](help)
 

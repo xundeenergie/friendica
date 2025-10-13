@@ -1,10 +1,8 @@
-Admin Tools
-===========
+# Admin Tools
 
 * [Home](help)
 
-Friendica Tools
----------------
+## Friendica Tools
 
 Friendica has a build in command console you can find in the *bin* directory.
 The console provides the following commands:
@@ -31,8 +29,7 @@ The console provides the following commands:
 
 Please consult *bin/console help* on the command line interface of your server for details about the commands.
 
-3rd Party Tools
----------------
+## 3rd Party Tools
 
 In addition to the tools Friendica includes, some 3rd party tools can make your admin days easier.
 
@@ -44,21 +41,23 @@ The following configuration was [provided](https://forum.friendi.ca/display/1745
 You need to adjust the *logpath* in the *jail.local* file and the *bantime* (value is in seconds).
 
 In */etc/fail2ban/jail.local* create a section for Friendica:
-
-	[friendica]
-	enabled = true
-	findtime = 300
-	bantime  = 900
-	filter = friendica
-	port = http,https
-	logpath = /var/log/friendica.log
-	logencoding = utf-8
+```toml
+[friendica]
+enabled = true
+findtime = 300
+bantime  = 900
+filter = friendica
+port = http,https
+logpath = /var/log/friendica.log
+logencoding = utf-8
+```
 
 And create a filter definition in */etc/fail2ban/filter.d/friendica.conf*:
-
-	[Definition]
-	failregex = ^.*authenticate\: failed login attempt.*\"ip\"\:\"<HOST>\".*$
-	ignoreregex =
+```toml
+[Definition]
+failregex = ^.*authenticate\: failed login attempt.*\"ip\"\:\"<HOST>\".*$
+ignoreregex =
+```
 
 Additionally you have to define the number of failed logins before the ban should be activated.
 This is done either in the global configuration or for each jail separately.
@@ -73,8 +72,10 @@ To keep them in control you should add them to the automatic [log rotation](http
 In */etc/logrotate.d/* add a file called *friendica* that contains the configuration.
 The following will compress */var/log/friendica* (assuming this is the location of the log file) on a daily basis and keep 2 days of back-log.
 
-	/var/log/friendica.log {
-		compress
-		daily
-		rotate 2
-	}
+```
+/var/log/friendica.log {
+	compress
+	daily
+	rotate 2
+}
+```

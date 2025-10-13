@@ -1,5 +1,4 @@
-Frequently Asked Questions (Admin) - FAQ
-==============
+# Frequently Asked Questions (Admin) - FAQ
 
 * [Home](help)
 
@@ -11,12 +10,12 @@ Frequently Asked Questions (Admin) - FAQ
 
 
 <a name="multiple"></a>
-### Can I configure multiple domains with the same code instance?
+## Can I configure multiple domains with the same code instance?
 
 No, this function is no longer supported as of Friendica 3.3 onwards.
 
 <a name="sources"></a>
-### Where can I find the source code of friendica, addons and themes?
+## Where can I find the source code of friendica, addons and themes?
 
 You can find the main repository [here](https://github.com/friendica/friendica).
 There you will always find the current stable version of friendica.
@@ -26,12 +25,12 @@ Addons are listed at [this page](https://github.com/friendica/friendica-addons).
 If you are searching for new themes, you can find them at [github.com/bkil/friendica-themes](https://github.com/bkil/friendica-themes)
 
 <a name="adminaccount1"></a>
-### I've changed my email address now the admin panel is gone?
+## I've changed my email address now the admin panel is gone?
 
 Have a look into your <tt>config/local.config.php</tt> and fix your email address there.
 
 <a name="adminaccount2"></a>
-### Can there be more then one admin for a node?
+## Can there be more then one admin for a node?
 
 Yes.
 You just have to list more then one email address in the
@@ -43,13 +42,14 @@ The listed emails need to be separated by a comma like this:
 ```
 
 <a name="dbupdate"></a>
-### The Database structure seems not to be updated. What can I do?
+## The Database structure seems not to be updated. What can I do?
 
 Please have a look at the Admin panel under [DB updates](/admin/dbsync/) and follow the link to *check database structure*.
 This will start a background process to check if the structure is up to the current definition.
 
 You can manually execute the structure update from the CLI in the base directory of your Friendica installation by running the following command:
-
-    bin/console dbstructure update
+```sh
+bin/console dbstructure update
+```
 
 if there occur any errors, please contact the [Friendica Support group](https://forum.friendi.ca/profile/helpers) or discuss in the [Friendica Admins group](https://forum.friendi.ca/profile/admins).

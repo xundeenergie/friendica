@@ -1,5 +1,4 @@
-Friendica BBCode tags reference
-========================
+# Friendica BBCode tags reference
 
 * [Creating posts](help/text-editor)
 
@@ -61,8 +60,8 @@ table.bbcodes > * > tr > th {
   <td><span style="color:  red;">red</span></td>
 </tr>
 <tr>
-  <td>[url=http://friendi.ca]Friendica[/url]</td>
-  <td><a href="http://friendi.ca" target="external-link">Friendica</a></td>
+  <td>[url=https://friendi.ca]Friendica[/url]</td>
+  <td><a href="https://friendi.ca" target="external-link">Friendica</a></td>
 </tr>
 <tr>
   <td>[img]https://raw.githubusercontent.com/friendica/friendica/stable/images/friendica-32.png[/img]</td>
@@ -103,23 +102,23 @@ table.bbcodes > * > tr > th {
   <th>Result</th>
 </tr>
 <tr>
-  <td>[url]http://friendi.ca[/url]</td>
-  <td><a href="http://friendi.ca">http://friendi.ca</a></td>
+  <td>[url]https://friendi.ca[/url]</td>
+  <td><a href="https://friendi.ca">https://friendi.ca</a></td>
 </tr>
 <tr>
-  <td>[url=http://friendi.ca]Friendica[/url]</td>
-  <td><a href="http://friendi.ca">Friendica</a></td>
+  <td>[url=https://friendi.ca]Friendica[/url]</td>
+  <td><a href="https://friendi.ca">Friendica</a></td>
 </tr>
 <tr>
-  <td>[bookmark]http://friendi.ca[/bookmark]<br><br>
-#^[url]http://friendi.ca[/url]</td>
-  <td><span class="oembed link"><h4>Friendica: <a href="http://friendi.ca" rel="oembed"></a><a href="http://friendi.ca" target="_blank" rel="noopener noreferrer">http://friendi.ca</a></h4></span></td>
+  <td>[bookmark]https://friendi.ca[/bookmark]<br><br>
+#^[url]https://friendi.ca[/url]</td>
+  <td><span class="oembed link"><h4>Friendica: <a href="https://friendi.ca" rel="oembed"></a><a href="https://friendi.ca" target="_blank" rel="noopener noreferrer">https://friendi.ca</a></h4></span></td>
 </tr>
 <tr>
-  <td>[bookmark=http://friendi.ca]Bookmark[/bookmark]<br><br>
-#^[url=http://friendi.ca]Bookmark[/url]<br><br>
-#[url=http://friendi.ca]^[/url][url=http://friendi.ca]Bookmark[/url]</td>
-  <td><span class="oembed link"><h4>Friendica: <a href="http://friendi.ca" rel="oembed"></a><a href="http://friendi.ca" target="_blank" rel="noopener noreferrer">Bookmark</a></h4></span></td>
+  <td>[bookmark=https://friendi.ca]Bookmark[/bookmark]<br><br>
+#^[url=https://friendi.ca]Bookmark[/url]<br><br>
+#[url=https://friendi.ca]^[/url][url=https://friendi.ca]Bookmark[/url]</td>
+  <td><span class="oembed link"><h4>Friendica: <a href="https://friendi.ca" rel="oembed"></a><a href="https://friendi.ca" target="_blank" rel="noopener noreferrer">Bookmark</a></h4></span></td>
 </tr>
 <tr>
   <td>[url=/posts/f16d77b0630f0134740c0cc47a0ea02a]Diaspora post with GUID[/url]</td>
@@ -170,7 +169,7 @@ code</code></td>
 </tr>
 <tr>
   <td>[code=php]function text_highlight($s,$lang)[/code]<sup><a href="#supported-code">1</a></sup></td>
-  <td><code><div class="hl-main"><ol class="hl-main"><li><span class="hl-code">&nbsp;</span><span class="hl-reserved">function</span><span class="hl-code"> </span><span class="hl-identifier">text_highlight</span><span class="hl-brackets">(</span><span class="hl-var">$s</span><span class="hl-code">,</span><span class="hl-var">$lang</span><span class="hl-brackets">)</span></li></ol></div></code></td>
+  <td><code><div class="hl-main"><ol class="hl-main"><li><span class="hl-code"> </span><span class="hl-reserved">function</span><span class="hl-code"> </span><span class="hl-identifier">text_highlight</span><span class="hl-brackets">(</span><span class="hl-var">$s</span><span class="hl-code">,</span><span class="hl-var">$lang</span><span class="hl-brackets">)</span></li></ol></div></code></td>
 </tr>
 <tr>
   <td>[quote]quote[/quote]</td>
@@ -275,21 +274,21 @@ code</code></td>
 </tr>
 <tr>
   <td>[table]<br>
-&nbsp;&nbsp;[tr]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[th]Header 1[/th]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[th]Header 2[/th]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[th]Header 2[/th]<br>
-&nbsp;&nbsp;[/tr]<br>
-&nbsp;&nbsp;[tr]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Cell 1[/td]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Cell 2[/td]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Cell 3[/td]<br>
-&nbsp;&nbsp;[/tr]<br>
-&nbsp;&nbsp;[tr]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Cell 4[/td]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Cell 5[/td]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Cell 6[/td]<br>
-&nbsp;&nbsp;[/tr]<br>
+  [tr]<br>
+    [th]Header 1[/th]<br>
+    [th]Header 2[/th]<br>
+    [th]Header 2[/th]<br>
+  [/tr]<br>
+  [tr]<br>
+    [td]Cell 1[/td]<br>
+    [td]Cell 2[/td]<br>
+    [td]Cell 3[/td]<br>
+  [/tr]<br>
+  [tr]<br>
+    [td]Cell 4[/td]<br>
+    [td]Cell 5[/td]<br>
+    [td]Cell 6[/td]<br>
+  [/tr]<br>
 [/table]</td>
   <td>
 	<table>
@@ -372,12 +371,12 @@ code</code></td>
 </tr>
 <tr>
   <td>[ul]<br>
-&nbsp;&nbsp;[li] First list element<br>
-&nbsp;&nbsp;[li] Second list element<br>
+  [li] First list element<br>
+  [li] Second list element<br>
 [/ul]<br>
 [list]<br>
-&nbsp;&nbsp;[li] First list element<br>
-&nbsp;&nbsp;[li] Second list element<br>
+  [li] First list element<br>
+  [li] Second list element<br>
 [/list]</td>
   <td>
 	<ul class="listbullet" style="list-style-type: circle;">
@@ -388,12 +387,12 @@ code</code></td>
 </tr>
 <tr>
   <td>[ol]<br>
-&nbsp;&nbsp;[li] First list element<br>
-&nbsp;&nbsp;[li] Second list element<br>
+  [li] First list element<br>
+  [li] Second list element<br>
 [/ol]<br>
 [list=1]<br>
-&nbsp;&nbsp;[li] First list element<br>
-&nbsp;&nbsp;[li] Second list element<br>
+  [li] First list element<br>
+  [li] Second list element<br>
 [/list]</td>
   <td>
     <ul class="listdecimal" style="list-style-type: decimal;">
@@ -404,8 +403,8 @@ code</code></td>
 </tr>
 <tr>
   <td>[list=]<br>
-&nbsp;&nbsp;[li] First list element<br>
-&nbsp;&nbsp;[li] Second list element<br>
+  [li] First list element<br>
+  [li] Second list element<br>
 [/list]</td>
   <td>
     <ul class="listnone" style="list-style-type: none;">
@@ -416,8 +415,8 @@ code</code></td>
 </tr>
 <tr>
   <td>[list=i]<br>
-&nbsp;&nbsp;[li] First list element<br>
-&nbsp;&nbsp;[li] Second list element<br>
+  [li] First list element<br>
+  [li] Second list element<br>
 [/list]</td>
   <td>
     <ul class="listlowerroman" style="list-style-type: lower-roman;">
@@ -428,8 +427,8 @@ code</code></td>
 </tr>
 <tr>
   <td>[list=I]<br>
-&nbsp;&nbsp;[li] First list element<br>
-&nbsp;&nbsp;[li] Second list element<br>
+  [li] First list element<br>
+  [li] Second list element<br>
 [/list]</td>
   <td>
     <ul class="listupperroman" style="list-style-type: upper-roman;">
@@ -440,8 +439,8 @@ code</code></td>
 </tr>
 <tr>
   <td>[list=a]<br>
-&nbsp;&nbsp;[li] First list element<br>
-&nbsp;&nbsp;[li] Second list element<br>
+  [li] First list element<br>
+  [li] Second list element<br>
 [/list]</td>
   <td>
     <ul class="listloweralpha" style="list-style-type: lower-alpha;">
@@ -452,8 +451,8 @@ code</code></td>
 </tr>
 <tr>
   <td>[list=A]<br>
-&nbsp;&nbsp;[li] First list element<br>
-&nbsp;&nbsp;[li] Second list element<br>
+  [li] First list element<br>
+  [li] Second list element<br>
 [/list]</td>
   <td>
     <ul class="listupperalpha" style="list-style-type: upper-alpha;">
@@ -548,7 +547,7 @@ pictures?[/abstract]<br>
 that I wanted to share with you.[/abstract]<br>
 Today I was in the woods and took some real cool pictures ...</td>
   <td>For Twitter and App.net the system will use the defined abstracts.<br>
-For other networks (e.g. when you are using the "statusnet" connector that is used to post to your GNU Social account) the general abstract element will be used.</td>
+For other networks (e.g. when you are using the "StatusNet" connector that is used to post to your GNU Social account) the general abstract element will be used.</td>
 </tr>
 </table>
 
@@ -574,7 +573,7 @@ While taking pictures in the woods I had a really strange encounter...</td>
 </tr>
 </table>
 
-The [abstract] element is not working with connectors where we post HTML directly, like Tumblr, Wordpress or Pump.io.
+The [abstract] element is not working with connectors where we post HTML directly, like Tumblr, WordPress or Pump.io.
 For the native connections--that is to e.g. Friendica, Hubzilla, Diaspora or GNU Social--the full posting is used and the contacts instance will display the posting as desired.
 
 For postings that are delivered via ActivityPub, the text from the abstract is placed in the summary field.
@@ -611,10 +610,10 @@ On Mastodon this field is used for the content warning.
 <tr>
   <td>Additionally, [pre] blocks preserve spaces:
     <ul>
-      <li>[pre]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spaces[/pre]</li>
+      <li>[pre]      Spaces[/pre]</li>
     </ul>
   </td>
-  <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spaces</td>
+  <td>      Spaces</td>
 </tr>
 <tr>
   <td>[nosmile] is used to disable smilies on a post by post basis<br>

@@ -1,5 +1,4 @@
-Tags und Erwähnungen
-=================
+# Tags und Erwähnungen
 
 * [Zur Startseite der Hilfe](help)
 

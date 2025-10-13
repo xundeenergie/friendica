@@ -1,5 +1,4 @@
-Kanäle (Channels)
-=====
+# Kanäle (Channels)
 
 * [Home](help)
 
@@ -18,8 +17,7 @@ Auf der Profilseite kannst du die Kanal-Frequenz für jeden Kontakt definieren. 
 * Zeige nur einige Beiträge an: Wenn ein Kontakt viele Beiträge in einem kurzen Zeitraum erstellt, reduziert diese Einstellung die Anzahl der angezeigten Beiträge in jedem Kanal.
 * Zeige keine Beiträge an: Beiträge von diesem Kontakt werden in keinem Kanal angezeigt.
 
-Voreingestellte Kanäle
----
+## Voreingestellte Kanäle
 
 * Für Dich: Beiträge von Kontakten mit denen du interagierst und die mit dir interagieren. Im Detail bestehend aus:
     * Beiträge von Leuten, mit denen du überdurchschnittlich viel interagierst.
@@ -38,8 +36,7 @@ Voreingestellte Kanäle
 * Audio: Beiträge mit Audio.
 * Videos: Beiträge mit Videos.
 
-Vom Benutzer eingestellte Kanäle
----
+## Vom Benutzer eingestellte Kanäle
 
 In den Einstellungen, unter "Kanäle", kannst du deine eigenen Kanäle erstellen.
 
@@ -54,8 +51,7 @@ Jeder Kanal wird durch diese Werte definiert:
 * Volltextsuche: Dies kann genutzt werden um Inhalte, basierend auf dem Inhalt und ein paar zusätzlichen Schlüsselwörtern, ein- oder auszuschließen. Es nutzt die "boolean mode"-Operatoren von MariaDB: https://mariadb.com/kb/en/full-text-index-overview/#in-boolean-mode
 * Bilder, Videos, Audio: Wenn ausgewählt, wirst du Inhalte mit dem gewählten Medientyp sehen. Diese Optionen können kombiniert werden. Wenn keines dieser Felder ausgewählt wurde, wirst du alle Inhalte, mit oder ohne angefügten Medien, sehen.
 
-Zusätzliche Schlüsselwörter für die Volltextsuche
----
+## Zusätzliche Schlüsselwörter für die Volltextsuche
 
 Zusätzlich zu der Suche nach Inhalten, gibt es Schlüsselwörter, die in der Volltextsuche genutzt werden können.
 Alternativen werden durch "|" dargestellt.

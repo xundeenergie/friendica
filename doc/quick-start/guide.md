@@ -18,8 +18,6 @@ Once you've finished writing your post, click on the padlock icon or permissions
 If you do not change anything, your post will be public.
 This means it will appear to anybody who views your profile, and in the community tab if your site has it enabled, as well as in the network tab of any of your contacts.
 
-Play around with this a bit, then when you're ready to move on, we'll take a look at the <a href="help/quick-start-network">Network Tab</a>
+Play around with this a bit, then when you're ready to move on, we'll take a look at the [Network Tab](help/quick-start/network).
 
 <iframe src="login" width="950" height="600"></iframe>
-
-

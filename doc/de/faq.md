@@ -1,5 +1,4 @@
-Häufig gestellte Fragen - FAQ
-==============
+# Häufig gestellte Fragen - FAQ
 
 * [Zur Startseite der Hilfe](help)
 
@@ -16,7 +15,7 @@ Häufig gestellte Fragen - FAQ
 
 
 <a name="help"></a>
-### Wo finde ich Hilfe?
+## Wo finde ich Hilfe?
 
 Wenn Du Probleme mit Deiner Friendica-Seite hast, dann kannst Du die Community in der [Friendica-Support-Gruppe](https://forum.friendi.ca/profile/helpers) fragen.
 Wenn Du Deinen Account nicht nutzen kannst, kannst Du einen Account auf einer öffentlichen Seite ([Liste](https://dir.friendica.social/servers)) nutzen.
@@ -36,7 +35,7 @@ Wenn du dir keinen weiteren Friendica Account einrichten willst, kannst du auch 
   --->
 
 <a name="ssl"></a>
-### Warum erhalte ich Warnungen über fehlende Zertifikate?
+## Warum erhalte ich Warnungen über fehlende Zertifikate?
 
 Manchmal erhältst Du eine Browser-Warnung über fehlende Zertifikate.
 Diese Warnungen können drei Gründe haben:
@@ -49,7 +48,7 @@ Diese Warnungen können drei Gründe haben:
 
 *(SSL (Secure Socket Layer) ist eine Technologie, die Daten auf ihrem Weg zwischen zwei Computern verschlüsselt.)*
 
-Wenn Du noch kein SSL-Zertifikat hast, dann gibt es drei Wege, eines zu erhalten: kauf Dir eines, hole Dir ein kostenloses (z.B. bei StartSSL, WoSign, hoffentlich bald auch letsencrypt) oder kreiere Dein eigenes (nicht empfohlen).
+Wenn Du noch kein SSL-Zertifikat hast, dann gibt es drei Wege, eines zu erhalten: kauf Dir eines, hole Dir ein kostenloses (z.B. bei StartSSL, WoSign, hoffentlich bald auch LetsEncrypt) oder kreiere Dein eigenes (nicht empfohlen).
 [Weitere Informationen über die Einrichtung von SSL und warum es schlecht ist, selbst-signierte Zertifikate zu nutzen, findest Du hier.](help/ssl)
 
 Sei Dir bewusst, dass Browser-Warnungen über Sicherheitslücken etwas sind, wodurch neue Nutzer schnell das Vertrauen in das gesamte Friendica-Projekt verlieren können.
@@ -66,7 +65,7 @@ Einige erlauben die Nutzung von freien Zertifikaten oder lassen Dich ihre eigene
 Andere erlauben nur kostenpflichtige Zertifikate als eigenes Angebot bzw. von anderen Anbietern.
 
 <a name="upload"></a>
-### Wie kann ich Bilder, Dateien, Links, Video und Audio in Beiträge einfügen?
+## Wie kann ich Bilder, Dateien, Links, Video und Audio in Beiträge einfügen?
 
 Bilder können direkt im [Beitragseditor](help/text-editor) vom Computer hochgeladen werden.
 Eine Übersicht aller Bilder, die auf Deinem Server liegen, findest Du unter <i>deineSeite.de/profile/profilname/photos</i>.
@@ -79,7 +78,7 @@ Deshalb eignet sich diese Methode vor allem für Office-Dateien oder gepackte Da
 Wer hingegen Dateien über Dropbox, über eine auf dem eigenen Server installierte Owncloud oder über einen anderen [Filehoster](http://en.wikipedia.org/wiki/Comparison_of_file_hosting_services) einfügen will, verwendet den Link-Button.
 
 Wenn Du mit dem Link-Button (Ketten-Symbol) URLs zu anderen Seiten einfügst, versucht Friendica eine kurze Zusammenfassung als Vorschau abzurufen.
-Manchmal klappts das nicht ... dann verlinke den Beitrag einfach per [url=http://example.com]<i>freigewählter Name</i>[/url] im Editor.
+Manchmal klappt das nicht ... dann verlinke den Beitrag einfach per [url=http://example.com]<i>freigewählter Name</i>[/url] im Editor.
 
 Video- und Audiodateien können zwar in Beiträge eingebunden werden, allerdings geht das nicht über einen direkten Upload im Editor wie bei Fotos.
 Du hast zwei Möglichkeiten:
@@ -88,19 +87,19 @@ Du hast zwei Möglichkeiten:
 2. Wenn Du Zugang zu einem eigenen Server hast, kannst Deine Multimediadatei per FTP dort hochladen und beim Video-/Audiobutton diese URL angeben. Dann wird das Video oder die Audiodatei direkt mit einem Player in Deinem Beitrag angezeigt.
 Friendica verwendet zur Einbettung HTML5. Das bedeutet, dass je nach Browser und Betriebssystem andere Formate unterstützt werden, darunter WebM, MP4, MP3 und Ogg. Eine Tabelle findest Du bei Wikipedia ([Video](http://en.wikipedia.org/wiki/HTML5_video), [Audio](http://en.wikipedia.org/wiki/HTML5_audio)).
 
-Zum Konvertieren von Videos in das lizenfreie Videoformat WebM gibt es unter Windows das kostenlose Programm [Xmedia-Recode](http://www.xmedia-recode.de/).
+Zum Konvertieren von Videos in das lizenzfreie Videoformat WebM gibt es unter Windows das kostenlose Programm [Xmedia-Recode](http://www.xmedia-recode.de/).
 
 <a name="avatars"></a>
-### Ist es möglich, bei mehreren Profilen verschiedene Avatare (Nutzerbilder) zu haben?
+## Ist es möglich, bei mehreren Profilen verschiedene Avatare (Nutzerbilder) zu haben?
 
 Ja.
 Auf Deiner ["Profile verwalten/editieren"-Seite](../profiles) wählst Du zunächst das gewünschte Profil aus.
-Anschließend siehst Du eine Seite mit allen Infos zu diesem Profil.
+Anschließend siehst Du eine Seite mit allen Informationen zu diesem Profil.
 Klicke nun oben auf den Link "Profilbild ändern" und lade im nächsten Fenster ein Bild von Deinem PC hoch.
 Um Deine privaten Daten zu schützen, wird in Beiträgen nur das Bild aus Deinem öffentlichen Profil angezeigt.
 
 <a name="language"></a>
-### Wie kann ich Friendica in einer bestimmten Sprache ansehen?
+## Wie kann ich Friendica in einer bestimmten Sprache ansehen?
 
 Die Sprache des Friendica Interfaces kann durch den `lang` Parameter un der URL beeinflusst werden.
 Das Argument des Parameters ist ein  [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)  Code.
@@ -115,7 +114,7 @@ auf Deutsch:
      https://social.example.com/profile/example?lang=de.
 
 <a name="contacts"></a>
-### Was ist der Unterschied zwischen blockierten|ignorierten|archivierten|versteckten Kontakten?
+## Was ist der Unterschied zwischen blockierten|ignorierten|archivierten|versteckten Kontakten?
 
 Wir verhindern direkte Kommunikation mit blockierten Kontakten.
 Sie gehören nicht zu den Empfängern beim Versand von Beiträgen und deren Beiträge werden auch nicht importiert.
@@ -134,11 +133,11 @@ Dabei werden auch Kommentare dieser Person in Beiträgen Deiner Freunde blockier
 Ein archivierter Kontakt bedeutet, dass Kommunikation nicht möglich ist und auch nicht versucht wird (das ist z.B. sinnvoll, wenn eine Person zu einem neuen Server gewechselt ist und das alte Profil gelöscht hat).
 Anders als beim Blockieren werden existierende Beiträge, die vor der Archivierung erstellt wurden, weiterhin angezeigt.
 
-Ein versteckter Kontakt wird in keiner "Freundeliste" erscheinen (außer für dich).
-Trotzdem wird ein versteckter Kontakt normal in Unterhaltungen angezeigt - was für andere Kontakte ein Hinweis sein kann, dass diese Person als versteckter Kontakt in Deiner Liste ist.
+Ein versteckter Kontakt wird in keiner "Freundesliste" erscheinen (außer für dich).
+Trotzdem wird ein versteckter Kontakt normal in Unterhaltungen angezeigt - was für andere Kontakte ein Hinweis sein kann, dass diese Person als versteckter Kontakt in deiner Liste ist.
 
 <a name="removed"></a>
-### Was passiert, wenn ein Account gelöscht ist? Ist dieser richtig gelöscht?
+## Was passiert, wenn ein Account gelöscht ist? Ist dieser richtig gelöscht?
 
 Wenn Du Deinen Account löschst, wird sofort der gesamte Inhalt auf Deinem Server gelöscht und ein Löschbefehl an alle Deine Kontakte verschickt.
 Dadurch wirst Du ebenfalls aus dem globalen Verzeichnis gelöscht.
@@ -146,18 +145,18 @@ Dieses Vorgehen setzt voraus, dass Dein Profil für 24 Stunden weiterhin "teilwe
 Wir können also Dein Profil blockieren und es so erscheinen lassen, als wären alle Daten sofort gelöscht, allerdings warten wir 24 Stunden (bzw. bis alle Deine Kontakte informiert wurden), bevor wir die Daten auch physikalisch löschen.
 
 <a name="hashtag"></a>
-### Kann ich einem Hashtag folgen?
+## Kann ich einem Hashtag folgen?
 
 Ja.
 Füge die Tags zu Deinen gespeicherten Suchen hinzu, sie werden automatisch auf der Netzwerk-Seite auftauchen.
 Bitte beachte, dass Deine Antworten auf solche Posts aus technischen Gründen nicht unter dem "Persönlich"-Reiter auf der Netzwerk-Seite und der gesamte Thread nicht per API zu sehen sind.
 
 <a name="rss"></a>
-### Wie kann ich einen RSS-Feed meiner Netzwerkseite (Stream) erstellen?
+## Wie kann ich einen RSS-Feed meiner Netzwerkseite (Stream) erstellen?
 
 Wenn Du die Beiträge Deines Accounts mit RSS teilen willst, dann kannst Du einen der folgenden Links nutzen:
 
-#### RSS-Feed Deiner Beiträge
+### RSS-Feed Deiner Beiträge
 
 	deineSeite.de/feed/[profilname]/posts
 
@@ -165,7 +164,7 @@ Beispiel: Friendica Support
 
 	https://forum.friendi.ca/feed/helpers/posts
 
-#### RSS-Feed all deiner Beiträge und Antworten
+### RSS-Feed all deiner Beiträge und Antworten
 
     deineSeite.de/dfrn_poll/feed/[profilname]/comments
 
@@ -173,18 +172,18 @@ Beispiel: Friendica Support
 
     https://forum.friendi.ca/feeds/helpers/comments
 
-#### RSS-Feed all deiner Aktivitäten
+### RSS-Feed all deiner Aktivitäten
 
     deineSeite.de/feed/[profilname]/
 
 <a name="clients">
-### Gibt es Clients für Friendica?
+## Gibt es Clients für Friendica?
 
 Friendica unterstützt [Mastodon API](help/api-mastodon) und [Twitter API | gnusocial](help/api).
 Das bedeutet, du kannst einge der Mastodon und Twitter Clients für Friendica verwenden.
 Die verfügbaren Features sind Abhängig vom Client, so dass diese teils unterschiedlich sein können.
 
-#### Android
+### Android
 
 * [AndStatus](http://andstatus.org) ([F-Droid](https://f-droid.org/repository/browse/?fdid=org.andstatus.app), [Google Play](https://play.google.com/store/apps/details?id=org.andstatus.app))
 * [B4X for Pleroma & Mastodon](https://github.com/AnywhereSoftware/B4X-Pleroma)
@@ -202,21 +201,21 @@ Die verfügbaren Features sind Abhängig vom Client, so dass diese teils untersc
 * [twitlatte](https://github.com/moko256/twitlatte)
 * [Yuito](https://github.com/accelforce/Yuito)
 
-#### SailfishOS
+### SailfishOS
 
 * [Friendly](https://openrepos.net/content/fabrixxm/friendly#comment-form)
 
-#### iOS
+### iOS
 
-* [B4X for Pleroma & Mastodon](https://www.b4x.com/) ([AppStore](https://apps.apple.com/app/b4x-pleroma/id1538396871), [GitHub](https://github.com/AnywhereSoftware/B4X-Pleroma))
-* [Fedi](https://fediapp.com) ([AppStore](https://apps.apple.com/de/app/fedi-for-pleroma-and-mastodon/id1478806281))
-* [Mastodon](https://joinmastodon.org/apps)([AppStore](https://apps.apple.com/us/app/mastodon-for-iphone/id1571998974))
-* [Roma](https://www.roma.rocks/)([AppStore](https://apps.apple.com/de/app/roma-for-pleroma-and-mastodon/id1445328699))
-* [Stella*](https://www.stella-app.net/) ([AppStore](https://apps.apple.com/us/app/stella-for-mastodon-twitter/id921372048))
-* [Tooot](https://tooot.app/) ([AppStore](https://apps.apple.com/app/id1549772269), [GitHub](https://github.com/tooot-app)), Datensammlung (nicht mit Identität verknüpft)
-* [Tootle](https://mastodon.cloud/@tootleapp) ([AppStore](https://apps.apple.com/de/app/tootle-for-mastodon/id1236013466)), letztes update: 2020
+* [B4X for Pleroma & Mastodon](https://www.b4x.com/) ([App Store](https://apps.apple.com/app/b4x-pleroma/id1538396871), [GitHub](https://github.com/AnywhereSoftware/B4X-Pleroma))
+* [Fedi](https://fediapp.com) ([App Store](https://apps.apple.com/de/app/fedi-for-pleroma-and-mastodon/id1478806281))
+* [Mastodon](https://joinmastodon.org/apps)([App Store](https://apps.apple.com/us/app/mastodon-for-iphone/id1571998974))
+* [Roma](https://www.roma.rocks/)([App Store](https://apps.apple.com/de/app/roma-for-pleroma-and-mastodon/id1445328699))
+* [Stella*](https://www.stella-app.net/) ([App Store](https://apps.apple.com/us/app/stella-for-mastodon-twitter/id921372048))
+* [Tooot](https://tooot.app/) ([App Store](https://apps.apple.com/app/id1549772269), [GitHub](https://github.com/tooot-app)), Datensammlung (nicht mit Identität verknüpft)
+* [Tootle](https://mastodon.cloud/@tootleapp) ([App Store](https://apps.apple.com/de/app/tootle-for-mastodon/id1236013466)), letztes update: 2020
 
-#### Linux
+### Linux
 
 * [Choqok](https://choqok.kde.org)
 * [Whalebird](https://whalebird.social)
@@ -224,12 +223,12 @@ Die verfügbaren Features sind Abhängig vom Client, so dass diese teils untersc
 * [Toot](https://toot.readthedocs.io/en/latest/)
 * [Tootle](https://github.com/bleakgrey/tootle)
 
-#### macOS
+### macOS
 
-* [Mastonaut](https://mastonaut.app/) ([AppStore](https://apps.apple.com/us/app/mastonaut/id1450757574)), kostet ~8€
-* [Whalebird](https://whalebird.social/en/desktop/contents) ([AppStore](https://apps.apple.com/de/app/whalebird/id1378283354), [GitHub](https://github.com/h3poteto/whalebird-desktop))
+* [Mastonaut](https://mastonaut.app/) ([App Store](https://apps.apple.com/us/app/mastonaut/id1450757574)), kostet ~8€
+* [Whalebird](https://whalebird.social/en/desktop/contents) ([App Store](https://apps.apple.com/de/app/whalebird/id1378283354), [GitHub](https://github.com/h3poteto/whalebird-desktop))
 
-#### Web
+### Web
 
 * [Halcyon](https://www.halcyon.social/)
 * [Pinafore](https://github.com/nolanlawson/pinafore)

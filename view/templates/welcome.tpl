@@ -12,7 +12,7 @@
 		<h4>{{$started nofilter}}</h4>
 		<ul>
 			<li>
-				<a target="newmember" href="help/quick-start-guide">{{$walkthrough_link}}</a><br />
+				<a target="newmember" href="help/quick-start/guide">{{$walkthrough_link}}</a><br />
 				{{$walkthrough_txt nofilter}}
 			</li>
 		</ul>

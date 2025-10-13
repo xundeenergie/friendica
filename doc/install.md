@@ -1,7 +1,7 @@
 # Friendica Installation
 
 
-We've tried very hard to ensure that Friendica will run on commodity hosting platforms - such as those used to host Wordpress blogs and Drupal websites.
+We've tried very hard to ensure that Friendica will run on commodity hosting platforms - such as those used to host WordPress blogs and Drupal websites.
 We offer a manual and an automatic installation.
 But be aware that Friendica is more than a simple web application.
 
@@ -15,7 +15,7 @@ Many will.
 But **please** review the requirements below and confirm these with your hosting provider prior to installation.
 
 ## Support
-If you encounter installation issues, please let us know via the [helper](http://forum.friendi.ca/profile/helpers) or the [developer](https://forum.friendi.ca/profile/developers) group or [file an issue](https://github.com/friendica/friendica/issues).
+If you encounter installation issues, please let us know via the [helper](https://forum.friendi.ca/profile/helpers) or the [developer](https://forum.friendi.ca/profile/developers) group or [file an issue](https://github.com/friendica/friendica/issues).
 
 Please be as clear as you can about your operating environment and provide as much detail as possible about any error messages you may see, so that we can prevent it from happening in the future.
 Due to the large variety of operating systems and PHP platforms in existence we may have only limited ability to debug your PHP installation or acquire any missing modules - but we will do our best to solve any general code issues.
@@ -27,7 +27,7 @@ Due to the large variety of operating systems and PHP platforms in existence we 
 
 ### Requirements
 
-* Apache with mod_rewrite enabled and "[AllowOverride All](https://httpd.apache.org/docs/2.4/mod/core.html#allowoverride)" so you can use a local `.htaccess` file
+* Apache with `mod_rewrite` enabled and "[AllowOverride All](https://httpd.apache.org/docs/2.4/mod/core.html#allowoverride)" so you can use a local `.htaccess` file
 * PHP 7.4+
   * PHP *command line* access with register_argc_argv set to true in the php.ini file
   * Curl, GD, GMP, PDO, mbstring, MySQLi, xml, zip, IntlChar, IDN and OpenSSL extensions
@@ -74,33 +74,40 @@ Clone the [friendica/friendica GitHub repository](https://github.com/friendica/f
 This makes the software much easier to update.
 
 The Linux commands to clone the repository into a directory "mywebsite" would be
-
-    git clone https://github.com/friendica/friendica.git -b stable mywebsite
+```sh
+git clone https://github.com/friendica/friendica.git -b stable mywebsite
+```
 
 Get the addons by going into your website folder.
-
-    cd mywebsite
+```sh
+cd mywebsite
+```
 
 Clone the addon repository (separately):
-
-	git clone https://github.com/friendica/friendica-addons.git -b stable addon
+```sh
+git clone https://github.com/friendica/friendica-addons.git -b stable addon
+```
 
 Install the dependencies:
-
-    bin/composer.phar run install:prod
+```sh
+bin/composer.phar run install:prod
+```
 
 Make sure the folder *view/smarty3* exists and is writable by the webserver user, in this case *www-data*
-
-    mkdir -p view/smarty3
-    chown www-data:www-data view/smarty3
-    chmod 775 view/smarty3
+```sh
+mkdir -p view/smarty3
+chown www-data:www-data view/smarty3
+chmod 775 view/smarty3
+```
 
 If you want to use the development version of Friendica you can switch to the develop branch in the repository by running
 
-    git checkout develop
-    bin/composer.phar run install:prod
-    cd addon
-    git checkout develop
+```sh
+git checkout develop
+bin/composer.phar run install:prod
+cd addon
+git checkout develop
+```
 
 **Be aware that the develop branch is unstable and may break your Friendica node at any time.**
 You should have a recent backup before updating.
@@ -111,15 +118,19 @@ If you encounter a bug, please let us know.
 Create an empty database and note the access details (hostname, username, password, database name).
 Generate a strong password, then enter mysql with:
 
-    mysql
+```sh
+mysql
+```
 
 Then use the following script using the password you just generated:
 
-    CREATE DATABASE friendicadb;
-    CREATE USER 'friendica'@'localhost' IDENTIFIED BY '<<your mysql password here>>';
-    GRANT ALL ON friendicadb.* TO 'friendica'@'localhost';
-    FLUSH PRIVILEGES;
-    EXIT;
+```sql
+CREATE DATABASE friendicadb;
+CREATE USER 'friendica'@'localhost' IDENTIFIED BY '<<your mysql password here>>';
+GRANT ALL ON friendicadb.* TO 'friendica'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
 
 Friendica needs the permission to create and delete fields and tables in its own database.
 
@@ -144,42 +155,45 @@ Registration errors should all be recoverable automatically.
 If you get any *critical* failure at this point, it generally indicates the database was not installed correctly.
 You might wish to move/rename `config/local.config.php` to another name and empty (called 'dropping') the database tables, so that you can start fresh.
 
-### Option B: Run the automatic install script
+### Option B: Run the automatic installation script
 
 You have the following options to automatically install Friendica:
--	creating a prepared config file (f.e. `prepared.config.php`)
--	using environment variables (f.e. `MYSQL_HOST`)
--	using options (f.e. `--dbhost <host>`)
+- creating a prepared config file (f.e. `prepared.config.php`)
+- using environment variables (f.e. `MYSQL_HOST`)
+- using options (f.e. `--dbhost <host>`)
 
 You can combine environment variables and options, but be aware that options are prioritized over environment variables.
 
 For more information during the installation, you can use this command line option
-
-    bin/console autoinstall -v
+```sh
+bin/console autoinstall -v
+```
 
 If you wish to include all optional checks, use `-a` like this statement:
-
-    bin/console autoinstall -a
+```sh
+bin/console autoinstall -a
+```
 
 *If* the automatic installation fails for any reason, check the following:
 
-*	Does `config/local.config.php` already exist? If yes, the automatic installation won't start
-*	Are the options in the `config/local.config.php` correct? If not, edit them directly.
-*	Is the empty MySQL-database created? If not, create it.
+* Does `config/local.config.php` already exist? If yes, the automatic installation won't start
+* Are the options in the `config/local.config.php` correct? If not, edit them directly.
+* Is the empty MySQL-database created? If not, create it.
 
 #### B.1: Config file
 
 You can use a prepared config file like [local-sample.config.php](/config/local-sample.config.php).
 
 Navigate to the main Friendica directory and execute the following command:
-
-    bin/console autoinstall -f <prepared.config.php>
+```sh
+bin/console autoinstall -f <prepared.config.php>
+```
 
 #### B.2: Environment variables
 
 There are two types of environment variables.
--	those you can use in normal mode too (Currently just **database credentials**)
--	those you can only use during installation (because Friendica will normally ignore it)
+- those you can use in normal mode too (Currently just **database credentials**)
+- those you can only use during installation (because Friendica will normally ignore it)
 
 You can use the options during installation too and skip some of the environment variables.
 
@@ -187,53 +201,56 @@ You can use the options during installation too and skip some of the environment
 
 if you don't use the option `--savedb` during installation, the DB credentials will **not** be saved in the `config/local.config.php`.
 
--	`MYSQL_HOST` The host of the mysql/mariadb database
--	`MYSQL_PORT` The port of the mysql/mariadb database
--	`MYSQL_USERNAME` The username of the mysql database login (used for mysql)
--	`MYSQL_USER` The username of the mysql database login (used for mariadb)
--	`MYSQL_PASSWORD` The password of the mysql/mariadb database login
--	`MYSQL_DATABASE` The name of the mysql/mariadb database
+- `MYSQL_HOST` The host of the mysql/mariadb database
+- `MYSQL_PORT` The port of the mysql/mariadb database
+- `MYSQL_USERNAME` The username of the mysql database login (used for mysql)
+- `MYSQL_USER` The username of the mysql database login (used for mariadb)
+- `MYSQL_PASSWORD` The password of the mysql/mariadb database login
+- `MYSQL_DATABASE` The name of the mysql/mariadb database
 
 **Friendica settings**
 
-This variables wont be used at normal Friendica runtime.
+These variables won't be used at normal Friendica runtime.
 Instead, they get saved into `config/local.config.php`.
 
--	`FRIENDICA_URL_PATH` The URL path of Friendica (f.e. '/friendica')
--	`FRIENDICA_PHP_PATH` The path of the PHP binary
--	`FRIENDICA_ADMIN_MAIL` The admin email address of Friendica (this email will be used for admin access)
--	`FRIENDICA_TZ` The timezone of Friendica
--	`FRIENDICA_LANG` The language of Friendica
+- `FRIENDICA_URL_PATH` The URL path of Friendica (f.e. '/friendica')
+- `FRIENDICA_PHP_PATH` The path of the PHP binary
+- `FRIENDICA_ADMIN_MAIL` The admin email address of Friendica (this email will be used for admin access)
+- `FRIENDICA_TZ` The timezone of Friendica
+- `FRIENDICA_LANG` The language of Friendica
 
 Navigate to the main Friendica directory and execute the following command:
-
-    bin/console autoinstall [--savedb]
+```sh
+bin/console autoinstall [--savedb]
+```
 
 #### B.3: Execution options
 
 All options will be saved in the `config/local.config.php` and are overruling the associated environment variables.
 
--	`-H|--dbhost <host>` The host of the mysql/mariadb database (env `MYSQL_HOST`)
--	`-p|--dbport <port>` The port of the mysql/mariadb database (env `MYSQL_PORT`)
--	`-U|--dbuser <username>` The username of the mysql/mariadb database login (env `MYSQL_USER` or `MYSQL_USERNAME`)
--	`-P|--dbpass <password>` The password of the mysql/mariadb database login (env `MYSQL_PASSWORD`)
--	`-d|--dbdata <database>` The name of the mysql/mariadb database (env `MYSQL_DATABASE`)
--	`-b|--phppath <php_path>` The path of the PHP binary (env `FRIENDICA_PHP_PATH`)
--	`-A|--admin <mail>` The admin email address of Friendica (env `FRIENDICA_ADMIN_MAIL`)
--	`-T|--tz <timezone>` The timezone of Friendica (env `FRIENDICA_TZ`)
--	`-L|--lang <language>` The language of Friendica (env `FRIENDICA_LANG`)
+- `-H|--dbhost <host>` The host of the mysql/mariadb database (env `MYSQL_HOST`)
+- `-p|--dbport <port>` The port of the mysql/mariadb database (env `MYSQL_PORT`)
+- `-U|--dbuser <username>` The username of the mysql/mariadb database login (env `MYSQL_USER` or `MYSQL_USERNAME`)
+- `-P|--dbpass <password>` The password of the mysql/mariadb database login (env `MYSQL_PASSWORD`)
+- `-d|--dbdata <database>` The name of the mysql/mariadb database (env `MYSQL_DATABASE`)
+- `-b|--phppath <php_path>` The path of the PHP binary (env `FRIENDICA_PHP_PATH`)
+- `-A|--admin <mail>` The admin email address of Friendica (env `FRIENDICA_ADMIN_MAIL`)
+- `-T|--tz <timezone>` The timezone of Friendica (env `FRIENDICA_TZ`)
+- `-L|--lang <language>` The language of Friendica (env `FRIENDICA_LANG`)
 
 Navigate to the main Friendica directory and execute the following command:
-
-    bin/console autoinstall [options]
+```sh
+bin/console autoinstall [options]
+```
 
 ### Prepare .htaccess file
 
 Copy `.htaccess-dist` to `.htaccess` (be careful under Windows) to have working mod-rewrite again. If you have installed Friendica into a sub directory, like */friendica/* set this path in `RewriteBase` accordingly.
 
 Example:
-
-    cp .htaccess-dist .htaccess
+```sh
+cp .htaccess-dist .htaccess
+```
 
 *Note*: Do **not** rename the `.htaccess-dist` file as it is tracked by GIT and renaming will cause a dirty working directory.
 
@@ -250,9 +267,9 @@ Another common error related to host-meta is the "Invalid profile URL."
 
 Check for a `.well-known` directory that did not come with Friendica.
 The preferred configuration is to remove the directory, however this is not always possible.
-If there is any /.well-known/.htaccess file, it could interfere with this Friendica core requirement.
-You should remove any RewriteRules from that file, or remove that whole file if appropriate.
-It may be necessary to chmod the /.well-known/.htaccess file if you were not given write permissions by default.
+If there is any `/.well-known/.htaccess` file, it could interfere with this Friendica core requirement.
+You should remove any `RewriteRules` from that file, or remove that whole file if appropriate.
+It may be necessary to `chmod` the `/.well-known/.htaccess` file if you were not given write permissions by default.
 
 ## Register the admin account
 
@@ -268,8 +285,9 @@ You might wish to delete/rename `config/local.config.php` to another name and dr
 
 Set up a cron job or scheduled task to run the worker once every 5-10 minutes in order to perform background processing.
 Example:
-
-    cd /base/directory; /path/to/php bin/console.php worker
+```sh
+cd /base/directory; /path/to/php bin/console.php worker
+```
 
 Change "/base/directory", and "/path/to/php" as appropriate for your situation.
 
@@ -277,8 +295,9 @@ Change "/base/directory", and "/path/to/php" as appropriate for your situation.
 
 If you are using a Linux server, run "crontab -e" and add a line like the
 one shown, substituting for your unique paths and settings:
-
-    */10 * * * * cd /home/myname/mywebsite; /usr/bin/php bin/console.php worker
+```crontab
+*/10 * * * * cd /home/myname/mywebsite; /usr/bin/php bin/console.php worker
+```
 
 You can generally find the location of PHP by executing "which php".
 If you run into trouble with this section please contact your hosting provider for assistance.
@@ -290,12 +309,15 @@ Once you have installed Friendica and created an admin account as part of the pr
 
 #### worker alternative: daemon
 Otherwise, you’ll need to use the command line on your remote server and start the Friendica daemon (background task) using the following command:
-
-    cd /path/to/friendica; php bin/console.php daemon start
+```sh
+cd /path/to/friendica; php bin/console.php daemon start
+```
 
 Once started, you can check the daemon status using the following command:
 
-    cd /path/to/friendica; php bin/console.php daemon status
+```sh
+cd /path/to/friendica; php bin/console.php daemon status
+```
 
 After a server restart or any other failure, the daemon needs to be restarted.
 This could be achieved by a cronjob.
@@ -319,16 +341,23 @@ As it stores all your data, you should also have a recent dump of your Friendica
 Friendica looks for some well-known HTTP headers indicating a reverse-proxy
 terminating an HTTPS connection.
 While the standard from RFC 7239 specifies the use of the `Forwarded` header.
-
-    Forwarded: for=192.0.2.1; proto=https; by=192.0.2.2
+```
+Forwarded: for=192.0.2.1; proto=https; by=192.0.2.2
+```
 
 Friendica also supports a number on non-standard headers in common use.
 
-    X-Forwarded-Proto: https
+```
+X-Forwarded-Proto: https
+```
 
-    Front-End-Https: on
+```
+Front-End-Https: on
+```
 
-    X-Forwarded-Ssl: on
+```
+X-Forwarded-Ssl: on
+```
 
 It is however preferable to use the standard approach if configuring a new server.
 
@@ -355,12 +384,12 @@ Often this will need to be resolved with your hosting provider or (if self-hoste
 First check your file permissions.
 Your website and all contents must generally be world-readable.
 
-Ensure that mod-rewrite is installed and working, and that your `.htaccess` file
+Ensure that `mod-rewrite` is installed and working, and that your `.htaccess` file
 is being used. To verify the latter, create a file `test.out` containing the
 word "test" in the top directory of Friendica, make it world readable and point
 your web browser to
 
-	http://yoursitenamehere.com/test.out
+> http://yoursitenamehere.com/test.out
 
 This file should be blocked. You should get a permission denied message.
 
@@ -376,9 +405,10 @@ If you do not see the word "test", your `.htaccess` is working, but it is likely
 that mod-rewrite is not installed in your web server or is not working.
 
 On most Linux flavors:
-
-	% a2enmod rewrite
-	% /etc/init.d/apache2 restart
+```sh
+a2enmod rewrite
+/etc/init.d/apache2 restart
+```
 
 Consult your hosting provider, experts on your particular Linux distribution or
 (if Windows) the provider of your Apache server software if you need to change
@@ -391,15 +421,17 @@ distribution or Apache package (if using Windows).
 Create an empty `config/local.config.php`file and apply world-write permission.
 
 On Linux:
-
-	% touch config/local.config.php
-	% chmod 664 config/local.config.php
+```sh
+touch config/local.config.php
+chmod 664 config/local.config.php
+```
 
 Retry the installation. As soon as the database has been created,
 
 ******* this is important *********
-
-	% chmod 644 config/local.config.php
+```sh
+chmod 644 config/local.config.php
+```
 
 ### Suhosin issues
 
@@ -436,7 +468,7 @@ provided by one of our members.
 >     (attacker 'REMOTE_ADDR not set', file '/var/www/friendica/friendica/boot.php',
 >     line 1341)
 >
-> After a while I noticed, that `bin/console.php worker` calls further PHP script via `proc_open`.
+> After a while I noticed, that `bin/console.php worker` calls further PHP scripts via `proc_open`.
 > These scripts themselves also use `proc_open` and fail, because they are NOT
 > called with `-d suhosin.executor.func.blacklist=none`.
 >
@@ -457,12 +489,13 @@ provided by one of our members.
 If the setup fails to create all the database tables and/or manual creation from
 the command line fails, with this error:
 
-	ERROR 1067 (42000) at line XX: Invalid default value for 'created'
+> ERROR 1067 (42000) at line XX: Invalid default value for 'created'
 
 You need to adjust your my.cnf and add the following setting under the [mysqld]
 section:
-
-	sql_mode = '';
+```
+sql_mode = '';
+```
 
 After that, restart mysql and try again.
 
@@ -549,9 +582,11 @@ You may also set it manually in the config file or in the database within the `d
 
 Altering of a table may fail if it contains a large number of rows.
 First verify the existing timeout (50s by default):
-
-`show global variables like "innodb_lock_wait_timeout";`
+```sql
+show global variables like "innodb_lock_wait_timeout";
+```
 
 Then increase it:
-
-`set global innodb_lock_wait_timeout=600;`
+```sql
+set global innodb_lock_wait_timeout=600;
+```

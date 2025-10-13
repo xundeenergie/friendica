@@ -1,16 +1,14 @@
-Vagrant for Friendica Developers
-===================
+# Vagrant for Friendica Developers
 
 * [Home](help)
 
-Getting started
----------------
+## Getting started
 
 [Vagrant](https://www.vagrantup.com/) is a virtualization solution for developers.
 No need to setup up a webserver, database etc. before actually starting.
 Vagrant creates a virtual machine for you that you can just run inside VirtualBox and start to work directly on Friendica.
 
-It brings an Debian Bullseye with PHP 8.0 and MariaDB 10.5.11.
+It brings a Debian Bullseye with PHP 8.0 and MariaDB 10.5.11.
 
 What you need to do:
 
@@ -34,22 +32,24 @@ Find the Friendica log file `/vagrant/logfile.out` on the VM or in the `logfile.
 8. Commit and push your changes directly back to GitHub.
 
 If you want to stop vagrant after finishing your work, run the following command
-
-		$> vagrant halt
+```sh
+vagrant halt
+```
 
 in the development directory.
 This will not delete the virtual machine.
 9. To ultimately delete the virtual machine run
-
-        $> vagrant destroy
-        $> rm /vagrant/config/local.config.php
+```sh
+vagrant destroy
+rm /vagrant/config/local.config.php
+```
 
 to make sure that you can start from scratch with another "vagrant up".
 
 Default User Accounts
 ---------------------
 
-By default the provision script will setup two user accounts.
+By default the provision script will set up two user accounts.
 
   * admin, password admin
   * friendica, password friendica
@@ -57,10 +57,11 @@ By default the provision script will setup two user accounts.
 Trouble Shooting
 ----------------
 
-If you see a version mis-match for the _VirtualBox Guest Additions_ between host and guest during the initial setup of the Vagrant VM, you will need to install an addon to Vagrant (ref. [Stack Overflow](https://stackoverflow.com/a/38010683)).
+If you see a version mismatch for the _VirtualBox Guest Additions_ between host and guest during the initial setup of the Vagrant VM, you will need to install an addon to Vagrant (ref. [Stack Overflow](https://stackoverflow.com/a/38010683)).
 Stop the Vagrant VM and run the following command:
-
-	$> vagrant plugin install vagrant-vbguest
+```sh
+vagrant plugin install vagrant-vbguest
+```
 
 On the next Vagrant up, the version problem should be fixed.
 

@@ -1,5 +1,4 @@
-Frequently Asked Questions - FAQ
-==============
+# Frequently Asked Questions - FAQ
 
 * [Home](help)
 
@@ -16,8 +15,7 @@ Frequently Asked Questions - FAQ
 
 
 <a name="help"></a>
-
-### Where I can find help?
+## Where I can find help?
 
 If this FAQ does not answer your question you can always reach out to the community via the following options:
 
@@ -34,7 +32,7 @@ If this FAQ does not answer your question you can always reach out to the commun
   --->
 
 <a name="ssl"></a>
-### Why do I get warnings about SSL certificates?
+## Why do I get warnings about SSL certificates?
 
 SSL (Secure Socket Layer) is a technology to encrypt data transfer between computers.
 Sometimes your browser warns you about a missing or invalid certificate.
@@ -47,7 +45,7 @@ These warnings can have three reasons:
 We recommend to talk to the admin(s) of the affected friendica server. (Admins, please see the respective section of the [admin manual](help/ssl).)
 
 <a name="upload"></a>
-### How can I upload images, files, links, videos and sound files to posts?
+## How can I upload images, files, links, videos and sound files to posts?
 
 You can upload images from your computer using the [editor](help/text-editor).
 An overview of all uploaded images is listed at *yourpage.com/profile/profilename/photos*.
@@ -76,7 +74,7 @@ Some supported file types are WebM, MP4, MP3 and OGG.
 See Wikipedia for more of them ([video](http://en.wikipedia.org/wiki/HTML5_video), [audio](http://en.wikipedia.org/wiki/HTML5_audio)).
 
 <a name="avatars"></a>
-### Is it possible to have different avatars per profile?
+## Is it possible to have different avatars per profile?
 
 Yes.
 On your Edit/Manage Profiles page, you will find a "change profile photo" link.
@@ -84,7 +82,7 @@ Clicking this will take you to a page where you can upload a photograph and sele
 To avoid privacy leakage, we only display the photograph associated with your default profile as the avatar in your posts.
 
 <a name="language"></a>
-### How can I view Friendica in a certain language?
+## How can I view Friendica in a certain language?
 
 You can do this by adding the `lang` parameter to the url in your url bar.
 The data in the parameter is a [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) code.
@@ -101,12 +99,12 @@ in German:
 When a certain language is forced, the language remains until session is closed.
 
 <a name="contacts"></a>
-### How do blocked, ignored, archived and hidden contacts behave?
+## How do blocked, ignored, archived and hidden contacts behave?
 
 These are various categories of contacts that are restricted in some way.
 Many of these types are related to [Safety](help/safety).
 
-##### Blocked
+### Blocked
 
 Direct communication will be blocked.
 Blocked contacts are not included in delivery, and their own posts to you are not imported.
@@ -114,7 +112,7 @@ However, their conversations with your friends will still be visible in your str
 If you remove a contact completely, they can send you another friend request.
 Blocked contacts cannot do this. They cannot communicate with you directly, only through friends.
 
-##### Ignored
+### Ignored
 
 Ignored contacts are included in delivery and will receive your posts and private messages.
 However, we do not import their posts or private messages to you.
@@ -122,18 +120,18 @@ Like blocking, you will still see this person's comments to posts made by your f
 
 An addon called "blockem" can be installed to collapse/hide all posts from a particular person in your stream if you desire complete blocking of an individual, including their conversations with your other friends.
 
-##### Archived
+### Archived
 
 Communication is not possible and will not be attempted.
 However, unlike blocking, existing posts this person made before being archived will be visible in your stream.
 
-##### Hidden
+### Hidden
 
 The contact not be displayed in your public friend list.
 However, a hidden contact will appear normally in conversations and this may expose their hidden status to anybody who can see the conversation.
 
 <a name="removed"></a>
-### What happens when an account is removed?
+## What happens when an account is removed?
 
 If you remove your account, it will be scheduled for permanent deletion in *seven days*.
 As soon as you activate the deletion process you won't be able to log in anymore.
@@ -144,18 +142,18 @@ Your node will also issue removal requests to all your contacts; this will also 
 Your username cannot be reissued for future sign-ups for security reasons.
 
 <a name="hashtag"></a>
-### Can I follow a hashtag?
+## Can I follow a hashtag?
 
 Yes. Simply add the hashtag to your saved searches.
 The posts will appear on your network page.
 For technical reasons, your answers to such posts won't appear on the "personal" tab in the network page and the whole thread isn't accessible via the API.
 
 <a name="rss"></a>
-### How to create an RSS feed of the stream?
+## How to create an RSS feed of the stream?
 
 If you want to share your public page via rss you can use one of the following links:
 
-#### RSS feed of your posts
+### RSS feed of your posts
 
 	basic-url.com//feed/[nickname]/posts
 
@@ -172,14 +170,15 @@ Example: Friendica Support
 	https://forum.friendi.ca/feed/helpers/comments
 
 <a name="clients"></a>
-### What friendica clients can I use?
+
+## What friendica clients can I use?
 
 Friendica supports [Mastodon API](help/api-mastodon) and [Twitter API | gnusocial](help/api).
 This means you can use some of the Mastodon and Twitter clients for Friendica.
 The available features are client specific and may differ.
 Clients dedicated to Friendica are marked in **bold**.
 
-#### Android
+### Android
 
 * [AndStatus](http://andstatus.org) ([F-Droid](https://f-droid.org/repository/browse/?fdid=org.andstatus.app), [Google Play](https://play.google.com/store/apps/details?id=org.andstatus.app))
 * [Fedilab](https://fedilab.app) ([F-Droid](https://f-droid.org/app/fr.gouv.etalab.mastodon), [Google Play](https://play.google.com/store/apps/details?id=app.fedilab.android))
@@ -195,7 +194,7 @@ Clients dedicated to Friendica are marked in **bold**.
 * [TwidereX](https://github.com/TwidereProject/TwidereX-Android) ([F-Droid](https://f-droid.org/en/packages/com.twidere.twiderex/), [Google Play](https://play.google.com/store/apps/details?id=com.twidere.twiderex))
 * [Yuito](https://github.com/accelforce/Yuito) ([Google Play](https://play.google.com/store/apps/details?id=net.accelf.yuito))
 
-#### iOS
+### iOS
 
 * [Mastodon](https://joinmastodon.org/apps) ([App Store](https://apps.apple.com/us/app/mastodon-for-iphone/id1571998974))
 * **[Relatica](https://gitlab.com/mysocialportal/relatica)**
@@ -203,7 +202,7 @@ Clients dedicated to Friendica are marked in **bold**.
 * [Tooot](https://github.com/tooot-app) ([App Store](https://apps.apple.com/app/id1549772269))
 * [TwidereX](https://github.com/TwidereProject/TwidereX-iOS) ([App Store](https://apps.apple.com/app/twidere-x/id1530314034))
 
-#### Linux
+### Linux
 
 * [Choqok](https://choqok.kde.org)
 * **[Relatica](https://gitlab.com/mysocialportal/relatica)**
@@ -211,19 +210,19 @@ Clients dedicated to Friendica are marked in **bold**.
 * [Toot](https://toot.readthedocs.io/en/latest/)
 * [Whalebird](https://whalebird.social/en/desktop/contents) ([GitHub](https://github.com/h3poteto/whalebird-desktop))
 
-#### macOS
+### macOS
 
 * **[Relatica](https://gitlab.com/mysocialportal/relatica)**
 * [TheDesk](https://thedesk.top/en/) ([GitHub](https://github.com/cutls/TheDesk))
 * [Whalebird](https://whalebird.social/en/desktop/contents) ([App Store](https://apps.apple.com/de/app/whalebird/id1378283354), [GitHub](https://github.com/h3poteto/whalebird-desktop))
 
-#### Windows
+### Windows
 
 * **[Relatica](https://gitlab.com/mysocialportal/relatica)**
 * [TheDesk](https://thedesk.top/en/) ([GitHub](https://github.com/cutls/TheDesk))
 * [Whalebird](https://whalebird.social/en/desktop/contents) ([Microsoft Store](https://apps.microsoft.com/detail/9nbw4csdv5hc), [GitHub](https://github.com/h3poteto/whalebird-desktop))
 
-#### Web Frontend
+### Web Frontend
 
 * [Halcyon](https://www.halcyon.social/)
 * [Pinafore](https://github.com/nolanlawson/pinafore)

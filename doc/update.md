@@ -1,5 +1,4 @@
-Updating Friendica
-===============
+# Updating Friendica
 
 * [Home](help)
 
@@ -27,15 +26,17 @@ To update Addons from an archive, simply delete the ``path/to/friendica/addon`` 
 ## Using Git
 
 You can get the latest changes at any time with
-
-    cd path/to/friendica
-    git pull
-    bin/composer.phar run install:prod
+```sh
+cd path/to/friendica
+git pull
+bin/composer.phar run install:prod
+```
 
 The addon tree has to be updated separately like so:
-
-    cd path/to/friendica/addon
-    git pull
+```sh
+cd path/to/friendica/addon
+git pull
+```
 
 For both repositories:
 The default branch to use is the ``stable`` branch, which is the stable version of Friendica.
@@ -61,7 +62,7 @@ There are two main ways of doing it, either by manually removing the duplicates 
 Manually removing the duplicates is usually faster if they're not too numerous.
 To manually remove the duplicates, you need to know the UNIQUE index columns available in `database.sql`.
 
-```SQL
+```sql
 SELECT GROUP_CONCAT(id), <index columns>, count(*) as count FROM users
 GROUP BY <index columns> HAVING count >= 2;
 
@@ -71,7 +72,7 @@ GROUP BY <index columns> HAVING count >= 2;
 If there are too many rows to handle manually, you can create a new table with the same structure as the table with duplicates and insert the existing content with INSERT IGNORE.
 To recreate the table you need to know the table structure available in `database.sql`.
 
-```SQL
+```sql
 CREATE TABLE <table_name>_new <rest of the CREATE TABLE>;
 INSERT IGNORE INTO <table_name>_new SELECT * FROM <table_name>;
 DROP TABLE <table_name>;
@@ -84,7 +85,7 @@ This method is slower overall, but it is better suited for large numbers of dupl
 
 #### Foreign Keys
 
-Some of the updates include the use of foreign keys now that will bump into issues with previous versions, which would sometimes shove bad data into tables, preventing, causing errors such as below.
+Some updates include the use of foreign keys now that will bump into issues with previous versions, which would sometimes shove bad data into tables, preventing, causing errors such as below.
 
 ```
 Error 1452 occurred during database update:
@@ -94,7 +95,7 @@ ALTER TABLE `thread` ADD FOREIGN KEY (`iid`) REFERENCES `item` (`id`) ON UPDATE 
 
 All current known fixes for possible items that can go wrong are as below.
 
-```SQL
+```sql
 DELETE FROM `item` WHERE `owner-id` NOT IN (SELECT `id` FROM `contact`);
 DELETE FROM `item` WHERE `contact-id` NOT IN (SELECT `id` FROM `contact`);
 DELETE FROM `notify` WHERE `uri-id` NOT IN (SELECT `id` FROM `item-uri`);

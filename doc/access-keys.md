@@ -1,5 +1,4 @@
-Accesskeys reference
-=======================
+# Access keys reference
 
 * [Home](help)
 
@@ -12,8 +11,8 @@ For example, for moving to profile page in Firefox, press these three keys simul
 
 [Shift] [Alt] [p]
 
-General
--------
+## General
+
 * p - Profile
 * n - Network
 * l - Channel
@@ -24,13 +23,13 @@ General
 * f - Notifications
 * u - User menu
 
-../community
---------
+## ../community
+
 * l - Local community
 * g - Global community
 
-../channel
---------
+## ../channel
+
 * y - for you
 * f - followers
 * r - sharers of sharers
@@ -42,8 +41,8 @@ General
 * g - Posts in your language
 * o - Hot posts in your language
 
-../profile
---------
+## ../profile
+
 * m - Status Messages and Posts
 * r - Profile Details
 * h - Photo Albums
@@ -53,8 +52,8 @@ General
 * o - Scheduled Posts
 * k - View Contacts
 
-../contacts (contact list)
----------
+## ../contacts (contact list)
+
 * g - Suggestions
 * l - Show all Contacts
 * o - Only show unblocked contacts
@@ -64,8 +63,8 @@ General
 * h - Only show hidden contacts
 * e - Edit contact circles
 
-../contact (single contact view)
--------------------------------
+## ../contact (single contact view)
+
 * m - Status messages
 * p - Posts and Comments
 * d - Media
@@ -73,12 +72,12 @@ General
 * t - Contacts
 * r - Advanced
 
-../message
---------
+## ../message
+
 * m - New message
 
-../network
---------
+## ../network
+
 * e - Sort by Comment Date
 * t - Sort by Receipt Date
 * q - Sort by Creation Date
@@ -86,16 +85,16 @@ General
 * w - New posts
 * m - Favourite Posts
 
-../notifications
---------------
+## ../notifications
+
 * y - System
 * w - Network
 * r - Personal
 * h - Home
 * i - Introductions
 
-../settings
----------
+## ../settings
+
 * o - Account
 * 2 - Two-factor authentication
 * p - Profiles

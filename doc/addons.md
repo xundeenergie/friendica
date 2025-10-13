@@ -1,5 +1,4 @@
-Friendica Addon development
-==============
+# Friendica Addon development
 
 * [Home](help)
 
@@ -144,7 +143,7 @@ No additional data is provided.
 ## Modules
 
 Addons may also act as "modules" and intercept all page requests for a given URL path.
-In order for a addon to act as a module it needs to declare an empty function `<addon>_module()`.
+In order for an addon to act as a module it needs to declare an empty function `<addon>_module()`.
 
 If this function exists, you will now receive all page requests for `https://my.web.site/<addon>` - with any number of URL components as additional arguments.
 These are parsed into the `App\Arguments` object.
@@ -560,7 +559,7 @@ For `select`, **field** is:
 Called just before dispatching the router.
 Hook data is a `\FastRoute\RouterCollector` object that should be used to add addon routes pointing to classes.
 
-**Notice**: The class whose name is provided in the route handler must be reachable via auto-loader.
+**Notice**: The class whose name is provided in the route handler must be reachable via autoloader.
 
 ### probe_detect
 
@@ -618,7 +617,7 @@ Called when unfollowing a remote contact on a non-native network (like Bluesky)
 Hook data:
 - **contact** (input): the target public contact (uid = 0) array.
 - **uid** (input): the id of the source local user.
-- **result** (output): wether the unfollowing is successful or not.
+- **result** (output): whether the unfollowing is successful or not.
 
 ### revoke_follow
 
@@ -627,7 +626,7 @@ Called when making a remote contact on a non-native network (like Bluesky) unfol
 Hook data:
 - **contact** (input): the target public contact (uid = 0) array.
 - **uid** (input): the id of the source local user.
-- **result** (output): a boolean value indicating wether the operation was successful or not.
+- **result** (output): a boolean value indicating whether the operation was successful or not.
 
 ### block
 
@@ -636,7 +635,7 @@ Called when blocking a remote contact on a non-native network (like Bluesky).
 Hook data:
 - **contact** (input): the remote contact (uid = 0) array.
 - **uid** (input): the user id to issue the block for.
-- **result** (output): a boolean value indicating wether the operation was successful or not.
+- **result** (output): a boolean value indicating whether the operation was successful or not.
 
 ### unblock
 
@@ -645,7 +644,7 @@ Called when unblocking a remote contact on a non-native network (like Bluesky).
 Hook data:
 - **contact** (input): the remote contact (uid = 0) array.
 - **uid** (input): the user id to revoke the block for.
-- **result** (output): a boolean value indicating wether the operation was successful or not.
+- **result** (output): a boolean value indicating whether the operation was successful or not.
 
 ### support_probe
 

@@ -1,10 +1,8 @@
-Account Basics
-==============
+# Account Basics
 
 * [Home](help)
 
-Registration
----
+## Registration
 
 Not all Friendica sites allow open registration.
 If registration is allowed, you will see a "Register" link immediately below the login prompt on the site's home page.
@@ -46,14 +44,13 @@ It must contain only US-ASCII text characters and numbers, and must also start w
 It also must be unique on this system.
 This is used in many places to identify your account, and once set it cannot be changed.
 
-
 ### Directory Publishing
 
 The registration form also allows you to choose whether or not to list your account in the online directory of your node.
 This is like a "phone book" and you may choose to be unlisted.
 We recommend that you select 'Yes' so that other people (friends, family, etc.) will be able to find you.
 If you choose 'No', you will essentially be invisible and have few opportunities for interaction.
-Whichever you choose, this can be changed any time from your Settings page after you login.
+Whichever you choose, this can be changed any time from your Settings page after you log in.
 
 ### Register
 
@@ -61,8 +58,7 @@ Once you have provided the necessary details, click the 'Register' button.
 An email will be sent to you providing your account login details.
 Please check your email (including spam folders) for your registration details and initial password.
 
-Login Page
----
+## Login Page
 
 On the 'Login' page, please enter your login information that was provided during registration.
 You may use either your nickname or email address as a Login Name.
@@ -76,34 +72,25 @@ Otherwise, enter your password.
 This will have been initially provided in your registration email message.
 Your password is case-sensitive, so please check your 'Caps Lock' key if you are having difficulty logging in.
 
-Changing Your Password
----
+## Changing Your Password
 
 After your first login, please visit the 'Settings' page from the top menu bar and change your password to something that you will remember.
 
-Getting Started
----
+## Getting Started
 
 A link with ['Tips for New Members'](newmember) will show up on your network and home pages for two weeks providing key information for getting started.
 
-Retrieving Personal Data
----
+## Retrieving Personal Data
 
 You can export a copy of your personal data in JSON format from the "Export personal data" link at the top of your settings page.
 
 You need this file to relocate your Friendica account to another node.
 This might be necessary, e.g. if your node suffers a severe hardware problem and is not recoverable.
 
-See Also
----
+## See Also
 
-* [Profiles](help/profiles)
-
-* [Global Directory](help/making-friends#the+directories)
-
-* [Circles and Privacy](help/circles-and-privacy)
-
-* [Move Account](help/move-account)
-
-* [Remove Account](help/remove-account)
-
+- [Profiles](help/profiles)
+- [Global Directory](help/making-friends#the+directories)
+- [Circles and Privacy](help/circles-and-privacy)
+- [Move Account](help/move-account)
+- [Remove Account](help/remove-account)

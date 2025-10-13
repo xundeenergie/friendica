@@ -1,5 +1,4 @@
-Making Friends
-==============
+# Making Friends
 
 * [Home](help)
 
@@ -7,8 +6,8 @@ Friendship in Friendica can sometimes take on different meaning.
 But let's keep it simple; you want to be friends with somebody.
 How do you do it?
 
-The Directories
----
+## The Directories
+
 Friendica has two different kinds of "address book".
 The directory of the Friendica server you are registered on and a global directory to which your and other Friendica servers submit account information.
 
@@ -23,8 +22,7 @@ If you click through to the global directory, you will be presented with a list 
 You will also see a "Show Community Groups" link, which will direct you to Groups.
 You connect to people and groups the same way, public groups will automatically accept your introduction, whereas private groups and some individual users will need to manually approve it.
 
-Connect to other Friendica users
----
+## Connect to other Friendica users
 
 Visit their profile.
 Just beneath their profile picture will be the word 'Connect' (we're assuming this is an English language profile).
@@ -48,8 +46,8 @@ If you already know somebody's Identity Address, you can enter it in the "connec
 This will take you through a similar process.
 
 
-Connect to users of alternate networks
----
+## Connect to users of alternate networks
+
 ### Across the Federation and Fediverse
 You can also use your Identity Address or other people's Identity Addresses to become friends across the so-called Federation/Fediverse of open source social media.
 Currently, Friendica supports connections with people on diaspora*, Red, Hubzilla, GNU Social, StatusNet, Mastodon, Pleroma, socialhome, and ganggo platforms.
@@ -80,31 +78,29 @@ To subscribe to a mailing list, enter the email in following example format "mai
 You can "follow" almost anybody or any website that produces a syndication feed (RSS/Atom,etc.).
 If we can find an information stream and a name to attach to the contact, we'll try to connect with them.
 
-Notification
----
+## Notification
+
 When somebody requests friendship you will receive a notification.
 You will usually need to approve this before the friendship is complete.
 
-Approval
----
+## Approval
+
 Some networks allow people to send you messages without being friends and without your approval.
 Friendica does not allow this by default, as it would open a gateway for spam.
 
-Unilateral or bilateral friendships
----
+## Unilateral or bilateral friendships
+
 When you receive a friendship notification from another Friendica member, you will have the option of allowing them as a "Follower" or as a "Friend".
 If they are a follower, they can see what you have to say, including private communications that you send to them, but not vice versa.
 As a friend, you can both communicate with each other.
 
 diaspora* uses a different terminology, and you are given the option of allowing them to "share with you", or being full friends.
 
-Deleting
----
+## Deleting
 
 You can delete a friend no matter what the friendship status - which completely removes everything relating to that person from your website.
 
-Unwanted Behaviour
----
+## Unwanted Behaviour
 
 If a contact engages in abuse, harrassment, or other unwanted behaviour, there are various actions you can take.
 These include:

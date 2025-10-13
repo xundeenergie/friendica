@@ -351,11 +351,12 @@ If you want to enable those, you have to activate them in the ``config/local.con
 Use the following settings to redirect PHP errors to a file.
 
 Config:
-
-	error_reporting(E_ERROR | E_WARNING | E_PARSE );
-	ini_set('error_log','php.out');
-	ini_set('log_errors','1');
-	ini_set('display_errors', '0');
+```
+error_reporting(E_ERROR | E_WARNING | E_PARSE );
+ini_set('error_log','php.out');
+ini_set('log_errors','1');
+ini_set('display_errors', '0');
+```
 
 This will put all PHP errors in the file php.out (which must be writeable by the webserver).
 Undeclared variables are occasionally referenced in the program and therefore we do not recommend using `E_NOTICE` or `E_ALL`.
@@ -382,14 +383,15 @@ These are the data base settings, the admin account settings, the path of PHP an
 ## DB Settings
 
 With the following settings, you specify the data base server, the username and password for Friendica and the database to use.
-
-	'database' => [
-		'hostname' => 'localhost',
-		'username' => 'mysqlusername',
-		'password' => 'mysqlpassword',
-		'database' => 'mysqldatabasename',
-		'charset' => 'utf8mb4',
-	],
+```
+'database' => [
+	'hostname' => 'localhost',
+	'username' => 'mysqlusername',
+	'password' => 'mysqlpassword',
+	'database' => 'mysqldatabasename',
+	'charset' => 'utf8mb4',
+],
+```
 
 ## Admin users
 
@@ -397,31 +399,33 @@ You can set one, or more, accounts to be *Admin*.
 By default this will be the one account you create during the installation process.
 But you can expand the list of email addresses by any used email address you want.
 Registration of new accounts with a listed email address is not possible.
-
-	'config' => [
-		'admin_email' => 'you@example.com, buddy@example.com',
-	],
+```
+'config' => [
+	'admin_email' => 'you@example.com, buddy@example.com',
+],
+```
 
 ## PHP Path
 
 Some of Friendica's processes are running in the background.
 For this you need to specify the path to the PHP binary to be used.
-
-	'config' => [
-		'php_path' => '/usr/bin/php',
-	],
+```
+'config' => [
+	'php_path' => '/usr/bin/php',
+],
+```
 
 ## Subdirectory configuration
 
 It is possible to install Friendica into a subdirectory of your web server.
 We strongly discourage you from doing so, as this will break federation to other networks (e.g. Diaspora, GNU Social, Hubzilla)
 Say you have a subdirectory for tests and put Friendica into a further subdirectory, the config would be:
-
-	'system' => [
-		'url' => 'https://example.com/tests/friendica',
-	],
+```
+'system' => [
+	'url' => 'https://example.com/tests/friendica',
+],
+```
 
 ## Other exceptions
 
 Furthermore there are some experimental settings, you can read-up in the [Config values that can only be set in config/local.config.php](help/config) section of the documentation.
-

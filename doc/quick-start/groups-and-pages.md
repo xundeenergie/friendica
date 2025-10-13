@@ -1,5 +1,5 @@
 This is the global directory.
-If you get lost, you can <a href = "help/quick-start-groups-and-pages">click this link</a> to bring yourself back here.
+If you get lost, you can [click this link](help/quick-start/groups-and-pages) to bring yourself back here.
 
 On this page, you'll find a collection of groups.
 Groups are not real people.
@@ -13,8 +13,6 @@ Simply find a group you're interested in, and connect to it the same way you did
 There are a lot of groups, and you're likely to get lost.
 Remember the link at the top of this page will bring you back here.
 
-Once you've added some groups, <a href="help/quick-start-finally">move on to the next section</a>.
+Once you've added some groups, [move on to the next section](help/quick-start/finally).
 
 <iframe src="https://dir.friendica.social/group" width="950" height="600"></iframe>
-
-

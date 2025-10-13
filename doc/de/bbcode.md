@@ -1,5 +1,4 @@
-Referenz der Friendica BBCode Tags
-========================
+# Referenz der Friendica BBCode Tags
 
 * [Zur Startseite der Hilfe](help)
 
@@ -61,8 +60,8 @@ table.bbcodes > * > tr > th {
   <td><span style="color:  red;">rot</span></td>
 </tr>
 <tr>
-  <td>[url=http://friendi.ca]Friendica[/url]</td>
-  <td><a href="http://friendi.ca" target="external-link">Friendica</a></td>
+  <td>[url=https://friendi.ca]Friendica[/url]</td>
+  <td><a href="https://friendi.ca" target="external-link">Friendica</a></td>
 </tr>
 <tr>
   <td>[img]https://raw.githubusercontent.com/friendica/friendica/stable/images/friendica-32.png[/img]</td>
@@ -103,23 +102,23 @@ table.bbcodes > * > tr > th {
   <th>Ergebnis</th>
 </tr>
 <tr>
-  <td>[url]http://friendi.ca[/url]</td>
-  <td><a href="http://friendi.ca">http://friendi.ca</a></td>
+  <td>[url]https://friendi.ca[/url]</td>
+  <td><a href="https://friendi.ca">https://friendi.ca</a></td>
 </tr>
 <tr>
-  <td>[url=http://friendi.ca.com]Friendica[/url]</td>
-  <td><a href="http://friendi.ca.com">Friendica</a></td>
+  <td>[url=https://friendi.ca.com]Friendica[/url]</td>
+  <td><a href="https://friendi.ca.com">Friendica</a></td>
 </tr>
 <tr>
-  <td>[bookmark]http://friendi.ca[/bookmark]<br><br>
-#^[url]http://friendi.ca[/url]</td>
-  <td><span class="oembed link"><h4>Friendica: <a href="http://friendi.ca" rel="oembed"></a><a href="http://friendi.ca" target="_blank" rel="noopener noreferrer">http://friendi.ca</a></h4></span></td>
+  <td>[bookmark]https://friendi.ca[/bookmark]<br><br>
+#^[url]https://friendi.ca[/url]</td>
+  <td><span class="oembed link"><h4>Friendica: <a href="https://friendi.ca" rel="oembed"></a><a href="https://friendi.ca" target="_blank" rel="noopener noreferrer">https://friendi.ca</a></h4></span></td>
 </tr>
 <tr>
-  <td>[bookmark=http://friendi.ca]Lesezeichen[/bookmark]<br><br>
-#^[url=http://friendi.ca]Lesezeichen[/url]<br><br>
-#[url=http://friendi.ca]^[/url][url=http://friendi.ca]Lesezeichen[/url]</td>
-  <td><span class="oembed link"><h4>Friendica: <a href="http://friendi.ca" rel="oembed"></a><a href="http://friendi.ca" target="_blank" rel="noopener noreferrer">Lesezeichen</a></h4></span></td>
+  <td>[bookmark=https://friendi.ca]Lesezeichen[/bookmark]<br><br>
+#^[url=https://friendi.ca]Lesezeichen[/url]<br><br>
+#[url=https://friendi.ca]^[/url][url=https://friendi.ca]Lesezeichen[/url]</td>
+  <td><span class="oembed link"><h4>Friendica: <a href="https://friendi.ca" rel="oembed"></a><a href="https://friendi.ca" target="_blank" rel="noopener noreferrer">Lesezeichen</a></h4></span></td>
 </tr>
 <tr>
   <td>[url=/posts/f16d77b0630f0134740c0cc47a0ea02a]Diaspora Beitrag mit GUID[/url]</td>
@@ -171,7 +170,7 @@ Zeilen</code></td>
 </tr>
 <tr>
   <td>[code=php]function text_highlight($s,$lang)[/code]</td>
-  <td><code><div class="hl-main"><ol class="hl-main"><li><span class="hl-code">&nbsp;</span><span class="hl-reserved">function</span><span class="hl-code"> </span><span class="hl-identifier">text_highlight</span><span class="hl-brackets">(</span><span class="hl-var">$s</span><span class="hl-code">,</span><span class="hl-var">$lang</span><span class="hl-brackets">)</span></li></ol></div></code></td>
+  <td><code><div class="hl-main"><ol class="hl-main"><li><span class="hl-code"> </span><span class="hl-reserved">function</span><span class="hl-code"> </span><span class="hl-identifier">text_highlight</span><span class="hl-brackets">(</span><span class="hl-var">$s</span><span class="hl-code">,</span><span class="hl-var">$lang</span><span class="hl-brackets">)</span></li></ol></div></code></td>
 </tr>
 <tr>
   <td>[quote]Zitat[/quote]</td>
@@ -255,21 +254,21 @@ Zeilen</code></td>
 </tr>
 <tr>
   <td>[table]<br>
-&nbsp;&nbsp;[tr]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[th]Kopfzeile 1[/th]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[th]Kopfzeile 2[/th]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[th]Kopfzeile 2[/th]<br>
-&nbsp;&nbsp;[/tr]<br>
-&nbsp;&nbsp;[tr]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Zelle 1[/td]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Zelle 2[/td]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Zelle 3[/td]<br>
-&nbsp;&nbsp;[/tr]<br>
-&nbsp;&nbsp;[tr]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Zelle 4[/td]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Zelle 5[/td]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;[td]Zelle 6[/td]<br>
-&nbsp;&nbsp;[/tr]<br>
+  [tr]<br>
+    [th]Kopfzeile 1[/th]<br>
+    [th]Kopfzeile 2[/th]<br>
+    [th]Kopfzeile 2[/th]<br>
+  [/tr]<br>
+  [tr]<br>
+    [td]Zelle 1[/td]<br>
+    [td]Zelle 2[/td]<br>
+    [td]Zelle 3[/td]<br>
+  [/tr]<br>
+  [tr]<br>
+    [td]Zelle 4[/td]<br>
+    [td]Zelle 5[/td]<br>
+    [td]Zelle 6[/td]<br>
+  [/tr]<br>
 [/table]</td>
   <td>
 	<table>
@@ -352,12 +351,12 @@ Zeilen</code></td>
 </tr>
 <tr>
   <td>[ul]<br>
-&nbsp;&nbsp;[li] Erstes Listenelement<br>
-&nbsp;&nbsp;[li] Zweites Listenelement<br>
+  [li] Erstes Listenelement<br>
+  [li] Zweites Listenelement<br>
 [/ul]<br>
 [list]<br>
-&nbsp;&nbsp;[li] Erstes Listenelement<br>
-&nbsp;&nbsp;[li] Zweites Listenelement<br>
+  [li] Erstes Listenelement<br>
+  [li] Zweites Listenelement<br>
 [/list]</td>
   <td>
 	<ul class="listbullet" style="list-style-type: circle;">
@@ -368,12 +367,12 @@ Zeilen</code></td>
 </tr>
 <tr>
   <td>[ol]<br>
-&nbsp;&nbsp;[li] Erstes Listenelement<br>
-&nbsp;&nbsp;[li] Zweites Listenelement<br>
+  [li] Erstes Listenelement<br>
+  [li] Zweites Listenelement<br>
 [/ol]<br>
 [list=1]<br>
-&nbsp;&nbsp;[li] Erstes Listenelement<br>
-&nbsp;&nbsp;[li] Zweites Listenelement<br>
+  [li] Erstes Listenelement<br>
+  [li] Zweites Listenelement<br>
 [/list]</td>
   <td>
     <ul class="listdecimal" style="list-style-type: decimal;">
@@ -384,8 +383,8 @@ Zeilen</code></td>
 </tr>
 <tr>
   <td>[list=]<br>
-&nbsp;&nbsp;[li] Erstes Listenelement<br>
-&nbsp;&nbsp;[li] Zweites Listenelement<br>
+  [li] Erstes Listenelement<br>
+  [li] Zweites Listenelement<br>
 [/list]</td>
   <td>
     <ul class="listnone" style="list-style-type: none;">
@@ -396,8 +395,8 @@ Zeilen</code></td>
 </tr>
 <tr>
   <td>[list=i]<br>
-&nbsp;&nbsp;[li] Erstes Listenelement<br>
-&nbsp;&nbsp;[li] Zweites Listenelement<br>
+  [li] Erstes Listenelement<br>
+  [li] Zweites Listenelement<br>
 [/list]</td>
   <td>
     <ul class="listlowerroman" style="list-style-type: lower-roman;">
@@ -408,8 +407,8 @@ Zeilen</code></td>
 </tr>
 <tr>
   <td>[list=I]<br>
-&nbsp;&nbsp;[li] Erstes Listenelement<br>
-&nbsp;&nbsp;[li] Zweites Listenelement<br>
+  [li] Erstes Listenelement<br>
+  [li] Zweites Listenelement<br>
 [/list]</td>
   <td>
     <ul class="listupperroman" style="list-style-type: upper-roman;">
@@ -420,8 +419,8 @@ Zeilen</code></td>
 </tr>
 <tr>
   <td>[list=a]<br>
-&nbsp;&nbsp;[li] Erstes Listenelement<br>
-&nbsp;&nbsp;[li] Zweites Listenelement<br>
+  [li] Erstes Listenelement<br>
+  [li] Zweites Listenelement<br>
 [/list]</td>
   <td>
     <ul class="listloweralpha" style="list-style-type: lower-alpha;">
@@ -432,8 +431,8 @@ Zeilen</code></td>
 </tr>
 <tr>
   <td>[list=A]<br>
-&nbsp;&nbsp;[li] Erstes Listenelement<br>
-&nbsp;&nbsp;[li] Zweites Listenelement<br>
+  [li] Erstes Listenelement<br>
+  [li] Zweites Listenelement<br>
 [/list]</td>
   <td>
     <ul class="listupperalpha" style="list-style-type: upper-alpha;">
@@ -551,7 +550,7 @@ Als ich die Bilder im Wald aufgenommen habe, hatte ich eine wirklich ungew&ouml;
 </tr>
 </table>
 
-F&uuml;r Verbindungen zu Netzwerken, zu denen Friendica den HTML Code postet, wie Tumblr, Wordpress oder Pump.io wird das [abstract] Element nicht verwendet.
+F&uuml;r Verbindungen zu Netzwerken, zu denen Friendica den HTML Code postet, wie Tumblr, WordPress oder Pump.io wird das [abstract] Element nicht verwendet.
 Bei nativen Verbindungen; das hei&szlig;t zu z.B. Friendica, Hubzilla, Diaspora oder GNU Social Kontakten; wird der ungek&uuml;rzte Beitrag &uuml;bertragen.
 Die Instanz des Kontakts k&uuml;mmert sich um die Darstellung.
 
@@ -595,4 +594,3 @@ Du kannst alle [style=text-shadow: 0 0 4px #CC0000;]CSS-Eigenschaften[/style] di
   <td>Du kannst alle <span style="text-shadow: 0 0 4px #cc0000;;">CSS-Eigenschaften</span> dieses Inline-Textes &auml;ndern-</td>
 </tr>
 </table>
-

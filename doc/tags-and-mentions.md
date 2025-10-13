@@ -1,13 +1,10 @@
-Tags and Mentions
-=================
-
+# Tags and Mentions
 
 * [Home](help)
 
-
 Like many other modern social networks, Friendica uses a special notation inside messages to indicate "tags" or contextual links to other entities.
 
-**Mentions**
+## Mentions
 
 People are tagged by preceding their name with the @ character.
 
@@ -41,7 +38,7 @@ If you sort your contacts into circles, you cannot @-mention these circles.
 But you can select the circle in the access control when creating a new posting, to allow (or disallow) a certain circle of people to see the posting.
 See [Circles and Privacy](help/circles-and-privacy) for more details about grouping your contacts.
 
-**Topical Tags**
+## Topical Tags
 
 Topical tags are indicated by preceding the tag name with the # character.
 This will create a link in the post to a generalised site search for the term provided.

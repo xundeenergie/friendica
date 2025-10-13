@@ -1,5 +1,4 @@
-How To Move Classes to `src`
-==============
+# How To Move Classes to `src`
 
 * [Home](help)
   * [Developer Intro](help/developers-intro)
@@ -12,7 +11,7 @@ However, there are a significant number of items to check when moving a class fi
 
 ## Decide the namespace
 
-This isn't the most technical decision of them all, but it has long lasting consequences as it will be the name that will be used to refer to this class from now on.
+This isn't the most technical decision of them all, but it has long-lasting consequences as it will be the name that will be used to refer to this class from now on.
 There is [a shared Ethercalc sheet](https://ethercalc.org/friendica_classes) to suggest namespace/class names that lists all the already moved class files for inspiration.
 
 A few pointers though:
@@ -34,7 +33,7 @@ namespace Friendica\Core;
 From now on, the `Config` class can be referred to as `Friendica\Core\Config`, however it isn't very practical, especially when the class was previously used as `Config`.
 Thankfully, PHP provides namespace shortcuts through `use`.
 
-This language construct just provides a different naming scheme for a namespace or a class, but doesn't trigger the autoload mechanism on its own.
+This language construct just provides a different naming scheme for a namespace or a class, but doesn't trigger the autoload-mechanism on its own.
 Here are the different ways you can use `use`:
 
 ````php

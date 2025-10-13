@@ -1,5 +1,4 @@
-Chats
-=====
+# Chats
 
 * [Home](help)
 
@@ -8,10 +7,9 @@ There are two possibilities to use chat on your friendica site
 * IRC Chat
 * Jappix
 
-IRC-Chat Addon
----
+## IRC-Chat Addon
 
-After activating the addon, you can find the chat at [yoursite.com/irc](../irc).
+After activating the addon, you can find the chat at `https://your-site.info/irc`.
 Note: you can use this chat without any login at your site so that everyone could use it.
 
 If you follow the link, you will see the login page of the IRC chat.
@@ -25,8 +23,8 @@ The first line shows your name and your current IP address.
 The right part of the window shows all users.
 The lower part of the window contains an input field.
 
-Jappix Mini
----
+## Jappix Mini
+
 
 The Jappix Mini Addon creates a chatbox for jabber- and XMPP-contacts.
 You should already have a jabber/XMPP-account before setting up the addon.
@@ -39,9 +37,11 @@ You can use several servers to create an account:
 
 ### 1. Basics
 
-At first you have to get the current version. You can either pull it from [GitHub](https://github.com) like so:
-
-    $> cd /var/www/virtual/YOURSPACE/html/addon; git pull
+First you have to get the current version. You can either pull it from [GitHub](https://github.com) like so:
+```sh
+cd /var/www/virtual/YOURSPACE/html/addon
+git pull
+```
 
 Or you can download a tar archive here: [jappixmini.tgz](https://github.com/friendica/friendica-addons/blob/stable/jappixmini.tgz) (click at „view raw“).
 
@@ -59,13 +59,13 @@ Activate the BOSH proxy.
 Go to your user account settings next and choose the addon page.
 Scroll down until you find the Jappix Mini addon settings.
 
-At first you have to activate the addon.
+First you have to activate the addon.
 
 Now add your Jabber/XMPP name, the domain/server (without "http"; just "jappix.com").
 For „Jabber BOSH Host“ you could use "https://bind.jappix.com/".
 Note that you need another BOSH server if you do not use jappix.com for your XMPP account.
-You can find further information in the „Configuration Help“-section below this fields.
-At last you have enter your password (there are some more optional options, you can choose).
+You can find further information in the „Configuration Help“-section below these fields.
+Finally you enter your password (there are some more optional options, you can choose).
 Finish these steps with "send" to save the entries.
 Now, you should find the chatbox at the lower right corner of your browser window.
 

@@ -1,5 +1,4 @@
-Friendica Templating Documentation
-==================================
+# Friendica Templating Documentation
 
 * [Home](help)
 
@@ -21,25 +20,27 @@ Templates that are only used by addons shall be placed in the
 directory.
 
 To render a template use the function *getMarkupTemplate* to load the template and *replaceMacros* to replace the macros/variables in the just loaded template file.
-
-		$tpl = Renderer::getMarkupTemplate('install_settings.tpl');
-        $o .= Renderer::replaceMacros($tpl, array( ... ));
+```php
+$tpl = Renderer::getMarkupTemplate('install_settings.tpl');
+$o .= Renderer::replaceMacros($tpl, array( ... ));
+```
 
 the array consists of an association of an identifier and the value for that identifier, i.e.
-
-		'$title' => $install_title,
+```php
+'$title' => $install_title,
+```
 
 where the value may as well be an array by its own.
 
-Form Templates
---------------
+## Form Templates
 
 To guarantee a consistent look and feel for input forms, i.e. in the settings sections, there are templates for the basic form fields.
-They are initialized with an array of data, depending on the tyle of the field.
+They are initialized with an array of data, depending on the style of the field.
 
 All of these take an array holding the values, e.g. for a one line text input field, which is required and should be used to type email addresses use something along the lines of:
-
-		'$adminmail' => array('adminmail', DI::l10n()->t('Site administrator email address'), $adminmail, DI::l10n()->t('Your account email address must match this in order to use the web admin panel.'), 'required', '', 'email'),
+```php
+'$adminmail' => array('adminmail', DI::l10n()->t('Site administrator email address'), $adminmail, DI::l10n()->t('Your account email address must match this in order to use the web admin panel.'), 'required', '', 'email'),
+```
 
 To evaluate the input value, you can then use the $_POST array, more precisely the $_POST['adminemail'] variable.
 
@@ -148,25 +149,25 @@ Field parameter:
 
 ### field_select.tpl
 
-A drop down selection box.
+A drop-down selection box.
 Field parameter:
 
 0. Name of the field,
 1. Label of the selection box,
 2. Current selected value,
 3. Help text for the selection box,
-4. Array holding the possible values of the selection drop down.
+4. Array holding the possible values of the selection drop-down.
 
 ### field_select_raw.tpl
 
-A drop down selection box (see above) but you have to prepare the values yourself.
+A drop-down selection box (see above) but you have to prepare the values yourself.
 Field parameter:
 
 0. Name of the field,
 1. Label of the selection box,
 2. Current selected value,
 3. Help text for the selection box,
-4. Possible values of the selection drop down.
+4. Possible values of the selection drop-down.
 
 ### field_textarea.tpl
 
