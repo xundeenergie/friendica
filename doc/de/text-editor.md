@@ -41,7 +41,7 @@ Hier reicht schon eine Angabe wie "Berlin" oder "10775".
 Dieser Eintrag führt anschließend zu einer Suchanfrage bei Google Maps.
 <p style="clear:both;"></p>
 
-<i>* wie du Dateien hochladen kannst, erfährst du [hier](help/FAQ#upload)</i>
+<i>* wie du Dateien hochladen kannst, erfährst du [hier](help/faq#upload)</i>
 
 **Im Folgenden findest du Symbole weiterer Themen**
 
