@@ -1,65 +1,62 @@
 # Hilfe
 
-**Dokumentation für Benutzer**
+## Dokumentation für Benutzer
 
 * Allgemeine Funktionen - Erste Schritte
-	* [Account - Basics](help/account-basics)
-	* [Schnellstart für neue Benutzer](help/quick-start/guide)
-	* [Beiträge erstellen](help/text-editor)
-	* [Referenz der BBCode Elemente](help/bbcode)
-	* [Beiträge kommentieren, einordnen und löschen](help/text-comment)
-	* [Referenz der Accesskeys](help/access-keys)
-    * [Veranstaltungen](help/events)
+	* [Account - Basics](help/user/account-basics)
+	* [Schnellstart für neue Benutzer](help/user/quick-start/guide)
+	* [Beiträge erstellen](help/user/text-editor)
+	* [Referenz der BBCode Elemente](help/user/bbcode)
+	* [Beiträge kommentieren, einordnen und löschen](help/user/text-comment)
+	* [Referenz der Accesskeys](help/user/access-keys) (EN)
+    * [Veranstaltungen](help/user/events)
 * Du und andere Nutzer
-	* [Konnektoren (Connectors)](help/connectors)
-	* [Freunde finden](help/making-friends)
-	* [Circles und Privatsphäre](help/circles-and-privacy)
-	* [Tags und Erwähnungen](help/tags-and-mentions)
-	* [Community-Gruppen](help/groups)
-	* [Kanäle (Channels)](help/channels)
-	* [Chats](help/chats)
+	* [Konnektoren (Connectors)](help/user/connectors)
+	* [Freunde finden](help/user/making-friends)
+	* [Circles und Privatsphäre](help/user/circles-and-privacy)
+	* [Tags und Erwähnungen](help/user/tags-and-mentions)
+	* [Gruppen](help/user/groups)
+	* [Kanäle (Channels)](help/user/channels)
+	* [Chats](help/user/chats)
 * Weiterführende Informationen
-	* [Account umziehen](help/move-account)
-	* [Export / Import gefolgter Kontakte](help/export-import-contacts)
-	* [Account löschen](help/remove-account)
-	* [Bugs und Probleme](help/bugs-and-issues)
-	* [Häufig gestellte Fragen (FAQ)](help/faq)
+	* [Häufig gestellte Fragen (FAQ)](help/user/faq)
+	* [Account umziehen](help/user/move-account)
+	* [Export / Import gefolgter Kontakte](help/user/export-import-contacts)
+	* [Account löschen](help/user/remove-account)
+	* [Bugs und Probleme](help/user/bugs-and-issues)
 
-**Dokumentation für Administratoren**
+## Dokumentation für Administratoren
 
-* [Installation](help/install)
-* [Update](help/update) (EN)
-* [Konfigurationen & Admin-Panel](help/settings)
-* [Addons](help/addons)
-* [Konnektoren (Connectors) installieren](help/installing-connectors)
-* [Installation eines ejabberd Servers (XMPP-Chat) mit synchronisierten Anmeldedaten](help/install-ejabberd) (EN)
-* [Betreibe deine Seite mit einem SSL-Zertifikat](help/ssl)
-* [Konfigurationswerte, die nur in der config/local.config.php gesetzt werden können](help/config) (EN)
-* [Performance verbessern](help/improve-performance)
-* [Administration Werkzeuge](help/tools) (EN)
-* [Admin FAQ](help/faq-admin)
+* [Häufig gestellte Fragen FAQ](help/admin/faq)
+* [Installation](help/admin/install)
+* [Update](help/admin/update) (EN)
+* [Konfigurationen & Admin-Panel](help/admin/settings)
+* [Konnektoren (Connectors) installieren](help/admin/installing-connectors)
+* [Installation eines ejabberd Servers (XMPP-Chat) mit synchronisierten Anmeldedaten](help/admin/install-ejabberd) (EN)
+* [Betreibe deine Seite mit einem SSL-Zertifikat](help/admin/ssl)
+* [Konfigurationswerte, die nur in der config/local.config.php gesetzt werden können](help/admin/config) (EN)
+* [Performance verbessern](help/admin/improve-performance)
+* [Administration Werkzeuge](help/admin/tools) (EN)
 
-**Dokumentation für Entwickler**
+## Dokumentation für Entwickler
 
-* [Entwickler](help/developers)
-* [Where to get started?](help/developers-intro) (EN)
-* [Help on Github](help/github)
-* [Help on Vagrant](help/vagrant)
-* [How to translate Friendica](help/translations) (EN)
-* [Bugs and Issues](help/bugs-and-issues)
-* [Addon Development](help/addons)
-* [Theme Development](help/themes)
-* [Smarty 3 Templates](help/smarty3-templates)
-* [Protokoll Dokumentation](help/protocol) (EN)
+* [Guide](help/developer/guide)
+* [Where to get started?](help/developer/index) (EN)
+* [On GitHub](help/developer/github)
+* [On Vagrant](help/developer/vagrant)
+* [Translate Friendica](help/developer/translations) (EN)
+* [Addon Development](help/developer/addons)
+* [Theme Development](help/developer/themes)
+* [Smarty 3 Templates](help/developer/smarty3-templates)
+* [Protokoll Dokumentation](help/spec/protocol/procotol) (EN)
 * [Datenbank-Schema](help/database)
-* [Class Autoloading](help/autoloader) (EN)
-* [Using Composer](help/composer) (EN)
+* [Class Autoloading](help/developer/autoloader) (EN)
+* [Using Composer](help/developer/composer) (EN)
 * [Code-Referenz (mit doxygen generiert - setzt Cookies)](doc/html/)
-* [API Dokumentation](help/api) (EN)
-* [Translation of Friendica](help/translations) (EN)
-* [Run tests](help/tests) (EN)
+* [API Dokumentation](help/spec/api/index) (EN)
+* [Run tests](help/developer/tests) (EN)
 
-**Links**
+## Links
 
 * Website: [https://friendi.ca](https://friendi.ca)
 * Help Group: [@helpers@forum.friendi.ca](https://forum.friendi.ca/~helpers)
@@ -68,7 +65,7 @@
 * Matrix: [https://matrix.to/#/#friendi.ca:matrix.org](https://matrix.to/#/#friendi.ca:matrix.org)
 * Mailing List: [https://mailman.friendi.ca/mailman/listinfo/support-friendi.ca](http://mailman.friendi.ca/mailman/listinfo/support-friendi.ca)
 
-**Über**
+## Über
 
 * [Server Information](friendica)
 * [Nutzungsbedingungen](tos)

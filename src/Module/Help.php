@@ -42,11 +42,11 @@ class Help extends BaseModule
 			}
 			$title              = basename($path);
 			$filename           = $path;
-			$text               = self::loadDocFile('doc/' . $path . '.md', $lang);
+			$text               = self::loadDocFile($path . '.md', $lang);
 			DI::page()['title'] = DI::l10n()->t('Help:') . ' ' . str_replace('-', ' ', $title);
 		}
 
-		$home = self::loadDocFile('doc/home.md', $lang);
+		$home = self::loadDocFile('home.md', $lang);
 		if (!$text) {
 			$text               = $home;
 			$filename           = "home";
@@ -110,23 +110,25 @@ class Help extends BaseModule
 		return $html;
 	}
 
-	private static function loadDocFile($fileName, $lang = 'en')
+	private static function loadDocFile($filePath, $lang = 'en')
 	{
-		$baseName = basename($fileName);
-		$dirName  = dirname($fileName);
-		// An ugly hack to get the guide, which is inside a directory now, working again in German
-		// A non-hacky solution could be found, but if this file is being deleted soon when switching to mkdocs then...?
-		if (strpos($dirName, "quick-start")) {
-			if (file_exists("doc/$lang/quick-start/$baseName")) {
-				return file_get_contents("doc/$lang/quick-start/$baseName");
-			}
-		}
-		if (file_exists("$dirName/$lang/$baseName")) {
-			return file_get_contents("$dirName/$lang/$baseName");
+		$baseDir = "doc";
+
+		// Try loading docs inside a language dir first, then try English dir, then fall back to looking at the root dir
+		$docPath = "$baseDir/$lang/$filePath";
+		if (file_exists($docPath)) {
+			return file_get_contents($docPath);
 		}
 
-		if (file_exists($fileName)) {
-			return file_get_contents($fileName);
+		$docPath = "$baseDir/en/$filePath";
+		if (file_exists($docPath)) {
+			return file_get_contents($docPath);
+		}
+
+		// Delete this once database docs have been moved into en/spec/database
+		$docPath = "$baseDir/$filePath";
+		if (file_exists($docPath)) {
+			return file_get_contents($docPath);
 		}
 
 		return '';

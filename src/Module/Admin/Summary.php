@@ -105,7 +105,7 @@ class Summary extends BaseAdmin
 				'<a href="%s">%s</a> is not reachable on your system. This is a severe configuration issue that prevents server to server communication. See <a href="%s">the installation page</a> for help.',
 				$well_known,
 				$well_known,
-				DI::baseUrl() . '/help/install'
+				DI::baseUrl() . '/help/admin/install'
 			);
 		}
 
