@@ -2,21 +2,10 @@
 
 * [Home](help)
 
-<!-- TODO: Replace this with a generated TOC and remove the anchor tags -->
-
-* **[Can I configure multiple domains with the same code instance?](help/faq#multiple)**
-* **[Where can I find the source code of friendica, addons and themes?](help/faq#sources)**
-* **[I've changed the my email address now the admin panel is gone?](help/faq#adminaccount1)**
-* **[Can there be more then just one admin for a node?](help/faq#adminaccount2)**
-* **[The Database structure seems not to be updated. What can I do?](help/faq#dbupdate)**
-
-
-<a name="multiple"></a>
 ## Can I configure multiple domains with the same code instance?
 
 No, this function is no longer supported as of Friendica 3.3 onwards.
 
-<a name="sources"></a>
 ## Where can I find the source code of friendica, addons and themes?
 
 You can find the main repository [here](https://github.com/friendica/friendica).
@@ -26,12 +15,10 @@ Addons are listed at [this page](https://github.com/friendica/friendica-addons).
 
 If you are searching for new themes, you can find them at [github.com/bkil/friendica-themes](https://github.com/bkil/friendica-themes)
 
-<a name="adminaccount1"></a>
 ## I've changed my email address now the admin panel is gone?
 
 Have a look into your <tt>config/local.config.php</tt> and fix your email address there.
 
-<a name="adminaccount2"></a>
 ## Can there be more then one admin for a node?
 
 Yes.
@@ -43,7 +30,6 @@ The listed emails need to be separated by a comma like this:
 'admin_email' => 'mail1@example.com,mail2@example.com',
 ```
 
-<a name="dbupdate"></a>
 ## The Database structure seems not to be updated. What can I do?
 
 Please have a look at the Admin panel under [DB updates](/admin/dbsync/) and follow the link to *check database structure*.

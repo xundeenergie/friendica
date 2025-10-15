@@ -27,9 +27,9 @@
 
 ## Dokumentation für Administratoren
 
-* [Häufig gestellte Fragen FAQ](help/admin/faq)
 * [Installation](help/admin/install)
 * [Update](help/admin/update) (EN)
+* [Häufig gestellte Fragen FAQ](help/admin/faq)
 * [Konfigurationen & Admin-Panel](help/admin/settings)
 * [Konnektoren (Connectors) installieren](help/admin/installing-connectors)
 * [Installation eines ejabberd Servers (XMPP-Chat) mit synchronisierten Anmeldedaten](help/admin/install-ejabberd) (EN)

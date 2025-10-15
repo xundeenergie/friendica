@@ -2,21 +2,6 @@
 
 * [Zur Startseite der Hilfe](help)
 
-<!-- TODO: Replace this with a generated TOC and remove the anchor tags -->
-
-* **[Wo finde ich Hilfe?](help/faq#help)**
-* **[Warum erhalte ich Warnungen über fehlende Zertifikate?](help/faq#ssl)**
-* **[Wie kann ich Bilder, Dateien, Links, Video und Audio in Beiträge einfügen?](help/faq#upload)**
-* **[Ist es möglich, bei mehreren Profilen verschiedene Avatare (Nutzerbilder) zu haben?](help/faq#avatars)**
-* **[Wie kann ich Friendica in einer bestimmten Sprache ansehen?](help/faq#language)**
-* **[Was ist der Unterschied zwischen blockierten|ignorierten|archivierten|versteckten Kontakten?](help/faq#contacts)**
-* **[Was passiert, wenn ein Account gelöscht ist? Ist dieser richtig gelöscht?](help/faq#removed)**
-* **[Kann ich einem Hashtag folgen?](help/faq#hashtag)**
-* **[Wie kann ich einen RSS-Feed meiner Netzwerkseite (Stream) erstellen?](help/faq#rss)**
-* **[Gibt es Clients für Friendica?](help/faq#clients)**
-
-
-<a name="help"></a>
 ## Wo finde ich Hilfe?
 
 Wenn Du Probleme mit Deiner Friendica-Seite hast, dann kannst Du die Community in der [Friendica-Support-Gruppe](https://forum.friendi.ca/profile/helpers) fragen.
@@ -36,7 +21,6 @@ Wenn du dir keinen weiteren Friendica Account einrichten willst, kannst du auch 
 	https://github.com/github/opensource.guide/pull/807
   --->
 
-<a name="ssl"></a>
 ## Warum erhalte ich Warnungen über fehlende Zertifikate?
 
 Manchmal erhältst Du eine Browser-Warnung über fehlende Zertifikate.
@@ -66,7 +50,6 @@ Wenn Du zum jetzigen Zeitpunkt noch keinen Server aufgesetzt hast, ist es sinnvo
 Einige erlauben die Nutzung von freien Zertifikaten oder lassen Dich ihre eigenen Zertifikate mitnutzen.
 Andere erlauben nur kostenpflichtige Zertifikate als eigenes Angebot bzw. von anderen Anbietern.
 
-<a name="upload"></a>
 ## Wie kann ich Bilder, Dateien, Links, Video und Audio in Beiträge einfügen?
 
 Bilder können direkt im [Beitragseditor](help/text-editor) vom Computer hochgeladen werden.
@@ -91,7 +74,6 @@ Friendica verwendet zur Einbettung HTML5. Das bedeutet, dass je nach Browser und
 
 Zum Konvertieren von Videos in das lizenzfreie Videoformat WebM gibt es unter Windows das kostenlose Programm [Xmedia-Recode](http://www.xmedia-recode.de/).
 
-<a name="avatars"></a>
 ## Ist es möglich, bei mehreren Profilen verschiedene Avatare (Nutzerbilder) zu haben?
 
 Ja.
@@ -100,7 +82,6 @@ Anschließend siehst Du eine Seite mit allen Informationen zu diesem Profil.
 Klicke nun oben auf den Link "Profilbild ändern" und lade im nächsten Fenster ein Bild von Deinem PC hoch.
 Um Deine privaten Daten zu schützen, wird in Beiträgen nur das Bild aus Deinem öffentlichen Profil angezeigt.
 
-<a name="language"></a>
 ## Wie kann ich Friendica in einer bestimmten Sprache ansehen?
 
 Die Sprache des Friendica Interfaces kann durch den `lang` Parameter un der URL beeinflusst werden.
@@ -115,7 +96,6 @@ auf Deutsch:
 
      https://social.example.com/profile/example?lang=de.
 
-<a name="contacts"></a>
 ## Was ist der Unterschied zwischen blockierten|ignorierten|archivierten|versteckten Kontakten?
 
 Wir verhindern direkte Kommunikation mit blockierten Kontakten.
@@ -138,7 +118,6 @@ Anders als beim Blockieren werden existierende Beiträge, die vor der Archivieru
 Ein versteckter Kontakt wird in keiner "Freundesliste" erscheinen (außer für dich).
 Trotzdem wird ein versteckter Kontakt normal in Unterhaltungen angezeigt - was für andere Kontakte ein Hinweis sein kann, dass diese Person als versteckter Kontakt in deiner Liste ist.
 
-<a name="removed"></a>
 ## Was passiert, wenn ein Account gelöscht ist? Ist dieser richtig gelöscht?
 
 Wenn Du Deinen Account löschst, wird sofort der gesamte Inhalt auf Deinem Server gelöscht und ein Löschbefehl an alle Deine Kontakte verschickt.
@@ -146,14 +125,12 @@ Dadurch wirst Du ebenfalls aus dem globalen Verzeichnis gelöscht.
 Dieses Vorgehen setzt voraus, dass Dein Profil für 24 Stunden weiterhin "teilweise" verfügbar sein wird, um eine Verbindung zu allen Deinen Kontakten ermöglicht.
 Wir können also Dein Profil blockieren und es so erscheinen lassen, als wären alle Daten sofort gelöscht, allerdings warten wir 24 Stunden (bzw. bis alle Deine Kontakte informiert wurden), bevor wir die Daten auch physikalisch löschen.
 
-<a name="hashtag"></a>
 ## Kann ich einem Hashtag folgen?
 
 Ja.
 Füge die Tags zu Deinen gespeicherten Suchen hinzu, sie werden automatisch auf der Netzwerk-Seite auftauchen.
 Bitte beachte, dass Deine Antworten auf solche Posts aus technischen Gründen nicht unter dem "Persönlich"-Reiter auf der Netzwerk-Seite und der gesamte Thread nicht per API zu sehen sind.
 
-<a name="rss"></a>
 ## Wie kann ich einen RSS-Feed meiner Netzwerkseite (Stream) erstellen?
 
 Wenn Du die Beiträge Deines Accounts mit RSS teilen willst, dann kannst Du einen der folgenden Links nutzen:
@@ -178,7 +155,6 @@ Beispiel: Friendica Support
 
     deineSeite.de/feed/[profilname]/
 
-<a name="clients">
 ## Gibt es Clients für Friendica?
 
 Friendica unterstützt [Mastodon API](help/api-mastodon) und [Twitter API | gnusocial](help/api).

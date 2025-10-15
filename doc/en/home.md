@@ -28,9 +28,9 @@
 
 ## Admin Manual
 
-* [Frequently asked questions (FAQ)](help/admin/faq)
 * [Installation](help/admin/install)
 * [Updating](help/admin/update)
+* [Frequently asked questions (FAQ)](help/admin/faq)
 * [Settings & Admin Panel](help/admin/settings)
 * [Installing Connectors](help/admin/installing-connectors)
 * [Installing an ejabberd server (XMPP chat) with synchronized credentials](help/admin/install-ejabberd)

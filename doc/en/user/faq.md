@@ -2,20 +2,6 @@
 
 * [Home](help)
 
-<!-- TODO: Replace this with a generated TOC and remove the anchor tags -->
-
-* **[Where I can find help?](help/user/faq#help)**
-* **[Why do I get warnings about certificates?](help/user/faq#ssl)**
-* **[How can I upload images, files, links, videos and sound files to posts?](help/user/faq#upload)**
-* **[Is it possible to have different avatars per profile?](help/user/faq#avatars)**
-* **[How can I view Friendica in a certain language?](help/user/faq#language)**
-* **[How do blocked, ignored, archived and hidden contacts behave?](help/user/faq#contacts)**
-* **[What happens when an account is removed? Is it truly deleted?](help/user/faq#removed)**
-* **[Can I subscribe to a hashtag?](help/user/faq#hashtag)**
-* **[How to create an RSS feed of the stream?](help/user/faq#rss)**
-* **[What friendica clients can I use?](help/user/faq#clients)**
-
-<a name="help"></a>
 ## Where I can find help?
 
 If this FAQ does not answer your question you can always reach out to the community via the following options:
@@ -32,7 +18,6 @@ If this FAQ does not answer your question you can always reach out to the commun
 	https://github.com/github/opensource.guide/pull/807
   --->
 
-<a name="ssl"></a>
 ## Why do I get warnings about SSL certificates?
 
 SSL (Secure Socket Layer) is a technology to encrypt data transfer between computers.
@@ -45,7 +30,6 @@ These warnings can have three reasons:
 
 We recommend to talk to the admin(s) of the affected friendica server. (Admins, please see the respective section of the [admin manual](help/admin/ssl).)
 
-<a name="upload"></a>
 ## How can I upload images, files, links, videos and sound files to posts?
 
 You can upload images from your computer using the [editor](help/user/text-editor).
@@ -74,7 +58,6 @@ Therefore, the supported files are dependent on your browser and operating syste
 Some supported file types are WebM, MP4, MP3 and OGG.
 See Wikipedia for more of them ([video](http://en.wikipedia.org/wiki/HTML5_video), [audio](http://en.wikipedia.org/wiki/HTML5_audio)).
 
-<a name="avatars"></a>
 ## Is it possible to have different avatars per profile?
 
 Yes.
@@ -82,7 +65,6 @@ On your Edit/Manage Profiles page, you will find a "change profile photo" link.
 Clicking this will take you to a page where you can upload a photograph and select which profile it will be associated with.
 To avoid privacy leakage, we only display the photograph associated with your default profile as the avatar in your posts.
 
-<a name="language"></a>
 ## How can I view Friendica in a certain language?
 
 You can do this by adding the `lang` parameter to the url in your url bar.
@@ -131,7 +113,6 @@ However, unlike blocking, existing posts this person made before being archived 
 The contact not be displayed in your public friend list.
 However, a hidden contact will appear normally in conversations and this may expose their hidden status to anybody who can see the conversation.
 
-<a name="removed"></a>
 ## What happens when an account is removed?
 
 If you remove your account, it will be scheduled for permanent deletion in *seven days*.
@@ -142,14 +123,12 @@ After the elapsed time of seven days, all your posts, messages, photos, and pers
 Your node will also issue removal requests to all your contacts; this will also remove your profile from the global directory if you are listed.
 Your username cannot be reissued for future sign-ups for security reasons.
 
-<a name="hashtag"></a>
 ## Can I follow a hashtag?
 
 Yes. Simply add the hashtag to your saved searches.
 The posts will appear on your network page.
 For technical reasons, your answers to such posts won't appear on the "personal" tab in the network page and the whole thread isn't accessible via the API.
 
-<a name="rss"></a>
 ## How to create an RSS feed of the stream?
 
 If you want to share your public page via rss you can use one of the following links:
@@ -169,8 +148,6 @@ Example: Friendica Support
 Example: Friendica Support
 
 	https://forum.friendi.ca/feed/helpers/comments
-
-<a name="clients"></a>
 
 ## What friendica clients can I use?
 
