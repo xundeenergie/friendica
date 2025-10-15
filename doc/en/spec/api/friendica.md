@@ -7,7 +7,7 @@
 
 Friendica provides the following specific endpoints.
 
-Authentication is the same as described in [Using the APIs](help/api#authentication).
+Authentication is the same as described in [Using the APIs](help/spec/api/index#authentication).
 
 ## Entities
 

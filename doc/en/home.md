@@ -10,6 +10,7 @@
 	* [Comment, sort and delete posts](help/user/text-comment)
 	* [Accesskey reference](help/user/access-keys)
 	* [Events](help/user/events)
+	* [Themes](help/user/themes)
 * You and other users
 	* [Connectors](help/user/connectors)
 	* [Making Friends](help/user/making-friends)
@@ -48,8 +49,7 @@
 	* [On Vagrant](help/developer/vagrant)
 * Code structure
     * [Domain-Driven-Design](help/developer/domain-driven-design)
-	* [Addon Development](help/developer/addons)
-	* [Theme Development](help/developer/themes)
+	* [Addon Development](help/developer/addon-development)
 	* [Smarty 3 Templates](help/developer/smarty3-templates)
 	* [Storage backend addon](help/developer/addon-storage-backend)
 * How To
