@@ -62,13 +62,12 @@ Sobald Du die nötigen Informationen eingegeben hast, klicke auf "Registrieren".
 Eine Email mit den Registrierungsdetails und Deinem Initialpasswort wird an die hinterlegte Email-Adresse geschickt.
 Bitte prüfe den Posteingang (inklusive dem Spam-Ordner).
 
-
 ## Login-Seite
 
 Gib auf der "Login"-Seite die Informationen ein, die Du mit der oben genannten Email erhalten hast.
 Du kannst entweder Deinen Spitznamen oder die Email-Adresse als Login-Namen nutzen.
 
-Wenn Du Deinen Account nutzt, um unterschiedliche '[Seiten](help/pages)' zu verwalten, die die gleiche Email-Adresse verwenden, dann nutze bitte den Spitznamen des Accounts, der verwaltet werden soll.
+Wenn Du Deinen Account nutzt, um unterschiedliche '[accounts (Gruppen/Seiten)](help/accounts-groups-pages)' zu verwalten, die die gleiche Email-Adresse verwenden, dann nutze bitte den Spitznamen des Accounts, der verwaltet werden soll.
 
 *Wenn* Dein Account OpenID nutzt, dann kannst Du Deine OpenID-Adresse als Login-Name nutzen und das Passwort-Feld frei lassen.
 Du wirst zu deinem OpenID-Anbieter weitergeleitet, wo Du Deine Anmeldung abschließt.
@@ -77,11 +76,9 @@ Wenn Du OpenID nicht nutzt, dann gib Dein Passwort ein, das Du mit der Registrie
 Das Passwort muss genau so geschrieben werden, wie es in der Email steht; Groß- und Kleinschreibung wird beachtet.
 Falls Du Schwierigkeiten beim Login hast, prüfe bitte, ob z. B. Deine Feststelltaste aktiv ist.
 
-
 ### Passwort ändern
 
 Besuche nach Deinem ersten Login bitte die Einstellungsseite und wechsle das Passwort in eines, dass Du Dir merken kannst.
-
 
 ## Die ersten Schritte
 
@@ -99,17 +96,14 @@ Dies ist z.B. dann nützlich wenn du mit deinem Account auf einen anderen Friend
 
 Ein ['Tipp für neue Mitglieder'](newmember)-Link zeigt sich in den ersten beiden Wochen auf Deiner Startseite, um Dir erste Informationen zum Start zu bieten.
 
-
 ## Schau Dir ebenfalls folgende Seiten an
 
-* [Circles und Privatssphäre](help/circles-and-privacy)
+* [Circles und Privatssphäre](help/user/circles-and-privacy)
 
-* [Account löschen](help/remove-account)
+* [Account löschen](help/user/remove-account)
 
 ### Der eigene Friendica-Knoten
+
 Wenn Du Deinen eigenen Friendica-Knoten auf einem Server aufsetzen willst, kannst Du das ebenfalls machen.
 Besuche die [Friendica-Webseite](https://friendi.ca), um den Code mit den Installationsanleitungen herunterzuladen.
 Es ist ein einfacher Installationsprozess, den jeder mit ein wenig technischen Erfahrungen im Webseiten-Hosting oder mit grundlegenden Linux-Erfahrungen handhaben kann.
-
-
-

@@ -16,7 +16,7 @@
 	* [Freunde finden](help/user/making-friends)
 	* [Circles und Privatsphäre](help/user/circles-and-privacy)
 	* [Tags und Erwähnungen](help/user/tags-and-mentions)
-	* [Gruppen](help/user/groups)
+	* [Accountypen: Gruppen und Seiten](help/user/accounts-groups-pages)
 	* [Kanäle (Channels)](help/user/channels)
 	* [Chats](help/user/chats)
 * Weiterführende Informationen

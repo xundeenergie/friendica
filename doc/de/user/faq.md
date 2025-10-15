@@ -35,7 +35,7 @@ Diese Warnungen können drei Gründe haben:
 *(SSL (Secure Socket Layer) ist eine Technologie, die Daten auf ihrem Weg zwischen zwei Computern verschlüsselt.)*
 
 Wenn Du noch kein SSL-Zertifikat hast, dann gibt es drei Wege, eines zu erhalten: kauf Dir eines, hole Dir ein kostenloses (z.B. bei StartSSL, WoSign, hoffentlich bald auch LetsEncrypt) oder kreiere Dein eigenes (nicht empfohlen).
-[Weitere Informationen über die Einrichtung von SSL und warum es schlecht ist, selbst-signierte Zertifikate zu nutzen, findest Du hier.](help/ssl)
+[Weitere Informationen über die Einrichtung von SSL und warum es schlecht ist, selbst-signierte Zertifikate zu nutzen, findest Du hier.](help/admin/ssl)
 
 Sei Dir bewusst, dass Browser-Warnungen über Sicherheitslücken etwas sind, wodurch neue Nutzer schnell das Vertrauen in das gesamte Friendica-Projekt verlieren können.
 Aus diesem Grund wird Friendica Red nur SSL-Zertifikate eines anerkannten Anbieters (CA, certificate authority) akzeptieren und nicht zu Seiten verbinden, die kein SSL nutzen.
@@ -157,7 +157,7 @@ Beispiel: Friendica Support
 
 ## Gibt es Clients für Friendica?
 
-Friendica unterstützt [Mastodon API](help/api-mastodon) und [Twitter API | gnusocial](help/api).
+Friendica unterstützt [Mastodon API](help/spec/api/mastodon) und [Twitter API | gnusocial](help/spec/api/index).
 Das bedeutet, du kannst einge der Mastodon und Twitter Clients für Friendica verwenden.
 Die verfügbaren Features sind Abhängig vom Client, so dass diese teils unterschiedlich sein können.
 

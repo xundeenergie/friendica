@@ -89,8 +89,8 @@ This might be necessary, e.g. if your node suffers a severe hardware problem and
 
 ## See Also
 
-- [Profiles](help/profiles)
-- [Global Directory](help/making-friends#the+directories)
-- [Circles and Privacy](help/circles-and-privacy)
-- [Move Account](help/move-account)
-- [Remove Account](help/remove-account)
+- [Account types: Groups and Pages](help/user/accounts-groups-pages)
+- [Global Directory](help/user/making-friends#the+directories)
+- [Circles and Privacy](help/user/circles-and-privacy)
+- [Move Account](help/user/move-account)
+- [Remove Account](help/user/remove-account)

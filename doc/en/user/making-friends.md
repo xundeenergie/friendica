@@ -109,4 +109,4 @@ These include:
 * Ignoring the contact, so that you will not see their posts
 * Blocking the contact from receiving your posts
 
-For more information, see [Safety](help/safety).
+For more information, see [Safety](help/user/safety).

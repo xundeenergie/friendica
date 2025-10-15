@@ -1,4 +1,4 @@
-# Groups
+# Account types: Groups and pages
 
 * [Home](help)
 

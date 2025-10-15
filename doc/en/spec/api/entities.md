@@ -1,7 +1,7 @@
 # Friendica API entities
 
 * [Home](help)
-  * [Using the APIs](help/api)
+  * [Using the APIs](help/spec/api/index)
 
 
 ## Activities

@@ -17,7 +17,7 @@
 	* [Safety](help/user/safety)
 	* [Circles and Privacy](help/user/circles-and-privacy)
 	* [Tags and Mentions](help/user/tags-and-mentions)
-	* [Groups](help/user/groups)
+	* [Account types: Groups and Pages](help/user/accounts-groups-pages)
 	* [Channels](help/user/channels)
 	* [Chats](help/user/chats)
 * Further information

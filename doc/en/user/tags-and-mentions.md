@@ -36,7 +36,7 @@ If you select a group from the ACL a !-mention will be added automatically to yo
 
 If you sort your contacts into circles, you cannot @-mention these circles.
 But you can select the circle in the access control when creating a new posting, to allow (or disallow) a certain circle of people to see the posting.
-See [Circles and Privacy](help/circles-and-privacy) for more details about grouping your contacts.
+See [Circles and Privacy](help/user/circles-and-privacy) for more details about grouping your contacts.
 
 ## Topical Tags
 

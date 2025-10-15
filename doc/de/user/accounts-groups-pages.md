@@ -1,4 +1,4 @@
-# Gruppen
+# Accounttypen: Gruppen und Seiten
 
 * [Zur Startseite der Hilfe](help)
 
