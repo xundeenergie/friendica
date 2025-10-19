@@ -1,4 +1,4 @@
-# How to improve the performance of a Friendica site
+# How to improve the performance of a Friendica server
 
 * [Home](help)
 

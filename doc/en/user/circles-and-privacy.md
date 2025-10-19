@@ -1,4 +1,4 @@
-# Circles and Privacy
+# Circles and privacy
 
 * [Home](help)
 

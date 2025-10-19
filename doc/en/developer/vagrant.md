@@ -1,4 +1,4 @@
-# Vagrant for Friendica Developers
+# Vagrant for Friendica developers
 
 * [Home](help)
 

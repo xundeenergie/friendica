@@ -1,4 +1,4 @@
-# Making Friends
+# Making friends
 
 * [Home](help)
 

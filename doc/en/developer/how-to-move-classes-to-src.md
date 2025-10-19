@@ -1,4 +1,4 @@
-# How To Move Classes to `src`
+# How to move classes to `src`
 
 * [Home](help)
   * [Developer Intro](help/developer/index)

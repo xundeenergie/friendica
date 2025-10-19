@@ -1,4 +1,4 @@
-# Remove Account
+# Deleting an account
 
 * [Home](help)
 

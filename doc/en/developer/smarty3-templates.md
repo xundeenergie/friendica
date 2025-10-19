@@ -1,4 +1,4 @@
-# Friendica Templating Documentation
+# Friendica templating documentation
 
 * [Home](help)
 

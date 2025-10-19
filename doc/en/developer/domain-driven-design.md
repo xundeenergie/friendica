@@ -1,4 +1,4 @@
-# Domain-Driven-Design
+# Domain-driven design
 
 * [Home](help)
   * [Developer Intro](help/developer/index)

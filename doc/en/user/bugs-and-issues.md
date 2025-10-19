@@ -1,4 +1,4 @@
-# Bugs and Issues
+# Bugs and issues
 
 * [Home](help)
 

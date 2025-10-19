@@ -1,4 +1,4 @@
-# Friendica Installation
+# Friendica installation
 
 
 We've tried very hard to ensure that Friendica will run on commodity hosting platforms - such as those used to host WordPress blogs and Drupal websites.

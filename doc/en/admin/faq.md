@@ -1,4 +1,4 @@
-# Frequently Asked Questions (Admin) - FAQ
+# Frequently asked questions (Admin) - FAQ
 
 * [Home](help)
 

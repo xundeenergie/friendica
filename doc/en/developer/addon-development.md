@@ -1,4 +1,4 @@
-# Friendica Addon development
+# Friendica addon development
 
 * [Home](help)
 

@@ -100,7 +100,7 @@ Ein ['Tipp für neue Mitglieder'](newmember)-Link zeigt sich in den ersten beide
 
 * [Circles und Privatssphäre](help/user/circles-and-privacy)
 
-* [Account löschen](help/user/remove-account)
+* [Account löschen](help/user/delete-account)
 
 ### Der eigene Friendica-Knoten
 

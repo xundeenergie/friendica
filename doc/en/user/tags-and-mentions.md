@@ -1,4 +1,4 @@
-# Tags and Mentions
+# Tags and mentions
 
 * [Home](help)
 
@@ -36,9 +36,9 @@ If you select a group from the ACL a !-mention will be added automatically to yo
 
 If you sort your contacts into circles, you cannot @-mention these circles.
 But you can select the circle in the access control when creating a new posting, to allow (or disallow) a certain circle of people to see the posting.
-See [Circles and Privacy](help/user/circles-and-privacy) for more details about grouping your contacts.
+See [Circles and privacy](help/user/circles-and-privacy) for more details about grouping your contacts.
 
-## Topical Tags
+## Topical tags
 
 Topical tags are indicated by preceding the tag name with the # character.
 This will create a link in the post to a generalised site search for the term provided.

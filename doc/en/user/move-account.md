@@ -1,4 +1,4 @@
-# How to move your account between servers
+# Moving an account between servers
 
 * [Home](help)
 

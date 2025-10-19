@@ -1,8 +1,8 @@
-# Admin Tools
+# Admin tools
 
 * [Home](help)
 
-## Friendica Tools
+## Friendica tools
 
 Friendica has a build in command console you can find in the *bin* directory.
 The console provides the following commands:

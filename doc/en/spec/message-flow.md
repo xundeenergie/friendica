@@ -1,4 +1,4 @@
-# Friendica Message Flow
+# Friendica message flow
 
 This page documents some of the details of how messages get from one person to another in the Friendica network.
 There are multiple paths, using multiple protocols and message formats.

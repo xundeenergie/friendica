@@ -23,7 +23,7 @@
 	* [Häufig gestellte Fragen (FAQ)](help/user/faq)
 	* [Account umziehen](help/user/move-account)
 	* [Export / Import gefolgter Kontakte](help/user/export-import-contacts)
-	* [Account löschen](help/user/remove-account)
+	* [Account löschen](help/user/delete-account)
 	* [Bugs und Probleme](help/user/bugs-and-issues)
 
 ## Dokumentation für Administratoren

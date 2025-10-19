@@ -94,4 +94,4 @@ Click again on "show" or "don't show" to switch it off.
 
 You can search for contacts or circles with the search box.
 
-See also [Circles and Privacy](help/user/circles-and-privacy)
+See also [Circles and privacy](help/user/circles-and-privacy)

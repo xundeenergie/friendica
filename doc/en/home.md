@@ -3,8 +3,8 @@
 ## User Manual
 
 * General functions - first steps
-	* [Account Basics](help/user/account-basics)
-	* [New User Quick Start](help/user/quick-start/guide)
+	* [Account basics](help/user/account-basics)
+	* [Quick start for new users](help/user/quick-start/guide)
 	* [Creating posts](help/user/text-editor)
 	* [BBCode tag reference](help/user/bbcode)
 	* [Comment, sort and delete posts](help/user/text-comment)
@@ -13,19 +13,19 @@
 	* [Themes](help/user/themes)
 * You and other users
 	* [Connectors](help/user/connectors)
-	* [Making Friends](help/user/making-friends)
+	* [Making friends](help/user/making-friends)
 	* [Safety](help/user/safety)
-	* [Circles and Privacy](help/user/circles-and-privacy)
-	* [Tags and Mentions](help/user/tags-and-mentions)
+	* [Circles and privacy](help/user/circles-and-privacy)
+	* [Tags and mentions](help/user/tags-and-mentions)
 	* [Account types: Groups and Pages](help/user/accounts-groups-pages)
 	* [Channels](help/user/channels)
 	* [Chats](help/user/chats)
 * Further information
 	* [Frequently asked questions (FAQ)](help/user/faq)
-	* [Move your account](help/user/move-account)
+	* [Moving an account](help/user/move-account)
 	* [Export / Import of followed Contacts](help/user/export-import-contacts)
-	* [Delete your account](help/user/remove-account)
-	* [Bugs and Issues](help/user/bugs-and-issues)
+	* [Deleting an account](help/user/delete-account)
+	* [Bugs and issues](help/user/bugs-and-issues)
 
 ## Admin Manual
 
@@ -37,9 +37,10 @@
 * [Installing an ejabberd server (XMPP chat) with synchronized credentials](help/admin/install-ejabberd)
 * [Using SSL with Friendica](help/admin/ssl)
 * [Config values that can only be set in config/local.config.php](help/admin/config)
-* [Improving Performance](help/admin/improve-performance)
+* [Improving performance](help/admin/improve-performance)
 * [Migrating to a new server](help/admin/migrate)
-* [Administration Tools](help/admin/tools)
+* [Administration tools](help/admin/tools)
+* [Monitoring](help/admin/monitoring)
 
 ## Developer Manual
 
@@ -48,21 +49,21 @@
 	* [On GitHub](help/developer/github)
 	* [On Vagrant](help/developer/vagrant)
 * Code structure
-    * [Domain-Driven-Design](help/developer/domain-driven-design)
-	* [Addon Development](help/developer/addon-development)
-	* [Smarty 3 Templates](help/developer/smarty3-templates)
+    * [Domain-driven design](help/developer/domain-driven-design)
+	* [Addon development](help/developer/addon-development)
+	* [Smarty 3 templates](help/developer/smarty3-templates)
 	* [Storage backend addon](help/developer/addon-storage-backend)
 * How To
-	* [Translate Friendica](help/developer/translations)
+	* [Translating Friendica](help/developer/translations)
 	* [Using Composer](help/developer/composer)
-	* [Move classes to `src`](help/developer/how-to-move-classes-to-src)
+	* [Moving classes to the src directory](help/developer/how-to-move-classes-to-src)
 	* [Run tests](help/developer/tests)
 * Reference
 	* [API endpoints](help/spec/api/index)
 	* [Code (Doxygen generated - sets cookies)](doc/html/)
-	* [Protocol Documentation](help/spec/protocol/protocol)
+	* [Protocol documentation](help/spec/protocol/protocol)
 	* [Database schema documentation](help/database)
-	* [Class Autoloading](help/developer/autoloader)
+	* [Class autoloading](help/developer/autoloader)
 
 ## Links
 
@@ -71,10 +72,10 @@
 * XMPP: [support@forum.friendi.ca](xmpp:support@forum.friendi.ca?join)
 * IRC: [https://web.libera.chat/?channels=#friendica](https://web.libera.chat/?channels=#friendica)
 * Matrix: [https://matrix.to/#/#friendi.ca:matrix.org](https://matrix.to/#/#friendi.ca:matrix.org)
-* Mailing List: [https://mailman.friendi.ca/mailman/listinfo/support-friendi.ca](http://mailman.friendi.ca/mailman/listinfo/support-friendi.ca)
+* Mailing list: [https://mailman.friendi.ca/mailman/listinfo/support-friendi.ca](http://mailman.friendi.ca/mailman/listinfo/support-friendi.ca)
 
 ## About
 
-* [Server Information](friendica)
-* [Terms of Service](tos)
+* [Server information](friendica)
+* [Terms of service](tos)
 * [Credits](credits)
