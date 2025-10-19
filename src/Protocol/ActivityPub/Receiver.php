@@ -1917,10 +1917,6 @@ class Receiver
 
 				$attachments[$mediatype] = ['type' => $mediatype, 'mediaType' => $mediatype, 'url' => $href, 'height' => $height, 'width' => $width, 'size' => null, 'name' => ''];
 			} elseif ($mediatype == 'application/x-mpegURL') {
-				// PeerTube uses HLS streams for video. We prefer HLS streams over the video file itself.
-				// But we still store the video file as an attachment to be used by the API which currently does not support HLS streams.
-				$attachments = array_merge($attachments, self::processAttachmentUrls($url['as:tag'], $icon, [], []));
-
 				$attachment = ['type' => $filetype, 'mediaType' => $mediatype, 'url' => $href, 'height' => $height, 'width' => $width, 'size' => null, 'name' => '', 'image' => $icon];
 				if (is_array($player)) {
 					$attachment['player-url']    = $player['embed']  ?? null;
