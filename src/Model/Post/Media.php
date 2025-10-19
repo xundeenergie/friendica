@@ -485,7 +485,7 @@ class Media
 		$media['modified']        = $data['modified']         ?? null;
 		$media['schematypes']     = isset($data['schematypes']) ? json_encode($data['schematypes']) : null;
 
-		if (DI::config()->get('system', 'add_page_media')) {
+		if (!isset($media['player-url']) && !isset($media['embed-html']) && DI::config()->get('system', 'add_page_media')) {
 			if (isset($data['audio']) && sizeof($data['audio']) == 1) {
 				foreach ($data['audio'] as $entry) {
 					self::insertMedia($entry, $media['uri-id']);

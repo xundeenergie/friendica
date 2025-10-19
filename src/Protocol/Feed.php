@@ -688,29 +688,6 @@ class Feed
 					$taglist             = $fetch_further_information == LocalRelationship::FFI_BOTH ? PageInfo::getTagsFromUrl($item['plink'], $preview, $contact['ffi_keyword_denylist'] ?? '') : [];
 					$item['object-type'] = Activity\ObjectType::BOOKMARK;
 					$attachments         = [];
-
-					foreach (['audio', 'video'] as $elementname) {
-						if (!empty($data[$elementname])) {
-							foreach ($data[$elementname] as $element) {
-								if (!empty($element['src'])) {
-									$src = $element['src'];
-								} elseif (!empty($element['content'])) {
-									$src = $element['content'];
-								} else {
-									continue;
-								}
-
-								$attachments[] = [
-									'type'        => ($elementname == 'audio') ? Post\Media::AUDIO : Post\Media::VIDEO,
-									'url'         => $src,
-									'preview'     => $element['image']       ?? null,
-									'mimetype'    => $element['contenttype'] ?? null,
-									'name'        => $element['name']        ?? null,
-									'description' => $element['description'] ?? null,
-								];
-							}
-						}
-					}
 				}
 			} else {
 				if ($fetch_further_information == LocalRelationship::FFI_KEYWORD) {
