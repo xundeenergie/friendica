@@ -279,8 +279,7 @@ class Feed
 			return [];
 		}
 
-		$items          = [];
-		$creation_dates = [];
+		$items = [];
 
 		// Limit the number of items that are about to be fetched
 		$total_items = ($entries->length - 1);
@@ -289,7 +288,10 @@ class Feed
 			$total_items = $max_items;
 		}
 
-		$postings = self::importOlderEntries($entries, $total_items, $header, $author, $contact, $importer, $xpath, $atomns, $basepath, $dryRun);
+		$processed = self::processEntries($entries, $total_items, $header, $author, $contact, $importer, $xpath, $atomns, $basepath, $dryRun);
+
+		$postings       = $processed['postings'];
+		$creation_dates = $processed['creation_dates'];
 
 		if (!empty($postings)) {
 			$min_posting = DI::config()->get('system', 'minimum_posting_interval', 0);
@@ -358,9 +360,10 @@ class Feed
 		return $title;
 	}
 
-	private static function importOlderEntries(DOMNodeList $entries, int $total_items, array $header, array $author, array $contact, array $importer, DOMXPath $xpath, string $atomns, string $basepath, bool $dryRun): array
+	private static function processEntries(DOMNodeList $entries, int $total_items, array $header, array $author, array $contact, array $importer, DOMXPath $xpath, string $atomns, string $basepath, bool $dryRun): array
 	{
-		$postings = [];
+		$postings       = [];
+		$creation_dates = [];
 
 		// Importing older entries first
 		for ($i = $total_items; $i >= 0; --$i) {
@@ -762,7 +765,7 @@ class Feed
 			}
 		}
 
-		return $postings;
+		return ['postings' => $postings, 'creation_dates' => $creation_dates];
 	}
 
 	/**
