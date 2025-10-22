@@ -291,6 +291,24 @@ class PostMedia extends BaseEntity
 	}
 
 	/**
+	 * Checks if the media is an article
+	 *
+	 * @return boolean
+	 */
+	public function isArticle(): bool
+	{
+		if (is_array($this->schemaTypes)) {
+			foreach (['Article', 'BackgroundNewsArticle', 'NewsArticle'] as $type) {
+				if (in_array($type, $this->schemaTypes)) {
+					return true;
+				}
+			}
+		}
+
+		return in_array($this->getPageType(), ['article']);
+	}
+
+	/**
 	 * Get the page type. In case of a type with main und sub category (separated by `.`), only the main category is returned
 	 *
 	 * @return string|null

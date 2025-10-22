@@ -259,12 +259,13 @@ class Display extends BaseSettings
 			ContactSelector::SVG_WHITE       => $this->t('White'),
 		];
 
-		$preview_mode  = $this->pConfig->get($uid, 'system', 'preview_mode', BBCode::PREVIEW_LARGE);
+		$preview_mode  = $this->pConfig->get($uid, 'system', 'preview_mode', BBCode::PREVIEW_AUTO);
 		$preview_modes = [
 			BBCode::PREVIEW_NONE     => $this->t('No preview'),
 			BBCode::PREVIEW_NO_IMAGE => $this->t('No image'),
 			BBCode::PREVIEW_SMALL    => $this->t('Small Image'),
 			BBCode::PREVIEW_LARGE    => $this->t('Large Image'),
+			BBCode::PREVIEW_AUTO     => $this->t('Automatic image size'),
 		];
 
 		$bookmarked_timelines = $this->pConfig->get($uid, 'system', 'network_timelines', $this->getAvailableTimelines($uid, true)->column('code'));

@@ -3368,9 +3368,10 @@ class Item
 	{
 		DI::profiler()->startRecording('rendering');
 		// Don't show a preview when there is a visual attachment (audio or video)
-		$types     = $attachments['visual']->column('type');
-		$preview   = !in_array(PostMedia::TYPE_IMAGE, $types) && !in_array(PostMedia::TYPE_VIDEO, $types);
-		$has_media = in_array($item['post-type'] ?? null, [Item::PT_AUDIO, Item::PT_VIDEO]);
+		$types      = $attachments['visual']->column('type');
+		$preview    = !in_array(PostMedia::TYPE_IMAGE, $types) && !in_array(PostMedia::TYPE_VIDEO, $types);
+		$has_media  = in_array($item['post-type'] ?? null, [Item::PT_AUDIO, Item::PT_VIDEO]);
+		$is_article = false;
 
 		/** @var ?PostMedia $attachment */
 		$attachment = null;
@@ -3413,6 +3414,7 @@ class Item
 				'embed_height'  => $attachment->embedHeight,
 				'page_type'     => $attachment->pageType,
 			];
+			$is_article = $attachment->isArticle();
 
 			if ($preview && $attachment->preview) {
 				if ($attachment->previewWidth >= 500) {
@@ -3462,7 +3464,10 @@ class Item
 				}
 
 				// @todo Use a template
-				$preview_mode = DI::pConfig()->get($uid, 'system', 'preview_mode', BBCode::PREVIEW_LARGE);
+				$preview_mode = DI::pConfig()->get($uid, 'system', 'preview_mode', BBCode::PREVIEW_AUTO);
+				if ($preview_mode == BBCode::PREVIEW_AUTO) {
+					$preview_mode = $is_article ? BBCode::PREVIEW_SMALL : BBCode::PREVIEW_LARGE;
+				}
 				if (!$has_media && $preview_mode != BBCode::PREVIEW_NONE && !self::containsEmbed($body, $data['url'])) {
 					$rendered = BBCode::convertAttachment('', BBCode::INTERNAL, $data, $uriid, $preview_mode, DI::pConfig()->get($uid, 'system', 'embed_remote_media', false));
 				} elseif (!self::containsLink($content, $data['url'], Post\Media::HTML)) {
