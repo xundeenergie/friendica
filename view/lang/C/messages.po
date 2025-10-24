@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 2025.07-rc\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-22 15:27+0000\n"
+"POT-Creation-Date: 2025-10-24 11:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,8 +61,8 @@ msgstr ""
 #: src/Module/Notifications/Notification.php:93
 #: src/Module/OStatus/Subscribe.php:54 src/Module/Post/Edit.php:72
 #: src/Module/Profile/Common.php:63 src/Module/Profile/Contacts.php:66
-#: src/Module/Profile/Photos.php:100 src/Module/Profile/Schedule.php:25
-#: src/Module/Profile/Schedule.php:42 src/Module/Register.php:74
+#: src/Module/Profile/Photos.php:100 src/Module/Profile/Schedule.php:27
+#: src/Module/Profile/Schedule.php:44 src/Module/Register.php:74
 #: src/Module/Register.php:87 src/Module/Register.php:216
 #: src/Module/Register.php:255 src/Module/Search/Directory.php:23
 #: src/Module/Settings/Account.php:34 src/Module/Settings/Account.php:337
@@ -5721,7 +5721,7 @@ msgstr ""
 msgid "Only You Can See This"
 msgstr ""
 
-#: src/Module/BaseProfile.php:101 src/Module/Profile/Schedule.php:65
+#: src/Module/BaseProfile.php:101 src/Module/Profile/Schedule.php:109
 msgid "Scheduled Posts"
 msgstr ""
 
@@ -8400,19 +8400,19 @@ msgid "No contacts."
 msgstr ""
 
 #: src/Module/Profile/Conversations.php:96 src/Module/Profile/Profile.php:366
-#: src/Protocol/Feed.php:1127
+#: src/Protocol/Feed.php:1104
 #, php-format
 msgid "%s's posts"
 msgstr ""
 
 #: src/Module/Profile/Conversations.php:97 src/Module/Profile/Profile.php:367
-#: src/Protocol/Feed.php:1130
+#: src/Protocol/Feed.php:1107
 #, php-format
 msgid "%s's comments"
 msgstr ""
 
 #: src/Module/Profile/Conversations.php:98 src/Module/Profile/Profile.php:368
-#: src/Protocol/Feed.php:1123
+#: src/Protocol/Feed.php:1100
 #, php-format
 msgid "%s's timeline"
 msgstr ""
@@ -8554,15 +8554,23 @@ msgstr ""
 msgid "This profile has been restricted which prevents access to their public content from anonymous visitors."
 msgstr ""
 
-#: src/Module/Profile/Schedule.php:67
+#: src/Module/Profile/Schedule.php:93 src/Object/Post.php:123
+msgid "Private Message"
+msgstr ""
+
+#: src/Module/Profile/Schedule.php:101 src/Object/Post.php:551
+msgid "via"
+msgstr ""
+
+#: src/Module/Profile/Schedule.php:111
 msgid "Scheduled"
 msgstr ""
 
-#: src/Module/Profile/Schedule.php:68
+#: src/Module/Profile/Schedule.php:112
 msgid "Content"
 msgstr ""
 
-#: src/Module/Profile/Schedule.php:69
+#: src/Module/Profile/Schedule.php:113
 msgid "Remove post"
 msgstr ""
 
@@ -11356,10 +11364,6 @@ msgstr ""
 msgid "%s posted an update."
 msgstr ""
 
-#: src/Object/Post.php:123
-msgid "Private Message"
-msgstr ""
-
 #: src/Object/Post.php:127
 msgid "Public Message"
 msgstr ""
@@ -11523,10 +11527,6 @@ msgstr ""
 
 #: src/Object/Post.php:550
 msgid "to"
-msgstr ""
-
-#: src/Object/Post.php:551
-msgid "via"
 msgstr ""
 
 #: src/Object/Post.php:552
