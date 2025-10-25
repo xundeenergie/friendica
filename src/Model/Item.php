@@ -3032,10 +3032,10 @@ class Item
 		}
 
 		if (!empty($sharedSplitAttachments)) {
-			$s    = self::addGallery($s, $sharedSplitAttachments['visual']);
+			$s    = self::addGallery($s, $sharedSplitAttachments['visual'], $uid);
 			$s    = self::addVisualAttachments($sharedSplitAttachments['visual'], $shared_item, $s, true, $uid);
 			$s    = self::addLinkAttachment($shared_uri_id ?: $item['uri-id'], $sharedSplitAttachments, $body, $s, true, $quote_shared_links, $uid, $shared_item);
-			$s    = self::addNonVisualAttachments($sharedSplitAttachments['additional'], $item, $s);
+			$s    = self::addNonVisualAttachments($sharedSplitAttachments['additional'], $item, $s, $uid);
 			$body = BBCode::removeSharedData($body);
 		}
 
@@ -3045,10 +3045,10 @@ class Item
 			$s           = substr($s, 0, $pos);
 		}
 
-		$s = self::addGallery($s, $itemSplitAttachments['visual']);
+		$s = self::addGallery($s, $itemSplitAttachments['visual'], $uid);
 		$s = self::addVisualAttachments($itemSplitAttachments['visual'], $item, $s, false, $uid);
 		$s = self::addLinkAttachment($item['uri-id'], $itemSplitAttachments, $body, $s, false, $shared_links, $uid, $item);
-		$s = self::addNonVisualAttachments($itemSplitAttachments['additional'], $item, $s);
+		$s = self::addNonVisualAttachments($itemSplitAttachments['additional'], $item, $s, $uid);
 		$s = self::addQuestions($item, $s);
 
 		// Map.
@@ -3129,8 +3129,12 @@ class Item
 	 * @param PostMedias $PostMedias
 	 * @return string
 	 */
-	private static function addGallery(string $s, PostMedias $PostMedias): string
+	private static function addGallery(string $s, PostMedias $PostMedias, $uid): string
 	{
+		if ($uid == 0) {
+			return $s;
+		}
+
 		foreach ($PostMedias as $PostMedia) {
 			if (!$PostMedia->preview || ($PostMedia->type !== Post\Media::IMAGE)) {
 				continue;
@@ -3273,6 +3277,10 @@ class Item
 	 */
 	private static function addVisualAttachments(PostMedias $PostMedias, array $item, string $content, bool $shared, int $uid): string
 	{
+		if ($uid == 0) {
+			return $content;
+		}
+
 		DI::profiler()->startRecording('rendering');
 		$leading  = '';
 		$trailing = '';
@@ -3465,7 +3473,9 @@ class Item
 
 				// @todo Use a template
 				$preview_mode = DI::pConfig()->get($uid, 'system', 'preview_mode', BBCode::PREVIEW_AUTO);
-				if ($preview_mode == BBCode::PREVIEW_AUTO) {
+				if ($uid == 0) {
+					$preview_mode = BBCode::PREVIEW_NO_IMAGE;
+				} elseif ($preview_mode == BBCode::PREVIEW_AUTO) {
 					$preview_mode = $is_article ? BBCode::PREVIEW_SMALL : BBCode::PREVIEW_LARGE;
 				}
 				if (!$has_media && $preview_mode != BBCode::PREVIEW_NONE && !self::containsEmbed($body, $data['url'])) {
@@ -3506,8 +3516,12 @@ class Item
 	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	private static function addNonVisualAttachments(PostMedias $PostMedias, array $item, string $content): string
+	private static function addNonVisualAttachments(PostMedias $PostMedias, array $item, string $content, int $uid): string
 	{
+		if ($uid == 0) {
+			return $content;
+		}
+
 		DI::profiler()->startRecording('rendering');
 		$trailing = '';
 		foreach ($PostMedias as $PostMedia) {
