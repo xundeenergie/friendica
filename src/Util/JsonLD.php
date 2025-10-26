@@ -165,6 +165,8 @@ class JsonLD
 			'misskey'   => (object)['@id' => 'https://misskey-hub.net/ns#', '@type' => '@id'],
 			'pixelfed'  => (object)['@id' => 'http://pixelfed.org/ns#', '@type' => '@id'],
 			'lemmy'     => (object)['@id' => 'https://join-lemmy.org/ns#', '@type' => '@id'],
+			'quote'     => (object)['@id' => 'https://w3id.org/fep/044f#', '@type' => '@id'],
+			'gts'       => (object)['@id' => 'https://gotosocial.org/ns#', '@type' => '@id'],
 		];
 
 		$orig_json = $json;

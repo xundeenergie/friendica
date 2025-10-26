@@ -48,6 +48,7 @@ class Tag
 	const CAN_ANNOUNCE = 20;
 	const CAN_LIKE     = 21;
 	const CAN_REPLY    = 22;
+	const CAN_QUOTE    = 23;
 
 	const ACCOUNT             = 1;
 	const GENERAL_COLLECTION  = 2;

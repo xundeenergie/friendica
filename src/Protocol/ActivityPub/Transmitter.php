@@ -1899,6 +1899,7 @@ class Transmitter
 					$real_quote               = true;
 					$data['_misskey_content'] = BBCode::removeSharedData($body);
 					$data['quoteUrl']         = $item['quote-uri'];
+					$data['quoteUri']         = $item['quote-uri'];
 					$body                     = DI::contentItem()->addShareLink($body, $item['quote-uri-id']);
 				} else {
 					$body = DI::contentItem()->addSharedPost($item, $body);
@@ -1937,6 +1938,16 @@ class Transmitter
 
 		if (!empty($item['signed_text']) && ($item['uri'] != $item['thr-parent'])) {
 			$data['diaspora:comment'] = $item['signed_text'];
+		}
+
+		// @todo full support of GoToSocial's interaction policy
+		// @see https://docs.gotosocial.org/en/latest/federation/interaction_policy/
+		if ($item['private'] != Item::PRIVATE) {
+			$data['interactionPolicy'] = [
+				'canQuote' => [
+					'automaticApproval' => [ActivityPub::PUBLIC_COLLECTION]
+				]
+			];
 		}
 
 		$data['attachment'] = self::createAttachmentList($item);

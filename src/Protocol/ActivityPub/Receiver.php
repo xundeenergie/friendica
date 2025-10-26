@@ -20,6 +20,7 @@ use Friendica\Model\Contact;
 use Friendica\Model\APContact;
 use Friendica\Model\Item;
 use Friendica\Model\Post;
+use Friendica\Model\Tag;
 use Friendica\Model\User;
 use Friendica\Protocol\Activity;
 use Friendica\Protocol\ActivityPub;
@@ -1980,11 +1981,43 @@ class Receiver
 			}
 		}
 
+		if (!empty($object['gts:interactionPolicy'])) {
+			$object_data['interaction'] = self::getinteractionPolicy($object['gts:interactionPolicy']);
+		}
+
 		if (!empty($object['pixelfed:capabilities'])) {
 			$object_data['capabilities'] = self::getCapabilities($object);
 		}
 
 		return $object_data;
+	}
+
+	/**
+	 * Import GoToSocial's interaction policx
+	 * @see https://docs.gotosocial.org/en/latest/federation/interaction_policy/
+	 *
+	 * @param array $object
+	 * @return array
+	 */
+	private static function getinteractionPolicy(array $object): array
+	{
+		$interactions = [];
+		foreach ([Tag::CAN_ANNOUNCE => 'gts:canAnnounce', Tag::CAN_LIKE => 'gts:canLike', Tag::CAN_REPLY => 'gts:canReply', Tag::CAN_QUOTE => 'gts:canQuote'] as $key => $element) {
+			foreach (['gts:automaticApproval', 'gts:manualApproval'] as $approval) {
+				if (!isset($object[$element][$approval])) {
+					continue;
+				}
+				$interaction = JsonLD::fetchElement($object[$element][$approval], '@id');
+				if (empty($interaction)) {
+					continue;
+				}
+				if ($interaction == self::PUBLIC_COLLECTION) {
+					$interaction = ActivityPub::PUBLIC_COLLECTION;
+				}
+				$interactions[$key][] = $interaction;
+			}
+		}
+		return $interactions;
 	}
 
 	private static function getCapabilities($object)
@@ -2151,6 +2184,9 @@ class Receiver
 		}
 		if (empty($object_data['quote-url'])) {
 			$object_data['quote-url'] = JsonLD::fetchElement($object, 'misskey:_misskey_quote', '@id');
+		}
+		if (empty($object_data['quote-url'])) {
+			$object_data['quote-url'] = JsonLD::fetchElement($object, 'quote:quote');
 		}
 
 		foreach ($object_data['tags'] as $tag) {

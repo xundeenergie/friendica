@@ -50,15 +50,38 @@ class ActivityPub
 	const CONTEXT           = [
 		'https://www.w3.org/ns/activitystreams', 'https://w3id.org/security/v1',
 		[
-			'ostatus'  => 'http://ostatus.org#',
-			'vcard'    => 'http://www.w3.org/2006/vcard/ns#',
-			'dfrn'     => 'http://purl.org/macgirvin/dfrn/1.0/',
-			'diaspora' => 'https://diasporafoundation.org/ns/',
-			'litepub'  => 'http://litepub.social/ns#',
-			'toot'     => 'http://joinmastodon.org/ns#',
+			'ostatus'            => 'http://ostatus.org#',
+			'vcard'              => 'http://www.w3.org/2006/vcard/ns#',
+			'dfrn'               => 'http://purl.org/macgirvin/dfrn/1.0/',
+			'diaspora'           => 'https://diasporafoundation.org/ns/',
+			'litepub'            => 'http://litepub.social/ns#',
+			'toot'               => 'http://joinmastodon.org/ns#',
+			'quote'              => 'https://w3id.org/fep/044f#quote',
+			'quoteUri'           => 'http://fedibird.com/ns#quoteUri',
+			'quoteAuthorization' => [
+				'@id'   => 'https://w3id.org/fep/044f#quoteAuthorization',
+				'@type' => '@id',
+			],
+			'gts'               => 'https://gotosocial.org/ns#',
+			'interactionPolicy' => [
+				'@id'   => 'gts:interactionPolicy',
+				'@type' => '@id',
+			],
+			'canQuote' => [
+				'@id'   => 'gts:canQuote',
+				'@type' => '@id',
+			],
+			'automaticApproval' => [
+				'@id'   => 'gts:automaticApproval',
+				'@type' => '@id',
+			],
+			'manualApproval' => [
+				'@id'   => 'gts:manualApproval',
+				'@type' => '@id',
+			],
 			'featured' => [
-				"@id"   => "toot:featured",
-				"@type" => "@id",
+				"@id"   => 'toot:featured',
+				"@type" => '@id',
 			],
 			'schema'                    => 'http://schema.org#',
 			'manuallyApprovesFollowers' => 'as:manuallyApprovesFollowers',

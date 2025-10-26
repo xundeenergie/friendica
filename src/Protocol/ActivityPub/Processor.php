@@ -964,7 +964,9 @@ class Processor
 
 		self::storeReceivers($item['uri-id'], $activity['receiver_urls'] ?? []);
 
-		if (!empty($activity['capabilities'])) {
+		if (!empty($activity['interaction'])) {
+			$restrictions = self::storeInteractions($item['uri-id'], $activity['interaction']);
+		} elseif (!empty($activity['capabilities'])) {
 			$restrictions = self::storeCapabilities($item['uri-id'], $activity['capabilities']);
 		} elseif (!is_null($activity['can-comment']) && !$activity['can-comment']) {
 			$restrictions = [Tag::CAN_REPLY];
@@ -980,6 +982,8 @@ class Processor
 				$item['restrictions'] = $item['restrictions'] | Item::CANT_LIKE;
 			} elseif ($restriction == Tag::CAN_ANNOUNCE) {
 				$item['restrictions'] = $item['restrictions'] | Item::CANT_ANNOUNCE;
+			} elseif ($restriction == Tag::CAN_QUOTE) {
+				$item['restrictions'] = $item['restrictions'] | Item::CANT_QUOTE;
 			}
 		}
 
@@ -1418,6 +1422,32 @@ class Processor
 				Tag::store($uriid, $type, $name, $receiver, $target);
 			}
 		}
+	}
+
+	private static function storeInteractions(int $uriid, array $interactions): array
+	{
+		$restrictions = [];
+		foreach ($interactions as $key => $key_interaction) {
+			$restricted = true;
+			foreach ($key_interaction as $interaction) {
+				if ($interaction == ActivityPub::PUBLIC_COLLECTION) {
+					$name       = Receiver::PUBLIC_COLLECTION;
+					$restricted = false;
+				} elseif ($path = parse_url($interaction, PHP_URL_PATH)) {
+					$name = trim($path, '/');
+				} elseif ($host = parse_url($interaction, PHP_URL_HOST)) {
+					$name = $host;
+				} else {
+					DI::logger()->warning('Unable to coerce name from interaction', ['key' => $key, 'interaction' => $interaction]);
+					$name = '';
+				}
+				Tag::store($uriid, $key, $name, $interaction);
+			}
+			if ($restricted) {
+				$restrictions[] = $key;
+			}
+		}
+		return $restrictions;
 	}
 
 	private static function storeCapabilities(int $uriid, array $capabilities): array

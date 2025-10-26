@@ -158,6 +158,7 @@ class Item
 	const CANT_REPLY    = 1;
 	const CANT_LIKE     = 2;
 	const CANT_ANNOUNCE = 4;
+	const CANT_QUOTE    = 8;
 
 	/**
 	 * Update existing item entries
