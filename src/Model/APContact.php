@@ -260,9 +260,19 @@ class APContact
 		if (is_array($apcontact['photo']) || !empty($compacted['as:icon']['as:url']['@id'])) {
 			$apcontact['photo'] = JsonLD::fetchElement($compacted['as:icon'], 'as:url', '@id');
 		} elseif (empty($apcontact['photo'])) {
-			$photo = JsonLD::fetchElementArray($compacted, 'as:icon', 'as:url');
-			if (!empty($photo[0]['@id'])) {
-				$apcontact['photo'] = $photo[0]['@id'];
+			$prevwidth  = 0;
+			$prevheight = 0;
+			$photo      = JsonLD::fetchElementArray($compacted, 'as:icon', 'as:url');
+			$heights    = JsonLD::fetchElementArray($compacted, 'as:icon', 'as:height');
+			$widths     = JsonLD::fetchElementArray($compacted, 'as:icon', 'as:width');
+			foreach ($photo as $key => $url) {
+				$height = $heights[$key]['@value'] ?? 0;
+				$width  = $widths[$key]['@value']  ?? 0;
+				if (($width >= $prevwidth) || ($height >= $prevheight)) {
+					$apcontact['photo'] = $url['@id'];
+				}
+				$prevwidth  = $width;
+				$prevheight = $height;
 			}
 		}
 
