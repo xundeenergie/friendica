@@ -265,14 +265,16 @@ class APContact
 			$photo      = JsonLD::fetchElementArray($compacted, 'as:icon', 'as:url');
 			$heights    = JsonLD::fetchElementArray($compacted, 'as:icon', 'as:height');
 			$widths     = JsonLD::fetchElementArray($compacted, 'as:icon', 'as:width');
-			foreach ($photo as $key => $url) {
-				$height = $heights[$key]['@value'] ?? 0;
-				$width  = $widths[$key]['@value']  ?? 0;
-				if (($width >= $prevwidth) || ($height >= $prevheight)) {
-					$apcontact['photo'] = $url['@id'];
+			if (is_array($photo) && is_array($heights) && is_array($widths)) {
+				foreach ($photo as $key => $url) {
+					$height = $heights[$key]['@value'] ?? 0;
+					$width  = $widths[$key]['@value']  ?? 0;
+					if (($width >= $prevwidth) || ($height >= $prevheight)) {
+						$apcontact['photo'] = $url['@id'];
+					}
+					$prevwidth  = $width;
+					$prevheight = $height;
 				}
-				$prevwidth  = $width;
-				$prevheight = $height;
 			}
 		}
 
