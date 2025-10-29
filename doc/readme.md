@@ -5,10 +5,15 @@
 ## User and Admin documentation
 
 Every Friendica node has the _current_ version of the user and admin documentation available in the `/help` location.
-The documentation is mainly done in English, but the pages can be translated and some are already to German.
-If you want to help expanding the documentation or the translation, please register an account at the [Friendica wiki](https://wiki.friendi.ca) where the [texts are maintained](https://wiki.friendi.ca/docs).
 
-The documentation is periodically merged back from there to the _development_ branch of Friendica.
+The documentation is mainly done in English, but the pages can be translated and some are already to German.
+
+We greatly appreciate help in keeping Friendica well documented, with information that's up to date, so contributions are very welcome.
+The documentation lives in the core Friendica repository which, for now, [still lives on GitHub](https://github.com/friendica/friendica/).
+
+To contribute currently, you will need to make an account on GitHub, and if you're a developer or otherwise technically savvy you can create a `pull request` with your suggested changes
+You can make your changes using GitHub's builtin text editors, or locally.
+Alternatively you can create an `issue` with your suggested changes, and someone else can make a `pull request` based on your suggestions.
 
 Images that you use in the documentation should be located in the `img` sub-directory of this directory.
 Translations are located in sub-directories named after the language codes, e.g. `de`.
