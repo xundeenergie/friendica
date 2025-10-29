@@ -23,6 +23,7 @@ use Friendica\Model\Contact;
 use Friendica\Model\Item;
 use Friendica\Model\Post;
 use Friendica\Moderation\Entity\Report;
+use Friendica\Module\Moderation\Utils\ReportUtil;
 use Friendica\Module\Response;
 use Friendica\Navigation\SystemMessages;
 use Friendica\Network\HTTPException\ForbiddenException;
@@ -46,13 +47,16 @@ class Create extends BaseModule
 	private $factory;
 	/** @var \Friendica\Moderation\Repository\Report */
 	private $repository;
+	/** @var ReportUtil */
+	protected $reportUtil;
 
-	public function __construct(\Friendica\Moderation\Repository\Report $repository, \Friendica\Moderation\Factory\Report $factory, UserSession $session, App\Page $page, SystemMessages $systemMessages, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
+	public function __construct(\Friendica\Moderation\Repository\Report $repository, ReportUtil $reportUtil, \Friendica\Moderation\Factory\Report $factory, UserSession $session, App\Page $page, SystemMessages $systemMessages, L10n $l10n, App\BaseURL $baseUrl, App\Arguments $args, LoggerInterface $logger, Profiler $profiler, Response $response, array $server, array $parameters = [])
 	{
 		parent::__construct($l10n, $baseUrl, $args, $logger, $profiler, $response, $server, $parameters);
 
 		$this->systemMessages = $systemMessages;
 		$this->page           = $page;
+		$this->reportUtil     = $reportUtil;
 		$this->session        = $session;
 		$this->factory        = $factory;
 		$this->repository     = $repository;
@@ -298,27 +302,6 @@ class Create extends BaseModule
 		]);
 	}
 
-	// A copy of the one in Moderation/Reports.php - please consolidate!
-	public function getReportCategoryName(int $category): string
-	{
-		switch ($category) {
-			case Report::CATEGORY_SPAM:
-				return $this->t('Spam');
-			case Report::CATEGORY_ILLEGAL:
-				return $this->t('Illegal Content');
-			case Report::CATEGORY_SAFETY:
-				return $this->t('Community Safety');
-			case Report::CATEGORY_UNWANTED:
-				return $this->t('Unwanted Content/Behavior');
-			case Report::CATEGORY_VIOLATION:
-				return $this->t('Rules Violation');
-			case Report::CATEGORY_OTHER:
-				return $this->t('Other');
-			default:
-				return "";
-		};
-	}
-
 	private function getAside(array $request): string
 	{
 		$contact = null;
@@ -343,7 +326,7 @@ class Create extends BaseModule
 			],
 
 			'$contact'  => $contact,
-			'$category' => self::getReportCategoryName($request['category'] ?? 0),
+			'$category' => $this->reportUtil->getReportCategoryName($request['category'] ?? 0),
 			'$rules'    => $rules ?? [],
 			'$comment'  => BBCode::convertForUriId($contact['uri-id'] ?? 0, $this->session->get('report_comment') ?? '', BBCode::EXTERNAL),
 			'$posts'    => count($request['uri-ids'] ?? []),
