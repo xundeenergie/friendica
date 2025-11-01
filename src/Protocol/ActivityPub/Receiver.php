@@ -2028,7 +2028,13 @@ class Receiver
 			if (empty($capabilities_list)) {
 				continue;
 			}
-			$capabilities[$element] = $capabilities_list;
+
+			foreach ($capabilities_list as $capability) {
+				if ($capability == self::PUBLIC_COLLECTION) {
+					$capability = ActivityPub::PUBLIC_COLLECTION;
+				}
+				$capabilities[$element][] = $capability;
+			}
 		}
 		return $capabilities;
 	}
@@ -2164,11 +2170,6 @@ class Receiver
 			}
 
 			$object_data['attachments'] = array_merge($object_data['attachments'], self::processAttachmentUrls($object['as:url'] ?? [], self::processIcon($object), $player, $embed));
-		}
-
-		$object_data['can-comment'] = JsonLD::fetchElement($object, 'pt:commentsEnabled', '@value');
-		if (is_null($object_data['can-comment'])) {
-			$object_data['can-comment'] = JsonLD::fetchElement($object, 'pixelfed:commentsEnabled', '@value');
 		}
 
 		// Support for quoted posts (Pleroma, Fedibird and Misskey)

@@ -29,6 +29,7 @@ use Friendica\Network\HTTPException\InternalServerErrorException;
 use Friendica\Network\HTTPException\ServiceUnavailableException;
 use Friendica\Protocol\Activity;
 use Friendica\Protocol\ActivityPub;
+use Friendica\Protocol\ActivityPub\Processor;
 use Friendica\Protocol\Delivery;
 use Friendica\Protocol\Diaspora;
 use Friendica\Util\DateTimeFormat;
@@ -39,7 +40,6 @@ use Friendica\Util\Proxy;
 use Friendica\Util\Strings;
 use Friendica\Util\Temporal;
 use GuzzleHttp\Psr7\Uri;
-use LanguageDetection\Language;
 
 class Item
 {
@@ -994,6 +994,10 @@ class Item
 		if (Post::exists($condition)) {
 			DI::logger()->notice('Item is already inserted - aborting', $condition);
 			return 0;
+		}
+
+		if (!isset($item['restrictions']) || is_null($item['restrictions'])) {
+			$item['restrictions'] = Processor::getRestrictions($item['uri-id'], $item['author-id'], $item['uid']);
 		}
 
 		$post_user_id = Post\User::insert($item['uri-id'], $item['uid'], $item);

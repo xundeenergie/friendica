@@ -121,7 +121,7 @@ class Tag
 		}
 
 		if (empty($cid)) {
-			if (!in_array($type, [self::TO, self::CC, self::BTO, self::BCC, self::AUDIENCE, self::ATTRIBUTED])) {
+			if (!in_array($type, [self::TO, self::CC, self::BTO, self::BCC, self::AUDIENCE, self::ATTRIBUTED, self::CAN_ANNOUNCE, self::CAN_LIKE, self::CAN_REPLY, self::CAN_QUOTE])) {
 				if (($type != self::HASHTAG) && !empty($url) && ($url != $name)) {
 					$url = strtolower($url);
 				} else {

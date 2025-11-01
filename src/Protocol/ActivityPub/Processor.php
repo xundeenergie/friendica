@@ -965,33 +965,9 @@ class Processor
 		self::storeReceivers($item['uri-id'], $activity['receiver_urls'] ?? []);
 
 		if (!empty($activity['interaction'])) {
-			$restrictions = self::storeInteractions($item['uri-id'], $activity['interaction']);
+			self::storeInteractions($item['uri-id'], $activity['interaction']);
 		} elseif (!empty($activity['capabilities'])) {
-			$restrictions = self::storeCapabilities($item['uri-id'], $activity['capabilities']);
-		} elseif (!is_null($activity['can-comment']) && !$activity['can-comment']) {
-			$restrictions = [Tag::CAN_REPLY];
-		} else {
-			$restrictions = [];
-		}
-
-		$item['restrictions'] = null;
-		foreach ($restrictions as $restriction) {
-			if ($restriction == Tag::CAN_REPLY) {
-				$item['restrictions'] = $item['restrictions'] | Item::CANT_REPLY;
-			} elseif ($restriction == Tag::CAN_LIKE) {
-				$item['restrictions'] = $item['restrictions'] | Item::CANT_LIKE;
-			} elseif ($restriction == Tag::CAN_ANNOUNCE) {
-				$item['restrictions'] = $item['restrictions'] | Item::CANT_ANNOUNCE;
-			} elseif ($restriction == Tag::CAN_QUOTE) {
-				$item['restrictions'] = $item['restrictions'] | Item::CANT_QUOTE;
-			}
-		}
-
-		if (!empty($item['author-id'])) {
-			$author = Contact::selectFirstAccount(['ap-posting-restricted'], ['id' => $item['author-id']]);
-			if (!empty($author['ap-posting-restricted'])) {
-				$item['restrictions'] = $item['restrictions'] | Item::CANT_REPLY;
-			}
+			self::storeCapabilities($item['uri-id'], $activity['capabilities'], $item['author-id']);
 		}
 
 		$item['location'] = $activity['location'];
@@ -1424,15 +1400,55 @@ class Processor
 		}
 	}
 
-	private static function storeInteractions(int $uriid, array $interactions): array
+	public static function getRestrictions(int $uriid, int $author_id, int $uid): ?int
 	{
-		$restrictions = [];
+		$author = Contact::getAccountById($author_id, ['ap-following', 'ap-followers', 'ap-posting-restricted']);
+		if ($author['ap-posting-restricted']) {
+			return Item::CANT_REPLY;
+		}
+
+		$tags = Tag::getByURIId($uriid, [Tag::CAN_ANNOUNCE, Tag::CAN_LIKE, Tag::CAN_REPLY, Tag::CAN_QUOTE]);
+		if (!is_array($tags) || sizeof($tags) == 0) {
+			return null;
+		}
+
+		$restrictions = 0;
+		foreach ($tags as $tag) {
+			if ($tag['url'] == ActivityPub::PUBLIC_COLLECTION) {
+				continue;
+			}
+
+			if ($uid != 0) {
+				if (User::getIdForURL($tag['url']) == $uid) {
+					continue;
+				}
+				if ($tag['url'] == $author['ap-following'] && Contact::isSharing($author_id, $uid, true)) {
+					continue;
+				}
+				if ($tag['url'] == $author['ap-followers'] && Contact::isFollower($author_id, $uid, true)) {
+					continue;
+				}
+			}
+			if ($tag['type'] == Tag::CAN_REPLY) {
+				$restrictions = $restrictions | Item::CANT_REPLY;
+			} elseif ($tag['type'] == Tag::CAN_LIKE) {
+				$restrictions = $restrictions | Item::CANT_LIKE;
+			} elseif ($tag['type'] == Tag::CAN_ANNOUNCE) {
+				$restrictions = $restrictions | Item::CANT_ANNOUNCE;
+			} elseif ($tag['type'] == Tag::CAN_QUOTE) {
+				$restrictions = $restrictions | Item::CANT_QUOTE;
+			}
+		}
+		DI::logger()->debug('Calculated restrictions', ['uri-id' => $uriid, 'author-id' => $author_id, 'uid' => $uid, 'restrictions' => $restrictions]);
+		return $restrictions;
+	}
+
+	private static function storeInteractions(int $uriid, array $interactions)
+	{
 		foreach ($interactions as $key => $key_interaction) {
-			$restricted = true;
 			foreach ($key_interaction as $interaction) {
 				if ($interaction == ActivityPub::PUBLIC_COLLECTION) {
-					$name       = Receiver::PUBLIC_COLLECTION;
-					$restricted = false;
+					$name = Receiver::PUBLIC_COLLECTION;
 				} elseif ($path = parse_url($interaction, PHP_URL_PATH)) {
 					$name = trim($path, '/');
 				} elseif ($host = parse_url($interaction, PHP_URL_HOST)) {
@@ -1441,25 +1457,33 @@ class Processor
 					DI::logger()->warning('Unable to coerce name from interaction', ['key' => $key, 'interaction' => $interaction]);
 					$name = '';
 				}
+				DI::logger()->debug('Storing interaction', ['uri-id' => $uriid, 'key' => $key, 'name' => $name, 'interaction' => $interaction]);
 				Tag::store($uriid, $key, $name, $interaction);
 			}
-			if ($restricted) {
-				$restrictions[] = $key;
-			}
 		}
-		return $restrictions;
 	}
 
-	private static function storeCapabilities(int $uriid, array $capabilities): array
+	private static function storeCapabilities(int $uriid, array $capabilities, int $author_id)
 	{
-		$restrictions = [];
 		foreach (['pixelfed:canAnnounce' => Tag::CAN_ANNOUNCE, 'pixelfed:canLike' => Tag::CAN_LIKE, 'pixelfed:canReply' => Tag::CAN_REPLY] as $element => $type) {
-			$restricted = true;
+			if (!isset($capabilities[$element])) {
+				$author = Contact::getAccountById($author_id, ['nick', 'url']);
+				if (!$author) {
+					continue;
+				}
+				Tag::store($uriid, $type, $author['nick'] ?: $author['url'], $author['url']);
+				continue;
+			}
 			foreach ($capabilities[$element] ?? [] as $capability) {
 				if ($capability == ActivityPub::PUBLIC_COLLECTION) {
 					$name = Receiver::PUBLIC_COLLECTION;
 				} elseif (empty($capability) || ($capability == '[]')) {
-					continue;
+					$author = Contact::getAccountById($author_id, ['nick', 'url']);
+					if (!$author) {
+						continue;
+					}
+					$name       = $author['nick'] ?: $author['url'];
+					$capability = $author['url'];
 				} elseif ($path = parse_url($capability, PHP_URL_PATH)) {
 					$name = trim($path, '/');
 				} elseif ($host = parse_url($capability, PHP_URL_HOST)) {
@@ -1468,14 +1492,9 @@ class Processor
 					DI::logger()->warning('Unable to coerce name from capability', ['element' => $element, 'type' => $type, 'capability' => $capability]);
 					$name = '';
 				}
-				$restricted = false;
 				Tag::store($uriid, $type, $name, $capability);
 			}
-			if ($restricted) {
-				$restrictions[] = $type;
-			}
 		}
-		return $restrictions;
 	}
 
 	/**
