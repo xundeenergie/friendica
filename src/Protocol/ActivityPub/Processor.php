@@ -1363,7 +1363,7 @@ class Processor
 	 * @param integer $uriid
 	 * @param array $tags
 	 */
-	private static function storeTags(int $uriid, array $tags = null)
+	private static function storeTags(int $uriid, ?array $tags = null)
 	{
 		foreach ($tags as $tag) {
 			if (empty($tag['name']) || empty($tag['type']) || !in_array($tag['type'], ['Mention', 'Hashtag'])) {

@@ -612,7 +612,7 @@ class Receiver
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public static function processActivity(array $activity, string $body = '', int $uid = null, bool $trust_source = false, bool $push = false, array $signer = [], string $http_signer = '', int $completion = Receiver::COMPLETION_AUTO): bool
+	public static function processActivity(array $activity, string $body = '', ?int $uid = null, bool $trust_source = false, bool $push = false, array $signer = [], string $http_signer = '', int $completion = Receiver::COMPLETION_AUTO): bool
 	{
 		$type = JsonLD::fetchElement($activity, '@type');
 		if (!$type) {
@@ -1077,7 +1077,7 @@ class Receiver
 	 * @param array   $signer       The signer of the post
 	 * @return void
 	 */
-	private static function storeUnhandledActivity(bool $unknown, string $type, array $object_data, array $activity, string $body = '', int $uid = null, bool $trust_source = false, bool $push = false, array $signer = [])
+	private static function storeUnhandledActivity(bool $unknown, string $type, array $object_data, array $activity, string $body = '', ?int $uid = null, bool $trust_source = false, bool $push = false, array $signer = [])
 	{
 		if (!DI::config()->get('debug', 'ap_log_unknown')) {
 			return;

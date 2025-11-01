@@ -1367,7 +1367,7 @@ class Contact
 	 * @throws InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public static function getIdForURL(string $url = null, int $uid = 0, $update = null, array $default = []): int
+	public static function getIdForURL(?string $url = null, int $uid = 0, $update = null, array $default = []): int
 	{
 		$contact_id = 0;
 
@@ -1629,7 +1629,7 @@ class Contact
 	 * @return string posts in HTML
 	 * @throws Exception
 	 */
-	public static function getPostsFromUrl(string $contact_url, int $uid, bool $only_media = false, string $last_created = null): string
+	public static function getPostsFromUrl(string $contact_url, int $uid, bool $only_media = false, ?string $last_created = null): string
 	{
 		return self::getPostsFromId(self::getIdForURL($contact_url), $uid, $only_media, $last_created);
 	}
@@ -1644,7 +1644,7 @@ class Contact
 	 * @return string posts in HTML
 	 * @throws Exception
 	 */
-	public static function getPostsFromId(int $cid, int $uid, bool $only_media = false, string $last_created = null): string
+	public static function getPostsFromId(int $cid, int $uid, bool $only_media = false, ?string $last_created = null): string
 	{
 		$contact = DBA::selectFirst('contact', ['contact-type', 'network', 'name', 'nick'], ['id' => $cid]);
 		if (!DBA::isResult($contact)) {
@@ -1834,7 +1834,7 @@ class Contact
 	 * @param string $reason Block reason
 	 * @return bool Whether it was successful
 	 */
-	public static function block(int $cid, string $reason = null): bool
+	public static function block(int $cid, ?string $reason = null): bool
 	{
 		$return = self::update(['blocked' => true, 'block_reason' => $reason], ['id' => $cid]);
 

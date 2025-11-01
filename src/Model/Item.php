@@ -1831,7 +1831,7 @@ class Item
 	 * @return string Unique guid
 	 * @throws \Exception
 	 */
-	public static function guidFromUri(string $uri, string $host = null): string
+	public static function guidFromUri(string $uri, ?string $host = null): string
 	{
 		// Our regular guid routine is using this kind of prefix as well
 		// We have to avoid that different routines could accidentally create the same value
@@ -2233,7 +2233,7 @@ class Item
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public static function fixPrivatePhotos(string $s, int $uid, array $item = null, int $cid = 0): string
+	public static function fixPrivatePhotos(string $s, int $uid, ?array $item = null, int $cid = 0): string
 	{
 		if (DI::config()->get('system', 'disable_embedded')) {
 			return $s;
@@ -2499,7 +2499,7 @@ class Item
 	 * @throws \Friendica\Network\HTTPException\InternalServerErrorException
 	 * @throws \ImagickException
 	 */
-	public static function performActivity(int $item_id, string $verb, int $uid, string $allow_cid = null, string $allow_gid = null, string $deny_cid = null, string $deny_gid = null): bool
+	public static function performActivity(int $item_id, string $verb, int $uid, ?string $allow_cid = null, ?string $allow_gid = null, ?string $deny_cid = null, ?string $deny_gid = null): bool
 	{
 		if (empty($uid)) {
 			return false;
