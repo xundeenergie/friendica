@@ -402,14 +402,6 @@ class PostMedia extends BaseRepository
 			$preview_url = '';
 		}
 
-		if (($postMedia->height ?? 0) > ($postMedia->width ?? 0)) {
-			$height = min($this->config->get('system', 'max_height') ?: '100%', $postMedia->height);
-			$width  = 'auto';
-		} else {
-			$height = 'auto';
-			$width  = '100%';
-		}
-
 		if ($this->pConfig->get($uid, 'system', 'embed_media', false) && $postMedia->hasPlayerUrl() && $postMedia->hasPlayerHeight()) {
 			$media = $this->getPlayerIframe($postMedia);
 		} elseif ($this->pConfig->get($uid, 'system', 'embed_media', false) && $postMedia->hasEmbedHtml() && !$postMedia->isPhoto()) {
@@ -427,8 +419,8 @@ class PostMedia extends BaseRepository
 					'name'        => $postMedia->name ?: $postMedia->url,
 					'preview'     => $preview_url,
 					'mime'        => (string)$postMedia->mimetype,
-					'height'      => $height,
-					'width'       => $width,
+					'height'      => 'auto',
+					'width'       => '100%',
 					'style'       => 'aspect-ratio:' . $postMedia->width . '/' . $postMedia->height . ';',
 					'description' => $postMedia->description,
 				],
