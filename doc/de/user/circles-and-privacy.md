@@ -1,7 +1,5 @@
 # Circles und Privatsphäre
 
-* [Zur Startseite der Hilfe](help)
-
 Circles sind nur eine Ansammlung von Freunden.
 Aber Friendica nutzt diese, um sehr mächtige Features zur Verfügung zu stellen.
 

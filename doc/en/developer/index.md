@@ -2,8 +2,6 @@
 
 <!-- markdownlint-disable MD010 MD013 -->
 
-* [Home](help)
-
 Do you want to help us improve Friendica?
 Here we have compiled some hints on how to get started and some tasks to help you choose.
 A project like Friendica is the sum of many contributions.

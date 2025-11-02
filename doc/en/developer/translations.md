@@ -1,7 +1,5 @@
 # Friendica translations
 
-* [Home](help)
-
 ## Overview
 
 The Friendica translation process is based on `gettext` PO files.

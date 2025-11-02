@@ -15,4 +15,4 @@ Remember the link at the top of this page will bring you back here.
 
 Once you've added some groups, [move on to the next section](help/user/quick-start/finally).
 
-<iframe src="https://dir.friendica.social/group" width="950" height="600"></iframe>
+<iframe src="https://dir.friendica.social/group" width="100%" height="600"></iframe>

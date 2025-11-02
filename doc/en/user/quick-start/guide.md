@@ -20,4 +20,4 @@ This means it will appear to anybody who views your profile, and in the communit
 
 Play around with this a bit, then when you're ready to move on, we'll take a look at the [Network Tab](help/user/quick-start/network).
 
-<iframe src="login" width="950" height="600"></iframe>
+<iframe src="login" width="100%" height="600"></iframe>

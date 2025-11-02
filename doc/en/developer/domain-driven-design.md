@@ -1,7 +1,6 @@
 # Domain-driven design
 
-* [Home](help)
-  * [Developer Intro](help/developer/index)
+* [Developer Intro](help/developer/index)
 
 Friendica uses class structures inspired by Domain-Driven-Design programming patterns.
 This page is meant to explain what it means in practical terms for Friendica development.

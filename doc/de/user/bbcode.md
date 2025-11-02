@@ -1,7 +1,5 @@
 # Referenz der Friendica BBCode Tags
 
-* [Zur Startseite der Hilfe](help)
-
 ## Inline
 
 <style>

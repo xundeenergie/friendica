@@ -1,7 +1,5 @@
 # Konnektoren installieren
 
-* [Zur Startseite der Hilfe](help)
-
 Friendica verwendet Konnektoren, um sich mit einigen Netzwerken zu verbinden, wie Tumblr oder Bluesky.
 
 Alle diese Konnektoren erfordern einen Account im Zielnetzwerk.

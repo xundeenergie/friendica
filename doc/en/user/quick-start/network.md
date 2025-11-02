@@ -9,4 +9,4 @@ Here, you can comment, like, or dislike posts, or click on somebody's name to vi
 
 Now we need to fill it up, the first step, is to [make some new friends](help/user/quick-start/making-new-friends).
 
-<iframe src="network" width="950" height="600"></iframe>
+<iframe src="network" width="100%" height="600"></iframe>

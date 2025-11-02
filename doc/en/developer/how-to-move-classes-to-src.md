@@ -1,7 +1,6 @@
 # How to move classes to `src`
 
-* [Home](help)
-  * [Developer Intro](help/developer/index)
+* [Developer Intro](help/developer/index)
 
 Friendica uses [Composer](help/developer/composer) to manage autoloading.
 This means that all the PHP class files moved to the `src` folder will be [automatically included](help/developer/autoloader) when the class it defines is first used in the flow.

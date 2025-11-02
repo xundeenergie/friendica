@@ -1,7 +1,5 @@
 # Account types: Groups and pages
 
-* [Home](help)
-
 Friendica also lets you create accounts that can function as discussion groups, celebrity accounts, announcement channels, news reflectors, or organization pages, depending on how you want to interact with others.
 Management of these accounts can be delegated to other accounts, or a parent account can be designated to easily toggle multiple identities.
 

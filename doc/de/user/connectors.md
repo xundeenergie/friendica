@@ -1,7 +1,5 @@
 # Konnektoren (Connectors)
 
-* [Zur Startseite der Hilfe](help)
-
 Konnektoren erlauben es Dir, Dich mit anderen sozialen Netzwerken zu verbinden.
 Mit diesen Konnektoren kannst Du z.B. zu Bluesky, Tumblr oder Twitter posten.
 Für Bluesky und Tumblr gibt es eine bidirektionale Verbindung, d.h. du kannst Friendica nutzen, um deine Timeline von diesen Diensten zu lesen.

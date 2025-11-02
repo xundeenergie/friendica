@@ -1,7 +1,5 @@
 # Deleting an account
 
-* [Home](help)
-
 We don't like to see people leave Friendica, but if you need to remove your account, you should visit the URL
 
 http://sitename/settings/removeme

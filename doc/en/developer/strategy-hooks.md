@@ -1,7 +1,5 @@
 # Friendica strategy Hooks
 
-* [Home](help)
-
 ## Strategy hooks
 
 This type of hook is based on the [Strategy Design Pattern](https://refactoring.guru/design-patterns/strategy).

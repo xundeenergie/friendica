@@ -1,7 +1,5 @@
 # Settings
 
-* [Home](help)
-
 If you are the admin of a Friendica node, you have access to the **Admin Panel** where you can configure your Friendica node.
 
 ## Overview

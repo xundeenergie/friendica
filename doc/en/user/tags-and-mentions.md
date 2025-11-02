@@ -1,7 +1,5 @@
 # Tags and mentions
 
-* [Home](help)
-
 Like many other modern social networks, Friendica uses a special notation inside messages to indicate "tags" or contextual links to other entities.
 
 ## Mentions

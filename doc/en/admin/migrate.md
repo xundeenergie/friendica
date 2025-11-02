@@ -1,7 +1,5 @@
 # Migrating to a new server installation
 
-* [Home](help)
-
 ## Preparation
 
 ### New server

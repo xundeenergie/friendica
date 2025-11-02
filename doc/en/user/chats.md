@@ -1,7 +1,5 @@
 # Chats
 
-* [Home](help)
-
 There are two possibilities to use chat on your friendica site
 
 * IRC Chat

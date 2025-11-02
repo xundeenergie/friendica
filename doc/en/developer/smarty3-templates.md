@@ -1,7 +1,5 @@
 # Friendica templating documentation
 
-* [Home](help)
-
 Friendica uses [Smarty 3](http://www.smarty.net/) as PHP templating engine.
 The main templates are found in
 

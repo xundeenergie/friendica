@@ -1,7 +1,5 @@
 # Config values that can only be set in config/local.config.php
 
-* [Home](help)
-
 Friendica's configuration is done in two places: in PHP array configuration files and in the `config` database table.
 Database config values overwrite the same file config values.
 

@@ -1,7 +1,5 @@
 # Friendica storage backend addon development
 
-* [Home](help)
-
 Storage backends can be added via addons.
 A storage backend is implemented as a class, and the plugin register the class to make it available to the system.
 

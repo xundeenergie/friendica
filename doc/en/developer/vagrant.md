@@ -1,7 +1,5 @@
 # Vagrant for Friendica developers
 
-* [Home](help)
-
 ## Getting started
 
 [Vagrant](https://www.vagrantup.com/) is a virtualization solution for developers.

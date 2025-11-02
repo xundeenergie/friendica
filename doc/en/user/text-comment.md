@@ -1,7 +1,5 @@
 # Comment, sort and delete posts
 
-* [Home](help)
-
 Here you can find an overview of the different ways to comment and sort existing posts. <span style="color: red;">Attention: we've used the <b>"diabook"</b> theme. If you're using another theme, some of the icons may be different.</span>
 
 <img src="doc/assets/img/diabook.png" width="308" height="42" alt="diabook" >

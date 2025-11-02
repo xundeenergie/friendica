@@ -1,7 +1,5 @@
 # Accounts Umziehen
 
-* [Zur Startseite der Hilfe](help)
-
 ! **Dies ist ein experimentelles Feature**
 
 **Wie man einen Account von einem Server zu einem anderen umzieht.**

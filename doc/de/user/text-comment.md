@@ -1,7 +1,5 @@
 # Beiträge kommentieren, einordnen und löschen
 
-* [Zur Startseite der Hilfe](help)
-
 Hier findest du eine Übersicht über die verschiedenen Möglichkeiten, bestehende Beiträge einzuordnen und zu kommentieren.
 <span style="color: red;">
 Achtung: für dieses Beispiel wurde das Thema <b>"Diabook"</b> genutzt.

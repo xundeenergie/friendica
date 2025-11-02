@@ -1,7 +1,5 @@
 # Frequently asked questions (Admin) - FAQ
 
-* [Home](help)
-
 ## Can I configure multiple domains with the same code instance?
 
 No, this function is no longer supported as of Friendica 3.3 onwards.

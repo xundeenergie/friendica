@@ -1,7 +1,5 @@
 # Friendica Nachrichtenfluss
 
-* [Zur Startseite der Hilfe](help)
-
 Diese Seite soll einige Infos darüber dokumentieren, wie Nachrichten innerhalb von Friendica von einer Person zur anderen übertragen werden.
 Es gibt verschiedene Pfade, die verschiedene Protokolle und Nachrichtenformate nutzen.
 

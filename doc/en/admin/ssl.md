@@ -1,7 +1,5 @@
 # Using SSL with Friendica
 
-* [Home](help)
-
 ## Disclaimer
 
 **This document has been updated in November 2016.

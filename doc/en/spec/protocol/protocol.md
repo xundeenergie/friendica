@@ -1,7 +1,5 @@
 # Used protocols
 
-* [Home](help)
-
 ## Friendicas DFRN Protocol
 
 * [Document with the DFRN specification](spec/dfrn2.pdf)

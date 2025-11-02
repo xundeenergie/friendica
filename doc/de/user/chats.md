@@ -1,7 +1,5 @@
 # Chats
 
-* [Zur Startseite der Hilfe](help)
-
 Du hast derzeit zwei Möglichkeiten, einen Chat auf Deiner Friendica-Seite zu betreiben
 
 * IRC - Internet Relay Chat

@@ -64,7 +64,8 @@ class Help extends BaseModule
 		if ($filename !== "home") {
 			// create TOC but not for home
 			$lines     = explode("\n", $html);
-			$toc       = "<h2>TOC</h2><ul id='toc'>";
+			$back_text = DI::l10n()->t('Home');
+			$toc       = "<p><i class='fa fa-arrow-left'></i> <a href='/help'>&nbsp;$back_text</a></p><h2>TOC</h2><ul id='toc'>";
 			$lastLevel = 1;
 			$idNum     = [0, 0, 0, 0, 0, 0, 0];
 			foreach ($lines as &$line) {

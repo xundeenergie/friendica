@@ -1,8 +1,5 @@
 # Moving an account between servers
 
-* [Home](help)
-
-
 ! **This is an experimental feature**
 
 * Go to "Settings" -> "[Export personal data](uexport)"

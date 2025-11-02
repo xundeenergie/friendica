@@ -1,7 +1,5 @@
 # Account - Basics
 
-* [Zur Startseite der Hilfe](help)
-
 ## Registrierung
 
 Viele, aber nicht alle Friendica-Knoten (Server) bieten die Möglichkeit zur Registrierung an.

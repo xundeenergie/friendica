@@ -1,7 +1,5 @@
 # Freunde finden
 
-* [Zur Startseite der Hilfe](help)
-
 Freundschaft kann in Friendica viele verschiedene Bedeutungen annehmen.
 Aber lasst es uns einfach halten, du willst einfach mit jemandem befreundet sein.
 Wie machst du das?

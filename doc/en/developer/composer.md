@@ -1,7 +1,6 @@
 # Using Composer
 
-* [Home](help)
-  * [Developer Intro](help/developer/index)
+* [Developer Intro](help/developer/index)
 
 Friendica uses [Composer](https://getcomposer.org) to manage dependencies libraries and the class autoloader both for libraries and namespaced Friendica classes.
 

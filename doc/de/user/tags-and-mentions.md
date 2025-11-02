@@ -1,7 +1,5 @@
 # Tags und Erwähnungen
 
-* [Zur Startseite der Hilfe](help)
-
 Wie viele andere soziale Netzwerke benutzt auch Friendica eine spezielle Schreibweise in seinen Nachrichten, um Tags oder kontextbezogene Links zu anderen Beiträgen hervorzuheben.
 
 **Erwähnungen**

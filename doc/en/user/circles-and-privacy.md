@@ -1,7 +1,5 @@
 # Circles and privacy
 
-* [Home](help)
-
 Circles are merely collections of friends.
 But Friendica uses these to unlock some very powerful features.
 

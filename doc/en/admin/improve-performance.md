@@ -1,7 +1,5 @@
 # How to improve the performance of a Friendica server
 
-* [Home](help)
-
 Feel free to ask in the [Friendica support group](https://forum.friendi.ca/profile/helpers) if you need some clarification about the following instructions or if you need help in any other way.
 
 ## System configuration

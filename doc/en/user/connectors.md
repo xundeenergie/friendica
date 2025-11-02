@@ -1,7 +1,5 @@
 # Connectors
 
-* [Home](help)
-
 Connectors allow you to connect with external social networks and services.
 They are only required for posting to existing accounts on for example Bluesky, Tumblr or Twitter.
 For Bluesky and Tumblr you can also enable a bidirectional synchronisation, so that you can use Friendica to read your timeline from Tumblr or Bluesky.

@@ -1,7 +1,5 @@
 # Installing Connectors
 
-* [Home](help)
-
 Friendica uses add-ons to connect to some networks, such as Tumblr or Bluesky.
 
 All of these add-ons require an account on the target network.

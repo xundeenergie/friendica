@@ -1,7 +1,5 @@
 # Friendica addon development
 
-* [Home](help)
-
 Please see the sample addon 'randplace' for a working example of using some of these features.
 Addons work by intercepting event hooks - which must be registered.
 Modules work by intercepting specific page requests (by URL path).

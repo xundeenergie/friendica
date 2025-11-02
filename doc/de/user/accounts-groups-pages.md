@@ -1,8 +1,5 @@
 # Accounttypen: Gruppen und Seiten
 
-* [Zur Startseite der Hilfe](help)
-
-
 In Friendica kannst Du auch Gruppen und/oder Prominenten-Seiten erstellen.
 
 Jede Seite in Friendica hat einen einmaligen Spitznamen.

@@ -1,7 +1,5 @@
 # Updating Friendica
 
-* [Home](help)
-
 ## Using a Friendica archive
 
 If you installed Friendica in the ``path/to/friendica`` folder:

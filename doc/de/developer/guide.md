@@ -1,7 +1,5 @@
 # Friendica - Entwickler-Guide
 
-* [Zur Startseite der Hilfe](help)
-
 Hier erfährst Du, wie Du bei uns mitmachen kannst:
 
 Zunächst erstelle Dir per 'git clone https://github.com/friendica/friendica.git' ein funktionierendes Git-Paket auf Deinem System, auf dem Du die Entwicklung durchführst, und einen eigenen Github-Account.

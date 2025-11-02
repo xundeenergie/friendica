@@ -1,7 +1,5 @@
 # Tests
 
-* [Home](help)
-
 You can run unit tests with [PHPUnit](https://phpunit.de/):
 
 ```bash

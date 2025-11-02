@@ -1,7 +1,5 @@
 # Access keys reference
 
-* [Home](help)
-
 Access keys are keyboard shortcuts that allow you to easily navigate the user interface.
 Access keys are currently not available with the Frio theme.
 

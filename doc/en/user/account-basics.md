@@ -1,7 +1,5 @@
 # Account basics
 
-* [Home](help)
-
 ## Registration
 
 Not all Friendica sites allow open registration.

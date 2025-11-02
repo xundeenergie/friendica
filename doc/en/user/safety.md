@@ -1,7 +1,5 @@
 # Safety
 
-* [Home](help)
-
 Each Friendica instance is linked together with a global network of other servers, some running Friendica and some running other software.
 These servers support a diverse global community of millions of users.
 Inevitably, some of these users are malicious.

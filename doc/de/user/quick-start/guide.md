@@ -1,7 +1,5 @@
 # Erste Schritte...
 
-* [Zur Startseite der Hilfe](help)
-
 Als Erstes: Gehe sicher, dass Du eingeloggt bist.
 Wenn Du noch nicht eingeloggt bist, kannst Du das in dem Fenster unten machen.
 
@@ -30,4 +28,4 @@ Auch wenn Du Deinen Server so konfiguriert hast, dass der Zugriff von außerhalb
 
 Probiere es doch einfach mal aus. Wenn Du fertig bist, schauen wir uns den ["Netzwerk"-Tab](help/user/quick-start/network) an.
 
-<iframe src="login" width="950" height="600"></iframe>
+<iframe src="login" width="100%" height="600"></iframe>

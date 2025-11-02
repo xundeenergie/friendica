@@ -1,7 +1,5 @@
 # Häufig gestellte Fragen (Admin) - FAQ
 
-* [Zur Startseite der Hilfe](help)
-
 ## Kann ich mehrere Domains mit den selben Dateien aufsetzen?
 
 Ja, das ist möglich.

@@ -16,4 +16,4 @@ Click the link at the top of this page to go back to the suggested friends list 
 Feel uncomfortable adding people you don't know?
 Don't worry - that's where [Groups and Pages](help/user/quick-start/groups-and-pages) come in!
 
-<iframe src="contact/suggestions" width="950" height="600"></iframe>
+<iframe src="contact/suggestions" width="100%" height="600"></iframe>

@@ -1,7 +1,5 @@
 # Making friends
 
-* [Home](help)
-
 Friendship in Friendica can sometimes take on different meaning.
 But let's keep it simple; you want to be friends with somebody.
 How do you do it?

@@ -1,7 +1,5 @@
 # Deine "Netzwerk"-Seite
 
-* [Zur Startseite der Hilfe](help)
-
 Dies ist Dein "Netzwerk"-Tab.
 Wenn Du Dich mal verirrt hast, kannst Du [diesen Link klicken](help/user/quick-start/network), um wieder hierher zu kommen.
 
@@ -14,4 +12,4 @@ Du kannst ihre Beiträge von hier aus kommentieren, mitteilen, dass Du den Beitr
 Nun wollen wir diese Seite mit Inhalt füllen.
 Der erste Schritt ist es, [Leute zu Deinem Account hinzuzufügen](help/user/quick-start/making-new-friends).
 
-<iframe src="network" width="950" height="600"></iframe>
+<iframe src="network" width="100%" height="600"></iframe>

@@ -1,7 +1,5 @@
 # Kanäle (Channels)
 
-* [Home](help)
-
 Kanäle sind eine Möglichkeit neue Inhalte zu finden, oder Inhalte anzuzeigen, die du sonst möglicherweise verpasst hättest.
 Es gibt mehrere vordefinierte Kanäle und zusätzlich kannst du deine eigenen, basierend auf ein paar Regeln, erstellen.
 Kanäle zeigen nur Beiträge aus den letzten 24 Stunden an. (Dieser Wert kann vom Administrator geändert werden.)

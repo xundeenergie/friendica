@@ -1,7 +1,5 @@
 # Frequently asked questions - FAQ
 
-* [Home](help)
-
 ## Where I can find help?
 
 If this FAQ does not answer your question you can always reach out to the community via the following options:

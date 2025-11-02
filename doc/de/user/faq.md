@@ -1,7 +1,5 @@
 # Häufig gestellte Fragen - FAQ
 
-* [Zur Startseite der Hilfe](help)
-
 ## Wo finde ich Hilfe?
 
 Wenn Du Probleme mit Deiner Friendica-Seite hast, dann kannst Du die Community in der [Friendica-Support-Gruppe](https://forum.friendi.ca/profile/helpers) fragen.

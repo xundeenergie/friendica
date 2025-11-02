@@ -1,7 +1,6 @@
 # Twitter API
 
-* [Home](help)
-  * [Using the APIs](help/spec/api/index)
+* [Using the APIs](help/spec/api/index)
 
 ## Overview
 

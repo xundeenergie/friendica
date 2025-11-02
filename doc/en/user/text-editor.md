@@ -6,8 +6,6 @@ figure figcaption { background: #eeeeee; color: #444444; padding: 2px; font-styl
 
 # Creating posts
 
-* [Home](help)
-
 Here you can find an overview of the different ways to create and edit your post.
 
 One click on the Pencil & Paper icon in the top right of your Home or Network page, or the "Share" text box, and the post editor shows up.

@@ -1,7 +1,5 @@
 # Bugs and issues
 
-* [Home](help)
-
 If your server has a support page, you should report any bugs/issues you encounter there first.
 Reporting to your support page before reporting to the developers makes their job easier, as they don't have to deal with bug reports that might not have anything to do with them.
 Reducing the workload in this way helps us get new features faster.

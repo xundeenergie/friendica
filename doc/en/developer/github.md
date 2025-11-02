@@ -1,7 +1,5 @@
 # Friendica on GitHub
 
-* [Home](help)
-
 Here is how you can work on the code with us. If you have any questions please write to the Friendica developers' group.
 
 ## Introduction to the workflow with our GitHub repository

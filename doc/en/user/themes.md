@@ -1,7 +1,5 @@
 # Themes
 
-* [Home](help)
-
 The default Theme in Friendica is called [frio](https://github.com/friendica/friendica/tree/stable/view/theme/frio).
 
 Open `Settings > Display > Custom Theme Settings` adjust the Theme to your liking. Select your preferred Appearance - light, dark or black - and your favorite Accent color. Click `Submit` to save your changes.

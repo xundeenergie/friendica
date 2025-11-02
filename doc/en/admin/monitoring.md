@@ -1,7 +1,5 @@
 # Monitoring
 
-* [Home](help)
-
 ## Endpoints
 
 Currently, there are two endpoints for statistics available

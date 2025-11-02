@@ -1,7 +1,5 @@
 # Channels
 
-* [Home](help)
-
 Channels are a way to discover new content or to display content that you might have missed otherwise.
 There are several predefined channels, additionally you can create your own channels, based on some rules.
 Channels only display posts from the last 24 hours (this value can be changed by the admin).

@@ -1,7 +1,5 @@
 # Friendica Addon/Entwicklung
 
-* [Zur Startseite der Hilfe](help)
-
 Bitte schau dir das Beispiel-Addon "randplace" für ein funktionierendes Beispiel für manche der hier aufgeführten Funktionen an.
 Das Facebook-Addon bietet ein Beispiel dafür, die "addon"- und "module"-Funktion gemeinsam zu integrieren.
 Addons arbeiten, indem sie Event Hooks abfangen.

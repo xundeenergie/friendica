@@ -1,7 +1,5 @@
 # Bugs und Probleme
 
-* [Zur Startseite der Hilfe](help)
-
 Du solltest jeden Bug und jedes Problem, den/das Du findest, zunächst dem Administrator (oder gegebenenfalls der Support-Seite) Deines Servers melden, statt auf der allgemeinen Bug-Seite.
 Das erleichtert den Entwicklern ihre Arbeit (z. B. neue Features zu entwickeln), da sie sich nicht mit Fehlern beschäftigen müssen, mit denen sie nichts zu tun haben.
 

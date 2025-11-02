@@ -1,7 +1,5 @@
 # Configuring two-factor authentication
 
-* [Home](help)
-
 You can configure two-factor authentication using a mobile app.
 A time-based one-time password (TOTP) application automatically generates an authentication code that changes after a certain period of time.
 
@@ -17,7 +15,7 @@ Nonetheless, we recommend:
 
  - For iOS, [Matt Rubin's MIT-licensed Authenticator app](https://mattrubin.me/authenticator).
  - For Android, [andOTP](https://github.com/andOTP/andOTP).
- 
+
 ### 2. Record your one-use recovery codes
 
 From your [two-factor authentication user settings](/settings/2fa), enter your password and click on "Enable two-factor authentication".

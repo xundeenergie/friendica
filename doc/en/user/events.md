@@ -1,7 +1,5 @@
 # Events
 
-* [Home](help)
-
 A special form of postings are events.
 The events you and your contacts share can be found at [/events](/events) on your node.
 To get there go to your wall and follow the tab "events"

@@ -1,7 +1,5 @@
 # Gruppen und Seiten
 
-* [Zur Startseite der Hilfe](help)
-
 Hier siehst Du das globale Verzeichnis.
 Wenn Du Dich mal verirrt hast, kannst Du diesen Link klicken und wieder hierher kommen.
 
@@ -20,4 +18,4 @@ Solltest Du beim Stöbern durch die vielen Gruppen nicht wieder hierher zurück 
 
 Wenn Du einige Gruppen hinzugefügt hast, gehe [weiter zum nächsten Schritt](help/user/quick-start/finally).
 
-<iframe src="https://dir.friendica.social/group" width="950" height="600"></iframe>
+<iframe src="https://dir.friendica.social/group" width="100%" height="600"></iframe>

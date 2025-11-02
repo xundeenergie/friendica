@@ -1,7 +1,5 @@
 # Friendica Installation
 
-* [Zur Startseite der Hilfe](help)
-
 Wir haben hart daran gearbeitet, um Friendica auf vorgefertigten Hosting-Plattformen zum Laufen zu bringen - solche, auf denen auch WordPress Blogs und Drupal-Installationen laufen.
 Wir bieten eine manuelle und eine automatische Installation an.
 Aber bedenke, dass Friendica mehr als eine einfache Webanwendung ist.

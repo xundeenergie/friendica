@@ -1,7 +1,5 @@
 # Beiträge erstellen
 
-* [Zur Startseite der Hilfe](help)
-
 Hier findest du eine Übersicht über die verschiedenen Möglichkeiten, deinen Beitrag zu bearbeiten.
 <span style="color: red;">
 Achtung: für dieses Beispiel wurde das Thema <b>"Diabook"</b> genutzt.
