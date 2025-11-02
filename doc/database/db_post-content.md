@@ -10,7 +10,7 @@ Fields
 | --------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------- | ---- | --- | ------- | ----- |
 | uri-id          | Id of the item-uri table entry that contains the item uri                                                                 | int unsigned   | NO   | PRI | NULL    |       |
 | title           | item title                                                                                                                | varchar(255)   | NO   |     |         |       |
-| content-warning |                                                                                                                           | varchar(255)   | NO   |     |         |       |
+| content-warning |                                                                                                                           | varchar(500)   | NO   |     |         |       |
 | body            | item body content                                                                                                         | mediumtext     | YES  |     | NULL    |       |
 | raw-body        | Body without embedded media links                                                                                         | mediumtext     | YES  |     | NULL    |       |
 | quote-uri-id    | Id of the item-uri table that contains the quoted uri                                                                     | int unsigned   | YES  |     | NULL    |       |

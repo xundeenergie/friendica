@@ -11,12 +11,14 @@ Fields
 | uri-id          | Id of the item-uri table entry that contains the item uri                                                                 | int unsigned   | NO   | PRI | NULL                |       |
 | edited          | Date of edit                                                                                                              | datetime       | NO   | PRI | 0001-01-01 00:00:00 |       |
 | title           | item title                                                                                                                | varchar(255)   | NO   |     |                     |       |
-| content-warning |                                                                                                                           | varchar(255)   | NO   |     |                     |       |
+| content-warning |                                                                                                                           | varchar(500)   | NO   |     |                     |       |
 | body            | item body content                                                                                                         | mediumtext     | YES  |     | NULL                |       |
 | raw-body        | Body without embedded media links                                                                                         | mediumtext     | YES  |     | NULL                |       |
+| quote-uri-id    | Id of the item-uri table that contains the quoted uri                                                                     | int unsigned   | YES  |     | NULL                |       |
 | location        | text location where this item originated                                                                                  | varchar(255)   | NO   |     |                     |       |
 | coord           | longitude/latitude pair representing location where this item originated                                                  | varchar(255)   | NO   |     |                     |       |
 | language        | Language information about this post                                                                                      | text           | YES  |     | NULL                |       |
+| sensitive       | If true, this post contains sensitive content                                                                             | boolean        | YES  |     | NULL                |       |
 | app             | application which generated this item                                                                                     | varchar(255)   | NO   |     |                     |       |
 | rendered-hash   |                                                                                                                           | varchar(32)    | NO   |     |                     |       |
 | rendered-html   | item.body converted to html                                                                                               | mediumtext     | YES  |     | NULL                |       |
@@ -40,5 +42,6 @@ Foreign Keys
 | Field | Target Table | Target Field |
 |-------|--------------|--------------|
 | uri-id | [item-uri](help/database/db_item-uri) | id |
+| quote-uri-id | [item-uri](help/database/db_item-uri) | id |
 
 Return to [database documentation](help/database)

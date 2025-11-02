@@ -1,6 +1,6 @@
 -- ------------------------------------------
 -- Friendica 2025.07-rc (Interrupted Fern)
--- DB_UPDATE_VERSION 1583
+-- DB_UPDATE_VERSION 1584
 -- ------------------------------------------
 
 
@@ -1275,7 +1275,7 @@ CREATE TABLE IF NOT EXISTS `post-collection` (
 CREATE TABLE IF NOT EXISTS `post-content` (
 	`uri-id` int unsigned NOT NULL COMMENT 'Id of the item-uri table entry that contains the item uri',
 	`title` varchar(255) NOT NULL DEFAULT '' COMMENT 'item title',
-	`content-warning` varchar(255) NOT NULL DEFAULT '' COMMENT '',
+	`content-warning` varchar(500) NOT NULL DEFAULT '' COMMENT '',
 	`body` mediumtext COMMENT 'item body content',
 	`raw-body` mediumtext COMMENT 'Body without embedded media links',
 	`quote-uri-id` int unsigned COMMENT 'Id of the item-uri table that contains the quoted uri',
@@ -1368,12 +1368,14 @@ CREATE TABLE IF NOT EXISTS `post-history` (
 	`uri-id` int unsigned NOT NULL COMMENT 'Id of the item-uri table entry that contains the item uri',
 	`edited` datetime NOT NULL DEFAULT '0001-01-01 00:00:00' COMMENT 'Date of edit',
 	`title` varchar(255) NOT NULL DEFAULT '' COMMENT 'item title',
-	`content-warning` varchar(255) NOT NULL DEFAULT '' COMMENT '',
+	`content-warning` varchar(500) NOT NULL DEFAULT '' COMMENT '',
 	`body` mediumtext COMMENT 'item body content',
 	`raw-body` mediumtext COMMENT 'Body without embedded media links',
+	`quote-uri-id` int unsigned COMMENT 'Id of the item-uri table that contains the quoted uri',
 	`location` varchar(255) NOT NULL DEFAULT '' COMMENT 'text location where this item originated',
 	`coord` varchar(255) NOT NULL DEFAULT '' COMMENT 'longitude/latitude pair representing location where this item originated',
 	`language` text COMMENT 'Language information about this post',
+	`sensitive` boolean COMMENT 'If true, this post contains sensitive content',
 	`app` varchar(255) NOT NULL DEFAULT '' COMMENT 'application which generated this item',
 	`rendered-hash` varchar(32) NOT NULL DEFAULT '' COMMENT '',
 	`rendered-html` mediumtext COMMENT 'item.body converted to html',
@@ -1384,7 +1386,8 @@ CREATE TABLE IF NOT EXISTS `post-history` (
 	`resource-id` varchar(32) NOT NULL DEFAULT '' COMMENT 'Used to link other tables to items, it identifies the linked resource (e.g. photo) and if set must also set resource_type',
 	`plink` varbinary(383) NOT NULL DEFAULT '' COMMENT 'permalink or URL to a displayable copy of the message at its source',
 	 PRIMARY KEY(`uri-id`,`edited`),
-	FOREIGN KEY (`uri-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE
+	FOREIGN KEY (`uri-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
+	FOREIGN KEY (`quote-uri-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE
 ) DEFAULT COLLATE utf8mb4_general_ci COMMENT='Post history';
 
 --
