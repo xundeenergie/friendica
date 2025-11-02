@@ -40,7 +40,7 @@ class Help extends BaseModule
 
 				$path .= DI::args()->get($x);
 			}
-			$title              = basename($path);
+			$title              = mb_ucfirst(basename($path));
 			$filename           = $path;
 			$text               = self::loadDocFile($path . '.md', $lang);
 			DI::page()['title'] = DI::l10n()->t('Help:') . ' ' . str_replace('-', ' ', $title);
