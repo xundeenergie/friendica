@@ -1386,6 +1386,7 @@ CREATE TABLE IF NOT EXISTS `post-history` (
 	`resource-id` varchar(32) NOT NULL DEFAULT '' COMMENT 'Used to link other tables to items, it identifies the linked resource (e.g. photo) and if set must also set resource_type',
 	`plink` varbinary(383) NOT NULL DEFAULT '' COMMENT 'permalink or URL to a displayable copy of the message at its source',
 	 PRIMARY KEY(`uri-id`,`edited`),
+	 INDEX `quote-uri-id` (`quote-uri-id`),
 	FOREIGN KEY (`uri-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE,
 	FOREIGN KEY (`quote-uri-id`) REFERENCES `item-uri` (`id`) ON UPDATE RESTRICT ON DELETE CASCADE
 ) DEFAULT COLLATE utf8mb4_general_ci COMMENT='Post history';

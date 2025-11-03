@@ -32,9 +32,10 @@ Fields
 Indexes
 ------------
 
-| Name    | Fields         |
-| ------- | -------------- |
-| PRIMARY | uri-id, edited |
+| Name         | Fields         |
+| ------------ | -------------- |
+| PRIMARY      | uri-id, edited |
+| quote-uri-id | quote-uri-id   |
 
 Foreign Keys
 ------------

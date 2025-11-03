@@ -1393,6 +1393,7 @@ return [
 		],
 		"indexes" => [
 			"PRIMARY" => ["uri-id", "edited"],
+			"quote-uri-id" => ["quote-uri-id"],
 		]
 	],
 	"post-link" => [
