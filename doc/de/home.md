@@ -49,7 +49,7 @@
 * [Addon Development](help/developer/addon-development)
 * [Smarty 3 Templates](help/developer/smarty3-templates) (EN)
 * [Protokoll Dokumentation](help/spec/protocol/protocol) (EN)
-* [Datenbank-Schema](help/database) (EN)
+* [Datenbank-Schema](help/spec/database/index) (EN)
 * [Class Autoloading](help/developer/autoloader) (EN)
 * [Using Composer](help/developer/composer) (EN)
 * [Code-Referenz (mit doxygen generiert - setzt Cookies)](doc/html/)

@@ -62,7 +62,7 @@
 	* [API endpoints](help/spec/api/index)
 	* [Code (Doxygen generated - sets cookies)](doc/html/)
 	* [Protocol documentation](help/spec/protocol/protocol)
-	* [Database schema documentation](help/database)
+	* [Database schema documentation](help/spec/database/index)
 	* [Class autoloading](help/developer/autoloader)
 
 ## Links
