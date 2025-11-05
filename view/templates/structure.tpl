@@ -22,12 +22,12 @@
 {{/foreach}}
 
 {{if $foreign}}
-## Foreign Keys
+## Foreign keys
 
 | Field | Target Table | Target Field |
 |-------|--------------|--------------|
 {{foreach $foreign as $key}}
-| {{$key.field nofilter}} | [{{$key.targettable nofilter}}](help/spec/database/db_{{$key.targettable nofilter}}) | {{$key.targetfield nofilter}} |
+| {{$key.field nofilter}} | [{{$key.targettable nofilter}}](help/spec/database/db-{{$key.targettable nofilter}}) | {{$key.targetfield nofilter}} |
 {{/foreach}}
 {{/if}}
 

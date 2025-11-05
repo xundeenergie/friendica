@@ -122,7 +122,7 @@ class DocWriter
 				'$indexes' => $indexes,
 				'$foreign' => $foreign,
 			]);
-			$filename = $basePath . static::DOC_PATH_PREFIX . 'db_' . $name . '.md';
+			$filename = $basePath . static::DOC_PATH_PREFIX . 'db-' . $name . '.md';
 			file_put_contents($filename, $content);
 		}
 		asort($tables);

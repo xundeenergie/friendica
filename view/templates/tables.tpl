@@ -5,10 +5,10 @@
   * SPDX-License-Identifier: AGPL-3.0-or-later
   *}}
 
-# Database Tables
+# Database tables
 
 | Table | Description |
 |-------|-------------|
 {{foreach $tables as $table}}
-| [{{$table.name nofilter}}](help/spec/database/db_{{$table.name nofilter}}) | {{$table.comment nofilter}} |
+| [{{$table.name nofilter}}](help/spec/database/db-{{$table.name nofilter}}) | {{$table.comment nofilter}} |
 {{/foreach}}
