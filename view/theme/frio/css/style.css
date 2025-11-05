@@ -1195,6 +1195,10 @@ aside > .help-aside-wrapper h2 {
 	font-weight: bold;
 	font-size: 14px;
 }
+.help-content-wrapper th, .help-content-wrapper td {
+	border: 1px solid #c5c5c5;
+	padding: 2px 3px;
+}
 
 /* vcard / h-card */
 aside .vcard #profile-photo-wrapper {
